@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { AnimatedGradientBackground } from "@/components/effects/AnimatedGradientBackground";
 import { NoiseOverlay } from "@/components/effects/NoiseOverlay";
 import { ClientEffects } from "@/components/effects/ClientEffects";
