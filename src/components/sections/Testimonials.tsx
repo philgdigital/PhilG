@@ -76,7 +76,7 @@ export function Testimonials() {
                     <span className="text-white font-medium text-sm tracking-wide">
                       {t.name}
                     </span>
-                    <span className="font-mono text-zinc-500 text-[10px] font-medium tracking-[0.2em] uppercase">
+                    <span className="font-mono text-zinc-400 text-[10px] font-medium tracking-[0.2em] uppercase">
                       {t.company}
                     </span>
                   </div>

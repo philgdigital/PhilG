@@ -75,7 +75,7 @@ export function Footer({ onOpenForm }: FooterProps) {
         </Reveal>
 
         <Reveal delay={500}>
-          <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-500 text-center">
+          <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400 text-center">
             Prague Metropolitan Area · hello@philg.com
           </p>
         </Reveal>
@@ -94,7 +94,7 @@ export function Footer({ onOpenForm }: FooterProps) {
         </div>
       </div>
 
-      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-500 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-12 z-10">
+      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-12 z-10">
         <span>© {YEAR} PHIL G.</span>
         <button
           type="button"

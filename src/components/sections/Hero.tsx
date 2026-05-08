@@ -3,6 +3,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { ScrollTransform } from "@/components/ui/ScrollTransform";
+import { MagneticText } from "@/components/ui/MagneticText";
 
 export function Hero() {
   return (
@@ -19,8 +20,10 @@ export function Hero() {
 
         <Reveal delay={200}>
           <ScrollTransform direction={-1} speed={0.4}>
-            <h1 className="text-[13vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
-              Design
+            <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
+              <MagneticText range={220} maxOffset={18}>
+                Design
+              </MagneticText>
             </h1>
           </ScrollTransform>
         </Reveal>
@@ -31,8 +34,10 @@ export function Hero() {
           </Reveal>
           <Reveal delay={400}>
             <ScrollTransform direction={1} speed={0.3}>
-              <h1 className="text-[13vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase shine-text">
-                Acceleration
+              <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase shine-text">
+                <MagneticText range={220} maxOffset={18}>
+                  Acceleration
+                </MagneticText>
               </h1>
             </ScrollTransform>
           </Reveal>
@@ -41,11 +46,13 @@ export function Hero() {
         <div className="flex justify-start md:justify-end w-full md:w-[95%] mt-4 md:mt-0">
           <Reveal delay={500}>
             <ScrollTransform direction={-1} speed={0.2}>
-              <h1 className="text-[13vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase text-white flex items-center gap-4">
-                <span className="text-zinc-500 italic font-light lowercase text-[7vw] md:text-[5vw] -mt-4 font-serif">
+              <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white flex items-center gap-4">
+                <span className="text-zinc-400 italic font-light lowercase text-[7vw] md:text-[5vw] -mt-4 font-serif">
                   with
                 </span>
-                AI.
+                <MagneticText range={220} maxOffset={18}>
+                  AI.
+                </MagneticText>
               </h1>
             </ScrollTransform>
           </Reveal>
@@ -75,7 +82,7 @@ export function Hero() {
                 Explore the Work
               </span>
             </a>
-            <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-500">
+            <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400">
               Lead UX/Product Designer · Prague Metropolitan Area
             </p>
           </div>

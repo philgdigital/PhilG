@@ -105,7 +105,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="form-name"
-                className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
+                className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400"
               >
                 Name
               </label>
@@ -120,7 +120,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="form-company"
-                className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
+                className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400"
               >
                 Company
               </label>
@@ -137,7 +137,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="form-budget"
-              className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
+              className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400"
             >
               Budget Scope
             </label>
@@ -161,7 +161,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="form-vision"
-              className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
+              className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400"
             >
               Project Vision
             </label>
