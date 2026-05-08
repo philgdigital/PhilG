@@ -27,7 +27,7 @@ export function Hero() {
 
         <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-12 w-full mt-2">
           <Reveal delay={300} className="hidden md:block">
-            <div className="w-16 h-2 md:w-40 md:h-3 bg-[#0f62fe] rounded-full shadow-[0_0_30px_rgba(15,98,254,0.6)]" />
+            <div className="w-16 h-2 md:w-40 md:h-3 rounded-full bg-gradient-to-r from-[#0f62fe] to-[#10b981] shadow-[0_0_30px_rgba(15,98,254,0.5)]" />
           </Reveal>
           <Reveal delay={400}>
             <ScrollTransform direction={1} speed={0.3}>
@@ -59,8 +59,7 @@ export function Hero() {
             complex enterprise problems into market-leading products. I blend
             deep user psychology with{" "}
             <span className="text-white font-medium">AI-native prototyping</span>{" "}
-            to ship 10× faster — for teams at Walmart, VMware, Microsoft, SAP,
-            and WWF.
+            to ship 10× faster.
           </p>
         </Reveal>
 

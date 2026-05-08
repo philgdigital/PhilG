@@ -87,7 +87,7 @@ export function Footer({ onOpenForm }: FooterProps) {
               key={i}
               className="text-6xl md:text-[8vw] font-black tracking-tighter uppercase text-white/40 mx-8 shine-text"
             >
-              ARCHITECTING ENTERPRISE VELOCITY —{" "}
+              ARCHITECTING ENTERPRISE VELOCITY ·{" "}
             </span>
           ))}
         </div>

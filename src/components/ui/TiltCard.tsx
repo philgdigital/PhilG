@@ -20,7 +20,7 @@ export function TiltCard({
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Direct DOM updates — no React state per mousemove (was 60-120 re-renders/sec).
+  // Direct DOM updates: no React state per mousemove (was 60-120 re-renders/sec).
   // Rect read per move is cheap (layout is already up-to-date during hover) and
   // stays correct if the page scrolls while the cursor is over the card.
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {

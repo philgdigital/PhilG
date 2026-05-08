@@ -58,8 +58,8 @@ export function About() {
               </span>{" "}
               with 20+ years of experience turning ideas into impactful,
               market-leading products. From redefining customer experiences for
-              Walmart to driving innovation for VMware, Microsoft, SAP, and WWF
-              — I don&apos;t just design; I deliver measurable outcomes.
+              Walmart to driving innovation for VMware, Microsoft, SAP, and WWF.
+              I don&apos;t just design; I deliver measurable outcomes.
             </p>
           </Reveal>
 
@@ -70,7 +70,7 @@ export function About() {
               Whether launching blockchain-powered platforms for WWF/OpenSC or
               leading AI-integrated designs for Azul Intelligence Cloud, I
               thrive on turning complex challenges into opportunities for
-              growth. Along the way I&apos;ve mentored 1,000+ designers — many
+              growth. Along the way I&apos;ve mentored 1,000+ designers, many
               now excelling at Meta, Booking.com, Uber, and Accenture.
             </p>
           </Reveal>

@@ -12,7 +12,7 @@ type Testimonial = {
 
 const TESTIMONIALS: Testimonial[] = [
   {
-    quote: "A visionary design leader — Phil's insights are invaluable.",
+    quote: "A visionary design leader. Phil's insights are invaluable.",
     name: "Kevin Olsen",
     company: "Mechanical Orchard",
   },

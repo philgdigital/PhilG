@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Phil G. — Lead UX/Product Designer · AI-Native";
+export const alt = "Phil G. · Lead UX/Product Designer · AI-Native";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -61,7 +61,7 @@ export default async function OpengraphImage() {
             <span
               style={{
                 background:
-                  "linear-gradient(90deg, #f4f4f5 0%, #4589ff 50%, #f4f4f5 100%)",
+                  "linear-gradient(90deg, #f4f4f5 0%, #4589ff 33%, #34d399 66%, #f4f4f5 100%)",
                 backgroundClip: "text",
                 color: "transparent",
               }}

@@ -22,8 +22,8 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Phil G. — Lead UX/Product Designer · AI-Native",
-    template: "%s — Phil G.",
+    default: "Phil G. · Lead UX/Product Designer · AI-Native",
+    template: "%s · Phil G.",
   },
   description:
     "Lead UX/Product Designer · 20+ years shipping high-impact products for Walmart, VMware, Microsoft, SAP, and WWF. AI-Native, Prague-based, accepting 2026 enterprise engagements.",
@@ -53,13 +53,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: "Phil G.",
-    title: "Phil G. — Lead UX/Product Designer · AI-Native",
+    title: "Phil G. · Lead UX/Product Designer · AI-Native",
     description:
       "20+ years shipping for Walmart, VMware, Microsoft, SAP, WWF. AI-Native enterprise design from Prague.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phil G. — Lead UX/Product Designer · AI-Native",
+    title: "Phil G. · Lead UX/Product Designer · AI-Native",
     description:
       "20+ years shipping for Walmart, VMware, Microsoft, SAP, WWF. AI-Native enterprise design from Prague.",
   },

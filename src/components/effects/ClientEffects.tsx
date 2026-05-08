@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-// Heavy interactive effects — load on the client only.
+// Heavy interactive effects: load on the client only.
 // Both depend on `window` and shouldn't block initial paint.
 const CustomCursor = dynamic(
   () => import("./CustomCursor").then((m) => m.CustomCursor),

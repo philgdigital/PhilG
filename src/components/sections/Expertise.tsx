@@ -30,7 +30,7 @@ const CARDS: ExpertiseCard[] = [
     colSpan: "md:col-span-1",
     icon: Smartphone,
     title: "UX Architecture",
-    desc: "Untangling complex enterprise data into zero-friction, highly scalable interfaces — the way Cemex, Walmart, and VMware needed.",
+    desc: "Untangling complex enterprise data into zero-friction, highly scalable interfaces, the way Cemex, Walmart, and VMware needed.",
   },
   {
     colSpan: "md:col-span-2",

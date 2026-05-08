@@ -17,7 +17,7 @@ const METRICS: Metric[] = [
     icon: Award,
     val: "20+",
     label: "Years",
-    desc: "Designing and shipping high-impact products for the Fortune 500 — Walmart, VMware, Microsoft, SAP, and WWF.",
+    desc: "Designing and shipping high-impact products for Fortune 500 teams like Walmart, VMware, Microsoft, SAP, and WWF.",
   },
   {
     icon: Users,

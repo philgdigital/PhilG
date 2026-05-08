@@ -11,7 +11,8 @@ export type Project = {
   accent: string;
 };
 
-const ACCENT = "#0f62fe";
+const BLUE = "#0f62fe";
+const EMERALD = "#10b981";
 
 export const projects: Project[] = [
   {
@@ -23,7 +24,7 @@ export const projects: Project[] = [
     year: "2024",
     img: "/images/projects/walmart.jpg",
     desc: "Redefined customer journeys for millions of shoppers. Drove engagement and usability through user-centered design across the Walmart digital ecosystem.",
-    accent: ACCENT,
+    accent: BLUE,
   },
   {
     id: 2,
@@ -34,7 +35,7 @@ export const projects: Project[] = [
     year: "2023",
     img: "/images/projects/wwf-opensc.jpg",
     desc: "Blockchain-powered platform empowering ethical consumerism with transparent, verifiable supply-chain data. From idea to launch.",
-    accent: ACCENT,
+    accent: EMERALD,
   },
   {
     id: 3,
@@ -45,7 +46,7 @@ export const projects: Project[] = [
     year: "2022",
     img: "/images/projects/cemex.jpg",
     desc: "Led UX for a global digital platform serving 20,000+ enterprise customers in 50+ countries. Streamlined the entire digital transformation.",
-    accent: ACCENT,
+    accent: BLUE,
   },
   {
     id: 4,
@@ -56,6 +57,6 @@ export const projects: Project[] = [
     year: "2021",
     img: "/images/projects/pivotal-vmware.jpg",
     desc: "Spearheaded digital transformations for global enterprises modernizing their developer platforms and engineering culture.",
-    accent: ACCENT,
+    accent: EMERALD,
   },
 ];

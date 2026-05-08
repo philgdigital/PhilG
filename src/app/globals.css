@@ -2,13 +2,15 @@
 
 /* ─────────────────────────────────────────────
    Design tokens (Tailwind v4 @theme)
-   Carbon-black + IBM Blue 60 — single-accent enterprise palette.
+   Carbon-black + IBM Blue 60 + Emerald 500. Single dual-accent palette.
    ───────────────────────────────────────────── */
 @theme {
   --color-bg: #0a0a0c;
   --color-accent: #0f62fe;
   --color-accent-strong: #0353e9;
   --color-accent-soft: #4589ff;
+  --color-emerald: #10b981;
+  --color-emerald-soft: #34d399;
   --font-sans: var(--font-inter), "Inter", sans-serif;
 }
 
@@ -18,6 +20,9 @@
   --accent-strong: #0353e9;
   --accent-soft: #4589ff;
   --accent-glow: rgba(15, 98, 254, 0.4);
+  --emerald: #10b981;
+  --emerald-soft: #34d399;
+  --emerald-glow: rgba(16, 185, 129, 0.4);
 }
 
 /* ─────────────────────────────────────────────
@@ -25,7 +30,7 @@
    ───────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  /* Clip horizontal overflow without making html a scroll container —
+  /* Clip horizontal overflow without making html a scroll container.
      `hidden` would force overflow-y: auto and break window scroll. */
   overflow-x: clip;
 }
@@ -43,7 +48,7 @@ body {
   color: #ffffff;
 }
 
-/* Custom cursor — only hide native cursor on devices with hover/fine pointer */
+/* Custom cursor: only hide native cursor on devices with hover/fine pointer */
 @media (hover: hover) and (pointer: fine) {
   body,
   a,
@@ -73,14 +78,14 @@ body {
 }
 
 /* ─────────────────────────────────────────────
-   Shine text — monochrome white→IBM-blue→white sweep.
-   Replaces the previous indigo→white→cyan rainbow.
+   Shine text: white → IBM blue → emerald → white sweep.
    ───────────────────────────────────────────── */
 .shine-text {
   background: linear-gradient(
     90deg,
     #f4f4f5 0%,
-    var(--accent-soft) 50%,
+    var(--accent-soft) 33%,
+    var(--emerald-soft) 66%,
     #f4f4f5 100%
   );
   background-size: 200% auto;
@@ -96,7 +101,7 @@ body {
 }
 
 /* ─────────────────────────────────────────────
-   Background orbs — single-color, no hue rotation.
+   Background orbs (animated blob keyframes).
    ───────────────────────────────────────────── */
 @keyframes blob {
   0% {
@@ -160,8 +165,7 @@ body {
 }
 
 /* ─────────────────────────────────────────────
-   Electric border — IBM-blue conic on hover.
-   Replaces the previous indigo/cyan/white rainbow.
+   Electric border: blue + emerald conic on hover.
    ───────────────────────────────────────────── */
 @keyframes electric-spin {
   from {
@@ -189,8 +193,8 @@ body {
 }
 .group:hover > .electric-border-container {
   opacity: 1;
-  filter: drop-shadow(0 0 10px rgba(15, 98, 254, 0.8))
-    drop-shadow(0 0 20px rgba(15, 98, 254, 0.4));
+  filter: drop-shadow(0 0 10px rgba(15, 98, 254, 0.7))
+    drop-shadow(0 0 20px rgba(16, 185, 129, 0.4));
 }
 .electric-border-container::before {
   content: "";
@@ -201,9 +205,10 @@ body {
   height: 250%;
   background: conic-gradient(
     from 0deg,
-    transparent 60%,
-    rgba(15, 98, 254, 0.5) 80%,
-    rgba(69, 137, 255, 1) 95%,
+    transparent 50%,
+    rgba(15, 98, 254, 0.4) 70%,
+    rgba(16, 185, 129, 0.7) 85%,
+    rgba(52, 211, 153, 1) 95%,
     #ffffff 100%
   );
   animation: electric-spin 2s linear infinite;
