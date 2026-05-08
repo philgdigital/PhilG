@@ -24,19 +24,19 @@ const CARDS: ExpertiseCard[] = [
     colSpan: "md:col-span-1",
     icon: Cpu,
     title: "AI Workflows",
-    desc: "Prompt engineering, generative UI generation, and LLM orchestration to 10x delivery speed.",
+    desc: "Prompt engineering, generative UI, and LLM orchestration to 10× delivery speed. AI-Native by default.",
   },
   {
     colSpan: "md:col-span-1",
     icon: Smartphone,
     title: "UX Architecture",
-    desc: "Untangling complex enterprise data into zero-friction, highly scalable interfaces.",
+    desc: "Untangling complex enterprise data into zero-friction, highly scalable interfaces — the way Cemex, Walmart, and VMware needed.",
   },
   {
     colSpan: "md:col-span-2",
     icon: Globe,
-    title: "Product Vision & Strategy",
-    desc: "Aligning deep user psychology with aggressive targets to define product roadmaps that don't just launch, but dominate their respective markets.",
+    title: "Vision, Strategy & Mentorship",
+    desc: "Aligning user psychology with aggressive business targets. Sales-funnel-aware UX strategy. Plus a track record of mentoring 1,000+ designers now leading at Meta, Booking, Uber, Accenture.",
   },
 ];
 
@@ -48,8 +48,8 @@ export function Expertise() {
     >
       <Reveal>
         <div className="flex items-center gap-4 mb-16">
-          <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
-          <h2 className="text-sm md:text-base font-bold tracking-widest uppercase text-neutral-300">
+          <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
+          <h2 className="text-sm md:text-base font-bold tracking-widest uppercase text-zinc-400">
             Full-Stack Capabilities
           </h2>
         </div>
@@ -61,9 +61,7 @@ export function Expertise() {
             <ScrollTransform direction={-1} speed={0.1}>
               <h3 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight text-white tracking-tight max-w-5xl">
                 Not just designing screens. I architect{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 italic font-serif">
-                  systems
-                </span>{" "}
+                <span className="shine-text italic font-serif">systems</span>{" "}
                 that generate measurable business outcomes.
               </h3>
             </ScrollTransform>
@@ -75,18 +73,18 @@ export function Expertise() {
           return (
             <Reveal key={s.title} delay={i * 150} className={s.colSpan}>
               <TiltCard scale={1.03} maxRotation={8} className="h-full">
-                <div className="glass h-full p-10 md:p-14 rounded-[2.5rem] flex flex-col justify-between transition-all duration-500 group border-white/5 hover:border-cyan-400/30 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)] relative overflow-hidden">
+                <div className="glass h-full p-10 md:p-14 rounded-[2.5rem] flex flex-col justify-between transition-all duration-500 group border-white/5 hover:border-[#0f62fe]/30 hover:shadow-[0_20px_50px_rgba(15,98,254,0.15)] relative overflow-hidden">
                   <ElectricBorder />
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 to-indigo-500/0 group-hover:from-cyan-500/5 group-hover:to-indigo-500/10 transition-all duration-700 pointer-events-none z-0" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#0f62fe]/0 to-[#0f62fe]/0 group-hover:from-[#0f62fe]/8 group-hover:to-[#0f62fe]/4 transition-all duration-700 pointer-events-none z-0" />
 
-                  <div className="p-5 rounded-2xl bg-white/5 w-fit mb-12 border border-white/10 group-hover:border-cyan-400/50 group-hover:scale-110 transition-all duration-500 ease-out relative z-10 backdrop-blur-md">
-                    <Icon className="w-8 h-8 text-cyan-300 drop-shadow-[0_0_10px_rgba(103,232,249,0.5)]" />
+                  <div className="p-5 rounded-2xl bg-white/5 w-fit mb-12 border border-white/10 group-hover:border-[#0f62fe]/50 group-hover:scale-110 transition-all duration-500 ease-out relative z-10 backdrop-blur-md">
+                    <Icon className="w-8 h-8 text-[#4589ff] drop-shadow-[0_0_10px_rgba(15,98,254,0.5)]" />
                   </div>
                   <div className="relative z-10">
                     <h4 className="text-3xl md:text-4xl font-bold text-white mb-5 tracking-tight drop-shadow-lg">
                       {s.title}
                     </h4>
-                    <p className="text-neutral-400 font-light text-xl leading-relaxed group-hover:text-neutral-200 transition-colors">
+                    <p className="text-zinc-400 font-light text-xl leading-relaxed group-hover:text-zinc-200 transition-colors">
                       {s.desc}
                     </p>
                   </div>

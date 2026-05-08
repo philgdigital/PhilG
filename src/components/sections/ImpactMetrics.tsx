@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp, Users, Zap, type LucideIcon } from "lucide-react";
+import { Award, Users, Globe, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
@@ -14,22 +14,22 @@ type Metric = {
 
 const METRICS: Metric[] = [
   {
-    icon: TrendingUp,
-    val: "$4.2B+",
-    label: "Capital Flow",
-    desc: "Transacting flawlessly through interfaces I architected for leading Fintechs.",
+    icon: Award,
+    val: "20+",
+    label: "Years",
+    desc: "Designing and shipping high-impact products for the Fortune 500 — Walmart, VMware, Microsoft, SAP, and WWF.",
   },
   {
     icon: Users,
-    val: "25M+",
-    label: "Global Users",
-    desc: "Interacting daily with frictionless design systems deployed worldwide.",
+    val: "1,000+",
+    label: "Mentored",
+    desc: "Designers I've coached now lead and ship at Meta, Booking.com, Uber, and Accenture.",
   },
   {
-    icon: Zap,
-    val: "10x",
-    label: "Delivery Velocity",
-    desc: "Faster time-to-market achieved by integrating AI into the UX lifecycle.",
+    icon: Globe,
+    val: "50+",
+    label: "Countries",
+    desc: "Cemex platform reach: 20,000+ enterprise customers served across 50+ markets.",
   },
 ];
 
@@ -42,9 +42,9 @@ export function ImpactMetrics() {
           return (
             <Reveal key={m.label} delay={i * 200} direction="up">
               <TiltCard scale={1.05} maxRotation={15}>
-                <div className="glass p-12 rounded-[2rem] h-full border-white/5 hover:border-indigo-500/40 hover:shadow-[0_20px_50px_rgba(79,70,229,0.15)] group preserve-3d relative">
+                <div className="glass p-12 rounded-[2rem] h-full border-white/5 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_50px_rgba(15,98,254,0.15)] group preserve-3d relative">
                   <ElectricBorder />
-                  <Icon className="w-10 h-10 text-indigo-400 mb-8 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ease-out translate-z-10 relative z-10" />
+                  <Icon className="w-10 h-10 text-[#0f62fe] mb-8 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ease-out translate-z-10 relative z-10" />
                   <h3 className="text-6xl md:text-7xl font-black tracking-tighter text-white mb-2 translate-z-20 relative z-10">
                     {m.val}
                   </h3>
@@ -52,7 +52,7 @@ export function ImpactMetrics() {
                   <h4 className="text-xl font-bold tracking-wide text-white uppercase mb-3 translate-z-10 relative z-10">
                     {m.label}
                   </h4>
-                  <p className="text-neutral-400 font-light leading-relaxed text-lg relative z-10">
+                  <p className="text-zinc-400 font-light leading-relaxed text-lg relative z-10">
                     {m.desc}
                   </p>
                 </div>

@@ -2,40 +2,48 @@
 
 /* ─────────────────────────────────────────────
    Design tokens (Tailwind v4 @theme)
+   Carbon-black + IBM Blue 60 — single-accent enterprise palette.
    ───────────────────────────────────────────── */
 @theme {
-  --color-background: #030305;
+  --color-bg: #0a0a0c;
+  --color-accent: #0f62fe;
+  --color-accent-strong: #0353e9;
+  --color-accent-soft: #4589ff;
   --font-sans: var(--font-inter), "Inter", sans-serif;
+}
+
+:root {
+  --bg-color: #0a0a0c;
+  --accent: #0f62fe;
+  --accent-strong: #0353e9;
+  --accent-soft: #4589ff;
+  --accent-glow: rgba(15, 98, 254, 0.4);
 }
 
 /* ─────────────────────────────────────────────
    Base
    ───────────────────────────────────────────── */
-:root {
-  --bg-color: #030305;
-}
-
 html {
   scroll-behavior: smooth;
   /* Clip horizontal overflow without making html a scroll container —
-     using `hidden` would force overflow-y to auto and break window scroll. */
+     `hidden` would force overflow-y: auto and break window scroll. */
   overflow-x: clip;
 }
 
 body {
   background-color: var(--bg-color);
-  color: #f5f5f5;
+  color: #f4f4f5;
   font-family: var(--font-inter), "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: #ffffff;
-  color: #000000;
+  background: var(--accent);
+  color: #ffffff;
 }
 
-/* Custom cursor — only hide native cursor on devices that support hover/fine pointer */
+/* Custom cursor — only hide native cursor on devices with hover/fine pointer */
 @media (hover: hover) and (pointer: fine) {
   body,
   a,
@@ -57,18 +65,24 @@ body {
   background: var(--bg-color);
 }
 ::-webkit-scrollbar-thumb {
-  background: #222;
+  background: #1f1f23;
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4f46e5;
+  background: var(--accent);
 }
 
 /* ─────────────────────────────────────────────
-   Animated gradient shine text
+   Shine text — monochrome white→IBM-blue→white sweep.
+   Replaces the previous indigo→white→cyan rainbow.
    ───────────────────────────────────────────── */
 .shine-text {
-  background: linear-gradient(90deg, #818cf8 0%, #ffffff 50%, #22d3ee 100%);
+  background: linear-gradient(
+    90deg,
+    #f4f4f5 0%,
+    var(--accent-soft) 50%,
+    #f4f4f5 100%
+  );
   background-size: 200% auto;
   color: transparent;
   -webkit-background-clip: text;
@@ -82,7 +96,7 @@ body {
 }
 
 /* ─────────────────────────────────────────────
-   Animated gradient orbs
+   Background orbs — single-color, no hue rotation.
    ───────────────────────────────────────────── */
 @keyframes blob {
   0% {
@@ -109,19 +123,6 @@ body {
 }
 .animation-delay-6000 {
   animation-delay: 6s;
-}
-
-/* Continuous hue shift for background */
-@keyframes hueRotate {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
-.animate-hue {
-  animation: hueRotate 20s linear infinite;
 }
 
 /* ─────────────────────────────────────────────
@@ -159,7 +160,8 @@ body {
 }
 
 /* ─────────────────────────────────────────────
-   Electric border (animated conic-gradient on card hover)
+   Electric border — IBM-blue conic on hover.
+   Replaces the previous indigo/cyan/white rainbow.
    ───────────────────────────────────────────── */
 @keyframes electric-spin {
   from {
@@ -187,8 +189,8 @@ body {
 }
 .group:hover > .electric-border-container {
   opacity: 1;
-  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.8))
-    drop-shadow(0 0 20px rgba(79, 70, 229, 0.6));
+  filter: drop-shadow(0 0 10px rgba(15, 98, 254, 0.8))
+    drop-shadow(0 0 20px rgba(15, 98, 254, 0.4));
 }
 .electric-border-container::before {
   content: "";
@@ -200,8 +202,8 @@ body {
   background: conic-gradient(
     from 0deg,
     transparent 60%,
-    rgba(79, 70, 229, 0.6) 80%,
-    rgba(34, 211, 238, 1) 95%,
+    rgba(15, 98, 254, 0.5) 80%,
+    rgba(69, 137, 255, 1) 95%,
     #ffffff 100%
   );
   animation: electric-spin 2s linear infinite;
@@ -231,10 +233,10 @@ body {
    Glassmorphism
    ───────────────────────────────────────────── */
 .glass {
-  background: rgba(15, 15, 20, 0.3);
+  background: rgba(15, 15, 20, 0.4);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
@@ -265,7 +267,6 @@ body {
     scroll-behavior: auto !important;
   }
   .animate-blob,
-  .animate-hue,
   .animate-marquee,
   .shine-text,
   .electric-border-container::before {

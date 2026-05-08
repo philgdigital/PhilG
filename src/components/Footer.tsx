@@ -28,11 +28,11 @@ export function Footer({ onOpenForm }: FooterProps) {
       id="contact"
       className="pt-32 pb-12 flex flex-col items-center justify-between min-h-screen relative overflow-hidden z-10 border-t border-white/5"
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-[#0f62fe]/8 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="flex-1 flex flex-col items-center justify-center w-full z-10 px-6 mt-12 relative">
         <Reveal delay={100} className="text-center mb-8">
-          <p className="text-2xl md:text-3xl text-cyan-300 font-medium tracking-wide drop-shadow-md">
+          <p className="text-2xl md:text-3xl text-[#4589ff] font-medium tracking-wide drop-shadow-md">
             Looking for Enterprise Acceleration?
           </p>
         </Reveal>
@@ -44,7 +44,7 @@ export function Footer({ onOpenForm }: FooterProps) {
               onClick={onOpenForm}
               className="text-center group block hover-target p-4"
             >
-              <h2 className="text-[14vw] lg:text-[13vw] font-black tracking-tighter uppercase leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 transition-all duration-700 group-hover:scale-[1.02] group-hover:from-white group-hover:to-white inline-block drop-shadow-2xl">
+              <h2 className="text-[14vw] lg:text-[13vw] font-black tracking-tighter uppercase leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500 transition-all duration-700 group-hover:scale-[1.02] group-hover:from-white group-hover:to-white inline-block drop-shadow-2xl">
                 Initiate
                 <br />
                 Project
@@ -54,7 +54,7 @@ export function Footer({ onOpenForm }: FooterProps) {
         </Reveal>
 
         <Reveal delay={400}>
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8 mt-16 text-neutral-300">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8 mt-16 text-zinc-300">
             {SOCIAL_LINKS.map((social) => {
               const Icon = social.icon;
               return (
@@ -72,6 +72,12 @@ export function Footer({ onOpenForm }: FooterProps) {
             })}
           </div>
         </Reveal>
+
+        <Reveal delay={500}>
+          <p className="mt-10 text-xs font-bold tracking-[0.3em] uppercase text-zinc-500 text-center">
+            · Prague Metropolitan Area · hello@philg.com ·
+          </p>
+        </Reveal>
       </div>
 
       <div className="w-full mt-auto pt-24 pb-12 overflow-hidden pointer-events-none mix-blend-overlay relative flex opacity-50">
@@ -87,14 +93,14 @@ export function Footer({ onOpenForm }: FooterProps) {
         </div>
       </div>
 
-      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-neutral-500 text-xs font-bold tracking-widest uppercase mt-12 z-10">
+      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-500 text-xs font-bold tracking-widest uppercase mt-12 z-10">
         <span>© {YEAR} PHIL G.</span>
         <button
           type="button"
           onClick={onOpenForm}
-          className="mt-4 md:mt-0 flex items-center gap-3 glass px-5 py-3 rounded-full border-white/5 hover:bg-white/10 hover:border-cyan-400/50 transition-all duration-300 hover-target"
+          className="mt-4 md:mt-0 flex items-center gap-3 glass px-5 py-3 rounded-full border-white/5 hover:bg-white/10 hover:border-[#0f62fe]/50 transition-all duration-300 hover-target"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.9)] animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_12px_rgba(15,98,254,0.9)] animate-pulse" />
           ACCEPTING ENTERPRISE CLIENTS
         </button>
       </div>

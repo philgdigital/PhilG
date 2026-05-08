@@ -72,14 +72,14 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
       <button
         type="button"
         aria-label="Close dialog"
-        className="absolute inset-0 bg-[#030305]/70 hover-target cursor-default"
+        className="absolute inset-0 bg-[#0a0a0c]/70 hover-target cursor-default"
         onClick={onClose}
       />
       <div
         ref={dialogRef}
-        className="relative w-full max-w-2xl bg-[#0a0a0f] border border-white/10 rounded-[2rem] p-8 md:p-12 shadow-[0_0_80px_rgba(79,70,229,0.25)] animate-modal overflow-hidden"
+        className="relative w-full max-w-2xl bg-[#0a0a0c] border border-white/10 rounded-[2rem] p-8 md:p-12 shadow-[0_0_80px_rgba(15,98,254,0.25)] animate-modal overflow-hidden"
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400" />
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0f62fe] to-transparent" />
 
         <button
           type="button"
@@ -113,8 +113,8 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
                 id="form-name"
                 type="text"
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-cyan-400 focus:bg-white/10 transition-all hover-target"
-                placeholder="Tim Cook"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target"
+                placeholder="Your name"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -128,8 +128,8 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
                 id="form-company"
                 type="text"
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-cyan-400 focus:bg-white/10 transition-all hover-target"
-                placeholder="Apple"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target"
+                placeholder="Your company"
               />
             </div>
           </div>
@@ -144,15 +144,15 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
             <select
               id="form-budget"
               defaultValue="50-100"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-neutral-300 focus:outline-none focus:border-cyan-400 focus:bg-white/10 transition-all hover-target appearance-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-neutral-300 focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target appearance-none"
             >
-              <option value="50-100" className="bg-[#0a0a0f]">
+              <option value="50-100" className="bg-[#0a0a0c]">
                 $50k – $100k (MVP Acceleration)
               </option>
-              <option value="100-250" className="bg-[#0a0a0f]">
+              <option value="100-250" className="bg-[#0a0a0c]">
                 $100k – $250k (System Architecture)
               </option>
-              <option value="250+" className="bg-[#0a0a0f]">
+              <option value="250+" className="bg-[#0a0a0c]">
                 $250k+ (Enterprise Overhaul)
               </option>
             </select>
@@ -169,8 +169,8 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
               id="form-vision"
               required
               rows={4}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-cyan-400 focus:bg-white/10 transition-all hover-target resize-none"
-              placeholder="We need to rethink our spatial computing ecosystem..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target resize-none"
+              placeholder="We&apos;re modernizing our enterprise platform and need a UX lead who can ship fast..."
             />
           </div>
 

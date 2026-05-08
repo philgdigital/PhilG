@@ -38,7 +38,7 @@ export function Navbar() {
           href="#"
           className="font-black text-2xl tracking-tighter text-white hover-target mix-blend-difference"
         >
-          PG<span className="text-indigo-400">®</span>
+          PG<span className="text-[#0f62fe]">®</span>
         </a>
         <div className="hidden md:flex gap-12 text-xs font-bold tracking-widest text-neutral-300">
           {NAV_LINKS.map((link) => (
@@ -85,7 +85,7 @@ export function Navbar() {
         >
           <div className="flex justify-between items-center mb-16">
             <span className="font-black text-2xl tracking-tighter text-white">
-              PG<span className="text-indigo-400">®</span>
+              PG<span className="text-[#0f62fe]">®</span>
             </span>
             <button
               type="button"
@@ -110,7 +110,7 @@ export function Navbar() {
                 <a
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="block text-5xl font-black tracking-tighter text-white uppercase hover:text-indigo-400 transition-colors hover-target"
+                  className="block text-5xl font-black tracking-tighter text-white uppercase hover:text-[#0f62fe] transition-colors hover-target"
                 >
                   {link.label}
                 </a>

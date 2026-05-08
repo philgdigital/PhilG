@@ -7,30 +7,55 @@ export type Project = {
   year: string;
   img: string;
   desc: string;
-  color: string;
+  /** Hex accent used for the card's hover overlay tint. */
+  accent: string;
 };
+
+const ACCENT = "#0f62fe";
 
 export const projects: Project[] = [
   {
     id: 1,
-    slug: "lumina-os",
-    title: "Lumina OS",
-    category: "Spatial Computing",
-    role: "UX / Frontend Architecture",
-    year: "2026",
-    img: "/images/projects/lumina-os.jpg",
-    desc: "A complete operating system reimagined for spatial computing. We used AI agents to rapidly simulate massive multi-tasking workflows prior to production build.",
-    color: "from-blue-900/90",
+    slug: "walmart",
+    title: "Walmart",
+    category: "Retail · Customer Experience",
+    role: "Lead UX",
+    year: "2024",
+    img: "/images/projects/walmart.jpg",
+    desc: "Redefined customer journeys for millions of shoppers. Drove engagement and usability through user-centered design across the Walmart digital ecosystem.",
+    accent: ACCENT,
   },
   {
     id: 2,
-    slug: "aether-platform",
-    title: "Aether Platform",
-    category: "Enterprise Big Data",
-    role: "Lead Product Designer",
-    year: "2025",
-    img: "/images/projects/aether-platform.jpg",
-    desc: "Data visualization engine for global logistics. We reduced cognitive overload by 70% by introducing predictive contextual menus.",
-    color: "from-purple-900/90",
+    slug: "wwf-opensc",
+    title: "WWF / OpenSC",
+    category: "Sustainability · Blockchain",
+    role: "Product Design Lead",
+    year: "2023",
+    img: "/images/projects/wwf-opensc.jpg",
+    desc: "Blockchain-powered platform empowering ethical consumerism with transparent, verifiable supply-chain data. From idea to launch.",
+    accent: ACCENT,
+  },
+  {
+    id: 3,
+    slug: "cemex",
+    title: "Cemex",
+    category: "B2B Platform · Global",
+    role: "UX Lead",
+    year: "2022",
+    img: "/images/projects/cemex.jpg",
+    desc: "Led UX for a global digital platform serving 20,000+ enterprise customers in 50+ countries. Streamlined the entire digital transformation.",
+    accent: ACCENT,
+  },
+  {
+    id: 4,
+    slug: "pivotal-vmware",
+    title: "Pivotal / VMware",
+    category: "Enterprise · DevOps",
+    role: "Senior Product Designer",
+    year: "2021",
+    img: "/images/projects/pivotal-vmware.jpg",
+    desc: "Spearheaded digital transformations for global enterprises modernizing their developer platforms and engineering culture.",
+    accent: ACCENT,
   },
 ];

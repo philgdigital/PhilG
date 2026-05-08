@@ -22,18 +22,29 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Phil G. — Architecting Enterprise Velocity",
+    default: "Phil G. — Lead UX/Product Designer · AI-Native",
     template: "%s — Phil G.",
   },
   description:
-    "Phil G. is an Enterprise Product Lead merging deep user psychology with Generative AI prototyping to scale top-tier software 10x faster.",
+    "Lead UX/Product Designer · 20+ years shipping high-impact products for Walmart, VMware, Microsoft, SAP, and WWF. AI-Native, Prague-based, accepting 2026 enterprise engagements.",
   keywords: [
     "Phil G",
-    "Enterprise Product Design",
-    "AI Prototyping",
-    "Frontend Architecture",
-    "Product Strategy",
-    "UX Architecture",
+    "Lead UX Designer",
+    "Product Designer",
+    "AI-Native",
+    "Enterprise UX",
+    "Walmart",
+    "VMware",
+    "Microsoft",
+    "SAP",
+    "WWF",
+    "Cemex",
+    "Pivotal",
+    "Azul Intelligence Cloud",
+    "UX Master",
+    "Sales Funnel Builder",
+    "Prague",
+    "Design Mentorship",
   ],
   authors: [{ name: "Phil G." }],
   creator: "Phil G.",
@@ -42,15 +53,15 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: "Phil G.",
-    title: "Phil G. — Architecting Enterprise Velocity",
+    title: "Phil G. — Lead UX/Product Designer · AI-Native",
     description:
-      "Enterprise Product Lead merging deep user psychology with Generative AI prototyping to scale top-tier software 10x faster.",
+      "20+ years shipping for Walmart, VMware, Microsoft, SAP, WWF. AI-Native enterprise design from Prague.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phil G. — Architecting Enterprise Velocity",
+    title: "Phil G. — Lead UX/Product Designer · AI-Native",
     description:
-      "Enterprise Product Lead merging deep user psychology with Generative AI prototyping to scale top-tier software 10x faster.",
+      "20+ years shipping for Walmart, VMware, Microsoft, SAP, WWF. AI-Native enterprise design from Prague.",
   },
   robots: {
     index: true,
@@ -59,7 +70,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#030305",
+  themeColor: "#0a0a0c",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -72,7 +83,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} antialiased`}>
-      <body className="selection:bg-indigo-500 selection:text-white">
+      <body className="selection:bg-[#0f62fe] selection:text-white">
         <AnimatedGradientBackground />
         <ClientEffects />
         <NoiseOverlay />

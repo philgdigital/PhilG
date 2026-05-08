@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Phil G. — Architecting Enterprise Velocity";
+export const alt = "Phil G. — Lead UX/Product Designer · AI-Native";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,10 +16,10 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "80px",
-          background: "#030305",
+          background: "#0a0a0c",
           backgroundImage:
-            "radial-gradient(ellipse at top left, rgba(79,70,229,0.45), transparent 50%), radial-gradient(ellipse at bottom right, rgba(34,211,238,0.35), transparent 50%), radial-gradient(ellipse at center, rgba(168,85,247,0.25), transparent 60%)",
-          color: "#ffffff",
+            "radial-gradient(ellipse at top left, rgba(15,98,254,0.45), transparent 55%), radial-gradient(ellipse at bottom right, rgba(15,98,254,0.18), transparent 60%)",
+          color: "#f4f4f5",
           fontFamily: "Inter, sans-serif",
         }}
       >
@@ -32,20 +32,20 @@ export default async function OpengraphImage() {
             alignItems: "center",
           }}
         >
-          PG<span style={{ color: "#818cf8", marginLeft: 4 }}>®</span>
+          PG<span style={{ color: "#0f62fe", marginLeft: 4 }}>®</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div
             style={{
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: 700,
-              letterSpacing: "0.2em",
+              letterSpacing: "0.25em",
               textTransform: "uppercase",
-              color: "#a5f3fc",
+              color: "#71717a",
             }}
           >
-            Architecting Enterprise Velocity
+            Lead UX/Product Designer · Prague · AI-Native
           </div>
           <div
             style={{
@@ -61,7 +61,7 @@ export default async function OpengraphImage() {
             <span
               style={{
                 background:
-                  "linear-gradient(90deg, #818cf8 0%, #ffffff 50%, #22d3ee 100%)",
+                  "linear-gradient(90deg, #f4f4f5 0%, #4589ff 50%, #f4f4f5 100%)",
                 backgroundClip: "text",
                 color: "transparent",
               }}
@@ -74,7 +74,7 @@ export default async function OpengraphImage() {
                   fontSize: 56,
                   fontWeight: 300,
                   fontStyle: "italic",
-                  color: "#737373",
+                  color: "#71717a",
                   textTransform: "lowercase",
                 }}
               >
@@ -90,15 +90,15 @@ export default async function OpengraphImage() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "flex-end",
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: 700,
-            letterSpacing: "0.15em",
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
-            color: "#a3a3a3",
+            color: "#a1a1aa",
           }}
         >
-          <span>Phil G. — Enterprise Product Lead</span>
-          <span style={{ color: "#34d399" }}>● Available 2026</span>
+          <span>Walmart · VMware · Microsoft · SAP · WWF · Cemex</span>
+          <span style={{ color: "#0f62fe" }}>● Available 2026</span>
         </div>
       </div>
     ),

@@ -9,14 +9,11 @@ import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
 export function Work() {
   return (
-    <section
-      id="work"
-      className="py-32 px-6 md:px-12 lg:px-24 relative z-10"
-    >
+    <section id="work" className="py-32 px-6 md:px-12 lg:px-24 relative z-10">
       <Reveal>
         <div className="flex items-center gap-4 mb-16">
-          <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(79,70,229,0.8)]" />
-          <h2 className="text-sm md:text-base font-bold tracking-widest uppercase text-neutral-300">
+          <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
+          <h2 className="text-sm md:text-base font-bold tracking-widest uppercase text-zinc-400">
             High-Profile Deployments
           </h2>
         </div>
@@ -26,7 +23,7 @@ export function Work() {
         {projects.map((p, index) => (
           <Reveal key={p.id} delay={100}>
             <TiltCard scale={1.01} maxRotation={3} className="w-full">
-              <div className="group relative w-full rounded-[2rem] md:rounded-[3rem] bg-black/50 border border-white/5 hover-target overflow-hidden h-[70vh] md:h-[85vh] flex items-end p-6 md:p-16 transition-all duration-700 hover:border-white/20 shadow-2xl">
+              <div className="group relative w-full rounded-[2rem] md:rounded-[3rem] bg-black/50 border border-white/5 hover-target overflow-hidden h-[70vh] md:h-[85vh] flex items-end p-6 md:p-16 transition-all duration-700 hover:border-[#0f62fe]/30 shadow-2xl">
                 <ElectricBorder />
 
                 <ParallaxImage
@@ -38,7 +35,10 @@ export function Work() {
                 />
 
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t ${p.color} via-black/40 to-transparent opacity-90 mix-blend-multiply transition-opacity duration-700 z-0`}
+                  className="absolute inset-0 opacity-90 mix-blend-multiply transition-opacity duration-700 z-0"
+                  style={{
+                    backgroundImage: `linear-gradient(to top, ${p.accent}E6, rgba(0,0,0,0.4) 50%, transparent)`,
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-100 group-hover:opacity-70 transition-opacity duration-700 z-0" />
 
@@ -51,13 +51,16 @@ export function Work() {
                       <span className="glass px-5 py-2.5 rounded-full text-white text-xs font-bold tracking-widest uppercase transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 delay-150 ease-[cubic-bezier(0.16,1,0.3,1)]">
                         {p.role}
                       </span>
+                      <span className="glass px-5 py-2.5 rounded-full text-[#4589ff] text-xs font-bold tracking-widest uppercase transform translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 delay-200 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                        {p.year}
+                      </span>
                     </div>
 
                     <h3 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white mb-6 break-words transform group-hover:-translate-y-2 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
                       {p.title}
                     </h3>
 
-                    <p className="text-neutral-300 font-light text-xl md:text-2xl leading-relaxed max-w-2xl transform opacity-0 translate-y-8 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 delay-200 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                    <p className="text-zinc-300 font-light text-xl md:text-2xl leading-relaxed max-w-2xl transform opacity-0 translate-y-8 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 delay-200 ease-[cubic-bezier(0.16,1,0.3,1)]">
                       {p.desc}
                     </p>
                   </div>
