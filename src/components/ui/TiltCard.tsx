@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 
 type TiltCardProps = {
   children: ReactNode;
@@ -9,6 +9,9 @@ type TiltCardProps = {
   maxRotation?: number;
 };
 
+const RESET_TRANSFORM =
+  "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+
 export function TiltCard({
   children,
   className = "",
@@ -16,28 +19,23 @@ export function TiltCard({
   maxRotation = 10,
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState(
-    "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
-  );
 
+  // Direct DOM updates — no React state per mousemove (was 60-120 re-renders/sec).
+  // Rect read per move is cheap (layout is already up-to-date during hover) and
+  // stays correct if the page scrolls while the cursor is over the card.
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
-    const x = (e.clientX - left) / width - 0.5;
-    const y = (e.clientY - top) / height - 0.5;
-
+    const node = ref.current;
+    if (!node) return;
+    const rect = node.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
     const rotateX = -y * maxRotation;
     const rotateY = x * maxRotation;
-
-    setTransform(
-      `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, ${scale})`,
-    );
+    node.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, ${scale})`;
   };
 
   const handleMouseLeave = () => {
-    setTransform(
-      "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
-    );
+    if (ref.current) ref.current.style.transform = RESET_TRANSFORM;
   };
 
   return (
@@ -47,7 +45,7 @@ export function TiltCard({
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseMove}
       className={`transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] will-change-transform ${className}`}
-      style={{ transform }}
+      style={{ transform: RESET_TRANSFORM }}
     >
       {children}
     </div>

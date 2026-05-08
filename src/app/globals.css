@@ -17,21 +17,17 @@
 
 html {
   scroll-behavior: smooth;
+  /* Clip horizontal overflow without making html a scroll container —
+     using `hidden` would force overflow-y to auto and break window scroll. */
+  overflow-x: clip;
 }
 
 body {
   background-color: var(--bg-color);
   color: #f5f5f5;
   font-family: var(--font-inter), "Inter", sans-serif;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-#__next,
-body > div:first-child {
-  overflow-x: hidden;
-  max-width: 100vw;
 }
 
 ::selection {
@@ -209,6 +205,10 @@ body > div:first-child {
     #ffffff 100%
   );
   animation: electric-spin 2s linear infinite;
+  animation-play-state: paused;
+}
+.group:hover > .electric-border-container::before {
+  animation-play-state: running;
 }
 
 /* ─────────────────────────────────────────────

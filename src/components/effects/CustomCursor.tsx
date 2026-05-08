@@ -38,6 +38,7 @@ export function CustomCursor() {
     let cursorX = mouseX;
     let cursorY = mouseY;
     let raf = 0;
+    let lastHoveredFlag = false;
 
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
@@ -55,33 +56,51 @@ export function CustomCursor() {
       }
       raf = requestAnimationFrame(render);
     };
-    render();
+
+    const start = () => {
+      if (raf === 0) raf = requestAnimationFrame(render);
+    };
+    const stop = () => {
+      if (raf !== 0) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
 
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      setIsHovered(
-        !!(
-          target.closest(".hover-target") ||
-          target.closest("a") ||
-          target.closest("button")
-        ),
+      const hovered = !!(
+        target.closest(".hover-target") ||
+        target.closest("a") ||
+        target.closest("button")
       );
+      if (hovered !== lastHoveredFlag) {
+        lastHoveredFlag = hovered;
+        setIsHovered(hovered);
+      }
     };
     const onMouseDown = () => setIsClicked(true);
     const onMouseUp = () => setIsClicked(false);
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseover", onMouseOver);
-    window.addEventListener("mousedown", onMouseDown);
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("mouseover", onMouseOver, { passive: true });
+    window.addEventListener("mousedown", onMouseDown, { passive: true });
+    window.addEventListener("mouseup", onMouseUp, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
+    start();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseover", onMouseOver);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [isFinePointer]);
 

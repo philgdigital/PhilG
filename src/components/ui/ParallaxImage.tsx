@@ -22,18 +22,53 @@ export function ParallaxImage({
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const wrapper = wrapperRef.current;
+    const inner = imgWrapperRef.current;
+    if (!wrapper || !inner) return;
+
     let rafId = 0;
-    const updateParallax = () => {
-      if (imgWrapperRef.current && wrapperRef.current) {
+
+    const apply = () => {
+      if (wrapperRef.current && imgWrapperRef.current) {
         const rect = wrapperRef.current.getBoundingClientRect();
         const distFromCenter =
           rect.top + rect.height / 2 - window.innerHeight / 2;
         imgWrapperRef.current.style.transform = `translate3d(0, ${distFromCenter * speed}px, 0) scale(1.15)`;
       }
-      rafId = requestAnimationFrame(updateParallax);
+      rafId = requestAnimationFrame(apply);
     };
-    updateParallax();
-    return () => cancelAnimationFrame(rafId);
+
+    const start = () => {
+      if (rafId === 0) rafId = requestAnimationFrame(apply);
+    };
+    const stop = () => {
+      if (rafId !== 0) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+        else stop();
+      },
+      { rootMargin: "200px 0px" },
+    );
+    observer.observe(wrapper);
+
+    apply();
+
+    const onVisibility = () => {
+      if (document.hidden) stop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      stop();
+    };
   }, [speed]);
 
   return (

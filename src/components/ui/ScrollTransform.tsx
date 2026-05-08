@@ -18,19 +18,56 @@ export function ScrollTransform({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
     let rafId = 0;
-    const update = () => {
+
+    const apply = () => {
       if (ref.current) {
         const rect = ref.current.getBoundingClientRect();
-        const centerDist =
-          rect.top + rect.height / 2 - window.innerHeight / 2;
+        const centerDist = rect.top + rect.height / 2 - window.innerHeight / 2;
         const x = centerDist * speed * direction;
         ref.current.style.transform = `translate3d(${x}px, 0, 0)`;
       }
-      rafId = requestAnimationFrame(update);
+      rafId = requestAnimationFrame(apply);
     };
-    update();
-    return () => cancelAnimationFrame(rafId);
+
+    const start = () => {
+      if (rafId === 0) rafId = requestAnimationFrame(apply);
+    };
+    const stop = () => {
+      if (rafId !== 0) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
+    // Run continuously while in or near the viewport for smooth motion;
+    // stop entirely when scrolled away to free up CPU.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+        else stop();
+      },
+      { rootMargin: "200px 0px" },
+    );
+    observer.observe(node);
+
+    // Sync initial transform before the IO callback fires so there is no
+    // first-paint jump.
+    apply();
+
+    const onVisibility = () => {
+      if (document.hidden) stop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      stop();
+    };
   }, [speed, direction]);
 
   return (
