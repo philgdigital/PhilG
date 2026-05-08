@@ -1,0 +1,81 @@
+"use client";
+
+import { ArrowUpRight } from "lucide-react";
+import { Reveal } from "@/components/ui/Reveal";
+import { ScrollTransform } from "@/components/ui/ScrollTransform";
+
+export function Hero() {
+  return (
+    <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-32 pb-12 relative z-10">
+      <div className="max-w-[1400px]">
+        <Reveal delay={100} direction="none">
+          <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl mb-8 shadow-[0_0_30px_rgba(79,70,229,0.15)]">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+            <span className="text-xs font-bold tracking-widest uppercase text-white">
+              Available for 2026 Enterprise Engagements
+            </span>
+          </div>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <ScrollTransform direction={-1} speed={0.4}>
+            <h1 className="text-[13vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
+              Design
+            </h1>
+          </ScrollTransform>
+        </Reveal>
+
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-12 w-full mt-2">
+          <Reveal delay={300} className="hidden md:block">
+            <div className="w-16 h-2 md:w-40 md:h-3 bg-gradient-to-r from-indigo-500 to-cyan-400 rounded-full shadow-[0_0_30px_rgba(6,182,212,0.6)]" />
+          </Reveal>
+          <Reveal delay={400}>
+            <ScrollTransform direction={1} speed={0.3}>
+              <h1 className="text-[13vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase shine-text">
+                Acceleration
+              </h1>
+            </ScrollTransform>
+          </Reveal>
+        </div>
+
+        <div className="flex justify-start md:justify-end w-full md:w-[95%] mt-4 md:mt-0">
+          <Reveal delay={500}>
+            <ScrollTransform direction={-1} speed={0.2}>
+              <h1 className="text-[13vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] uppercase text-white flex items-center gap-4">
+                <span className="text-neutral-500 italic font-light lowercase text-[7vw] md:text-[5vw] -mt-4 font-serif">
+                  with
+                </span>
+                AI.
+              </h1>
+            </ScrollTransform>
+          </Reveal>
+        </div>
+      </div>
+
+      <div className="mt-24 md:mt-32 max-w-3xl flex flex-col gap-10">
+        <Reveal delay={700}>
+          <p className="text-2xl md:text-4xl font-light text-neutral-300 leading-snug">
+            I am Phil G., an Enterprise Product Lead. I merge deep user
+            psychology with{" "}
+            <span className="text-white font-medium shadow-white/20">
+              Generative AI prototyping
+            </span>{" "}
+            to scale top-tier software 10x faster.
+          </p>
+        </Reveal>
+
+        <Reveal delay={800}>
+          <a
+            href="#work"
+            className="group w-fit flex items-center gap-4 text-white font-bold tracking-widest uppercase text-sm hover-target bg-transparent px-8 py-5 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden"
+          >
+            <ArrowUpRight className="w-5 h-5 text-white group-hover:text-black transition-all duration-500 group-hover:rotate-45" />
+            <span className="group-hover:text-black transition-colors duration-500">
+              Explore the Work
+            </span>
+          </a>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
