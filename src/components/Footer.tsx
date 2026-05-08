@@ -2,7 +2,6 @@
 
 import { Mail } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
-import { ScrollTransform } from "@/components/ui/ScrollTransform";
 import {
   LinkedinIcon,
   TwitterIcon,
@@ -38,19 +37,17 @@ export function Footer({ onOpenForm }: FooterProps) {
         </Reveal>
 
         <Reveal delay={200}>
-          <ScrollTransform direction={1} speed={0.2}>
-            <button
-              type="button"
-              onClick={onOpenForm}
-              className="text-center group block hover-target p-4"
-            >
-              <h2 className="text-[14vw] lg:text-[13vw] font-black tracking-tighter uppercase leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500 transition-all duration-700 group-hover:scale-[1.02] group-hover:from-white group-hover:to-white inline-block drop-shadow-2xl">
-                Initiate
-                <br />
-                Project
-              </h2>
-            </button>
-          </ScrollTransform>
+          <button
+            type="button"
+            onClick={onOpenForm}
+            className="text-center group block hover-target p-4"
+          >
+            <h2 className="text-[14vw] lg:text-[13vw] font-black tracking-tighter uppercase leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500 transition-all duration-700 group-hover:scale-[1.02] group-hover:from-white group-hover:to-white inline-block drop-shadow-2xl">
+              Initiate
+              <br />
+              Project
+            </h2>
+          </button>
         </Reveal>
 
         <Reveal delay={400}>
@@ -76,7 +73,7 @@ export function Footer({ onOpenForm }: FooterProps) {
 
         <Reveal delay={500}>
           <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400 text-center">
-            Prague Metropolitan Area · hello@philg.com
+            Prague, Czech Republic · hello@philg.com
           </p>
         </Reveal>
       </div>

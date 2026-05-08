@@ -2,7 +2,6 @@
 
 import { Sparkles, Workflow } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
-import { ScrollTransform } from "@/components/ui/ScrollTransform";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
@@ -23,15 +22,13 @@ export function Advantage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
         <Reveal delay={100}>
-          <ScrollTransform direction={1} speed={0.15}>
-            <h3 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight text-white tracking-tight">
-              Companies don&apos;t hire me for static mocks. They hire me for{" "}
-              <span className="shine-text italic font-serif">
-                extreme velocity
-              </span>
-              .
-            </h3>
-          </ScrollTransform>
+          <h3 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight text-white tracking-tight">
+            Companies don&apos;t hire me for static mocks. They hire me for{" "}
+            <span className="shine-text italic font-serif">
+              extreme velocity
+            </span>
+            .
+          </h3>
         </Reveal>
 
         <div className="flex flex-col gap-10">

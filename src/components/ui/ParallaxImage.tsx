@@ -1,82 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Image, { type StaticImageData } from "next/image";
 
 type ParallaxImageProps = {
   src: string | StaticImageData;
   alt: string;
+  /** @deprecated kept for compatibility, no longer used */
   speed?: number;
   className?: string;
   priority?: boolean;
 };
 
+/**
+ * Image rendered with a small static scale-up so the card has gentle
+ * dimensionality, but no per-frame parallax. The previous version ran a
+ * rAF loop reading getBoundingClientRect every frame, which was the
+ * single biggest scroll-time cost on the homepage. Removing it gives
+ * scroll back to the browser.
+ */
 export function ParallaxImage({
   src,
   alt,
-  speed = 0.15,
   className = "",
   priority = false,
 }: ParallaxImageProps) {
-  const imgWrapperRef = useRef<HTMLDivElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    const inner = imgWrapperRef.current;
-    if (!wrapper || !inner) return;
-
-    let rafId = 0;
-
-    const apply = () => {
-      if (wrapperRef.current && imgWrapperRef.current) {
-        const rect = wrapperRef.current.getBoundingClientRect();
-        const distFromCenter =
-          rect.top + rect.height / 2 - window.innerHeight / 2;
-        imgWrapperRef.current.style.transform = `translate3d(0, ${distFromCenter * speed}px, 0) scale(1.15)`;
-      }
-      rafId = requestAnimationFrame(apply);
-    };
-
-    const start = () => {
-      if (rafId === 0) rafId = requestAnimationFrame(apply);
-    };
-    const stop = () => {
-      if (rafId !== 0) {
-        cancelAnimationFrame(rafId);
-        rafId = 0;
-      }
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) start();
-        else stop();
-      },
-      { rootMargin: "200px 0px" },
-    );
-    observer.observe(wrapper);
-
-    apply();
-
-    const onVisibility = () => {
-      if (document.hidden) stop();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-
-    return () => {
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-      stop();
-    };
-  }, [speed]);
-
   return (
-    <div
-      ref={wrapperRef}
-      className="absolute inset-0 w-full h-full overflow-hidden"
-    >
-      <div ref={imgWrapperRef} className="w-full h-full will-change-transform">
+    <div className="absolute inset-0 w-full h-full overflow-hidden">
+      <div className="w-full h-full" style={{ transform: "scale(1.06)" }}>
         <Image
           src={src}
           alt={alt}

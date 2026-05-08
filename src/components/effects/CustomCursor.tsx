@@ -143,14 +143,18 @@ export function CustomCursor() {
       if (document.hidden) stop();
       else start();
     };
-    const onScrollOrResize = () => refreshTargets();
+
+    // Only refresh the magnetic-target list on real DOM changes (resize,
+    // route transitions). The previous version re-queried + reset every
+    // element's transform on every scroll event — at 60+ scroll events
+    // per second this added hundreds of ms of TBT during scroll.
+    const onResize = () => refreshTargets();
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("mouseover", onMouseOver, { passive: true });
     window.addEventListener("mousedown", onMouseDown, { passive: true });
     window.addEventListener("mouseup", onMouseUp, { passive: true });
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     start();
 
@@ -163,8 +167,7 @@ export function CustomCursor() {
       window.removeEventListener("mouseover", onMouseOver);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
-      window.removeEventListener("scroll", onScrollOrResize);
-      window.removeEventListener("resize", onScrollOrResize);
+      window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [isFinePointer]);

@@ -2,7 +2,6 @@
 
 import { Code2, Cpu, Smartphone, Globe, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
-import { ScrollTransform } from "@/components/ui/ScrollTransform";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
@@ -58,13 +57,11 @@ export function Expertise() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-3 mb-10">
           <Reveal delay={100}>
-            <ScrollTransform direction={-1} speed={0.1}>
-              <h3 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight text-white tracking-tight max-w-5xl">
-                Not just designing screens. I architect{" "}
-                <span className="shine-text italic font-serif">systems</span>{" "}
-                that generate measurable business outcomes.
-              </h3>
-            </ScrollTransform>
+            <h3 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight text-white tracking-tight max-w-5xl">
+              Not just designing screens. I architect{" "}
+              <span className="shine-text italic font-serif">systems</span>{" "}
+              that generate measurable business outcomes.
+            </h3>
           </Reveal>
         </div>
 

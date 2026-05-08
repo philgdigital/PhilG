@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Reveal } from "@/components/ui/Reveal";
-import { ScrollTransform } from "@/components/ui/ScrollTransform";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
@@ -40,12 +39,10 @@ export function About() {
 
         <div className="lg:col-span-7 flex flex-col gap-8">
           <Reveal delay={200}>
-            <ScrollTransform direction={1} speed={0.1}>
-              <h3 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white mb-2 leading-tight">
-                I don&apos;t just design screens. <br />I engineer{" "}
-                <span className="shine-text">outcomes.</span>
-              </h3>
-            </ScrollTransform>
+            <h3 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white mb-2 leading-tight">
+              I don&apos;t just design screens. <br />I engineer{" "}
+              <span className="shine-text">outcomes.</span>
+            </h3>
           </Reveal>
 
           <Reveal delay={300}>
