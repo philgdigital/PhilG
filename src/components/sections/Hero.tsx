@@ -11,7 +11,7 @@ export function Hero() {
         <Reveal delay={100} direction="none">
           <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl mb-8 shadow-[0_0_30px_rgba(15,98,254,0.15)]">
             <span className="w-2 h-2 rounded-full bg-[#0f62fe] animate-pulse" />
-            <span className="text-xs font-bold tracking-widest uppercase text-white">
+            <span className="font-mono text-xs font-medium tracking-[0.18em] uppercase text-white">
               Available for 2026 Enterprise Engagements
             </span>
           </div>
@@ -67,15 +67,16 @@ export function Hero() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
             <a
               href="#work"
-              className="group w-fit flex items-center gap-4 text-white font-bold tracking-widest uppercase text-sm hover-target bg-transparent px-8 py-5 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden"
+              data-magnetic="true"
+              className="group w-fit flex items-center gap-4 text-white font-mono font-medium tracking-[0.18em] uppercase text-sm hover-target bg-transparent px-8 py-5 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden will-change-transform"
             >
               <ArrowUpRight className="w-5 h-5 text-white group-hover:text-black transition-all duration-500 group-hover:rotate-45" />
               <span className="group-hover:text-black transition-colors duration-500">
                 Explore the Work
               </span>
             </a>
-            <p className="text-xs font-bold tracking-[0.25em] uppercase text-zinc-500">
-              · Lead UX/Product Designer · Prague Metropolitan Area ·
+            <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-500">
+              Lead UX/Product Designer · Prague Metropolitan Area
             </p>
           </div>
         </Reveal>

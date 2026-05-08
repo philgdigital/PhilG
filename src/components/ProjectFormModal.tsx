@@ -105,7 +105,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="form-name"
-                className="text-xs font-bold tracking-widest uppercase text-neutral-500"
+                className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
               >
                 Name
               </label>
@@ -120,7 +120,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="form-company"
-                className="text-xs font-bold tracking-widest uppercase text-neutral-500"
+                className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
               >
                 Company
               </label>
@@ -137,7 +137,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="form-budget"
-              className="text-xs font-bold tracking-widest uppercase text-neutral-500"
+              className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
             >
               Budget Scope
             </label>
@@ -161,7 +161,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="form-vision"
-              className="text-xs font-bold tracking-widest uppercase text-neutral-500"
+              className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500"
             >
               Project Vision
             </label>
@@ -176,7 +176,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
 
           <button
             type="submit"
-            className="mt-4 w-full bg-white text-black font-bold tracking-widest uppercase py-5 rounded-xl hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-300 hover-target flex items-center justify-center gap-3"
+            className="mt-4 w-full bg-white text-black font-mono font-medium tracking-[0.18em] uppercase text-sm py-5 rounded-xl hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-300 hover-target flex items-center justify-center gap-3"
           >
             <Sparkles className="w-5 h-5" />
             Submit Inquiry

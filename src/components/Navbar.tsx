@@ -40,7 +40,7 @@ export function Navbar() {
         >
           PG<span className="text-[#0f62fe]">®</span>
         </a>
-        <div className="hidden md:flex gap-12 text-xs font-bold tracking-widest text-neutral-300">
+        <div className="hidden md:flex gap-12 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}

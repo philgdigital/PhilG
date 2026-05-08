@@ -22,7 +22,7 @@ export function Clients() {
       <Reveal>
         <div className="flex items-center gap-4 mb-10">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
-          <h2 className="text-sm md:text-base font-bold tracking-widest uppercase text-zinc-400">
+          <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
             Trusted By
           </h2>
         </div>
@@ -33,7 +33,7 @@ export function Clients() {
           {CLIENTS.map((name) => (
             <li
               key={name}
-              className="text-base md:text-2xl font-light tracking-[0.3em] uppercase text-white/30 hover:text-white/80 transition-colors duration-500 hover-target"
+              className="font-mono text-sm md:text-xl font-medium tracking-[0.28em] uppercase text-white/30 hover:text-white/80 transition-colors duration-500 hover-target"
             >
               {name}
             </li>

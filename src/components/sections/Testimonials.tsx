@@ -42,7 +42,7 @@ export function Testimonials() {
       <Reveal>
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
-          <h2 className="text-sm md:text-base font-bold tracking-widest uppercase text-zinc-400">
+          <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
             What Leaders Say
           </h2>
         </div>
@@ -73,10 +73,10 @@ export function Testimonials() {
                 <figcaption className="flex items-center gap-3 relative z-10">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.8)]" />
                   <div className="flex flex-col">
-                    <span className="text-white font-bold text-sm tracking-wide">
+                    <span className="text-white font-medium text-sm tracking-wide">
                       {t.name}
                     </span>
-                    <span className="text-zinc-500 text-xs font-bold tracking-widest uppercase">
+                    <span className="font-mono text-zinc-500 text-[10px] font-medium tracking-[0.2em] uppercase">
                       {t.company}
                     </span>
                   </div>

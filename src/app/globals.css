@@ -11,7 +11,11 @@
   --color-accent-soft: #4589ff;
   --color-emerald: #10b981;
   --color-emerald-soft: #34d399;
-  --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-sans:
+    var(--font-sans), "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  --font-mono:
+    var(--font-mono), "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
 }
 
 :root {
@@ -38,9 +42,29 @@ html {
 body {
   background-color: var(--bg-color);
   color: #f4f4f5;
-  font-family: var(--font-inter), "Inter", sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mono utility for eyebrow/label text and numerical readouts */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Visible focus ring for keyboard nav: blue→emerald gradient outline */
+:focus-visible {
+  outline: 2px solid #0f62fe;
+  outline-offset: 4px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.25);
+}
+@media (hover: hover) and (pointer: fine) {
+  /* When custom cursor is active, native focus-visible can read as
+     redundant. Keep it but tone it down so the cursor leads UX. */
+  :focus-visible {
+    outline-offset: 2px;
+  }
 }
 
 ::selection {

@@ -61,10 +61,11 @@ export function Footer({ onOpenForm }: FooterProps) {
                 <a
                   key={social.name}
                   href={social.link}
-                  className="text-sm text-white group hover-target flex items-center gap-3 glass px-8 py-5 rounded-full hover:bg-white transition-all duration-500 hover:scale-110 shadow-lg"
+                  data-magnetic="true"
+                  className="text-white group hover-target flex items-center gap-3 glass px-8 py-5 rounded-full hover:bg-white transition-all duration-500 hover:scale-105 shadow-lg will-change-transform"
                 >
                   <Icon className="w-5 h-5 text-white group-hover:text-black transition-colors duration-500" />
-                  <span className="uppercase tracking-widest font-bold group-hover:text-black transition-colors duration-500">
+                  <span className="font-mono text-xs uppercase tracking-[0.22em] font-medium group-hover:text-black transition-colors duration-500">
                     {social.name}
                   </span>
                 </a>
@@ -74,8 +75,8 @@ export function Footer({ onOpenForm }: FooterProps) {
         </Reveal>
 
         <Reveal delay={500}>
-          <p className="mt-10 text-xs font-bold tracking-[0.3em] uppercase text-zinc-500 text-center">
-            · Prague Metropolitan Area · hello@philg.com ·
+          <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-500 text-center">
+            Prague Metropolitan Area · hello@philg.com
           </p>
         </Reveal>
       </div>
@@ -93,7 +94,7 @@ export function Footer({ onOpenForm }: FooterProps) {
         </div>
       </div>
 
-      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-500 text-xs font-bold tracking-widest uppercase mt-12 z-10">
+      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-500 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-12 z-10">
         <span>© {YEAR} PHIL G.</span>
         <button
           type="button"

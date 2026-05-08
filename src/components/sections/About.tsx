@@ -12,7 +12,7 @@ export function About() {
       <Reveal>
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
-          <h2 className="text-sm md:text-base font-bold tracking-widest uppercase text-zinc-400">
+          <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
             The Architect
           </h2>
         </div>
@@ -77,16 +77,16 @@ export function About() {
 
           <Reveal delay={500}>
             <div className="flex flex-wrap gap-4 mt-6">
-              <span className="glass px-6 py-3 rounded-full text-white text-xs font-bold tracking-widest uppercase">
+              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
                 UX Strategy
               </span>
-              <span className="glass px-6 py-3 rounded-full text-[#4589ff] text-xs font-bold tracking-widest uppercase border-[#0f62fe]/20 shadow-[0_0_15px_rgba(15,98,254,0.15)]">
+              <span className="glass px-6 py-3 rounded-full text-[#4589ff] font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase border-[#0f62fe]/20 shadow-[0_0_15px_rgba(15,98,254,0.15)]">
                 AI-Native Design
               </span>
-              <span className="glass px-6 py-3 rounded-full text-white text-xs font-bold tracking-widest uppercase">
+              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
                 Sales Funnel Building
               </span>
-              <span className="glass px-6 py-3 rounded-full text-white text-xs font-bold tracking-widest uppercase">
+              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
                 Team Leadership
               </span>
             </div>

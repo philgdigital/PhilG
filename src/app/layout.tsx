@@ -1,15 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { AnimatedGradientBackground } from "@/components/effects/AnimatedGradientBackground";
 import { NoiseOverlay } from "@/components/effects/NoiseOverlay";
 import { ClientEffects } from "@/components/effects/ClientEffects";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700", "900"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -82,7 +89,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${plexSans.variable} ${plexMono.variable} antialiased`}
+    >
       <body className="selection:bg-[#0f62fe] selection:text-white">
         <AnimatedGradientBackground />
         <ClientEffects />
