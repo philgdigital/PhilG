@@ -34,10 +34,15 @@ export function Hero() {
           </Reveal>
           <Reveal delay={400}>
             <ScrollTransform direction={1} speed={0.3}>
+              {/*
+                NOTE: 'Acceleration' is intentionally NOT wrapped in
+                MagneticText. shine-text (background-clip: text) does not
+                propagate through inline-block children, so per-char spans
+                would render the word transparent. Keeping it as direct
+                text preserves the gradient sweep.
+              */}
               <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase shine-text">
-                <MagneticText range={220} maxOffset={18}>
-                  Acceleration
-                </MagneticText>
+                Acceleration
               </h1>
             </ScrollTransform>
           </Reveal>
