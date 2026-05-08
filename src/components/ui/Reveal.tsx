@@ -33,6 +33,15 @@ export function Reveal({
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+
+    // If the element is already in the viewport on mount, reveal it immediately.
+    // Avoids waiting for IntersectionObserver's async callback for above-the-fold content.
+    const rect = node.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
