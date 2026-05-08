@@ -65,7 +65,7 @@ export function Navbar() {
 
       {/* Mobile drawer */}
       <div
-        className={`fixed inset-0 z-[60] md:hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed inset-0 z-[60] md:hidden transition-all duration-500 ease-[var(--ease-out)] ${
           isMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -79,7 +79,7 @@ export function Navbar() {
           className="absolute inset-0 bg-black/80 backdrop-blur-2xl w-full h-full hover-target cursor-default"
         />
         <div
-          className={`relative h-full flex flex-col p-8 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`relative h-full flex flex-col p-8 transition-transform duration-700 ease-[var(--ease-out)] ${
             isMenuOpen ? "translate-y-0" : "-translate-y-8"
           }`}
         >
@@ -100,7 +100,7 @@ export function Navbar() {
             {NAV_LINKS.map((link, i) => (
               <li
                 key={link.href}
-                className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                className={`transition-all duration-700 ease-[var(--ease-out)] ${
                   isMenuOpen
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"

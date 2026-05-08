@@ -33,7 +33,7 @@ export function Work() {
               {/* LEFT: image card pins to viewport center while content scrolls */}
               <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">
                 <Reveal direction="left" className="w-full">
-                  <TiltCard scale={1.02} maxRotation={4} className="w-full">
+                  <TiltCard scale={1.02} maxRotation={3} className="w-full">
                     <Link
                       href={`/work/${p.slug}`}
                       data-card="true"
@@ -46,7 +46,7 @@ export function Work() {
                         alt={p.title}
                         speed={0.1}
                         priority={index === 0}
-                        className="opacity-60 group-hover:opacity-100 transition-all duration-[1500ms] ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
+                        className="opacity-60 group-hover:opacity-100 transition-all duration-[1500ms] ease-[var(--ease-out)] z-0"
                       />
                       <div
                         className="absolute inset-0 opacity-80 mix-blend-multiply transition-opacity duration-700 z-0"
@@ -127,7 +127,7 @@ export function Work() {
                   <Link
                     href={`/work/${p.slug}`}
                     data-magnetic="true"
-                    className="group w-fit mt-4 flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-6 py-4 rounded-full border border-white/15 hover:border-white/40 hover:bg-white/5 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
+                    className="group w-fit mt-4 flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-6 py-4 rounded-full border border-white/15 hover:border-white/40 hover:bg-white/5 transition-all duration-500 ease-[var(--ease-out)] will-change-transform"
                   >
                     <span>Read case study</span>
                     <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />

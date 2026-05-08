@@ -20,7 +20,7 @@ export default function NotFound() {
       <Link
         href="/"
         data-magnetic="true"
-        className="group flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-8 py-5 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
+        className="group flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-8 py-5 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-500 ease-[var(--ease-out)] will-change-transform"
       >
         <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
         Return to home

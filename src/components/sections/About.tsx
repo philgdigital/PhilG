@@ -21,7 +21,7 @@ export function About() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
         <div className="lg:col-span-5 relative">
           <Reveal delay={100} direction="left">
-            <TiltCard scale={1.02} maxRotation={6}>
+            <TiltCard scale={1.02} maxRotation={5}>
               <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] border border-white/10 group bg-zinc-900/50">
                 <ElectricBorder />
                 <Image
@@ -30,7 +30,7 @@ export function About() {
                   fill
                   sizes="(min-width: 1024px) 40vw, 100vw"
                   priority
-                  className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[1500ms] ease-[cubic-bezier(0.16,1,0.3,1)] transform group-hover:scale-105"
+                  className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[1500ms] ease-[var(--ease-out)] transform group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-transparent opacity-80" />
               </div>

@@ -16,7 +16,7 @@ export function TiltCard({
   children,
   className = "",
   scale = 1.02,
-  maxRotation = 10,
+  maxRotation = 6,
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -44,7 +44,7 @@ export function TiltCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseMove}
-      className={`transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] will-change-transform ${className}`}
+      className={`transition-transform duration-300 ease-[var(--ease-out)] will-change-transform ${className}`}
       style={{ transform: RESET_TRANSFORM }}
     >
       {children}

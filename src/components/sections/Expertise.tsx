@@ -72,7 +72,7 @@ export function Expertise() {
           const Icon = s.icon;
           return (
             <Reveal key={s.title} delay={i * 150} className={s.colSpan}>
-              <TiltCard scale={1.03} maxRotation={8} className="h-full">
+              <TiltCard scale={1.03} maxRotation={6} className="h-full">
                 <div className="glass h-full p-10 md:p-14 rounded-[2.5rem] flex flex-col justify-between transition-all duration-500 group border-white/5 hover:border-[#0f62fe]/30 hover:shadow-[0_20px_50px_rgba(15,98,254,0.15)] relative overflow-hidden">
                   <ElectricBorder />
                   <div className="absolute inset-0 bg-gradient-to-br from-[#0f62fe]/0 to-[#0f62fe]/0 group-hover:from-[#0f62fe]/8 group-hover:to-[#0f62fe]/4 transition-all duration-700 pointer-events-none z-0" />

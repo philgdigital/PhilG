@@ -245,7 +245,7 @@ export default async function CaseStudy({ params }: RouteProps) {
               <Link
                 href="/#contact"
                 data-magnetic="true"
-                className="group inline-flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-8 py-5 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
+                className="group inline-flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-8 py-5 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-500 ease-[var(--ease-out)] will-change-transform"
               >
                 <span>Discuss your project</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />

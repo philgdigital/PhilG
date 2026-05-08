@@ -1,35 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef } from "react";
+import { useFinePointer } from "@/lib/hooks/use-fine-pointer";
 
-const FINE_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
-
-const subscribeFinePointer = (callback: () => void) => {
-  if (typeof window === "undefined") return () => undefined;
-  const mq = window.matchMedia(FINE_POINTER_QUERY);
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-};
-
-const getFinePointerSnapshot = () =>
-  typeof window === "undefined"
-    ? false
-    : window.matchMedia(FINE_POINTER_QUERY).matches;
-
-const getFinePointerServerSnapshot = () => false;
-
-const TRAIL_MAX_LENGTH = 14;
-const TRAIL_LIFETIME_MS = 600;
+const TRAIL_MAX_LENGTH = 8;
+const TRAIL_LIFETIME_MS = 450;
 const MIN_DISTANCE = 4; // px between recorded points
+const MAX_OPACITY = 0.22;
 
 export function CursorTrail() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const isFinePointer = useSyncExternalStore(
-    subscribeFinePointer,
-    getFinePointerSnapshot,
-    getFinePointerServerSnapshot,
-  );
+  const isFinePointer = useFinePointer();
 
   useEffect(() => {
     if (!isFinePointer) return;
@@ -72,7 +53,6 @@ export function CursorTrail() {
         trail.push({ x: mouseX, y: mouseY, t: now });
       }
       while (trail.length > TRAIL_MAX_LENGTH) trail.shift();
-      // Drop expired points so the array doesn't keep stale data when idle.
       while (trail.length && now - trail[0].t > TRAIL_LIFETIME_MS) {
         trail.shift();
       }
@@ -80,10 +60,10 @@ export function CursorTrail() {
       for (let i = 0; i < trail.length; i++) {
         const p = trail[i];
         const age = (now - p.t) / TRAIL_LIFETIME_MS;
-        const alpha = Math.max(0, (1 - age) * 0.32);
+        const alpha = Math.max(0, (1 - age) * MAX_OPACITY);
         if (alpha <= 0) continue;
-        const positional = i / Math.max(1, trail.length - 1); // 0 oldest -> 1 newest
-        const radius = 1.2 + positional * 1.6;
+        const positional = i / Math.max(1, trail.length - 1);
+        const radius = 1.0 + positional * 1.2;
         ctx.fillStyle = `rgba(244, 244, 245, ${alpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);

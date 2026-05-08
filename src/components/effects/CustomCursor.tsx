@@ -1,26 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-
-const FINE_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
-
-const subscribeFinePointer = (callback: () => void) => {
-  if (typeof window === "undefined") return () => undefined;
-  const mq = window.matchMedia(FINE_POINTER_QUERY);
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-};
-
-const getFinePointerSnapshot = () =>
-  typeof window === "undefined"
-    ? false
-    : window.matchMedia(FINE_POINTER_QUERY).matches;
-
-const getFinePointerServerSnapshot = () => false;
+import { useEffect, useRef, useState } from "react";
+import { useFinePointer } from "@/lib/hooks/use-fine-pointer";
 
 const MAGNETIC_RANGE = 90; // px from element edge to start pulling
 const MAGNETIC_STRENGTH = 0.32; // 0-1, how much the element follows the cursor
 
+/**
+ * Magnetic targets (data-magnetic="true") are tracked by this component.
+ * Within MAGNETIC_RANGE px of an element's edge the element translates
+ * up to MAGNETIC_STRENGTH * delta toward the cursor, with quadratic
+ * ease-in. The cursor ring also gets pulled subtly toward the nearest
+ * target.
+ *
+ * Targets opt in by setting `data-magnetic="true"`. CursorTrail and
+ * CustomCursor share fine-pointer detection via useFinePointer.
+ */
 export function CustomCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
@@ -29,11 +24,7 @@ export function CustomCursor() {
   );
   const [isClicked, setIsClicked] = useState(false);
 
-  const isFinePointer = useSyncExternalStore(
-    subscribeFinePointer,
-    getFinePointerSnapshot,
-    getFinePointerServerSnapshot,
-  );
+  const isFinePointer = useFinePointer();
 
   useEffect(() => {
     if (!isFinePointer) return;

@@ -13,11 +13,11 @@ type RevealProps = {
 };
 
 const translateMap: Record<Direction, string> = {
-  up: "translate-y-12",
-  down: "-translate-y-12",
-  left: "translate-x-12",
-  right: "-translate-x-12",
-  none: "translate-y-0 translate-x-0 scale-95",
+  up: "translate-y-6",
+  down: "-translate-y-6",
+  left: "translate-x-6",
+  right: "-translate-x-6",
+  none: "translate-y-0 translate-x-0 scale-[0.98]",
 };
 
 export function Reveal({
@@ -58,10 +58,10 @@ export function Reveal({
   return (
     <div
       ref={ref}
-      className={`transition-all duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`transition-all duration-[800ms] ease-[var(--ease-out)] ${
         isVisible
           ? "opacity-100 translate-y-0 translate-x-0 scale-100 blur-none"
-          : `opacity-0 blur-[12px] ${translateMap[direction]}`
+          : `opacity-0 blur-[6px] ${translateMap[direction]}`
       } ${className}`}
       style={{
         transitionDelay: `${delay}ms`,

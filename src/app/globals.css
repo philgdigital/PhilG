@@ -27,6 +27,9 @@
   --emerald: #10b981;
   --emerald-soft: #34d399;
   --emerald-glow: rgba(16, 185, 129, 0.4);
+  /* Canonical motion curves. Use these everywhere. */
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* ─────────────────────────────────────────────
