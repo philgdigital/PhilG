@@ -11,6 +11,7 @@ import { Advantage } from "@/components/sections/Advantage";
 import { PullQuote } from "@/components/sections/PullQuote";
 import { ImpactMetrics } from "@/components/sections/ImpactMetrics";
 import { Work } from "@/components/sections/Work";
+import { Insights } from "@/components/sections/Insights";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Expertise } from "@/components/sections/Expertise";
 import { AILab } from "@/components/sections/AILab";
@@ -23,10 +24,11 @@ import { AILab } from "@/components/sections/AILab";
  *   --  PullQuote interlude
  *   04  ImpactMetrics
  *   05  Work
- *   06  Testimonials
- *   07  Expertise (Full-Stack Capabilities)
- *   08  AILab (focused AI capability stack, builds momentum into CTA)
- *   09  Footer (Initiate)
+ *   06  Insights (thought leadership / writings)
+ *   07  Testimonials (Client Voice)
+ *   08  Expertise (Full-Stack Capabilities)
+ *   09  AILab (focused AI capability stack, builds momentum into CTA)
+ *   10  Footer (Initiate)
  *
  * Alternating sections receive `data-tonal="lift"` so section boundaries
  * are felt rather than seen. See globals.css `[data-tonal="lift"]`.
@@ -52,6 +54,7 @@ export default function Home() {
           <ImpactMetrics />
         </div>
         <Work />
+        <Insights />
         <div data-tonal="lift">
           <Testimonials />
         </div>

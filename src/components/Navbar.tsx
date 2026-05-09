@@ -5,6 +5,7 @@ import { XIcon as X } from "@/components/icons/Icons";
 
 const NAV_LINKS = [
   { href: "#work", label: "Enterprise Work" },
+  { href: "#insights", label: "Insights" },
   { href: "#expertise", label: "Capabilities" },
   { href: "#ai-lab", label: "AI Lab" },
 ];
