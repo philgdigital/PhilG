@@ -45,9 +45,9 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="mt-24 md:mt-32 max-w-3xl flex flex-col gap-10">
+      <div className="mt-24 md:mt-32 max-w-5xl flex flex-col gap-10">
         <Reveal delay={700}>
-          <p className="text-2xl md:text-4xl font-light text-zinc-300 leading-snug">
+          <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
             I&apos;m Phil G., a Lead UX/Product Designer with 20+ years turning
             complex enterprise problems into market-leading products. I blend
             deep user psychology with{" "}
@@ -57,18 +57,20 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={800}>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+          {/* CTA + meta on a single row. flex-wrap is a safety net for
+              very narrow viewports; on desktop they always sit inline. */}
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
             <a
               href="#work"
               data-magnetic="true"
-              className="group w-fit flex items-center gap-4 text-white font-mono font-medium tracking-[0.18em] uppercase text-sm hover-target bg-transparent px-8 py-5 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[var(--ease-out)] overflow-hidden will-change-transform"
+              className="group flex items-center gap-4 text-white font-mono font-medium tracking-[0.18em] uppercase text-sm hover-target bg-transparent px-8 py-5 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[var(--ease-out)] overflow-hidden will-change-transform whitespace-nowrap"
             >
               <ArrowUpRight className="w-5 h-5 text-white group-hover:text-black transition-all duration-500 group-hover:rotate-45" />
               <span className="group-hover:text-black transition-colors duration-500">
                 Explore the Work
               </span>
             </a>
-            <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400">
+            <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
               Lead UX/Product Designer · Prague, Czech Republic
             </p>
           </div>
