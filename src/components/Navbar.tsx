@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { XIcon as X } from "@/components/icons/Icons";
 
 const NAV_LINKS = [
-  { href: "#work", label: "Enterprise Work" },
+  { href: "#work", label: "Work" },
   { href: "#insights", label: "Insights" },
-  { href: "#expertise", label: "Capabilities" },
   { href: "#ai-lab", label: "AI Lab" },
+  { href: "#process", label: "Process" },
+  { href: "#faq", label: "FAQ" },
 ];
 
 export function Navbar() {

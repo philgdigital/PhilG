@@ -31,7 +31,9 @@ const SECTIONS: { id: string; num: string; label: string }[] = [
   { id: "testimonials", num: "07", label: "Client Voice" },
   { id: "expertise", num: "08", label: "Capabilities" },
   { id: "ai-lab", num: "09", label: "The AI Lab" },
-  { id: "contact", num: "10", label: "Initiate" },
+  { id: "process", num: "10", label: "How I Work" },
+  { id: "faq", num: "11", label: "Common Questions" },
+  { id: "contact", num: "12", label: "Initiate" },
 ];
 
 export function SectionProgress() {
