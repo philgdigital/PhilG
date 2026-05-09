@@ -296,14 +296,23 @@ body {
 }
 
 /* ─────────────────────────────────────────────
-   Glassmorphism
+   Glassmorphism.
+   Wrapped in @layer components so Tailwind utilities (hover:bg-white,
+   hover:border-*, etc.) can cleanly override these properties. Without
+   the layer, the unnamed-layer .glass beats @layer utilities in the
+   cascade and combos like `glass hover:bg-white` silently fail to apply
+   the hover background.
+   Uses `background-color` (not the `background` shorthand) so utilities
+   targeting just background-color don't have to fight other sub-properties.
    ───────────────────────────────────────────── */
-.glass {
-  background: rgba(15, 15, 20, 0.4);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+@layer components {
+  .glass {
+    background-color: rgba(15, 15, 20, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  }
 }
 
 /* ─────────────────────────────────────────────
