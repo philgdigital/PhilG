@@ -182,20 +182,21 @@ body {
   width: max-content;
 }
 .animate-marquee-slow {
-  animation: marquee 75s linear infinite;
+  animation: marquee 150s linear infinite;
   display: flex;
   width: max-content;
 }
 .animate-marquee-reverse {
-  animation: marquee-reverse 54s linear infinite;
+  animation: marquee-reverse 108s linear infinite;
   display: flex;
   width: max-content;
 }
-/* Slowest forward variant for the third Trusted By row. The 75/54/90s
-   spread means the three rows never visually sync, giving the band of
-   evidence depth without any explicit per-row staggering. */
+/* Slowest forward variant for the third Trusted By row. Speeds chosen so
+   the three rows never visually sync (150 / 108 / 180 share no useful
+   common multiple) and so each wordmark is visible for several seconds.
+   Earlier 75 / 54 / 90 read as 'too fast to follow'. */
 .animate-marquee-slowest {
-  animation: marquee 90s linear infinite;
+  animation: marquee 180s linear infinite;
   display: flex;
   width: max-content;
 }
