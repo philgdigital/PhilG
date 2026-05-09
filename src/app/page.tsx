@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ProjectFormModal } from "@/components/ProjectFormModal";
+import { SectionProgress } from "@/components/SectionProgress";
 import { Hero } from "@/components/sections/Hero";
 import { Clients } from "@/components/sections/Clients";
 import { About } from "@/components/sections/About";
@@ -40,6 +41,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      <SectionProgress />
       <main>
         <Hero />
         <div data-tonal="lift">
