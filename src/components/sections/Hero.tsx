@@ -15,8 +15,8 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={200}>
-          <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
-            Design
+          <h1 className="text-[11vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
+            Product Design
           </h1>
         </Reveal>
 
@@ -46,7 +46,10 @@ export function Hero() {
       <div className="mt-24 md:mt-32 max-w-5xl flex flex-col gap-10">
         <Reveal delay={700}>
           <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
-            I&apos;m Phil G., a Senior Product Design Leader who{" "}
+            <span className="font-serif italic text-white text-2xl md:text-4xl mr-2">
+              I&apos;m Phil G.
+            </span>
+            A Senior Product Design Leader who{" "}
             <span className="text-white font-medium">designs and builds</span>.{" "}
             <span className="text-white font-medium">17+ years</span> turning
             Fortune 500 problems into shipped products: leading{" "}
@@ -74,7 +77,7 @@ export function Hero() {
               </span>
             </a>
             <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
-              Senior UX/UI Product Design Leader · Prague, Czech Republic
+              Senior Product Design Leader & Builder · Prague, Czech Republic
             </p>
           </div>
         </Reveal>

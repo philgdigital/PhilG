@@ -34,7 +34,7 @@ const CARDS: ExpertiseCard[] = [
   {
     colSpan: "md:col-span-2",
     icon: Code2,
-    title: "Production-Grade Outputs",
+    title: "Production-Grade Code",
     desc: "Tokenized design systems and production-ready React/Tailwind code, eliminating the traditional 'design handoff' friction. Engineers actually want to use what I deliver. Proven at Walmart, VMware, Cemex, and SAP scale.",
   },
 ];
@@ -49,7 +49,7 @@ export function Expertise() {
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-            Full-Stack Capabilities
+            <span className="text-zinc-600">07 ·</span> Full-Stack Capabilities
           </h2>
         </div>
       </Reveal>
@@ -58,7 +58,7 @@ export function Expertise() {
         <div className="md:col-span-3 mb-10">
           <Reveal delay={100}>
             <h3 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight text-white tracking-tight max-w-5xl">
-              Not just designing screens. I architect{" "}
+              I design and build the{" "}
               <span className="shine-text italic font-serif">systems</span>{" "}
               that generate measurable business outcomes.
             </h3>

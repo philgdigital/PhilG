@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s · Phil G.",
   },
   description:
-    "Senior UX/UI Product Design Leader · 17+ years driving digital transformation for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, and Kuoni Tumlare. Product discovery, AI-native prototyping, and design leadership at scale. Prague-based, accepting 2026 enterprise engagements.",
+    "Senior Product Design Leader & Builder · 17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code. Prague-based, accepting 2026 enterprise engagements.",
   keywords: [
     "Phil G",
     "Senior UX Designer",
@@ -67,15 +67,15 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: "Phil G.",
-    title: "Phil G. · Senior UX/UI Product Design Leader · AI-Native",
+    title: "Phil G. · Senior Product Design Leader & Builder · AI-Native",
     description:
-      "17+ years driving digital transformation for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership at scale.",
+      "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phil G. · Senior UX/UI Product Design Leader · AI-Native",
+    title: "Phil G. · Senior Product Design Leader & Builder · AI-Native",
     description:
-      "17+ years driving digital transformation for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership at scale.",
+      "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
   },
   robots: {
     index: true,

@@ -53,13 +53,16 @@ function MarqueeRow({ reverse = false }: RowProps) {
           key={`${name}-${i}`}
           className="flex items-center gap-10 md:gap-16 lg:gap-20 pr-10 md:pr-16 lg:pr-20"
         >
-          <span className="font-bold text-4xl md:text-6xl lg:text-7xl tracking-[-0.01em] uppercase text-white/40 hover:text-white transition-colors duration-500 whitespace-nowrap leading-none">
+          <span className="font-bold text-4xl md:text-6xl lg:text-7xl tracking-[-0.015em] uppercase text-white/55 hover:text-white transition-colors duration-500 whitespace-nowrap leading-none">
             {name}
           </span>
+          {/* Refined dot divider: solid blue core inside a softer ring */}
           <span
             aria-hidden
-            className="w-2.5 h-2.5 rounded-full bg-[#0f62fe] shadow-[0_0_14px_rgba(15,98,254,0.7)] shrink-0"
-          />
+            className="relative w-3.5 h-3.5 rounded-full bg-[#0f62fe]/20 shrink-0 flex items-center justify-center"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.7)]" />
+          </span>
         </span>
       ))}
     </div>
@@ -83,7 +86,7 @@ export function Clients() {
           <div className="flex items-center gap-4 mb-10">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-              Trusted By
+              <span className="text-zinc-600">01 ·</span> Trusted By
             </h2>
           </div>
         </Reveal>
@@ -101,14 +104,14 @@ export function Clients() {
         </Reveal>
       </div>
 
-      {/* Full-bleed double marquee */}
+      {/* Full-bleed double marquee, framed top + bottom by hairline rules */}
       <Reveal delay={200}>
-        <div className="relative w-full">
+        <div className="relative w-full border-y border-white/5">
           {/* Edge fade masks: dissolve the rows into the page background */}
           <div className="pointer-events-none absolute inset-y-0 left-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-r from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-l from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
 
-          <div className="flex flex-col gap-6 md:gap-10 py-4">
+          <div className="flex flex-col gap-6 md:gap-10 py-8 md:py-10">
             <MarqueeRow />
             <MarqueeRow reverse />
           </div>

@@ -29,6 +29,15 @@ export function Footer({ onOpenForm }: FooterProps) {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-[#0f62fe]/8 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="flex-1 flex flex-col items-center justify-center w-full z-10 px-6 mt-12 relative">
+        <Reveal delay={50}>
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
+            <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
+              <span className="text-zinc-600">08 ·</span> Initiate
+            </h2>
+          </div>
+        </Reveal>
+
         <Reveal delay={100} className="text-center mb-8">
           <p className="text-2xl md:text-3xl text-[#4589ff] font-medium tracking-wide drop-shadow-md">
             Looking for Enterprise Acceleration?

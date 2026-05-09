@@ -20,7 +20,7 @@ const METRICS: Metric[] = [
     value: 17,
     suffix: "+",
     label: "Years",
-    desc: "Leading product discovery, design, and AI-native prototyping for Fortune 500 teams: Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Royal Air Force.",
+    desc: "Building products end-to-end for Fortune 500 teams: leading product discovery, AI-native prototyping, and shipping production-ready code. Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Royal Air Force.",
   },
   {
     icon: Users,
@@ -41,6 +41,15 @@ const METRICS: Metric[] = [
 export function ImpactMetrics() {
   return (
     <section id="impact" className="py-24 px-6 md:px-12 lg:px-24 relative z-10">
+      <Reveal>
+        <div className="flex items-center gap-4 mb-12">
+          <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
+          <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
+            <span className="text-zinc-600">04 ·</span> Impact
+          </h2>
+        </div>
+      </Reveal>
+
       {/*
         Equal-height cards: the grid uses `items-stretch` (default) so each
         cell stretches to the tallest row item. We propagate `h-full` through

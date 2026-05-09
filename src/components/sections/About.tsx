@@ -12,7 +12,7 @@ export function About() {
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-            The Architect
+            <span className="text-zinc-600">02 ·</span> The Architect
           </h2>
         </div>
       </Reveal>
@@ -72,6 +72,9 @@ export function About() {
 
           <Reveal delay={400}>
             <p className="text-zinc-400 font-light text-lg md:text-xl leading-relaxed">
+              <span className="font-serif italic text-white text-2xl md:text-3xl mr-2">
+                Seventeen years.
+              </span>
               I&apos;m a{" "}
               <span className="text-white">product builder</span> who leads
               with design. Three force-multipliers:{" "}
