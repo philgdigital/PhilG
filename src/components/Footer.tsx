@@ -2,17 +2,15 @@
 
 import { Mail } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
-import {
-  LinkedinIcon,
-  TwitterIcon,
-  DribbbleIcon,
-} from "@/components/icons/BrandIcons";
+import { LinkedinIcon } from "@/components/icons/BrandIcons";
 
 const SOCIAL_LINKS = [
-  { name: "Email", icon: Mail, link: "mailto:hello@philg.com" },
+  {
+    name: "Email",
+    icon: Mail,
+    link: "mailto:philg.digital@gmail.com",
+  },
   { name: "LinkedIn", icon: LinkedinIcon, link: "#" },
-  { name: "Twitter", icon: TwitterIcon, link: "#" },
-  { name: "Dribbble", icon: DribbbleIcon, link: "#" },
 ];
 
 const YEAR = new Date().getFullYear();
@@ -73,7 +71,7 @@ export function Footer({ onOpenForm }: FooterProps) {
 
         <Reveal delay={500}>
           <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400 text-center">
-            Prague, Czech Republic · hello@philg.com
+            Prague, Czech Republic · philg.digital@gmail.com
           </p>
         </Reveal>
       </div>

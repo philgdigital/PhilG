@@ -17,24 +17,24 @@ type Metric = {
 const METRICS: Metric[] = [
   {
     icon: Award,
-    value: 20,
+    value: 17,
     suffix: "+",
     label: "Years",
-    desc: "Designing and shipping high-impact products for Fortune 500 teams like Walmart, VMware, Microsoft, SAP, and WWF.",
+    desc: "Leading product discovery, design, and AI-native prototyping for Fortune 500 teams: Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Royal Air Force.",
   },
   {
     icon: Users,
     value: 1000,
     suffix: "+",
     label: "Mentored",
-    desc: "Designers I've coached now lead and ship at Meta, Booking.com, Uber, and Accenture.",
+    desc: "Designers I've coached now lead at Meta, Booking.com, Uber, IBM, and Accenture across 11 countries.",
   },
   {
     icon: Globe,
     value: 50,
     suffix: "+",
     label: "Countries",
-    desc: "Cemex platform reach: 20,000+ enterprise customers served across 50+ markets.",
+    desc: "Cemex platform reach: 20,000+ enterprise customers served across 50+ markets through one unified design system.",
   },
 ];
 

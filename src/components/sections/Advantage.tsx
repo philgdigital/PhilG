@@ -45,14 +45,14 @@ export function Advantage() {
                 </div>
                 <div>
                   <h4 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                    AI-Powered Ideation to Code
+                    Product Discovery → AI-Native Prototype
                   </h4>
                   <p className="text-zinc-400 leading-relaxed text-lg font-light">
-                    By orchestrating advanced LLMs and generative UI tools, I
-                    rapidly compress the distance between an idea and a
-                    functional prototype. I don&apos;t just draw screens; I
-                    generate the React structure, proving concepts in days
-                    instead of quarters.
+                    I lead end-to-end discovery: customer interviews, journey
+                    mapping, jobs-to-be-done. Then I orchestrate LLMs,
+                    generative UI, and custom GPTs to compress idea-to-code
+                    from quarters to days. You ship a real React prototype
+                    grounded in real research, not a static deck.
                   </p>
                 </div>
               </div>
@@ -72,13 +72,15 @@ export function Advantage() {
                 </div>
                 <div>
                   <h4 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                    Enterprise UX Architecture
+                    Design Leadership at Scale
                   </h4>
                   <p className="text-zinc-400 leading-relaxed text-lg font-light">
-                    I untangle massively complex data requirements for Fortune
-                    500 SaaS and Fintech tools. The result is zero-friction
-                    architecture, modular design systems, and frontend code
-                    delivery that your engineers will actually love.
+                    I hire, coach, and lead high-performing design teams across
+                    continents. At Kuoni Tumlare I hired six UX designers and
+                    led a twelve-person team across Europe, Asia, and India
+                    behind one AI-ready design system. Mentored 1,000+
+                    designers now leading at Meta, Booking, Uber, IBM,
+                    Accenture.
                   </p>
                 </div>
               </div>

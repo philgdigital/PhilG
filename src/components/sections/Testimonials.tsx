@@ -71,7 +71,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "A designer who doesn't worry about design — his main concern is making work that brings results. He's one of those guys you need when you want to make things really happen.",
+      "A designer who doesn't worry about design. His main concern is making work that brings results. He's one of those guys you need when you want to make things really happen.",
     name: "Jon Vieira",
     role: "Product Design Lead at Meta Reality Labs",
   },
@@ -131,7 +131,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "Phil is certainly the best designer I'd ever worked with. Creative, fast and assertive. With him on the project, you don't need to worry — you'll get the best result.",
+      "Phil is certainly the best designer I'd ever worked with. Creative, fast and assertive. With him on the project, you don't need to worry. You'll get the best result.",
     name: "Bruno Fisbhen",
     role: "Founder & CEO at ColaboraApp",
   },

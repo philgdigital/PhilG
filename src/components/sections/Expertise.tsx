@@ -1,6 +1,6 @@
 "use client";
 
-import { Code2, Cpu, Smartphone, Globe, type IconComponent } from "@/components/icons/Icons";
+import { Code2, Cpu, Users, Workflow, type IconComponent } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
@@ -15,27 +15,27 @@ type ExpertiseCard = {
 const CARDS: ExpertiseCard[] = [
   {
     colSpan: "md:col-span-2",
-    icon: Code2,
-    title: "Production-Grade Outputs",
-    desc: "Bridging the gap definitively. I deliver tokenized design systems and production-ready React/Tailwind front-ends, obliterating the traditional 'design handoff' friction.",
+    icon: Users,
+    title: "Design Leadership",
+    desc: "Hiring, coaching, and leading high-performing design teams across continents. At Kuoni Tumlare I hired six UX designers and led a twelve-person team across Europe, Asia, and India. Mentored 1,000+ designers now leading at Meta, Booking, Uber, IBM, and Accenture.",
+  },
+  {
+    colSpan: "md:col-span-1",
+    icon: Workflow,
+    title: "Product Discovery",
+    desc: "User research, customer interviews, and design-thinking workshops that connect what customers need to what the business needs to ship. NN/G UX Master, IDEO, IBM Enterprise Design Thinking certified.",
   },
   {
     colSpan: "md:col-span-1",
     icon: Cpu,
-    title: "AI Workflows",
-    desc: "Prompt engineering, generative UI, and LLM orchestration to 10× delivery speed. AI-Native by default.",
-  },
-  {
-    colSpan: "md:col-span-1",
-    icon: Smartphone,
-    title: "UX Architecture",
-    desc: "Untangling complex enterprise data into zero-friction, highly scalable interfaces, the way Cemex, Walmart, and VMware needed.",
+    title: "AI-Native Prototyping",
+    desc: "Gen AI, custom GPTs, and AI agents that compress idea-to-prototype from quarters to days. AI-ready design systems that scale across squads, shipped at Kuoni Tumlare for 12 designers working in parallel.",
   },
   {
     colSpan: "md:col-span-2",
-    icon: Globe,
-    title: "Vision, Strategy & Mentorship",
-    desc: "Aligning user psychology with aggressive business targets. Sales-funnel-aware UX strategy. Plus a track record of mentoring 1,000+ designers now leading at Meta, Booking, Uber, Accenture.",
+    icon: Code2,
+    title: "Production-Grade Outputs",
+    desc: "Tokenized design systems and production-ready React/Tailwind code, eliminating the traditional 'design handoff' friction. Engineers actually want to use what I deliver. Proven at Walmart, VMware, Cemex, and SAP scale.",
   },
 ];
 

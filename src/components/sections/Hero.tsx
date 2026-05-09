@@ -48,11 +48,15 @@ export function Hero() {
       <div className="mt-24 md:mt-32 max-w-5xl flex flex-col gap-10">
         <Reveal delay={700}>
           <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
-            I&apos;m Phil G., a Lead UX/Product Designer with 20+ years turning
-            complex enterprise problems into market-leading products. I blend
-            deep user psychology with{" "}
-            <span className="text-white font-medium">AI-native prototyping</span>{" "}
-            to ship 10× faster.
+            I&apos;m Phil G., a Senior Product Design Leader with{" "}
+            <span className="text-white font-medium">17+ years</span> driving
+            digital transformation across the Fortune 500. I lead{" "}
+            <span className="text-white font-medium">product discovery</span>,
+            build{" "}
+            <span className="text-white font-medium">
+              AI-ready design systems
+            </span>
+            , and ship enterprise prototypes 10× faster.
           </p>
         </Reveal>
 
@@ -71,7 +75,7 @@ export function Hero() {
               </span>
             </a>
             <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
-              Lead UX/Product Designer · Prague, Czech Republic
+              Senior UX/UI Product Design Leader · Prague, Czech Republic
             </p>
           </div>
         </Reveal>
