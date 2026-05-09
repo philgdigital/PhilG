@@ -2,17 +2,15 @@
 
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
+import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function Hero() {
   return (
     <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-44 md:pt-52 pb-20 relative z-10">
       <div className="max-w-[1400px]">
         <Reveal delay={100} direction="none">
-          <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl mb-10 shadow-[0_0_30px_rgba(16,185,129,0.18)]">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_10px_rgba(16,185,129,0.9)] animate-pulse" />
-            <span className="font-mono text-xs font-medium tracking-[0.18em] uppercase text-white">
-              Available for new clients
-            </span>
+          <div className="mb-10">
+            <AvailabilityBadge />
           </div>
         </Reveal>
 
@@ -48,15 +46,16 @@ export function Hero() {
       <div className="mt-24 md:mt-32 max-w-5xl flex flex-col gap-10">
         <Reveal delay={700}>
           <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
-            I&apos;m Phil G., a Senior Product Design Leader with{" "}
-            <span className="text-white font-medium">17+ years</span> driving
-            digital transformation across the Fortune 500. I lead{" "}
+            I&apos;m Phil G., a Senior Product Design Leader who{" "}
+            <span className="text-white font-medium">designs and builds</span>.{" "}
+            <span className="text-white font-medium">17+ years</span> turning
+            Fortune 500 problems into shipped products: leading{" "}
             <span className="text-white font-medium">product discovery</span>,
-            build{" "}
+            crafting{" "}
             <span className="text-white font-medium">
               AI-ready design systems
             </span>
-            , and ship enterprise prototypes 10× faster.
+            , and shipping production-grade React prototypes 10× faster.
           </p>
         </Reveal>
 

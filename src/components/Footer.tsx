@@ -3,12 +3,13 @@
 import { Mail } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { LinkedinIcon } from "@/components/icons/BrandIcons";
+import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 const SOCIAL_LINKS = [
   {
     name: "Email",
     icon: Mail,
-    link: "mailto:philg.digital@gmail.com",
+    link: "mailto:hello@philg.cz",
   },
   { name: "LinkedIn", icon: LinkedinIcon, link: "#" },
 ];
@@ -71,7 +72,7 @@ export function Footer({ onOpenForm }: FooterProps) {
 
         <Reveal delay={500}>
           <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400 text-center">
-            Prague, Czech Republic · philg.digital@gmail.com
+            Prague, Czech Republic · hello@philg.cz
           </p>
         </Reveal>
       </div>
@@ -91,14 +92,9 @@ export function Footer({ onOpenForm }: FooterProps) {
 
       <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-12 z-10">
         <span>© {YEAR} PHIL G.</span>
-        <button
-          type="button"
-          onClick={onOpenForm}
-          className="mt-4 md:mt-0 flex items-center gap-3 glass px-5 py-3 rounded-full border-white/5 hover:bg-white/10 hover:border-[#0f62fe]/50 transition-all duration-300 hover-target"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_12px_rgba(15,98,254,0.9)] animate-pulse" />
-          ACCEPTING ENTERPRISE CLIENTS
-        </button>
+        <div className="mt-4 md:mt-0">
+          <AvailabilityBadge variant="compact" onClick={onOpenForm} />
+        </div>
       </div>
     </footer>
   );

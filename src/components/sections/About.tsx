@@ -40,8 +40,11 @@ export function About() {
         <div className="lg:col-span-7 flex flex-col gap-8">
           <Reveal delay={200}>
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white mb-2 leading-tight">
-              I don&apos;t just design screens. <br />I engineer{" "}
-              <span className="shine-text">outcomes.</span>
+              I design{" "}
+              <em className="font-serif italic font-light text-zinc-400">
+                and
+              </em>{" "}
+              build the <span className="shine-text">product.</span>
             </h3>
           </Reveal>
 
@@ -49,7 +52,7 @@ export function About() {
             <p className="text-zinc-300 font-light text-xl md:text-2xl leading-relaxed">
               I&apos;m a{" "}
               <span className="text-white font-medium">
-                Certified UX Master (NN/G)
+                Certified UX Master by Nielsen Norman Group (NN/g)
               </span>
               ,{" "}
               <span className="text-white font-medium">
@@ -69,11 +72,13 @@ export function About() {
 
           <Reveal delay={400}>
             <p className="text-zinc-400 font-light text-lg md:text-xl leading-relaxed">
-              I lead with three force-multipliers:{" "}
+              I&apos;m a{" "}
+              <span className="text-white">product builder</span> who leads
+              with design. Three force-multipliers:{" "}
               <span className="text-white">product discovery</span> that turns
               user research into board-room business outcomes,{" "}
               <span className="text-white">AI-native prototyping</span> that
-              compresses ideation-to-code from quarters to days, and{" "}
+              compresses ideation-to-shipped-code from quarters to days, and{" "}
               <span className="text-white">design leadership</span> that builds
               high-performing teams. At Kuoni Tumlare I hired six designers and
               led a twelve-person team across Europe, Asia, and India behind a
