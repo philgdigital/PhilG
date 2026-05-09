@@ -137,6 +137,20 @@ export default async function InsightPage({ params }: RouteProps) {
     <>
       <Navbar />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
+        {/*
+          ONE big soft blurred dark halo behind ALL the article content.
+          Centered column, max ~1280px wide, spans the full vertical of
+          the main content. blur-3xl feathers every edge invisibly. The
+          colorful AnimatedGradientBackground from the root layout stays
+          visible past the halo on either side, so the page keeps the
+          'index' palette while every text block lands on a calm dark
+          surface.
+        */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 inset-y-20 w-[min(95vw,1280px)] -z-10 bg-[#06060a]/80 blur-3xl"
+        />
+
         {/* Top: back link */}
         <div className="flex items-center justify-between mb-16 max-w-5xl mx-auto">
           <Link
@@ -206,19 +220,11 @@ export default async function InsightPage({ params }: RouteProps) {
           </div>
         </Reveal>
 
-        {/* Article body sits over a soft blurred dark halo so the white
-            prose reads against a calmer surface, while the AnimatedGradient
-            orbs from the root layout still show through around the edges.
-            blur-3xl on the halo feathers all sides into nothing - no
-            visible container box. */}
-        <article className="relative max-w-4xl mx-auto py-14 md:py-20 px-6 md:px-12 lg:px-20">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -inset-x-12 md:-inset-x-24 -inset-y-12 md:-inset-y-20 -z-10 bg-[#06060a]/85 blur-3xl"
-          />
-          <div className="max-w-3xl mx-auto relative">
-            {insight.body && <ArticleBody blocks={insight.body} />}
-          </div>
+        {/* Article body. Sits inside the page-level halo so prose reads
+            against the soft dark backdrop. No own container; just centered
+            prose at reading width. */}
+        <article className="max-w-3xl mx-auto py-14 md:py-20">
+          {insight.body && <ArticleBody blocks={insight.body} />}
         </article>
 
         {/* Closing: next + related */}
