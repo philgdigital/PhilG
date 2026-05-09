@@ -1,13 +1,13 @@
 "use client";
 
-import { Code2, Cpu, Smartphone, Globe, type LucideIcon } from "lucide-react";
+import { Code2, Cpu, Smartphone, Globe, type IconComponent } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
 type ExpertiseCard = {
   colSpan: string;
-  icon: LucideIcon;
+  icon: IconComponent;
   title: string;
   desc: string;
 };

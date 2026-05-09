@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail } from "lucide-react";
+import { Mail } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import {
   LinkedinIcon,

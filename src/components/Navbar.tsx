@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { XIcon as X } from "@/components/icons/Icons";
 
 const NAV_LINKS = [
   { href: "#work", label: "Enterprise Work" },

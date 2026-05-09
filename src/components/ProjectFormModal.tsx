@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type FormEvent } from "react";
-import { X, Sparkles } from "lucide-react";
+import { XIcon as X, Sparkles } from "@/components/icons/Icons";
 
 type ProjectFormModalProps = {
   isOpen: boolean;

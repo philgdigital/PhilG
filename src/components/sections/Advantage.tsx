@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles, Workflow } from "lucide-react";
+import { Sparkles, Workflow } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";

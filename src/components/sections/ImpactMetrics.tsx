@@ -1,13 +1,13 @@
 "use client";
 
-import { Award, Users, Globe, type LucideIcon } from "lucide-react";
+import { Award, Users, Globe, type IconComponent } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 import { CountUp } from "@/components/ui/CountUp";
 
 type Metric = {
-  icon: LucideIcon;
+  icon: IconComponent;
   value: number;
   suffix: string;
   label: string;
