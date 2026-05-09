@@ -131,17 +131,17 @@ export function SectionProgress() {
   return (
     <nav
       aria-label="Section progress"
-      className={`hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 flex-col gap-3 pr-6 lg:pr-8 pl-16 lg:pl-24 py-12 transition-opacity duration-700 ease-[var(--ease-out)] ${
+      className={`hidden md:flex fixed right-6 lg:right-8 top-1/2 -translate-y-1/2 z-40 flex-col gap-3 transition-opacity duration-700 ease-[var(--ease-out)] ${
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      {/* Soft black gradient scrim. Sits behind the menu so the dots and
-          labels read clearly against any content underneath without
-          turning the column into a hard dark bar. Uses backdrop-blur for
-          a glassy lift effect at the right edge of the viewport. */}
+      {/* Soft tight scrim that hugs the menu items so they read against
+          any content underneath. -inset extends just past the items so
+          the magnetic-floating effect on hover still feels like the
+          items lift off the page (not anchored to a hard dark bar). */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-l from-black/55 via-black/25 to-transparent backdrop-blur-[2px]"
+        className="pointer-events-none absolute -inset-y-6 -left-6 -right-3 -z-10 rounded-[2rem] bg-gradient-to-l from-black/40 via-black/20 to-transparent backdrop-blur-[2px]"
       />
 
       {SECTIONS.map((s) => {
