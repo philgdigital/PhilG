@@ -5,8 +5,8 @@ import { XIcon as X } from "@/components/icons/Icons";
 
 const NAV_LINKS = [
   { href: "#work", label: "Enterprise Work" },
-  { href: "#advantage", label: "AI Advantage" },
   { href: "#expertise", label: "Capabilities" },
+  { href: "#ai-lab", label: "AI Lab" },
 ];
 
 export function Navbar() {

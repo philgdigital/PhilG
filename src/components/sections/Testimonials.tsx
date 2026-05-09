@@ -6,16 +6,26 @@ type Testimonial = {
   quote: string;
   name: string;
   role: string;
+  /** Featured quotes get serif italic display weight + col-span-2 on lg. */
+  featured?: boolean;
 };
 
 /**
- * Curated wall of testimonials. Each entry: a punchy 1-2 sentence quote
- * extracted from the original LinkedIn recommendation, the person's name,
- * and their current role. Layout below uses CSS columns so cards flow
- * naturally based on quote length (true masonry, no JS).
+ * Curated Client Voice wall. Editorial bento, not a uniform masonry.
+ *
+ * Two featured quotes (serif italic, larger, col-span-2 on lg) anchor the
+ * grid, chosen for highest brand signal: Pavel Petroshenko (Azul VP) +
+ * Jon Vieira (Meta Reality Labs). Five regular cards fill the rest with
+ * sans body type. Each card carries an open-quote glyph in serif italic,
+ * an initials avatar, and mono attribution. Hover lifts + electric-borders.
+ *
+ * Reduced from 22 to 7 to give each voice room to breathe. Full archive
+ * was great for "wall of social proof", but readability suffered. This
+ * arrangement reads as curated journalism instead of a stack.
  */
 const TESTIMONIALS: Testimonial[] = [
   {
+    featured: true,
     quote:
       "Phil stands out as an extraordinarily skilled and professional UI/UX design leader. His expertise is particularly evident in complex, challenging projects.",
     name: "Pavel Petroshenko",
@@ -23,15 +33,9 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "Phil is in a league of his own. A true embodiment of agile principles who knows how to attract a team's attention and energy to the outcomes that matter.",
+      "Phil is in a league of his own. A true embodiment of agile principles who knows how to attract a team's attention to the outcomes that matter.",
     name: "David Kendall",
     role: "Product Leader · 0→1 Innovation · AI/ML",
-  },
-  {
-    quote:
-      "A phenomenally talented and knowledgeable designer who passed on so many points of insight and wisdom during our time together.",
-    name: "Robert Sosin",
-    role: "Senior Conversation Designer · UX + AI",
   },
   {
     quote:
@@ -47,69 +51,16 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "A great asset for a design and cross-functional team. Phil provided support across projects and was actively involved in hiring.",
-    name: "Froso Ellina",
-    role: "Design Manager at Google",
-  },
-  {
-    quote:
       "A capable and thoughtful design leader. Phil delivered our first user research-led improvements and led our first multi-disciplinary discovery efforts.",
     name: "Kevin Olsen",
     role: "GM EMEA at Mechanical Orchard",
   },
   {
-    quote:
-      "One of the best designers I have worked with. Both approachable and easy to work with. His deep understanding of design contributed greatly to our mobile apps.",
-    name: "Wesley Siu",
-    role: "VP of Product Management",
-  },
-  {
-    quote:
-      "Not only a great leader, but also a good friend and mentor. He gave me the freedom to do my best work and was always available when I needed help.",
-    name: "Israel Mesquita",
-    role: "AI UX/UI Designer at George Labs",
-  },
-  {
+    featured: true,
     quote:
       "A designer who doesn't worry about design. His main concern is making work that brings results. He's one of those guys you need when you want to make things really happen.",
     name: "Jon Vieira",
     role: "Product Design Lead at Meta Reality Labs",
-  },
-  {
-    quote:
-      "A calm presence, communicates clearly, offers great insights, and leads excellent workshops. He made significant improvements to our user-research processes.",
-    name: "Daniel Kift",
-    role: "Senior Software Engineer at Shopify",
-  },
-  {
-    quote:
-      "Phil brought clear design direction to the team and helped steer products in the right direction. His calm, pragmatic approach was invaluable.",
-    name: "Andrea Nagel",
-    role: "Product Manager at Intercom",
-  },
-  {
-    quote:
-      "Phil ramped up super quickly. As a product manager, pressure from stakeholders dropped, velocity recovered, and team morale went up.",
-    name: "Vitor Kneipp",
-    role: "Senior Product Manager · Decisioning",
-  },
-  {
-    quote:
-      "What sets Phil apart is his strong business acumen. When he designs a product, he considers every possible impact on the business.",
-    name: "Martin J. Stojka",
-    role: "CEO at Jimmy Technologies",
-  },
-  {
-    quote:
-      "A high level of professionalism in his designs, work and ethics. He helped our team think out of the box and challenge the status-quo on Cemex's digital transformation.",
-    name: "Alejandro Cruz",
-    role: "Business Operations · Agile Transformation",
-  },
-  {
-    quote:
-      "Standout talent. I was particularly impressed by Phil's ability to handle even the toughest UI projects, effortlessly. He earns my highest recommendation.",
-    name: "Rafael Fidalgo",
-    role: "Senior Manager at Accenture",
   },
   {
     quote:
@@ -119,9 +70,9 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "I highly recommend Phil as a passionate and experienced Interaction Designer to any company that wants a leader on its team.",
-    name: "Filipe Marques",
-    role: "Staff Product Designer · UX Strategy",
+      "What sets Phil apart is his strong business acumen. When he designs a product, he considers every possible impact on the business.",
+    name: "Martin J. Stojka",
+    role: "CEO at Jimmy Technologies",
   },
   {
     quote:
@@ -129,25 +80,18 @@ const TESTIMONIALS: Testimonial[] = [
     name: "Demian Borba",
     role: "Founder & CEO at Pactto",
   },
-  {
-    quote:
-      "Phil is certainly the best designer I'd ever worked with. Creative, fast and assertive. With him on the project, you don't need to worry. You'll get the best result.",
-    name: "Bruno Fisbhen",
-    role: "Founder & CEO at ColaboraApp",
-  },
-  {
-    quote:
-      "Super helpful and insightful. He lives the mantra of Be Kind. I'd love to work again with Phil should our paths cross.",
-    name: "Steven Moyes",
-    role: "Creative · Innovative · Disruptive",
-  },
-  {
-    quote:
-      "A great designer who knows what's needed and when. Phil leads design exercises with high professionalism, especially in challenging projects.",
-    name: "Othman Alkhamra",
-    role: "Software Engineer at Marex",
-  },
 ];
+
+/**
+ * Initials extractor: 'Pavel Petroshenko' -> 'PP', 'Shani Abada, PhD' -> 'SA'.
+ * Two letters max so the avatar circle reads cleanly at small sizes.
+ */
+function initialsOf(name: string): string {
+  const cleaned = name.replace(/,.*$/, "").trim();
+  const parts = cleaned.split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export function Testimonials() {
   return (
@@ -171,33 +115,79 @@ export function Testimonials() {
         </h3>
       </Reveal>
 
-      {/* CSS columns masonry: cards flow naturally to the next column when
-          the current one's content height is reached, so quote-length
-          variation produces a tight, organic wall instead of awkward
-          fixed-height grid gaps. */}
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-6 md:gap-7">
-        {TESTIMONIALS.map((t, i) => (
-          <Reveal key={t.name} delay={i * 30}>
-            <figure className="group relative break-inside-avoid mb-6 md:mb-7 glass rounded-2xl p-7 md:p-8 border-white/5 hover:border-[#0f62fe]/30 hover:shadow-[0_8px_30px_rgba(15,98,254,0.10)] transition-all duration-500 will-change-transform">
-              {/* Subtle blue accent corner */}
-              <span
-                aria-hidden
-                className="absolute top-5 right-5 w-1.5 h-1.5 rounded-full bg-[#0f62fe]/60 group-hover:bg-[#0f62fe] transition-colors"
-              />
-              <blockquote className="text-zinc-200 font-light text-[15px] md:text-base leading-relaxed mb-6">
-                {t.quote}
-              </blockquote>
-              <figcaption className="flex flex-col gap-1 pt-4 border-t border-white/8">
-                <span className="text-white font-medium text-sm tracking-wide">
-                  {t.name}
+      {/*
+        Editorial bento grid with hierarchy.
+        - Two featured quotes (col-span-2 on lg) get serif italic display
+          weight; chosen for highest brand signal (Azul VP, Meta Reality Labs).
+        - Five regular cards in sans body type fill the remaining cells.
+        - Each card carries an oversized open-quote glyph at top-left, an
+          initials avatar circle at bottom-left, and mono attribution.
+        - Hover: lift + IBM-blue border + soft shadow.
+      */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 items-stretch">
+        {TESTIMONIALS.map((t, i) => {
+          const isFeatured = !!t.featured;
+          return (
+            <Reveal
+              key={t.name}
+              delay={i * 60}
+              className={isFeatured ? "lg:col-span-2" : ""}
+            >
+              <figure
+                className={`group relative h-full glass rounded-2xl border-white/5 hover:border-[#0f62fe]/35 hover:shadow-[0_12px_40px_rgba(15,98,254,0.14)] transition-all duration-500 will-change-transform overflow-hidden flex flex-col ${
+                  isFeatured ? "p-8 md:p-12" : "p-7 md:p-8"
+                }`}
+              >
+                {/* Open-quote glyph as decorative wash, top-left.
+                    Serif italic, IBM-blue tinted, big enough to read as
+                    pull-quote treatment without dominating the card. */}
+                <span
+                  aria-hidden
+                  className={`select-none font-serif italic font-light leading-none text-[#4589ff]/20 group-hover:text-[#4589ff]/35 transition-colors duration-500 ${
+                    isFeatured
+                      ? "text-7xl md:text-8xl mb-2"
+                      : "text-5xl md:text-6xl mb-1"
+                  }`}
+                >
+                  &ldquo;
                 </span>
-                <span className="font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-zinc-400 leading-snug">
-                  {t.role}
-                </span>
-              </figcaption>
-            </figure>
-          </Reveal>
-        ))}
+
+                <blockquote
+                  className={`${
+                    isFeatured
+                      ? "font-serif italic font-light text-2xl md:text-3xl lg:text-4xl leading-[1.3] text-white"
+                      : "text-zinc-200 font-light text-[15px] md:text-base leading-relaxed"
+                  } mb-8`}
+                >
+                  {t.quote}
+                </blockquote>
+
+                <figcaption className="mt-auto flex items-center gap-4 pt-5 border-t border-white/8">
+                  {/* Initials avatar circle. Subtle blue gradient bg so it
+                      reads as a tasteful identity marker, not a stock photo. */}
+                  <span
+                    aria-hidden
+                    className="shrink-0 w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center font-mono text-[11px] md:text-xs font-medium tracking-[0.08em] text-white border border-white/15 bg-gradient-to-br from-[#0f62fe]/30 to-[#10b981]/15 backdrop-blur-md group-hover:border-[#0f62fe]/50 group-hover:scale-105 transition-all duration-500"
+                  >
+                    {initialsOf(t.name)}
+                  </span>
+                  <div className="flex flex-col gap-1 min-w-0">
+                    <span
+                      className={`text-white font-medium tracking-wide truncate ${
+                        isFeatured ? "text-base md:text-lg" : "text-sm"
+                      }`}
+                    >
+                      {t.name}
+                    </span>
+                    <span className="font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-zinc-400 leading-snug">
+                      {t.role}
+                    </span>
+                  </div>
+                </figcaption>
+              </figure>
+            </Reveal>
+          );
+        })}
       </div>
     </section>
   );
