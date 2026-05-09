@@ -163,11 +163,11 @@ export default async function InsightPage({ params }: RouteProps) {
               >
                 {insight.type}
               </span>
-              <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-500">
+              <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
                 {formatDate(insight.date)}
               </span>
               <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-700" />
-              <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-500">
+              <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
                 {insight.readTime}
               </span>
             </div>
@@ -185,21 +185,9 @@ export default async function InsightPage({ params }: RouteProps) {
             </p>
           </Reveal>
 
-          <Reveal delay={300}>
-            <div className="mt-12 pt-8 border-t border-white/8 flex items-center gap-4">
-              <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0f62fe]/30 to-[#10b981]/15 border border-white/15 backdrop-blur-md flex items-center justify-center font-mono text-xs text-white">
-                PG
-              </span>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-white font-medium text-sm">
-                  Phil G.
-                </span>
-                <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-500">
-                  Senior Product Design Leader & Builder
-                </span>
-              </div>
-            </div>
-          </Reveal>
+          {/* Author byline intentionally omitted: every insight on this
+              site is by Phil G., so a per-piece byline is redundant. The
+              date + read-time row above carries the editorial metadata. */}
         </header>
 
         {/* Hero image */}
@@ -262,7 +250,7 @@ export default async function InsightPage({ params }: RouteProps) {
                   <h4 className="text-base md:text-lg font-medium text-white leading-snug tracking-tight">
                     {r.title}
                   </h4>
-                  <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-500 mt-auto pt-2">
+                  <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400 mt-auto pt-2">
                     {r.readTime}
                   </span>
                 </Link>

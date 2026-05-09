@@ -48,9 +48,18 @@ export default function Home() {
 
   return (
     <>
+      {/* Skip-to-content link. Visible only when keyboard-focused (otherwise
+          translated off-screen). Lets screen-reader and keyboard users jump
+          past the navbar + section-progress to the start of the page. */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[400] focus:bg-white focus:text-black focus:font-mono focus:font-medium focus:tracking-[0.18em] focus:uppercase focus:text-xs focus:px-4 focus:py-3 focus:rounded-full focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
       <Navbar />
       <SectionProgress />
-      <main>
+      <main id="main-content">
         <Hero />
         <div data-tonal="lift">
           <Clients />

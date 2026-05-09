@@ -82,7 +82,7 @@ export function AILab() {
           <div className="flex items-center gap-4 mb-10">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-              <span className="text-zinc-600">08 ·</span> The AI Lab
+              <span className="text-zinc-400">08 ·</span> The AI Lab
             </h2>
           </div>
         </Reveal>
@@ -94,7 +94,7 @@ export function AILab() {
               production
             </span>
             .{" "}
-            <span className="text-zinc-500">The AI capability stack.</span>
+            <span className="text-zinc-400">The AI capability stack.</span>
           </h3>
         </Reveal>
 
@@ -122,7 +122,7 @@ export function AILab() {
                       <div className="p-4 rounded-2xl bg-white/5 w-fit border border-white/10 group-hover:border-[#0f62fe]/50 group-hover:scale-110 transition-all duration-500 backdrop-blur-md">
                         <Icon className="w-7 h-7 text-[#4589ff] drop-shadow-[0_0_10px_rgba(15,98,254,0.4)]" />
                       </div>
-                      <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-500 group-hover:text-[#4589ff] transition-colors duration-500 mt-2">
+                      <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400 group-hover:text-[#4589ff] transition-colors duration-500 mt-2">
                         {c.badge}
                       </span>
                     </div>

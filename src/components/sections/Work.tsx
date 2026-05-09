@@ -15,21 +15,23 @@ export function Work() {
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-            <span className="text-zinc-600">05 ·</span> Selected Work
+            <span className="text-zinc-400">05 ·</span> Selected Work
           </h2>
         </div>
       </Reveal>
 
       {/* Each project is a 2-column scrollytelling chapter:
           left image stays sticky while right content scrolls past it. */}
-      <div className="flex flex-col gap-32 md:gap-48">
+      <div className="flex flex-col gap-24 md:gap-32">
         {projects.map((p, index) => {
-          const indexLabel = `0${index + 1} / 0${projects.length}`;
+          const total = projects.length;
+          const padded = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+          const indexLabel = `${padded(index + 1)} / ${padded(total)}`;
           return (
             <article
               key={p.id}
               id={`work-${p.slug}`}
-              className="grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[140vh] scroll-mt-32"
+              className="grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[100vh] scroll-mt-32"
             >
               {/* LEFT: image card pins to viewport center while content scrolls */}
               <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">

@@ -40,6 +40,7 @@ const ROW_1 = [
   "Vodafone",
   "WWF / OpenSC",
   "Royal Air Force",
+  "Nespresso",
   "Azul",
   "Microsoft",
   "GoodNotes",
@@ -50,6 +51,7 @@ const ROW_2 = [
   "Microsoft",
   "Walmart",
   "Royal Air Force",
+  "Nespresso",
   "Vodafone",
   "Pivotal",
   "GoodNotes",
@@ -70,6 +72,7 @@ const ROW_3 = [
   "Pivotal",
   "Azul",
   "SAP",
+  "Nespresso",
   "WWF / OpenSC",
   "Kuoni Tumlare",
   "VMware",
@@ -143,7 +146,7 @@ export function Clients() {
           <div className="flex items-center gap-4 mb-10">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-              <span className="text-zinc-600">01 ·</span> Trusted By
+              <span className="text-zinc-400">01 ·</span> Trusted By
             </h2>
           </div>
         </Reveal>
@@ -154,7 +157,7 @@ export function Clients() {
             <span className="shine-text italic font-serif font-light">
               17 years
             </span>{" "}
-            <span className="text-zinc-500 font-light">
+            <span className="text-zinc-400 font-light">
               building products with the world&apos;s most demanding teams.
             </span>
           </p>
@@ -178,10 +181,10 @@ export function Clients() {
 
       <div className="px-6 md:px-12 lg:px-24 relative z-10">
         <Reveal delay={300}>
-          <p className="mt-16 md:mt-20 max-w-2xl font-mono text-[11px] md:text-xs font-medium tracking-[0.22em] uppercase text-zinc-500">
-            <span className="text-white">12 enterprise engagements</span> ·
+          <p className="mt-16 md:mt-20 max-w-2xl font-mono text-[11px] md:text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
+            <span className="text-white">13 enterprise engagements</span> ·
             Walmart, VMware, Microsoft, SAP, Cemex, Vodafone, Royal Air Force,
-            WWF. And counting.
+            Nespresso, WWF. And counting.
           </p>
         </Reveal>
       </div>

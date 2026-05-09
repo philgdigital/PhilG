@@ -78,7 +78,7 @@ export function FAQ() {
           <div className="flex items-center gap-4 mb-10">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-              <span className="text-zinc-600">10 ·</span> Common Questions
+              <span className="text-zinc-400">10 ·</span> Common Questions
             </h2>
           </div>
         </Reveal>
@@ -98,7 +98,7 @@ export function FAQ() {
             <Reveal key={item.num} delay={150 + i * 60}>
               <div className="group glass h-full rounded-2xl p-7 md:p-8 border-white/5 hover:border-[#0f62fe]/30 hover:shadow-[0_10px_30px_rgba(15,98,254,0.10)] transition-all duration-500 flex flex-col gap-4">
                 <div className="flex items-baseline gap-4">
-                  <span className="font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase text-zinc-600">
+                  <span className="font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
                     {item.num}
                   </span>
                   <h4 className="text-lg md:text-xl font-medium text-white leading-snug tracking-tight">

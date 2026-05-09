@@ -48,12 +48,11 @@ function TypeBadge({ type }: { type: InsightType }) {
 }
 
 function MetaRow({ insight }: { insight: Insight }) {
+  // text-zinc-400 (was -500) for AA contrast at small mono sizes.
   return (
-    <div className="flex items-center gap-3 font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-zinc-500">
-      <span>By Phil G.</span>
-      <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-700" />
+    <div className="flex items-center gap-3 font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-zinc-400">
       <span>{formatDate(insight.date)}</span>
-      <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-700" />
+      <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-600" />
       <span>{insight.readTime}</span>
     </div>
   );
@@ -94,7 +93,7 @@ function FeaturedCard({ insight }: { insight: Insight }) {
         <div className="relative z-10 flex flex-col gap-6 p-8 md:p-10 lg:p-12">
           <div className="flex items-center justify-between gap-4">
             <TypeBadge type={insight.type} />
-            <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-zinc-500">
+            <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-zinc-400">
               Featured
             </span>
           </div>
@@ -187,7 +186,7 @@ export function Insights() {
         <div className="flex items-center gap-4 mb-10">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-            <span className="text-zinc-600">11 ·</span> Insights
+            <span className="text-zinc-400">11 ·</span> Insights
           </h2>
         </div>
       </Reveal>

@@ -131,10 +131,19 @@ export function SectionProgress() {
   return (
     <nav
       aria-label="Section progress"
-      className={`hidden md:flex fixed right-6 lg:right-8 top-1/2 -translate-y-1/2 z-40 flex-col gap-3 transition-opacity duration-700 ease-[var(--ease-out)] ${
+      className={`hidden md:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 flex-col gap-3 pr-6 lg:pr-8 pl-16 lg:pl-24 py-12 transition-opacity duration-700 ease-[var(--ease-out)] ${
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
+      {/* Soft black gradient scrim. Sits behind the menu so the dots and
+          labels read clearly against any content underneath without
+          turning the column into a hard dark bar. Uses backdrop-blur for
+          a glassy lift effect at the right edge of the viewport. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-l from-black/55 via-black/25 to-transparent backdrop-blur-[2px]"
+      />
+
       {SECTIONS.map((s) => {
         const isActive = activeId === s.id;
         const hasSubItems = !!s.subItems?.length;
@@ -155,7 +164,7 @@ export function SectionProgress() {
                     : "opacity-0 group-hover:opacity-100 text-zinc-400"
                 }`}
               >
-                <span className="text-zinc-600 mr-2">{s.num}</span>
+                <span className="text-zinc-400 mr-2">{s.num}</span>
                 {s.label}
               </span>
               <span
@@ -197,7 +206,7 @@ export function SectionProgress() {
                         className={`font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap transition-all duration-300 ${
                           subActive
                             ? "opacity-100 text-[#4589ff]"
-                            : "opacity-70 group-hover:opacity-100 text-zinc-500"
+                            : "opacity-70 group-hover:opacity-100 text-zinc-400"
                         }`}
                       >
                         {sub.label}
