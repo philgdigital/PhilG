@@ -41,46 +41,53 @@ export function Hero() {
             </h1>
           </Reveal>
         </div>
-      </div>
 
-      <div className="mt-24 md:mt-32 max-w-5xl mx-auto w-full flex flex-col gap-10">
-        <Reveal delay={700}>
-          <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
-            <span className="font-serif italic text-white text-2xl md:text-4xl mr-2">
-              I&apos;m Phil G.
-            </span>
-            A Senior Product Design Leader who{" "}
-            <span className="text-white font-medium">designs and builds</span>.{" "}
-            <span className="text-white font-medium">17+ years</span> turning
-            Fortune 500 problems into shipped products: leading{" "}
-            <span className="text-white font-medium">product discovery</span>,
-            crafting{" "}
-            <span className="text-white font-medium">
-              AI-ready design systems
-            </span>
-            , and shipping production-grade React prototypes 10× faster.
-          </p>
-        </Reveal>
-
-        <Reveal delay={800}>
-          {/* CTA + meta on a single row. flex-wrap is a safety net for
-              very narrow viewports; on desktop they always sit inline. */}
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-            <a
-              href="#work"
-              data-magnetic="true"
-              className="group flex items-center gap-4 text-white font-mono font-medium tracking-[0.18em] uppercase text-sm hover-target bg-transparent px-8 py-5 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[var(--ease-out)] overflow-hidden will-change-transform whitespace-nowrap"
-            >
-              <ArrowUpRight className="w-5 h-5 text-white group-hover:text-black transition-all duration-500 group-hover:rotate-45" />
-              <span className="group-hover:text-black transition-colors duration-500">
-                Explore the Work
+        {/*
+          Body + CTA + meta sit INSIDE the 1400px wrapper so their left
+          edge aligns with the headline's left edge. The body p stays
+          constrained to max-w-5xl for reading width, but is left-anchored
+          (no mx-auto) so it doesn't drift into the center of the page.
+        */}
+        <div className="mt-24 md:mt-32 flex flex-col gap-10 max-w-5xl">
+          <Reveal delay={700}>
+            <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
+              <span className="font-serif italic text-white text-2xl md:text-4xl mr-2">
+                I&apos;m Phil G.
               </span>
-            </a>
-            <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
-              Senior Product Design Leader & Builder · Prague, Czech Republic
+              A Senior Product Design Leader who{" "}
+              <span className="text-white font-medium">designs and builds</span>
+              . <span className="text-white font-medium">17+ years</span>{" "}
+              turning Fortune 500 problems into shipped products: leading{" "}
+              <span className="text-white font-medium">product discovery</span>
+              , crafting{" "}
+              <span className="text-white font-medium">
+                AI-ready design systems
+              </span>
+              , and shipping production-grade React prototypes 10× faster.
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
+
+          <Reveal delay={800}>
+            {/* CTA + meta on a single row, anchored to the LEFT (justify-start
+                via flex default). flex-wrap is a safety net for very narrow
+                viewports; on desktop they always sit inline. */}
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+              <a
+                href="#work"
+                data-magnetic="true"
+                className="group flex items-center gap-4 text-white font-mono font-medium tracking-[0.18em] uppercase text-sm hover-target bg-transparent px-8 py-5 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[var(--ease-out)] overflow-hidden will-change-transform whitespace-nowrap"
+              >
+                <ArrowUpRight className="w-5 h-5 text-white group-hover:text-black transition-all duration-500 group-hover:rotate-45" />
+                <span className="group-hover:text-black transition-colors duration-500">
+                  Explore the Work
+                </span>
+              </a>
+              <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
+                Senior Product Design Leader & Builder · Prague, Czech Republic
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
