@@ -15,7 +15,7 @@ export function Advantage() {
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-            The Enterprise Advantage
+            <span className="text-zinc-600">03 ·</span> The Enterprise Advantage
           </h2>
         </div>
       </Reveal>
@@ -23,7 +23,8 @@ export function Advantage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
         <Reveal delay={100}>
           <h3 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight text-white tracking-tight">
-            Companies don&apos;t hire me for static mocks. They hire me for{" "}
+            Companies don&apos;t hire me to design mocks. They hire me to ship
+            the actual product, at{" "}
             <span className="shine-text italic font-serif">
               extreme velocity
             </span>
@@ -45,14 +46,14 @@ export function Advantage() {
                 </div>
                 <div>
                   <h4 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                    AI-Powered Ideation to Code
+                    Product Discovery → AI-Native Prototype
                   </h4>
                   <p className="text-zinc-400 leading-relaxed text-lg font-light">
-                    By orchestrating advanced LLMs and generative UI tools, I
-                    rapidly compress the distance between an idea and a
-                    functional prototype. I don&apos;t just draw screens; I
-                    generate the React structure, proving concepts in days
-                    instead of quarters.
+                    I lead end-to-end discovery: customer interviews, journey
+                    mapping, jobs-to-be-done. Then I orchestrate LLMs,
+                    generative UI, and custom GPTs to compress idea-to-code
+                    from quarters to days. You ship a real React prototype
+                    grounded in real research, not a static deck.
                   </p>
                 </div>
               </div>
@@ -72,13 +73,15 @@ export function Advantage() {
                 </div>
                 <div>
                   <h4 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                    Enterprise UX Architecture
+                    Design Leadership at Scale
                   </h4>
                   <p className="text-zinc-400 leading-relaxed text-lg font-light">
-                    I untangle massively complex data requirements for Fortune
-                    500 SaaS and Fintech tools. The result is zero-friction
-                    architecture, modular design systems, and frontend code
-                    delivery that your engineers will actually love.
+                    I hire, coach, and lead design teams that ship, not just
+                    design. Across continents and time zones. At Kuoni Tumlare
+                    I hired six UX designers and led a twelve-person team
+                    across Europe, Asia, and India behind one AI-ready design
+                    system. Mentored 1,000+ designers now leading at Meta,
+                    Booking, Uber, IBM, Accenture.
                   </p>
                 </div>
               </div>

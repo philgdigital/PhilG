@@ -2,17 +2,16 @@
 
 import { Mail } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
-import {
-  LinkedinIcon,
-  TwitterIcon,
-  DribbbleIcon,
-} from "@/components/icons/BrandIcons";
+import { LinkedinIcon } from "@/components/icons/BrandIcons";
+import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 const SOCIAL_LINKS = [
-  { name: "Email", icon: Mail, link: "mailto:hello@philg.com" },
+  {
+    name: "Email",
+    icon: Mail,
+    link: "mailto:hello@philg.cz",
+  },
   { name: "LinkedIn", icon: LinkedinIcon, link: "#" },
-  { name: "Twitter", icon: TwitterIcon, link: "#" },
-  { name: "Dribbble", icon: DribbbleIcon, link: "#" },
 ];
 
 const YEAR = new Date().getFullYear();
@@ -30,6 +29,15 @@ export function Footer({ onOpenForm }: FooterProps) {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-[#0f62fe]/8 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="flex-1 flex flex-col items-center justify-center w-full z-10 px-6 mt-12 relative">
+        <Reveal delay={50}>
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
+            <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
+              <span className="text-zinc-600">08 ·</span> Initiate
+            </h2>
+          </div>
+        </Reveal>
+
         <Reveal delay={100} className="text-center mb-8">
           <p className="text-2xl md:text-3xl text-[#4589ff] font-medium tracking-wide drop-shadow-md">
             Looking for Enterprise Acceleration?
@@ -73,7 +81,7 @@ export function Footer({ onOpenForm }: FooterProps) {
 
         <Reveal delay={500}>
           <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400 text-center">
-            Prague, Czech Republic · hello@philg.com
+            Prague, Czech Republic · hello@philg.cz
           </p>
         </Reveal>
       </div>
@@ -93,14 +101,9 @@ export function Footer({ onOpenForm }: FooterProps) {
 
       <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-12 z-10">
         <span>© {YEAR} PHIL G.</span>
-        <button
-          type="button"
-          onClick={onOpenForm}
-          className="mt-4 md:mt-0 flex items-center gap-3 glass px-5 py-3 rounded-full border-white/5 hover:bg-white/10 hover:border-[#0f62fe]/50 transition-all duration-300 hover-target"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_12px_rgba(15,98,254,0.9)] animate-pulse" />
-          ACCEPTING ENTERPRISE CLIENTS
-        </button>
+        <div className="mt-4 md:mt-0">
+          <AvailabilityBadge variant="compact" onClick={onOpenForm} />
+        </div>
       </div>
     </footer>
   );

@@ -2,23 +2,21 @@
 
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
+import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function Hero() {
   return (
     <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-44 md:pt-52 pb-20 relative z-10">
       <div className="max-w-[1400px]">
         <Reveal delay={100} direction="none">
-          <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl mb-10 shadow-[0_0_30px_rgba(16,185,129,0.18)]">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_10px_rgba(16,185,129,0.9)] animate-pulse" />
-            <span className="font-mono text-xs font-medium tracking-[0.18em] uppercase text-white">
-              Available for new clients
-            </span>
+          <div className="mb-10">
+            <AvailabilityBadge />
           </div>
         </Reveal>
 
         <Reveal delay={200}>
-          <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
-            Design
+          <h1 className="text-[11vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
+            Product Design
           </h1>
         </Reveal>
 
@@ -48,11 +46,19 @@ export function Hero() {
       <div className="mt-24 md:mt-32 max-w-5xl flex flex-col gap-10">
         <Reveal delay={700}>
           <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
-            I&apos;m Phil G., a Lead UX/Product Designer with 20+ years turning
-            complex enterprise problems into market-leading products. I blend
-            deep user psychology with{" "}
-            <span className="text-white font-medium">AI-native prototyping</span>{" "}
-            to ship 10× faster.
+            <span className="font-serif italic text-white text-2xl md:text-4xl mr-2">
+              I&apos;m Phil G.
+            </span>
+            A Senior Product Design Leader who{" "}
+            <span className="text-white font-medium">designs and builds</span>.{" "}
+            <span className="text-white font-medium">17+ years</span> turning
+            Fortune 500 problems into shipped products: leading{" "}
+            <span className="text-white font-medium">product discovery</span>,
+            crafting{" "}
+            <span className="text-white font-medium">
+              AI-ready design systems
+            </span>
+            , and shipping production-grade React prototypes 10× faster.
           </p>
         </Reveal>
 
@@ -71,7 +77,7 @@ export function Hero() {
               </span>
             </a>
             <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
-              Lead UX/Product Designer · Prague, Czech Republic
+              Senior Product Design Leader & Builder · Prague, Czech Republic
             </p>
           </div>
         </Reveal>

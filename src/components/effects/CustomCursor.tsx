@@ -146,7 +146,7 @@ export function CustomCursor() {
 
     // Only refresh the magnetic-target list on real DOM changes (resize,
     // route transitions). The previous version re-queried + reset every
-    // element's transform on every scroll event — at 60+ scroll events
+    // element's transform on every scroll event. At 60+ scroll events
     // per second this added hundreds of ms of TBT during scroll.
     const onResize = () => refreshTargets();
 

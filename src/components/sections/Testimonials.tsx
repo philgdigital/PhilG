@@ -71,7 +71,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "A designer who doesn't worry about design — his main concern is making work that brings results. He's one of those guys you need when you want to make things really happen.",
+      "A designer who doesn't worry about design. His main concern is making work that brings results. He's one of those guys you need when you want to make things really happen.",
     name: "Jon Vieira",
     role: "Product Design Lead at Meta Reality Labs",
   },
@@ -131,7 +131,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "Phil is certainly the best designer I'd ever worked with. Creative, fast and assertive. With him on the project, you don't need to worry — you'll get the best result.",
+      "Phil is certainly the best designer I'd ever worked with. Creative, fast and assertive. With him on the project, you don't need to worry. You'll get the best result.",
     name: "Bruno Fisbhen",
     role: "Founder & CEO at ColaboraApp",
   },
@@ -159,7 +159,7 @@ export function Testimonials() {
         <div className="flex items-center gap-4 mb-12">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-            What Leaders Say
+            <span className="text-zinc-600">06 ·</span> Client Voice
           </h2>
         </div>
       </Reveal>
