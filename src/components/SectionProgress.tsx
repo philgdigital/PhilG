@@ -155,13 +155,13 @@ export function SectionProgress() {
               data-magnetic="true"
               aria-label={`${s.num} · ${s.label}`}
               aria-current={isActive ? "true" : undefined}
-              className="group flex items-center justify-end gap-3 hover-target"
+              className="group flex items-center justify-end gap-3 hover-target transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-x-1.5 will-change-transform"
             >
               <span
                 className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap transition-all duration-300 ${
                   isActive
                     ? "opacity-100 text-white"
-                    : "opacity-0 group-hover:opacity-100 text-zinc-400"
+                    : "opacity-0 group-hover:opacity-100 text-zinc-400 group-hover:translate-x-0 -translate-x-2"
                 }`}
               >
                 <span className="text-zinc-400 mr-2">{s.num}</span>
@@ -172,7 +172,7 @@ export function SectionProgress() {
                 className={`shrink-0 rounded-full transition-all duration-300 ease-[var(--ease-out)] ${
                   isActive
                     ? "w-2.5 h-2.5 bg-[#0f62fe] shadow-[0_0_12px_rgba(15,98,254,0.8)]"
-                    : "w-1.5 h-1.5 bg-white/30 group-hover:bg-white/70"
+                    : "w-1.5 h-1.5 bg-white/30 group-hover:bg-white/70 group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(255,255,255,0.5)]"
                 }`}
               />
             </a>
@@ -195,7 +195,7 @@ export function SectionProgress() {
                       data-magnetic="true"
                       aria-label={sub.label}
                       aria-current={subActive ? "true" : undefined}
-                      className="group flex items-center justify-end gap-2.5 hover-target"
+                      className="group flex items-center justify-end gap-2.5 hover-target transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-x-1 will-change-transform"
                       style={{
                         transitionDelay: showSubItems
                           ? `${i * 60 + 100}ms`
@@ -216,7 +216,7 @@ export function SectionProgress() {
                         className={`shrink-0 rounded-full transition-all duration-300 ${
                           subActive
                             ? "w-2 h-2 bg-[#4589ff] shadow-[0_0_8px_rgba(69,137,255,0.7)]"
-                            : "w-1 h-1 bg-white/25 group-hover:bg-white/60"
+                            : "w-1 h-1 bg-white/25 group-hover:bg-white/60 group-hover:scale-150"
                         }`}
                       />
                     </a>

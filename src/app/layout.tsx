@@ -102,14 +102,18 @@ export default function RootLayout({
     >
       <body className="selection:bg-[#0f62fe] selection:text-white">
         <AnimatedGradientBackground />
-        {/* Global readability dim. Sits between the AnimatedGradientBackground
-            (orbs + radial gradient) and the foreground content. Keeps the
-            ambient color of the orbs visible but flattens their luminance
-            so white text reads with consistent contrast on every page.
-            Subtle on purpose: 40% opacity preserves the moody feel. */}
+        {/* Global readability dim. A soft radial vignette: darkest in the
+            center where text content sits, fading to fully transparent at
+            the corners so the colorful AnimatedGradientBackground orbs
+            stay visible. No visible edges, no flat opacity panel.
+            blur-3xl makes the whole layer breathe softly into the page. */}
         <div
           aria-hidden
-          className="fixed inset-0 -z-[1] bg-[#0a0a0c]/45 pointer-events-none"
+          className="fixed inset-0 -z-[1] pointer-events-none blur-3xl"
+          style={{
+            background:
+              "radial-gradient(ellipse 75% 55% at 50% 50%, rgba(6,6,10,0.65) 0%, rgba(6,6,10,0.45) 35%, rgba(6,6,10,0.20) 65%, transparent 100%)",
+          }}
         />
         <ClientEffects />
         <NoiseOverlay />
