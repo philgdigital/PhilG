@@ -136,14 +136,6 @@ export default async function InsightPage({ params }: RouteProps) {
   return (
     <>
       <Navbar />
-      {/* Page-level dim. Calms the AnimatedGradientBackground orbs that
-          live in the root layout so the article reads against a quieter
-          surface. Article content needs reading comfort, not ambient
-          motion behind it. */}
-      <div
-        aria-hidden
-        className="fixed inset-0 -z-[1] bg-[#06060a]/80 pointer-events-none"
-      />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
         {/* Top: back link */}
         <div className="flex items-center justify-between mb-16 max-w-5xl mx-auto">
@@ -214,12 +206,17 @@ export default async function InsightPage({ params }: RouteProps) {
           </div>
         </Reveal>
 
-        {/* Article body. Wrapped in a darker reader surface so the
-            white prose has a calm, contained background. Slightly inset
-            from the surrounding page; soft border + ambient shadow give
-            the reading area a 'page within a page' feel. */}
-        <article className="max-w-4xl mx-auto bg-[#050508] rounded-[2rem] md:rounded-[2.5rem] border border-white/[0.05] shadow-[0_20px_80px_rgba(0,0,0,0.45)] py-14 md:py-20 px-6 md:px-12 lg:px-20">
-          <div className="max-w-3xl mx-auto">
+        {/* Article body sits over a soft blurred dark halo so the white
+            prose reads against a calmer surface, while the AnimatedGradient
+            orbs from the root layout still show through around the edges.
+            blur-3xl on the halo feathers all sides into nothing - no
+            visible container box. */}
+        <article className="relative max-w-4xl mx-auto py-14 md:py-20 px-6 md:px-12 lg:px-20">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-12 md:-inset-x-24 -inset-y-12 md:-inset-y-20 -z-10 bg-[#06060a]/85 blur-3xl"
+          />
+          <div className="max-w-3xl mx-auto relative">
             {insight.body && <ArticleBody blocks={insight.body} />}
           </div>
         </article>
