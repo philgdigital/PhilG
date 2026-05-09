@@ -135,13 +135,13 @@ export function SectionProgress() {
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      {/* Soft tight scrim that hugs the menu items so they read against
-          any content underneath. -inset extends just past the items so
-          the magnetic-floating effect on hover still feels like the
-          items lift off the page (not anchored to a hard dark bar). */}
+      {/* Soft cloud-like scrim. blur-3xl on the element itself feathers
+          all edges into nothing so the dark bg reads as a diffuse halo
+          around the menu, not a contained box. Generous -inset so the
+          blurred extent reaches past the items without cutting off. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-y-6 -left-6 -right-3 -z-10 rounded-[2rem] bg-gradient-to-l from-black/40 via-black/20 to-transparent backdrop-blur-[2px]"
+        className="pointer-events-none absolute -inset-y-24 -left-24 -right-12 -z-10 bg-gradient-to-l from-black/55 via-black/30 to-transparent blur-3xl"
       />
 
       {SECTIONS.map((s) => {
