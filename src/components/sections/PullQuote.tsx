@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Reveal } from "@/components/ui/Reveal";
 
 /**
@@ -10,13 +11,70 @@ import { Reveal } from "@/components/ui/Reveal";
  * a grid. EPAM / McKinsey / Accenture-Song use this same move to mark
  * narrative beats: setup -> client validation -> evidence.
  *
- * Source: Jon Vieira, Product Design Lead at Meta Reality Labs.
- * Chosen because the quote ("a designer who doesn't worry about design,
- * his main concern is making work that brings results") directly validates
- * the Product Builder thesis without saying it. Attribution carries the
- * Meta name, which matters here.
+ * Quotes rotate on every page load. Curated list below: 6 punchy lines
+ * pulled from the Testimonials wall, each ≤ ~135 chars so it reads
+ * cleanly at display weight. Picks favoring product-builder framing,
+ * recognizable companies, and varied source seniority.
+ *
+ * Hydration-safe: SSR + first paint render QUOTES[0] (deterministic).
+ * useEffect runs client-side post-mount and swaps to a random pick.
+ * Because the section is below the fold and animates in via Reveal,
+ * the swap completes before the user actually sees it.
  */
+
+type QuoteSource = {
+  quote: string;
+  name: string;
+  role: string;
+};
+
+const QUOTES: QuoteSource[] = [
+  {
+    quote:
+      "A designer who doesn't worry about design. His main concern is making work that brings results.",
+    name: "Jon Vieira",
+    role: "Product Design Lead at Meta Reality Labs",
+  },
+  {
+    quote: "If you want your product to succeed, you want Phil on your team.",
+    name: "Sean Berg",
+    role: "Senior UX Designer at Workday",
+  },
+  {
+    quote:
+      "Phil stands out as an extraordinarily skilled and professional UI/UX design leader.",
+    name: "Pavel Petroshenko",
+    role: "VP of Product Management at Azul",
+  },
+  {
+    quote:
+      "Phil is in a league of his own. A true embodiment of agile principles, focused on the outcomes that matter.",
+    name: "David Kendall",
+    role: "Product Leader · 0→1 Innovation · AI/ML",
+  },
+  {
+    quote:
+      "What sets Phil apart is his strong business acumen. When he designs a product, he considers every possible impact on the business.",
+    name: "Martin J. Stojka",
+    role: "CEO at Jimmy Technologies",
+  },
+  {
+    quote:
+      "Phil is certainly the best designer I'd ever worked with. Creative, fast and assertive.",
+    name: "Bruno Fisbhen",
+    role: "Founder & CEO at ColaboraApp",
+  },
+];
+
 export function PullQuote() {
+  // Initial render uses QUOTES[0] so SSR and client first-paint match
+  // (avoiding hydration mismatch). Swap to a random pick after mount.
+  const [quote, setQuote] = useState<QuoteSource>(QUOTES[0]);
+
+  useEffect(() => {
+    setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
+  }, []);
+
   return (
     <section
       id="pull-quote"
@@ -43,8 +101,7 @@ export function PullQuote() {
 
         <Reveal delay={120}>
           <blockquote className="font-serif italic font-light text-3xl md:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white max-w-5xl">
-            A designer who doesn&apos;t worry about design. His main concern is
-            making work that brings results.
+            {quote.quote}
           </blockquote>
         </Reveal>
 
@@ -55,8 +112,7 @@ export function PullQuote() {
               className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]"
             />
             <p className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-              <span className="text-white">Jon Vieira</span> · Product Design
-              Lead at Meta Reality Labs
+              <span className="text-white">{quote.name}</span> · {quote.role}
             </p>
           </figcaption>
         </Reveal>

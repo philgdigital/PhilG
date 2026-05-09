@@ -7,7 +7,7 @@ import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 export function Hero() {
   return (
     <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-44 md:pt-52 pb-20 relative z-10">
-      <div className="max-w-[1400px]">
+      <div className="max-w-[1400px] mx-auto w-full">
         <Reveal delay={100} direction="none">
           <div className="mb-10">
             <AvailabilityBadge />
@@ -43,7 +43,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="mt-24 md:mt-32 max-w-5xl flex flex-col gap-10">
+      <div className="mt-24 md:mt-32 max-w-5xl mx-auto w-full flex flex-col gap-10">
         <Reveal delay={700}>
           <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
             <span className="font-serif italic text-white text-2xl md:text-4xl mr-2">
