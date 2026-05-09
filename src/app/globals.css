@@ -191,6 +191,14 @@ body {
   display: flex;
   width: max-content;
 }
+/* Slowest forward variant for the third Trusted By row. The 75/54/90s
+   spread means the three rows never visually sync, giving the band of
+   evidence depth without any explicit per-row staggering. */
+.animate-marquee-slowest {
+  animation: marquee 90s linear infinite;
+  display: flex;
+  width: max-content;
+}
 
 /* ─────────────────────────────────────────────
    Editorial section tonal lift.
@@ -345,6 +353,7 @@ body {
   .animate-marquee,
   .animate-marquee-slow,
   .animate-marquee-reverse,
+  .animate-marquee-slowest,
   .shine-text,
   .electric-border-container::before {
     animation: none !important;

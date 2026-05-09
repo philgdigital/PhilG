@@ -38,16 +38,25 @@ const CLIENTS = [
 const ROW = [...CLIENTS, ...CLIENTS];
 
 type RowProps = {
-  reverse?: boolean;
+  /**
+   * Animation variant. Three available:
+   *   - "slow"     : 75s forward  (default; row 1)
+   *   - "reverse"  : 54s reverse (row 2, opposite direction)
+   *   - "slowest"  : 90s forward (row 3, slowest)
+   * The 75/54/90 spread means the rows never re-sync visually.
+   */
+  variant?: "slow" | "reverse" | "slowest";
 };
 
-function MarqueeRow({ reverse = false }: RowProps) {
+function MarqueeRow({ variant = "slow" }: RowProps) {
+  const animClass =
+    variant === "reverse"
+      ? "animate-marquee-reverse"
+      : variant === "slowest"
+        ? "animate-marquee-slowest"
+        : "animate-marquee-slow";
   return (
-    <div
-      className={`${
-        reverse ? "animate-marquee-reverse" : "animate-marquee-slow"
-      } items-center`}
-    >
+    <div className={`${animClass} items-center`}>
       {ROW.map((name, i) => (
         <span
           key={`${name}-${i}`}
@@ -111,9 +120,10 @@ export function Clients() {
           <div className="pointer-events-none absolute inset-y-0 left-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-r from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-l from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
 
-          <div className="flex flex-col gap-6 md:gap-10 py-8 md:py-10">
-            <MarqueeRow />
-            <MarqueeRow reverse />
+          <div className="flex flex-col gap-5 md:gap-8 py-8 md:py-10">
+            <MarqueeRow variant="slow" />
+            <MarqueeRow variant="reverse" />
+            <MarqueeRow variant="slowest" />
           </div>
         </div>
       </Reveal>
