@@ -27,18 +27,17 @@ import { FAQ } from "@/components/sections/FAQ";
  *   --  PullQuote interlude               validation
  *   04  ImpactMetrics                     numbers
  *   05  Work                              case studies
- *   06  Insights                          thought leadership
- *   07  Testimonials (Client Voice)       social proof
- *   08  Expertise (Capabilities)          breadth
- *   09  AILab                             AI focus
- *   10  Process (How I Work)              engagement model
- *   11  FAQ (Common Questions)            objection handling
+ *   06  Testimonials (Client Voice)       social proof
+ *   07  Expertise (Capabilities)          breadth
+ *   08  AILab                             AI focus
+ *   09  Process (How I Work)              engagement model
+ *   10  FAQ (Common Questions)            objection handling
+ *   11  Insights                          thought leadership (last; voice + parting gift)
  *   12  Footer (Initiate)                 CTA
  *
- * 10 + 11 added in round 5 to convert "browsing leader" into "booked
- * intro call" by removing the two highest-friction objections enterprise
- * buyers raise: "what does the engagement look like?" and "what about
- * X, Y, Z?".
+ * Insights moved to position 11 in round 6: works as the parting moment
+ * before the contact CTA. Visitor leaves with Phil's voice (writings)
+ * top-of-mind instead of mid-page.
  *
  * Alternating sections receive `data-tonal="lift"` so section boundaries
  * are felt rather than seen. See globals.css `[data-tonal="lift"]`.
@@ -65,7 +64,6 @@ export default function Home() {
           <ImpactMetrics />
         </div>
         <Work />
-        <Insights />
         <div data-tonal="lift">
           <Testimonials />
         </div>
@@ -73,6 +71,7 @@ export default function Home() {
         <AILab />
         <Process />
         <FAQ />
+        <Insights />
       </main>
       <Footer onOpenForm={() => setIsFormOpen(true)} />
       <ProjectFormModal

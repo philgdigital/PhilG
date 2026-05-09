@@ -19,7 +19,18 @@ import { Reveal } from "@/components/ui/Reveal";
  * The IBM-blue dot dividers tie this section to the global accent system.
  */
 
-const CLIENTS = [
+/**
+ * Three independent orderings of the same 12 clients. Per-row shuffle
+ * de-syncs the rows so the eye never sees the same wordmark stacked at
+ * the same X position across rows (the previous version, where every row
+ * shared one ordering, produced visible vertical repetition like
+ * "SAP / SAP" stacked between rows when the timing aligned).
+ *
+ * Orderings are hand-picked, not random, so SSR + client first paint
+ * always match (no hydration mismatch) and Phil can tweak the rhythm
+ * deterministically.
+ */
+const ROW_1 = [
   "Walmart",
   "VMware",
   "Pivotal",
@@ -34,8 +45,42 @@ const CLIENTS = [
   "GoodNotes",
 ];
 
-// Duplicate so the -50% translate marquee loops seamlessly.
-const ROW = [...CLIENTS, ...CLIENTS];
+const ROW_2 = [
+  "Cemex",
+  "Microsoft",
+  "Walmart",
+  "Royal Air Force",
+  "Vodafone",
+  "Pivotal",
+  "GoodNotes",
+  "Kuoni Tumlare",
+  "SAP",
+  "WWF / OpenSC",
+  "Azul",
+  "VMware",
+];
+
+const ROW_3 = [
+  "Microsoft",
+  "Vodafone",
+  "Royal Air Force",
+  "GoodNotes",
+  "Cemex",
+  "Walmart",
+  "Pivotal",
+  "Azul",
+  "SAP",
+  "WWF / OpenSC",
+  "Kuoni Tumlare",
+  "VMware",
+];
+
+// Duplicate each so the -50% translate marquee loops seamlessly.
+const ROWS = [
+  [...ROW_1, ...ROW_1],
+  [...ROW_2, ...ROW_2],
+  [...ROW_3, ...ROW_3],
+] as const;
 
 type RowProps = {
   /**
@@ -46,18 +91,21 @@ type RowProps = {
    * The 75/54/90 spread means the rows never re-sync visually.
    */
   variant?: "slow" | "reverse" | "slowest";
+  /** Index into ROWS. Different ordering per row, no vertical repetition. */
+  rowIndex: 0 | 1 | 2;
 };
 
-function MarqueeRow({ variant = "slow" }: RowProps) {
+function MarqueeRow({ variant = "slow", rowIndex }: RowProps) {
   const animClass =
     variant === "reverse"
       ? "animate-marquee-reverse"
       : variant === "slowest"
         ? "animate-marquee-slowest"
         : "animate-marquee-slow";
+  const items = ROWS[rowIndex];
   return (
     <div className={`${animClass} items-center`}>
-      {ROW.map((name, i) => (
+      {items.map((name, i) => (
         <span
           key={`${name}-${i}`}
           className="flex items-center gap-10 md:gap-16 lg:gap-20 pr-10 md:pr-16 lg:pr-20"
@@ -121,9 +169,9 @@ export function Clients() {
           <div className="pointer-events-none absolute inset-y-0 right-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-l from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
 
           <div className="flex flex-col gap-5 md:gap-8 py-8 md:py-10">
-            <MarqueeRow variant="slow" />
-            <MarqueeRow variant="reverse" />
-            <MarqueeRow variant="slowest" />
+            <MarqueeRow variant="slow" rowIndex={0} />
+            <MarqueeRow variant="reverse" rowIndex={1} />
+            <MarqueeRow variant="slowest" rowIndex={2} />
           </div>
         </div>
       </Reveal>

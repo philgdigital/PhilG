@@ -28,7 +28,8 @@ export function Work() {
           return (
             <article
               key={p.id}
-              className="grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[140vh]"
+              id={`work-${p.slug}`}
+              className="grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[140vh] scroll-mt-32"
             >
               {/* LEFT: image card pins to viewport center while content scrolls */}
               <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">

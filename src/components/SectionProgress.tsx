@@ -1,60 +1,73 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { projects } from "@/lib/projects";
 
 /**
  * Sticky section progress nav.
  *
- * Right-side fixed column of 10 dots, one per major homepage section.
+ * Right-side fixed column of dots, one per major homepage section.
  * Tracks the visitor's scroll position via IntersectionObserver and
- * lights up the active section. Click any dot to smooth-scroll to that
- * section. The active section's label appears next to its dot.
+ * lights up the active section. Click any dot to smooth-scroll there.
+ *
+ * When the active section is "Selected Work" (05), the nav expands a
+ * sub-list of the four case-study projects below the dot. Each sub-item
+ * tracks its own intersection and highlights as the visitor scrolls
+ * through that article. Sub-items collapse again when the visitor
+ * leaves the Work section.
  *
  * Editorial pattern borrowed from EPAM / Linear / IDEO Journal / Stripe
  * Press: gives the long page a tangible spine and lets a returning
  * visitor jump straight to the section they care about.
  *
- * Hidden on:
- *   - mobile (< md): the dots are too small to be useful at thumb scale
- *   - while still in the hero (first viewport): floats over Hero
- *     unnecessarily; only fades in after the user has started reading
- *   - prefers-reduced-motion: works the same, but no entrance fade
+ * Hidden on mobile (< md). Hidden until the visitor has scrolled past
+ * the first viewport so it doesn't float over the hero.
  */
 
-const SECTIONS: { id: string; num: string; label: string }[] = [
+type SubItem = { id: string; label: string };
+type Section = {
+  id: string;
+  num: string;
+  label: string;
+  subItems?: SubItem[];
+};
+
+const SECTIONS: Section[] = [
   { id: "clients", num: "01", label: "Trusted By" },
   { id: "about", num: "02", label: "The Architect" },
   { id: "advantage", num: "03", label: "The Enterprise Advantage" },
   { id: "impact", num: "04", label: "Impact" },
-  { id: "work", num: "05", label: "Selected Work" },
-  { id: "insights", num: "06", label: "Insights" },
-  { id: "testimonials", num: "07", label: "Client Voice" },
-  { id: "expertise", num: "08", label: "Capabilities" },
-  { id: "ai-lab", num: "09", label: "The AI Lab" },
-  { id: "process", num: "10", label: "How I Work" },
-  { id: "faq", num: "11", label: "Common Questions" },
+  {
+    id: "work",
+    num: "05",
+    label: "Selected Work",
+    subItems: projects.map((p) => ({
+      id: `work-${p.slug}`,
+      label: p.title,
+    })),
+  },
+  { id: "testimonials", num: "06", label: "Client Voice" },
+  { id: "expertise", num: "07", label: "Capabilities" },
+  { id: "ai-lab", num: "08", label: "The AI Lab" },
+  { id: "process", num: "09", label: "How I Work" },
+  { id: "faq", num: "10", label: "Common Questions" },
+  { id: "insights", num: "11", label: "Insights" },
   { id: "contact", num: "12", label: "Initiate" },
 ];
 
 export function SectionProgress() {
   const [activeId, setActiveId] = useState<string | null>(null);
-  // Visible only after user scrolls past the hero (first viewport).
+  const [activeWorkSubId, setActiveWorkSubId] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Pick the section whose top-edge crossed the upper third of the
-    // viewport most recently. rootMargin biases the observation zone
-    // upward so the active dot tracks "what you're reading" not "what's
-    // exactly centered".
-    const observer = new IntersectionObserver(
+    // Section-level observer. Uses a band 35-65% of the viewport height
+    // so the active dot tracks "what the visitor is reading" not "what
+    // is exactly centered".
+    const sectionObserver = new IntersectionObserver(
       (entries) => {
-        // Filter to currently intersecting entries; pick the one whose
-        // top is closest to the rootMargin top boundary.
         const intersecting = entries.filter((e) => e.isIntersecting);
         if (intersecting.length === 0) return;
-        // Of the intersecting sections, choose the one whose top is
-        // smallest (i.e. closest to the top of the viewport but still
-        // within the active band).
         const sorted = intersecting.sort(
           (a, b) =>
             Math.abs(a.boundingClientRect.top) -
@@ -63,8 +76,6 @@ export function SectionProgress() {
         setActiveId(sorted[0].target.id);
       },
       {
-        // Active band: from 35% from top of viewport down to 65%.
-        // A section that has any pixel inside this band is "current".
         rootMargin: "-35% 0px -65% 0px",
         threshold: 0,
       },
@@ -72,15 +83,43 @@ export function SectionProgress() {
 
     SECTIONS.forEach(({ id }) => {
       const node = document.getElementById(id);
-      if (node) observer.observe(node);
+      if (node) sectionObserver.observe(node);
     });
 
-    return () => observer.disconnect();
+    // Sub-article observer for Work case studies. A wider band (20-80%)
+    // because each Work article is taller than a viewport and we want
+    // the sub-item to track which article is on screen, not just which
+    // crossed the precise center.
+    const workSubObserver = new IntersectionObserver(
+      (entries) => {
+        const intersecting = entries.filter((e) => e.isIntersecting);
+        if (intersecting.length === 0) return;
+        const sorted = intersecting.sort(
+          (a, b) =>
+            Math.abs(a.boundingClientRect.top) -
+            Math.abs(b.boundingClientRect.top),
+        );
+        setActiveWorkSubId(sorted[0].target.id);
+      },
+      {
+        rootMargin: "-20% 0px -75% 0px",
+        threshold: 0,
+      },
+    );
+
+    const workSection = SECTIONS.find((s) => s.id === "work");
+    workSection?.subItems?.forEach(({ id }) => {
+      const node = document.getElementById(id);
+      if (node) workSubObserver.observe(node);
+    });
+
+    return () => {
+      sectionObserver.disconnect();
+      workSubObserver.disconnect();
+    };
   }, []);
 
   useEffect(() => {
-    // Show after the visitor has scrolled at least one viewport height.
-    // Hides again if they scroll back to top.
     const onScroll = () => {
       setVisible(window.scrollY > window.innerHeight * 0.6);
     };
@@ -98,37 +137,85 @@ export function SectionProgress() {
     >
       {SECTIONS.map((s) => {
         const isActive = activeId === s.id;
+        const hasSubItems = !!s.subItems?.length;
+        const showSubItems = hasSubItems && isActive;
         return (
-          <a
-            key={s.id}
-            href={`#${s.id}`}
-            data-magnetic="true"
-            aria-label={`${s.num} · ${s.label}`}
-            aria-current={isActive ? "true" : undefined}
-            className="group flex items-center justify-end gap-3 hover-target"
-          >
-            {/* Label: visible only on hover (always visible for active) */}
-            <span
-              className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap transition-all duration-300 ${
-                isActive
-                  ? "opacity-100 text-white"
-                  : "opacity-0 group-hover:opacity-100 text-zinc-400"
-              }`}
+          <div key={s.id} className="flex flex-col items-end gap-2">
+            <a
+              href={`#${s.id}`}
+              data-magnetic="true"
+              aria-label={`${s.num} · ${s.label}`}
+              aria-current={isActive ? "true" : undefined}
+              className="group flex items-center justify-end gap-3 hover-target"
             >
-              <span className="text-zinc-600 mr-2">{s.num}</span>
-              {s.label}
-            </span>
+              <span
+                className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap transition-all duration-300 ${
+                  isActive
+                    ? "opacity-100 text-white"
+                    : "opacity-0 group-hover:opacity-100 text-zinc-400"
+                }`}
+              >
+                <span className="text-zinc-600 mr-2">{s.num}</span>
+                {s.label}
+              </span>
+              <span
+                aria-hidden
+                className={`shrink-0 rounded-full transition-all duration-300 ease-[var(--ease-out)] ${
+                  isActive
+                    ? "w-2.5 h-2.5 bg-[#0f62fe] shadow-[0_0_12px_rgba(15,98,254,0.8)]"
+                    : "w-1.5 h-1.5 bg-white/30 group-hover:bg-white/70"
+                }`}
+              />
+            </a>
 
-            {/* Dot */}
-            <span
-              aria-hidden
-              className={`shrink-0 rounded-full transition-all duration-300 ease-[var(--ease-out)] ${
-                isActive
-                  ? "w-2.5 h-2.5 bg-[#0f62fe] shadow-[0_0_12px_rgba(15,98,254,0.8)]"
-                  : "w-1.5 h-1.5 bg-white/30 group-hover:bg-white/70"
-              }`}
-            />
-          </a>
+            {/* Sub-items: collapse/expand when entering/leaving Work */}
+            {hasSubItems && (
+              <div
+                className={`flex flex-col items-end gap-2 mr-[5px] pr-3 border-r border-white/10 overflow-hidden transition-all duration-500 ease-[var(--ease-out)] ${
+                  showSubItems
+                    ? "max-h-72 opacity-100 mt-1"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                {s.subItems!.map((sub, i) => {
+                  const subActive = activeWorkSubId === sub.id;
+                  return (
+                    <a
+                      key={sub.id}
+                      href={`#${sub.id}`}
+                      data-magnetic="true"
+                      aria-label={sub.label}
+                      aria-current={subActive ? "true" : undefined}
+                      className="group flex items-center justify-end gap-2.5 hover-target"
+                      style={{
+                        transitionDelay: showSubItems
+                          ? `${i * 60 + 100}ms`
+                          : "0ms",
+                      }}
+                    >
+                      <span
+                        className={`font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap transition-all duration-300 ${
+                          subActive
+                            ? "opacity-100 text-[#4589ff]"
+                            : "opacity-70 group-hover:opacity-100 text-zinc-500"
+                        }`}
+                      >
+                        {sub.label}
+                      </span>
+                      <span
+                        aria-hidden
+                        className={`shrink-0 rounded-full transition-all duration-300 ${
+                          subActive
+                            ? "w-2 h-2 bg-[#4589ff] shadow-[0_0_8px_rgba(69,137,255,0.7)]"
+                            : "w-1 h-1 bg-white/25 group-hover:bg-white/60"
+                        }`}
+                      />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         );
       })}
     </nav>

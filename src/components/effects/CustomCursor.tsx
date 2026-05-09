@@ -184,18 +184,22 @@ export function CustomCursor() {
         : "border-[1.5px] border-white/40";
   const ringScale = isClicked ? "scale-90" : "scale-100";
 
+  // z-index sits ABOVE the modal layer (z-[200]) so the cursor stays
+  // visible when the contact form modal opens. Without this, the modal
+  // backdrop covers the cursor and the visitor sees the system cursor
+  // re-appear or no cursor at all.
   return (
     <>
       <div
         ref={dotRef}
-        className={`fixed top-0 left-0 w-1 h-1 -ml-0.5 -mt-0.5 bg-white rounded-full pointer-events-none z-[100] mix-blend-difference transition-transform duration-100 ${
+        className={`fixed top-0 left-0 w-1 h-1 -ml-0.5 -mt-0.5 bg-white rounded-full pointer-events-none z-[300] mix-blend-difference transition-transform duration-100 ${
           isClicked ? "scale-50" : "scale-100"
         }`}
         aria-hidden
       />
       <div
         ref={ringRef}
-        className={`fixed top-0 left-0 pointer-events-none z-[99] rounded-full transition-[width,height,margin,border-color,background-color,transform] duration-300 ease-out ${ringSize} ${ringStyle} ${ringScale}`}
+        className={`fixed top-0 left-0 pointer-events-none z-[299] rounded-full transition-[width,height,margin,border-color,background-color,transform] duration-300 ease-out ${ringSize} ${ringStyle} ${ringScale}`}
         aria-hidden
       />
     </>
