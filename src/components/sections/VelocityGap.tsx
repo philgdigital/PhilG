@@ -141,11 +141,14 @@ export function VelocityGap() {
       id="velocity"
       className="relative z-10 py-32 md:py-44 px-6 md:px-12 lg:px-24 overflow-hidden"
       style={{
-        // Soft dark band with very wide fade zones so the top + bottom
-        // edges dissolve into the surrounding orb-bg without a visible
-        // mark.
+        // Soft dark band. Top fade tightened to 6% (was 20%) so the
+        // dark surface starts immediately after the universal section
+        // divider hairline at top:0. The earlier 20% fade-in let the
+        // page bg orbs bleed through the top of the section, which
+        // read as a stray fluid blob right beneath the divider.
+        // Bottom fade kept wide for a soft handoff to the Aphorism.
         background:
-          "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.7) 20%, rgba(2,2,5,0.7) 80%, rgba(2,2,5,0) 100%)",
+          "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.72) 6%, rgba(2,2,5,0.72) 80%, rgba(2,2,5,0) 100%)",
       }}
     >
       {/* Soft IBM-blue glow behind the headline for depth. */}

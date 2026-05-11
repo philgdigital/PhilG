@@ -23,7 +23,18 @@ export function Hero() {
       <div
         aria-hidden
         className="hero-liquid pointer-events-none absolute inset-0 overflow-hidden"
-        style={{ transform: "translateZ(0)" }}
+        style={{
+          transform: "translateZ(0)",
+          // Mask the liquid layer to fade out toward the bottom of
+          // the Hero so the displaced gradient never reaches the
+          // section boundary. Without this the warped blobs were
+          // visible right where the section divider sits, reading
+          // as a stray "weird shape" near the next section.
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 60%, transparent 92%)",
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 60%, transparent 92%)",
+        }}
       >
         <svg
           className="absolute inset-0 w-full h-full"
@@ -223,136 +234,172 @@ export function Hero() {
             </div>
           </Reveal>
 
-          {/* TRUST ROW (replaces the standalone Trusted By section).
-              A single short editorial intro line above a row of brand
-              wordmarks. Each wordmark uses the brand's approximate
-              color + signature typographic style, with a tiny accent
-              SVG mark for the ones that have a recognisable graphic
-              element. The marks are simplified generic shapes, not
-              copies of trademarked logos. Hover lifts each to full
-              opacity + adds a soft brand-tinted drop-shadow. */}
-          <Reveal delay={900}>
-            <div className="mt-10 md:mt-14 flex flex-col gap-5 md:gap-7">
-              {/* Single-line meta. Shorter than before so it never
-                  wraps on lg viewports; reads like a wordmark caption. */}
-              <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 whitespace-nowrap">
-                Built for Fortune 500 ·{" "}
-                <span className="text-zinc-300">17 years</span> · No recycled
-                decks
-              </p>
-              <ul className="flex flex-wrap items-center gap-x-7 md:gap-x-10 gap-y-4 md:gap-y-5">
-                {/* WALMART : blue wordmark + 6-point yellow spark. */}
-                <li className="group flex items-center gap-2 cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <svg
-                    viewBox="0 0 20 20"
-                    aria-hidden
-                    className="w-4 h-4 md:w-[18px] md:h-[18px] shrink-0 text-[#ffc220] group-hover:drop-shadow-[0_0_8px_rgba(255,194,32,0.6)] transition-all duration-500"
-                  >
-                    {[0, 30, 60, 90, 120, 150].map((deg) => (
-                      <rect
-                        key={deg}
-                        x="9.25"
-                        y="2"
-                        width="1.5"
-                        height="6.5"
-                        rx="0.75"
-                        fill="currentColor"
-                        transform={`rotate(${deg} 10 10)`}
-                      />
-                    ))}
-                  </svg>
-                  <span className="font-sans font-bold tracking-tight text-xl md:text-2xl text-[#0071ce] group-hover:text-[#0a8fff] transition-colors duration-500">
-                    Walmart
-                  </span>
-                </li>
-
-                {/* VMWARE : italic bold mark, dark wordmark. */}
-                <li className="group cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <span className="font-sans italic font-extrabold tracking-tight text-xl md:text-2xl text-zinc-200">
-                    vm
-                    <span className="text-[#717074] group-hover:text-zinc-300 transition-colors duration-500">
-                      ware
-                    </span>
-                  </span>
-                </li>
-
-                {/* SAP : blue blocky wordmark. */}
-                <li className="group cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <span className="font-sans font-black uppercase tracking-[0.04em] text-xl md:text-2xl text-[#008fd3] group-hover:text-[#21a8ec] transition-colors duration-500">
-                    SAP
-                  </span>
-                </li>
-
-                {/* MICROSOFT : 4-square mark + light wordmark. */}
-                <li className="group flex items-center gap-2 cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <svg
-                    viewBox="0 0 14 14"
-                    aria-hidden
-                    className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0"
-                  >
-                    <rect x="0" y="0" width="6" height="6" fill="#f25022" />
-                    <rect x="8" y="0" width="6" height="6" fill="#7fba00" />
-                    <rect x="0" y="8" width="6" height="6" fill="#00a4ef" />
-                    <rect x="8" y="8" width="6" height="6" fill="#ffb900" />
-                  </svg>
-                  <span className="font-sans font-light tracking-tight text-lg md:text-xl text-zinc-200">
-                    Microsoft
-                  </span>
-                </li>
-
-                {/* VODAFONE : red bold wordmark + speech-quote dot. */}
-                <li className="group flex items-baseline gap-1 cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <span
-                    aria-hidden
-                    className="shrink-0 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[#e60000] group-hover:shadow-[0_0_10px_rgba(230,0,0,0.6)] transition-all duration-500"
-                  />
-                  <span className="font-sans font-extrabold tracking-tight text-xl md:text-2xl text-[#e60000] group-hover:text-[#ff2c2c] transition-colors duration-500">
-                    Vodafone
-                  </span>
-                </li>
-
-                {/* CEMEX : dark blue uppercase wordmark. */}
-                <li className="group cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <span className="font-sans font-black uppercase tracking-[0.05em] text-xl md:text-2xl text-[#0a4a8a] group-hover:text-[#1f6ec0] transition-colors duration-500">
-                    CEMEX
-                  </span>
-                </li>
-
-                {/* NESPRESSO : refined serif italic in cream tone. */}
-                <li className="group cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <span className="font-serif italic font-light tracking-tight text-xl md:text-2xl text-[#d8c9b0] group-hover:text-[#f4e9d6] transition-colors duration-500">
-                    Nespresso
-                  </span>
-                </li>
-
-                {/* KUONI TUMLARE : clean sans wordmark in cool grey. */}
-                <li className="group cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <span className="font-sans font-semibold tracking-tight text-xl md:text-2xl text-zinc-200">
-                    Kuoni
-                    <span className="text-zinc-400"> Tumlare</span>
-                  </span>
-                </li>
-
-                {/* ROYAL AIR FORCE : concentric-circles roundel mark
-                    (red / white / blue) + tracked mono uppercase. */}
-                <li className="group flex items-center gap-2 cursor-default opacity-70 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                  <svg
-                    viewBox="0 0 16 16"
-                    aria-hidden
-                    className="w-4 h-4 md:w-[18px] md:h-[18px] shrink-0"
-                  >
-                    <circle cx="8" cy="8" r="7.5" fill="#1f4eaa" />
-                    <circle cx="8" cy="8" r="5" fill="#f4f4f5" />
-                    <circle cx="8" cy="8" r="2.5" fill="#c81f3a" />
-                  </svg>
-                  <span className="font-mono font-medium uppercase tracking-[0.18em] text-[11px] md:text-xs text-zinc-200">
-                    Royal Air Force
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </Reveal>
         </div>
+
+        {/* TRUST ROW (replaces the standalone Trusted By section).
+            Lives OUTSIDE the max-w-3xl body container so it has the
+            full 1400px outer wrapper width to fit all ten brand
+            wordmarks on a single line at lg viewports. On smaller
+            viewports the row wraps naturally. Each wordmark uses
+            brand-approximate colors + signature typography with a
+            small geometric accent mark (none reproduce a trademarked
+            logo file). All brand marks default to 75% opacity;
+            hover lifts to 100% + 1.04x scale. */}
+        <Reveal delay={900}>
+          <div className="mt-10 md:mt-14 flex flex-col gap-5 md:gap-7">
+            <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 whitespace-nowrap">
+              Built for Fortune 500 ·{" "}
+              <span className="text-zinc-300">17 years</span> · No recycled
+              decks
+            </p>
+            {/* lg:flex-nowrap forces single line on desktop; on
+                smaller viewports flex-wrap is the default fallback. */}
+            <ul className="flex flex-wrap lg:flex-nowrap items-center gap-x-5 md:gap-x-7 gap-y-4 md:gap-y-5">
+              {/* WALMART: 4-point sparkle (clean SVG path, fits inside
+                  the viewBox with no clipping) + bright IBM-blue
+                  wordmark. */}
+              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <svg
+                  viewBox="0 0 20 20"
+                  aria-hidden
+                  className="w-[18px] h-[18px] shrink-0 text-[#ffc220] group-hover:drop-shadow-[0_0_8px_rgba(255,194,32,0.6)] transition-all duration-500"
+                >
+                  <path
+                    d="M10 1 L11.4 8.6 L19 10 L11.4 11.4 L10 19 L8.6 11.4 L1 10 L8.6 8.6 Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span className="font-sans font-bold tracking-tight text-base md:text-lg text-[#0a8fff] group-hover:text-[#2da5ff] transition-colors duration-500">
+                  Walmart
+                </span>
+              </li>
+
+              {/* VMWARE: italic two-tone wordmark. */}
+              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <span className="font-sans italic font-extrabold tracking-tight text-base md:text-lg text-zinc-200">
+                  vm
+                  <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors duration-500">
+                    ware
+                  </span>
+                </span>
+              </li>
+
+              {/* SAP: cyan-blue black uppercase. */}
+              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <span className="font-sans font-black uppercase tracking-[0.04em] text-base md:text-lg text-[#21a8ec] group-hover:text-[#4dbdf2] transition-colors duration-500">
+                  SAP
+                </span>
+              </li>
+
+              {/* MICROSOFT: 2x2 four-color square mark + light sans. */}
+              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <svg
+                  viewBox="0 0 14 14"
+                  aria-hidden
+                  className="w-3.5 h-3.5 shrink-0"
+                >
+                  <rect x="0" y="0" width="6" height="6" fill="#f25022" />
+                  <rect x="8" y="0" width="6" height="6" fill="#7fba00" />
+                  <rect x="0" y="8" width="6" height="6" fill="#00a4ef" />
+                  <rect x="8" y="8" width="6" height="6" fill="#ffb900" />
+                </svg>
+                <span className="font-sans font-light tracking-tight text-base md:text-lg text-zinc-200">
+                  Microsoft
+                </span>
+              </li>
+
+              {/* VODAFONE: bright red wordmark with dot accent. */}
+              <li className="group flex items-baseline gap-1 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <span
+                  aria-hidden
+                  className="shrink-0 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#ff2c2c] group-hover:shadow-[0_0_10px_rgba(255,44,44,0.7)] transition-all duration-500"
+                />
+                <span className="font-sans font-extrabold tracking-tight text-base md:text-lg text-[#ff2c2c] group-hover:text-[#ff5757] transition-colors duration-500">
+                  Vodafone
+                </span>
+              </li>
+
+              {/* CEMEX: brighter mid-blue (the previous dark navy
+                  failed contrast on the dark page bg). */}
+              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <span className="font-sans font-black uppercase tracking-[0.05em] text-base md:text-lg text-[#2d8ce0] group-hover:text-[#5aa9eb] transition-colors duration-500">
+                  CEMEX
+                </span>
+              </li>
+
+              {/* NESPRESSO: refined serif italic in cream. */}
+              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <span className="font-serif italic font-light tracking-tight text-base md:text-lg text-[#e6d8c0] group-hover:text-[#f4e9d6] transition-colors duration-500">
+                  Nespresso
+                </span>
+              </li>
+
+              {/* WWF / OpenSC: simple globe ring mark + clean sans. */}
+              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <svg
+                  viewBox="0 0 16 16"
+                  aria-hidden
+                  className="w-4 h-4 shrink-0 text-zinc-200"
+                >
+                  <circle
+                    cx="8"
+                    cy="8"
+                    r="7"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                  />
+                  <ellipse
+                    cx="8"
+                    cy="8"
+                    rx="7"
+                    ry="3"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.1"
+                  />
+                  <line
+                    x1="8"
+                    y1="1"
+                    x2="8"
+                    y2="15"
+                    stroke="currentColor"
+                    strokeWidth="1.1"
+                  />
+                </svg>
+                <span className="font-sans font-bold tracking-tight text-base md:text-lg text-zinc-200">
+                  WWF
+                  <span className="text-zinc-500"> / OpenSC</span>
+                </span>
+              </li>
+
+              {/* KUONI TUMLARE: two-tone semibold sans. */}
+              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <span className="font-sans font-semibold tracking-tight text-base md:text-lg text-zinc-200">
+                  Kuoni
+                  <span className="text-zinc-400"> Tumlare</span>
+                </span>
+              </li>
+
+              {/* ROYAL AIR FORCE: concentric roundel SVG + tracked
+                  mono uppercase. */}
+              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <svg
+                  viewBox="0 0 16 16"
+                  aria-hidden
+                  className="w-4 h-4 shrink-0"
+                >
+                  <circle cx="8" cy="8" r="7.5" fill="#1f4eaa" />
+                  <circle cx="8" cy="8" r="5" fill="#f4f4f5" />
+                  <circle cx="8" cy="8" r="2.5" fill="#c81f3a" />
+                </svg>
+                <span className="font-mono font-medium uppercase tracking-[0.18em] text-[10px] md:text-[11px] text-zinc-200">
+                  Royal Air Force
+                </span>
+              </li>
+            </ul>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -234,34 +234,47 @@ body {
    3. aphorism-dot-pulse: the bottom IBM-blue accent dot scales
       1 -> 1.25 -> 1 + brightens its box-shadow on the same cadence,
       reading as a quiet "still on" signal. */
+/* AMPLIFIED: more visible than the previous subtle version. The
+   char wave now also rotates each character slightly and shifts its
+   color toward IBM blue at the midpoint, so the eye actually reads
+   the motion as a continuous wave rather than wondering if the text
+   is moving at all. */
 @keyframes aphorism-char-wave {
   0%,
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) rotateZ(0);
+    color: rgba(244, 244, 245, 0.95);
   }
   50% {
-    opacity: 0.78;
-    transform: translateY(-2px);
+    opacity: 0.85;
+    transform: translateY(-5px) rotateZ(-1.4deg);
+    color: rgba(105, 160, 255, 1);
   }
 }
 .aphorism-char-wave {
   animation: aphorism-char-wave 4s ease-in-out infinite;
 }
 
+/* Line shimmer: deeper opacity dip + a hue lift on the IBM-blue
+   gradient stop so the hairlines visibly pulse rather than just
+   dimming. */
 @keyframes aphorism-line-shimmer {
   0%,
   100% {
     opacity: 1;
+    filter: brightness(1);
   }
   50% {
-    opacity: 0.45;
+    opacity: 0.35;
+    filter: brightness(1.6);
   }
 }
 .aphorism-line-shimmer {
   animation: aphorism-line-shimmer 5s ease-in-out infinite;
 }
 
+/* Dot pulse: bigger scale + much brighter halo at the peak. */
 @keyframes aphorism-dot-pulse {
   0%,
   100% {
@@ -269,12 +282,14 @@ body {
     box-shadow: 0 0 10px rgba(15, 98, 254, 0.8);
   }
   50% {
-    transform: scale(1.25);
-    box-shadow: 0 0 18px rgba(15, 98, 254, 1);
+    transform: scale(1.45);
+    box-shadow:
+      0 0 22px rgba(15, 98, 254, 1),
+      0 0 44px rgba(15, 98, 254, 0.55);
   }
 }
 .aphorism-dot-pulse {
-  animation: aphorism-dot-pulse 3.6s ease-in-out infinite;
+  animation: aphorism-dot-pulse 3.2s ease-in-out infinite;
 }
 
 /* Pause orb drifts while the visitor is actively scrolling. The orbs

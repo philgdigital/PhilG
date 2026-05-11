@@ -78,7 +78,7 @@ export function PullQuote() {
   return (
     <section
       id="pull-quote"
-      className="relative z-10 border-y border-white/5 py-32 md:py-48 px-6 md:px-12 lg:px-24 overflow-hidden"
+      className="relative z-10 py-32 md:py-48 px-6 md:px-12 lg:px-24 overflow-hidden"
     >
       {/* Soft ambient glow centered behind the quote, anchors the moment */}
       <div
