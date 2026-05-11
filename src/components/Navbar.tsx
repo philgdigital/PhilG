@@ -73,14 +73,28 @@ export function Navbar() {
         aria-label="Primary"
         className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] md:w-[min(96%,1120px)] px-3 md:px-4 py-2.5 flex justify-between items-center gap-4 rounded-full backdrop-blur-3xl bg-black/30 border border-white/8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)]"
       >
+        {/* Logo: square monogram badge instead of the old 'PG R' text.
+            36px rounded-square with a hairline border + glass bg +
+            mono-black 'PG' centered + a small IBM-blue corner dot.
+            Hover lights up the border, fills the bg with a blue tint,
+            adds an ambient glow + scales the corner dot. Reads as a
+            real mark rather than a typographic placeholder. */}
         <Link
           href="/"
           onClick={handleLogoClick}
           data-cursor-no-hint="true"
-          className="shrink-0 pl-3 md:pl-4 font-black text-xl md:text-2xl tracking-tighter text-white hover-target"
+          className="group shrink-0 ml-1 md:ml-2 hover-target"
           aria-label="Phil G, back to home"
         >
-          PG<span className="text-[#0f62fe]">®</span>
+          <span className="relative flex items-center justify-center w-9 h-9 rounded-[10px] border border-white/15 bg-white/[0.04] backdrop-blur-md transition-all duration-500 ease-[var(--ease-out)] group-hover:border-[#0f62fe]/60 group-hover:bg-[#0f62fe]/15 group-hover:shadow-[0_0_18px_rgba(15,98,254,0.45)]">
+            <span className="font-mono font-black text-white text-[13px] tracking-tighter leading-none">
+              PG
+            </span>
+            <span
+              aria-hidden
+              className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.75)] transition-all duration-500 ease-[var(--ease-out)] group-hover:scale-125 group-hover:shadow-[0_0_14px_rgba(15,98,254,1)]"
+            />
+          </span>
         </Link>
         <div className="hidden md:flex items-center gap-1 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
           {NAV_LINKS.map((link) => (
@@ -129,8 +143,16 @@ export function Navbar() {
           }`}
         >
           <div className="flex justify-between items-center mb-16">
-            <span className="font-black text-2xl tracking-tighter text-white">
-              PG<span className="text-[#0f62fe]">®</span>
+            {/* Mobile drawer logo: same square monogram as the desktop
+                pill so the brand mark stays consistent across surfaces. */}
+            <span className="relative flex items-center justify-center w-9 h-9 rounded-[10px] border border-white/15 bg-white/[0.04] backdrop-blur-md">
+              <span className="font-mono font-black text-white text-[13px] tracking-tighter leading-none">
+                PG
+              </span>
+              <span
+                aria-hidden
+                className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.75)]"
+              />
             </span>
             <button
               type="button"
