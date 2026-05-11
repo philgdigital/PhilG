@@ -202,24 +202,35 @@ export function VelocityGap() {
           </div>
         </Reveal>
 
-        {/* Tool row. Each glyph + label is a hover target that shifts
-            to IBM blue on hover. Wraps on narrow viewports. */}
+        {/* Tool row. Strictly ONE LINE for all 8 tools:
+              - lg+: flex-nowrap + justify-between spreads the eight
+                entries across the full 1180px container width.
+              - md/sm: horizontal scroll via overflow-x-auto on a
+                wrapper that breaks out of the section padding so the
+                row can scroll edge-to-edge of the viewport without
+                cutting off the first / last entry. Scrollbar hidden
+                visually (still keyboard-accessible).
+            Each glyph + label is a hover target that shifts to IBM
+            blue on hover. shrink-0 on each item prevents flexbox
+            compression below the natural width. */}
         <Reveal delay={480}>
-          <ul className="mt-10 md:mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-7 md:gap-x-12 md:gap-y-9">
-            {TOOLS.map((tool) => (
-              <li
-                key={tool.name}
-                className="group flex items-center gap-3 text-zinc-300 transition-colors duration-500 ease-[var(--ease-out)] hover:text-[#4589ff]"
-              >
-                <span className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(15,98,254,0.55)]">
-                  {tool.glyph}
-                </span>
-                <span className="font-mono text-sm md:text-base font-medium tracking-[0.02em] whitespace-nowrap">
-                  {tool.name}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-10 md:mt-14 -mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <ul className="flex flex-nowrap items-center justify-between gap-x-5 md:gap-x-6 min-w-max md:min-w-0">
+              {TOOLS.map((tool) => (
+                <li
+                  key={tool.name}
+                  className="group shrink-0 flex items-center gap-2.5 text-zinc-300 transition-colors duration-500 ease-[var(--ease-out)] hover:text-[#4589ff]"
+                >
+                  <span className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(15,98,254,0.55)]">
+                    {tool.glyph}
+                  </span>
+                  <span className="font-mono text-xs md:text-sm font-medium tracking-[0.02em] whitespace-nowrap">
+                    {tool.name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </Reveal>
       </div>
     </section>
