@@ -267,7 +267,10 @@ export function InitialLoader() {
   const TICK_RADIUS = RING_SIZE / 2 - 1;
 
   // Step counter: 01 / 04, 02 / 04, etc. Mono uppercase.
-  const stepLabel = `0${phaseIdx + 1} / 0${PHASES.length}`;
+  // Drop the leading zeros: 1 / 4 instead of 01 / 04. The two visible
+  // leading zeros in the earlier format read as redundant on a counter
+  // that only ever counts to 4.
+  const stepLabel = `${phaseIdx + 1} / ${PHASES.length}`;
   const currentPhase = PHASES[phaseIdx];
 
   return (

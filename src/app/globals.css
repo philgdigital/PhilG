@@ -628,43 +628,57 @@ main > * + *::before {
   }
   .work-text-anim {
     animation: work-text-scroll linear both;
-    animation-range: entry 0% cover 50%;
+    /* entry 0% -> exit 100% so the text slides in AND out across
+       the article's full viewport range, matching the card's
+       hand-off flow rather than stopping at cover 50%. */
+    animation-range: entry 0% exit 100%;
   }
 }
-/* Card breath: dramatic scale + translate so the card visibly
-   pulses through the viewport as the visitor scrolls. Opacity floor
-   bumped to 0.88 (still always readable, never feels "faded out"),
-   but scale + translateY ranges are big enough to be felt:
-   scale 0.92 -> 1 -> 0.92, translateY +-36px -> 0. The 40-60% peak
-   plateau keeps each project centered for a deliberate beat instead
-   of flying past. */
+/* PROJECT-TO-PROJECT HAND-OFF.
+   Each Work project's card and text animate across the FULL viewport
+   range of its article (entry 0% -> exit 100%):
+     - 0%   (article entering from below): card is 100px below its
+       sticky position, scaled 0.82, rotated -2deg, fully transparent.
+       Reads as "card rising up from the next section".
+     - 25-75% (article centered, sticky engaged): card hits its
+       resting state (scale 1, translate 0, rotate 0, full opacity).
+       Holds for half the scroll range so the visitor has a clear
+       "centered, in focus" moment.
+     - 100% (article exiting to the top): card is 100px above its
+       sticky position, scaled 0.82, rotated +2deg, fully transparent.
+       Reads as "card lifting up and out, handing off to the next".
+   The opposite-direction rotation (-2deg in / +2deg out) gives each
+   project a subtle personality on its entrance and exit.
+   The text column mirrors the same up-from-below / up-and-out flow
+   without rotation so the supporting copy stays readable. */
 @keyframes work-card-scroll {
   0% {
-    transform: scale(0.92) translateY(36px);
-    opacity: 0.88;
+    transform: scale(0.82) translateY(100px) rotate(-2deg);
+    opacity: 0;
   }
-  40%,
-  60% {
-    transform: scale(1) translateY(0);
+  25%,
+  75% {
+    transform: scale(1) translateY(0) rotate(0deg);
     opacity: 1;
   }
   100% {
-    transform: scale(0.92) translateY(-36px);
-    opacity: 0.88;
+    transform: scale(0.82) translateY(-100px) rotate(2deg);
+    opacity: 0;
   }
 }
-/* Text reveal: visible slide-in with a dramatic translateX (-30px)
-   and a real opacity fade from 0.55 to 1. Animation-range stops at
-   cover 50%, so by the time the project is centered the text is
-   fully landed; scrolling-out doesn't reverse the text. */
 @keyframes work-text-scroll {
-  from {
-    transform: translateX(-30px);
-    opacity: 0.55;
+  0% {
+    transform: translateY(80px);
+    opacity: 0;
   }
-  to {
-    transform: translateX(0);
+  25%,
+  75% {
+    transform: translateY(0);
     opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px);
+    opacity: 0;
   }
 }
 
