@@ -115,7 +115,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
                 id="form-name"
                 type="text"
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f62fe] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c] focus:border-[#4589ff] focus:bg-white/10 transition-all hover-target"
                 placeholder="Your name"
               />
             </div>
@@ -130,7 +130,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
                 id="form-company"
                 type="text"
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f62fe] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c] focus:border-[#4589ff] focus:bg-white/10 transition-all hover-target"
                 placeholder="Your company"
               />
             </div>
@@ -146,7 +146,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
             <select
               id="form-budget"
               defaultValue="50-100"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-neutral-300 focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target appearance-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-neutral-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f62fe] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c] focus:border-[#4589ff] focus:bg-white/10 transition-all hover-target appearance-none"
             >
               <option value="50-100" className="bg-[#0a0a0c]">
                 $50k – $100k (MVP Acceleration)
@@ -171,7 +171,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
               id="form-vision"
               required
               rows={4}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#0f62fe] focus:bg-white/10 transition-all hover-target resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f62fe] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c] focus:border-[#4589ff] focus:bg-white/10 transition-all hover-target resize-none"
               placeholder="We&apos;re modernizing our enterprise platform and need a UX lead who can ship fast..."
             />
           </div>

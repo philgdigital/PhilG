@@ -392,7 +392,7 @@ export function Work() {
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
               <span className="text-zinc-400">06 ·</span> Selected Work
             </h2>
-            <div className="ml-auto font-mono text-[11px] tracking-[0.32em] uppercase text-zinc-500 tabular-nums">
+            <div className="ml-auto font-mono text-[11px] tracking-[0.32em] uppercase text-zinc-400 tabular-nums">
               {pip}
             </div>
           </div>
@@ -401,7 +401,7 @@ export function Work() {
         {/* Horizontal scroll hint: subtle "Scroll ->" affordance in
             the bottom-center so visitors understand the page-scroll
             input is being translated to horizontal gallery motion. */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500 flex items-center gap-3 pointer-events-none">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-400 flex items-center gap-3 pointer-events-none">
           <span>Scroll</span>
           <span aria-hidden className="inline-block w-6 h-px bg-zinc-600" />
           <span aria-hidden>→</span>

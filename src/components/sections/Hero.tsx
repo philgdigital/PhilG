@@ -417,7 +417,7 @@ export function Hero() {
             hover lifts to 100% + 1.04x scale. */}
         <Reveal delay={900}>
           <div className="mt-10 md:mt-14 flex flex-col gap-5 md:gap-7">
-            <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 whitespace-nowrap">
+            <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-400 whitespace-nowrap">
               Trusted by
             </p>
             {/* Desktop: flex-nowrap + justify-between spreads the

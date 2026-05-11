@@ -129,7 +129,7 @@ export function About() {
               language for client engagements at a glance. */}
           <Reveal delay={560}>
             <div className="flex flex-col gap-3 mt-4">
-              <span className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.32em] uppercase text-zinc-500">
+              <span className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.32em] uppercase text-zinc-400">
                 <span className="text-[#4589ff] mr-2">·</span>
                 Languages
               </span>
@@ -187,7 +187,7 @@ export function About() {
                     <path d="M22,21 Q30,17 38,21" fill="none" stroke="#fff" strokeWidth="1.2" />
                   </svg>
                   <span className="font-medium text-white">Portuguese</span>
-                  <span className="text-zinc-500 text-[11px] tracking-[0.16em] uppercase">Native</span>
+                  <span className="text-zinc-400 text-[11px] tracking-[0.16em] uppercase">Native</span>
                 </span>
                 <span aria-hidden className="text-zinc-700">·</span>
                 <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
@@ -201,7 +201,7 @@ export function About() {
                     <rect y="10" width="60" height="20" fill="#F1BF00" />
                   </svg>
                   <span className="font-medium text-white">Spanish</span>
-                  <span className="text-zinc-500 text-[11px] tracking-[0.16em] uppercase">Professional</span>
+                  <span className="text-zinc-400 text-[11px] tracking-[0.16em] uppercase">Professional</span>
                 </span>
               </div>
             </div>

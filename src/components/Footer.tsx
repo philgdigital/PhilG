@@ -15,6 +15,8 @@ export function Footer({ onOpenForm }: FooterProps) {
   return (
     <footer
       id="contact"
+      role="contentinfo"
+      aria-label="Site footer"
       className="pt-32 pb-12 flex flex-col items-center justify-between min-h-screen relative overflow-hidden z-10"
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-[#0f62fe]/8 blur-[150px] rounded-full pointer-events-none" />
@@ -134,7 +136,7 @@ export function Footer({ onOpenForm }: FooterProps) {
               Line 2: deploy target + the Figma strikethrough
             Hard <br /> forces the split regardless of viewport
             so the cadence reads as two distinct beats. */}
-        <p className="md:absolute md:left-1/2 md:-translate-x-1/2 font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500 text-center leading-relaxed max-w-2xl pointer-events-none">
+        <p className="md:absolute md:left-1/2 md:-translate-x-1/2 font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-400 text-center leading-relaxed max-w-2xl pointer-events-none">
           <span className="text-white">Zero to live in 3 days</span> ·
           Vibe-coded in Claude Code · Git-versioned
           <br />
