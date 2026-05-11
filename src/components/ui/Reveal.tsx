@@ -12,21 +12,21 @@ type RevealProps = {
   direction?: Direction;
 };
 
-// Translate distance is now 2 (8px) instead of 4 (16px). Smaller motion
-// means the entry animation completes visually in less perceived time
-// even at the same duration, so content is readable sooner during fast
-// scrolls.
+// Translate distance: 5 (20px) so the entry motion is genuinely
+// visible. Earlier 2 (8px) was so small the animation felt absent.
 const translateMap: Record<Direction, string> = {
-  up: "translate-y-2",
-  down: "-translate-y-2",
-  left: "translate-x-2",
-  right: "-translate-x-2",
-  none: "translate-y-0 translate-x-0 scale-[0.99]",
+  up: "translate-y-5",
+  down: "-translate-y-5",
+  left: "translate-x-5",
+  right: "-translate-x-5",
+  none: "translate-y-0 translate-x-0 scale-[0.97]",
 };
 
-/** Animation duration in ms. Matches the duration-[350ms] Tailwind class.
-    Was 450ms; tightened to 350ms so reveals complete sooner during scroll. */
-const REVEAL_DURATION_MS = 350;
+/** Animation duration in ms. Matches the duration-[600ms] Tailwind class.
+    600ms is long enough that the motion reads as a deliberate reveal
+    (not a flash) but short enough to complete well within the time a
+    visitor takes to scroll past the element. */
+const REVEAL_DURATION_MS = 600;
 
 export function Reveal({
   children,
@@ -58,15 +58,15 @@ export function Reveal({
       return;
     }
 
-    // Fire VERY EARLY: rootMargin extends the viewport TWO full
-    // viewport-heights below the visible bottom (200% in vmin units)
-    // so reveals start before they're anywhere near the fold. Combined
-    // with threshold 0 (fire on any pixel cross), the visitor never
-    // sees a still-hidden element come into view even on aggressive
-    // wheel scrolls. By the time they reach an element it has had
-    // 1-2 viewports' worth of scroll time to complete its 350ms entry.
-    // The "0px 0px 200% 0px" syntax is valid CSS rootMargin shorthand
-    // (% is relative to the root's height, here the window).
+    // Fire ~80% of a viewport early. This is the sweet spot:
+    //   - Late enough that the entry motion is VISIBLE as the
+    //     element scrolls into view (the visitor actually watches
+    //     the reveal happen, not "already done by the time you see
+    //     it" like a 200% rootMargin produces).
+    //   - Early enough that even at fast scroll speeds the 600ms
+    //     animation finishes before the element reaches the center
+    //     of the viewport, so reading is never interrupted.
+    // threshold: 0 = fire on any pixel cross.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -75,7 +75,7 @@ export function Reveal({
           observer.unobserve(node);
         }
       },
-      { threshold: 0, rootMargin: "0px 0px 200% 0px" },
+      { threshold: 0, rootMargin: "0px 0px 80% 0px" },
     );
     observer.observe(node);
     return () => observer.unobserve(node);
@@ -95,7 +95,7 @@ export function Reveal({
   return (
     <div
       ref={ref}
-      className={`transition-[opacity,transform] duration-[350ms] ease-[var(--ease-out)] ${
+      className={`transition-[opacity,transform] duration-[600ms] ease-[var(--ease-out)] ${
         isVisible
           ? "opacity-100 translate-y-0 translate-x-0 scale-100"
           : `opacity-0 ${translateMap[direction]}`

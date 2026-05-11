@@ -43,7 +43,7 @@ export function AntiPattern() {
         </Reveal>
 
         <Reveal delay={100}>
-          <h3 className="text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-white tracking-tight max-w-4xl mb-16 md:mb-20">
+          <h3 className="headline-scroll text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-white tracking-tight max-w-4xl mb-16 md:mb-20">
             Things I don&apos;t do.{" "}
             <span className="shine-text italic font-serif font-light">
               So we can move

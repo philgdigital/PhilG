@@ -154,14 +154,14 @@ export function VelocityGap() {
           deliberate block. */}
       <div className="relative z-10 max-w-[1180px] mx-auto text-center">
         <Reveal>
-          <span className="font-mono text-[11px] md:text-xs font-medium tracking-[0.32em] uppercase text-zinc-400">
+          <span className="eyebrow-scroll font-mono text-[11px] md:text-xs font-medium tracking-[0.32em] uppercase text-zinc-400">
             <span className="text-[#4589ff] mr-3">·</span>
             The Stack
           </span>
         </Reveal>
 
         <Reveal delay={120}>
-          <h2 className="mt-8 md:mt-10 text-5xl md:text-7xl lg:text-[8rem] font-black tracking-[-0.02em] leading-[0.92] uppercase text-white">
+          <h2 className="headline-scroll mt-8 md:mt-10 text-5xl md:text-7xl lg:text-[8rem] font-black tracking-[-0.02em] leading-[0.92] uppercase text-white">
             The Shipping Gap
             <br />
             <span className="text-[#4589ff] drop-shadow-[0_0_30px_rgba(15,98,254,0.35)]">

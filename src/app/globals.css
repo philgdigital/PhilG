@@ -439,15 +439,17 @@ html[data-scrolling="true"] .animate-blob-d {
     animation-range: entry 0% cover 50%;
   }
 }
-/* Card breath: much smaller scale/translate range + opacity never
-   drops below 0.92 so the card is always readable during scroll.
-   Earlier 0.55 floor made the card feel half-hidden at the edges
-   of its scroll window; the visitor saw a faded card and assumed
-   the content wasn't loaded. */
+/* Card breath: dramatic scale + translate so the card visibly
+   pulses through the viewport as the visitor scrolls. Opacity floor
+   bumped to 0.88 (still always readable, never feels "faded out"),
+   but scale + translateY ranges are big enough to be felt:
+   scale 0.92 -> 1 -> 0.92, translateY +-36px -> 0. The 40-60% peak
+   plateau keeps each project centered for a deliberate beat instead
+   of flying past. */
 @keyframes work-card-scroll {
   0% {
-    transform: scale(0.98) translateY(18px);
-    opacity: 0.92;
+    transform: scale(0.92) translateY(36px);
+    opacity: 0.88;
   }
   40%,
   60% {
@@ -455,20 +457,77 @@ html[data-scrolling="true"] .animate-blob-d {
     opacity: 1;
   }
   100% {
-    transform: scale(0.98) translateY(-18px);
-    opacity: 0.92;
+    transform: scale(0.92) translateY(-36px);
+    opacity: 0.88;
   }
 }
-/* Text reveal: smaller slide + opacity never below 0.85 so the
-   visitor can always read the supporting copy. */
+/* Text reveal: visible slide-in with a dramatic translateX (-30px)
+   and a real opacity fade from 0.55 to 1. Animation-range stops at
+   cover 50%, so by the time the project is centered the text is
+   fully landed; scrolling-out doesn't reverse the text. */
 @keyframes work-text-scroll {
   from {
-    transform: translateX(-14px);
-    opacity: 0.85;
+    transform: translateX(-30px);
+    opacity: 0.55;
   }
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+/* SECTION HEADLINE scroll-scale.
+   Adds a subtle parallax-feel scale + lift to monumental section
+   headlines as they pass through the viewport. The headline starts
+   slightly smaller + offset down, hits 1.0 at center, then settles
+   slightly larger as it exits. The eye reads it as continuous depth.
+   Applied via `.headline-scroll` on any heading we want to feel
+   parallax-alive. Pure CSS, scroll-linked, zero JS cost on browsers
+   that support animation-timeline (Chrome 115+, Edge 115+, Safari 26+).
+   Progressive enhancement: older browsers see the headline in its
+   default static state. */
+@supports (animation-timeline: view()) {
+  .headline-scroll {
+    animation: headline-scroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 80%;
+  }
+}
+@keyframes headline-scroll {
+  0% {
+    transform: scale(0.94) translateY(40px);
+    opacity: 0.7;
+    letter-spacing: -0.005em;
+  }
+  60%,
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* SECTION EYEBROW scroll-slide.
+   Tiny mono eyebrow labels (the "## · Section Name" rows) slide in
+   from the left as the section enters viewport. Same progressive-
+   enhancement pattern. */
+@supports (animation-timeline: view()) {
+  .eyebrow-scroll {
+    animation: eyebrow-scroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+@keyframes eyebrow-scroll {
+  from {
+    transform: translateX(-24px);
+    opacity: 0;
+    letter-spacing: 0.42em;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+    letter-spacing: 0.22em;
   }
 }
 

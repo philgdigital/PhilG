@@ -37,12 +37,16 @@ type AphorismProps = {
   id?: string;
 };
 
-// Tightened from 22ms / 600ms so the full reveal finishes in well
-// under a second even on the longer aphorism (~38 chars * 12ms +
-// 320ms = 776ms). Visitor never has to wait for words to land
-// during scroll.
-const STAGGER_MS = 12;
-const CHAR_DURATION_MS = 320;
+// Visible, dramatic per-character entrance with a chunky lift +
+// generous fade. STAGGER_MS 16 spreads the wave so the eye reads
+// each character settle one after the other (vs 12 which was nearly
+// simultaneous). CHAR_DURATION 520 gives each char a long enough
+// fade-up that the entrance feels deliberate. Full reveal of the
+// longest aphorism (38 chars) lands in ~1.13s + 80% viewport
+// rootMargin = ~1.4s of total visible window. The visitor reaches
+// the section just as the last letter settles.
+const STAGGER_MS = 16;
+const CHAR_DURATION_MS = 520;
 // Non-breaking space. Use this for any " " character inside an
 // inline-block span; a regular space collapses to zero width in that
 // layout context.
@@ -63,9 +67,10 @@ export function Aphorism({ lines, id }: AphorismProps) {
       return;
     }
 
-    // Fire two full viewport-heights early so the section is already
-    // revealed by the time it scrolls into actual view. Avoids the
-    // user catching mid-reveal characters during fast scrolling.
+    // Fire ~80% viewport-height early so the visitor sees the
+    // per-character entrance happen as the section scrolls in (not
+    // already-done). Matches Reveal's rootMargin for a consistent
+    // reveal rhythm site-wide.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -73,7 +78,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
           observer.disconnect();
         }
       },
-      { threshold: 0, rootMargin: "0px 0px 200% 0px" },
+      { threshold: 0, rootMargin: "0px 0px 80% 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -132,9 +137,11 @@ export function Aphorism({ lines, id }: AphorismProps) {
                     className="inline-block transition-[opacity,transform] ease-[var(--ease-out)]"
                     style={{
                       opacity: revealed ? 1 : 0,
+                      // 22px lift gives each character a chunky drop-
+                      // into-place feel. Was 14px; that was too subtle.
                       transform: revealed
                         ? "translateY(0)"
-                        : "translateY(14px)",
+                        : "translateY(22px)",
                       transitionDuration: `${CHAR_DURATION_MS}ms`,
                       transitionDelay: `${delay}ms`,
                     }}
