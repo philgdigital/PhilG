@@ -180,15 +180,6 @@ export function Clients() {
         </div>
       </Reveal>
 
-      <div className="px-6 md:px-12 lg:px-24 relative z-10">
-        <Reveal delay={300}>
-          <p className="mt-16 md:mt-20 max-w-2xl font-mono text-[11px] md:text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
-            <span className="text-white">13 enterprise engagements</span> ·
-            Walmart, VMware, Microsoft, SAP, Cemex, Vodafone, Royal Air Force,
-            Nespresso, WWF. And counting.
-          </p>
-        </Reveal>
-      </div>
     </section>
   );
 }

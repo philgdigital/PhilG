@@ -6,6 +6,7 @@ import { ArrowUpLeft, ArrowUpRight } from "@/components/icons/Icons";
 import { projects, getProject } from "@/lib/projects";
 import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
+import { DiscussProjectButton } from "@/components/DiscussProjectButton";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -248,14 +249,7 @@ export default async function CaseStudy({ params }: RouteProps) {
               </Reveal>
             </div>
             <Reveal delay={200}>
-              <Link
-                href="/#contact"
-                data-magnetic="true"
-                className="group inline-flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-8 py-5 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-500 ease-[var(--ease-out)] will-change-transform"
-              >
-                <span>Discuss your project</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
-              </Link>
+              <DiscussProjectButton />
             </Reveal>
           </div>
         </section>

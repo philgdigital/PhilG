@@ -19,6 +19,10 @@ const MAGNETIC_STRENGTH = 0.32; // 0-1, how much the element follows the cursor
 export function CustomCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
+  // Pulse wrapper follows the cursor position; nested rings inside
+  // animate via CSS keyframes to produce the 'electrified pulse'
+  // signal when hovering over a clickable target.
+  const pulseRef = useRef<HTMLDivElement>(null);
   const [hoverState, setHoverState] = useState<"idle" | "link" | "card">(
     "idle",
   );
@@ -133,6 +137,12 @@ export function CustomCursor() {
       if (ringRef.current) {
         ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
       }
+      // Pulse wrapper mirrors the ring's position so the pulse rings
+      // animate centered on the cursor. The wrapper just translates;
+      // the inner rings scale via CSS animation.
+      if (pulseRef.current) {
+        pulseRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+      }
       raf = requestAnimationFrame(render);
     };
 
@@ -191,6 +201,15 @@ export function CustomCursor() {
         : "border-[1.5px] border-white/40";
   const ringScale = isClicked ? "scale-90" : "scale-100";
 
+  // Pulse rings: visible only when hovering a clickable target.
+  // Two concentric rings with staggered animation delays create the
+  // 'electrified pulse' feel. Color matches the hover state (blue for
+  // links, emerald for cards).
+  const showPulse = hoverState !== "idle";
+  const pulseColor =
+    hoverState === "card" ? "#10b981" : "#0f62fe";
+  const pulseSize = hoverState === "card" ? 48 : 28;
+
   // z-index sits ABOVE the modal layer (z-[200]) so the cursor stays
   // visible when the contact form modal opens. Without this, the modal
   // backdrop covers the cursor and the visitor sees the system cursor
@@ -209,6 +228,41 @@ export function CustomCursor() {
         className={`fixed top-0 left-0 pointer-events-none z-[299] rounded-full transition-[width,height,margin,border-color,background-color,transform] duration-300 ease-out ${ringSize} ${ringStyle} ${ringScale}`}
         aria-hidden
       />
+      {/* Pulse wrapper. Mirrors the ring position in JS. Renders two
+          nested rings that scale outward + fade via CSS animation. */}
+      <div
+        ref={pulseRef}
+        className={`fixed top-0 left-0 pointer-events-none z-[298] transition-opacity duration-300 ${
+          showPulse ? "opacity-100" : "opacity-0"
+        }`}
+        aria-hidden
+      >
+        <span
+          className={`absolute rounded-full ${
+            showPulse ? "animate-cursor-pulse" : ""
+          }`}
+          style={{
+            width: `${pulseSize}px`,
+            height: `${pulseSize}px`,
+            marginLeft: `-${pulseSize / 2}px`,
+            marginTop: `-${pulseSize / 2}px`,
+            border: `1.5px solid ${pulseColor}`,
+            boxShadow: `0 0 16px ${pulseColor}66, inset 0 0 8px ${pulseColor}33`,
+          }}
+        />
+        <span
+          className={`absolute rounded-full ${
+            showPulse ? "animate-cursor-pulse-delay" : ""
+          }`}
+          style={{
+            width: `${pulseSize}px`,
+            height: `${pulseSize}px`,
+            marginLeft: `-${pulseSize / 2}px`,
+            marginTop: `-${pulseSize / 2}px`,
+            border: `1px solid ${pulseColor}`,
+          }}
+        />
+      </div>
     </>
   );
 }

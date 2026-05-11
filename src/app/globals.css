@@ -343,6 +343,34 @@ body {
 }
 
 /* ─────────────────────────────────────────────
+   Cursor pulse on hover.
+   When the custom cursor enters a link or card target, a pulse ring
+   layer expands outward + fades, repeating to clearly signal 'this is
+   clickable'. Two concentric rings staggered for an electrified feel.
+   The pulse element follows the cursor position from JS; this CSS
+   only controls the scale/fade animation on the inner ring.
+   ───────────────────────────────────────────── */
+@keyframes cursor-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+.animate-cursor-pulse {
+  animation: cursor-pulse-ring 1.2s cubic-bezier(0.33, 1, 0.68, 1) infinite;
+}
+/* Second ring offset 600ms so it staggers, creating an 'electrified'
+   double-pulse instead of a single repeating ring. */
+.animate-cursor-pulse-delay {
+  animation: cursor-pulse-ring 1.2s cubic-bezier(0.33, 1, 0.68, 1) infinite;
+  animation-delay: 600ms;
+}
+
+/* ─────────────────────────────────────────────
    View Transitions API
    Premium morph between cards and their content pages. Triggered from
    Work cards (src/components/sections/Work.tsx) and Insights cards

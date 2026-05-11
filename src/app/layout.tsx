@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { AnimatedGradientBackground } from "@/components/effects/AnimatedGradientBackground";
 import { NoiseOverlay } from "@/components/effects/NoiseOverlay";
 import { ClientEffects } from "@/components/effects/ClientEffects";
+import { FormProvider } from "@/lib/form-context";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({
@@ -117,7 +118,13 @@ export default function RootLayout({
         />
         <ClientEffects />
         <NoiseOverlay />
-        <div className="relative w-full h-full">{children}</div>
+        {/* FormProvider wraps everything so any page (homepage, work
+            case studies, insight articles) can open the same
+            ProjectFormModal via useFormContext(). The modal itself is
+            mounted inside the provider. */}
+        <FormProvider>
+          <div className="relative w-full h-full">{children}</div>
+        </FormProvider>
         <Analytics />
       </body>
     </html>

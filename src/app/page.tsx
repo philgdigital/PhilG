@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { ProjectFormModal } from "@/components/ProjectFormModal";
 import { SectionProgress } from "@/components/SectionProgress";
+import { useFormContext } from "@/lib/form-context";
 import { Hero } from "@/components/sections/Hero";
 import { Clients } from "@/components/sections/Clients";
 import { About } from "@/components/sections/About";
@@ -50,7 +49,10 @@ import { AntiPattern } from "@/components/sections/AntiPattern";
  * The lift is applied to: Clients, Advantage, ImpactMetrics, Testimonials.
  */
 export default function Home() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  // openForm comes from the global FormProvider mounted in layout.tsx.
+  // The modal itself is mounted inside that provider, so all routes
+  // (homepage, work case studies, insight articles) share the same form.
+  const { openForm } = useFormContext();
 
   return (
     <>
@@ -87,19 +89,15 @@ export default function Home() {
         <AILab />
         <Aphorism lines={["Outcomes, not optics.", "Decks don't ship."]} />
         <div data-tonal="lift">
-          <Process onOpenForm={() => setIsFormOpen(true)} />
+          <Process onOpenForm={openForm} />
         </div>
-        <FAQ onOpenForm={() => setIsFormOpen(true)} />
+        <FAQ onOpenForm={openForm} />
         <div data-tonal="lift">
           <AntiPattern />
         </div>
         <Insights />
       </main>
-      <Footer onOpenForm={() => setIsFormOpen(true)} />
-      <ProjectFormModal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-      />
+      <Footer onOpenForm={openForm} />
     </>
   );
 }
