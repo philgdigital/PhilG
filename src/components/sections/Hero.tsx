@@ -6,8 +6,115 @@ import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function Hero() {
   return (
-    <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-44 md:pt-52 pb-20 relative z-10">
-      <div className="max-w-[1400px] mx-auto w-full">
+    <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-44 md:pt-52 pb-20 relative z-10 overflow-hidden">
+      {/* LIQUID BG LAYER (Hero-only).
+          Two large radial gradients (IBM blue + emerald) are warped by
+          an SVG feTurbulence + feDisplacementMap filter whose
+          baseFrequency + displacement scale animate continuously. The
+          turbulence noise pattern slowly drifts, dragging the
+          gradient with it, so the color behind the hero text reads as
+          a slow flowing liquid rather than discrete moving orbs.
+
+          Sits at z-0 (above the section's own z-context floor) but
+          below the content div (z-10). The whole layer is gated under
+          .hero-liquid: visitors with prefers-reduced-motion see the
+          static gradient with no displacement animation (and the
+          turbulence is reduced to a single sample). */}
+      <div
+        aria-hidden
+        className="hero-liquid pointer-events-none absolute inset-0 overflow-hidden"
+        style={{ transform: "translateZ(0)" }}
+      >
+        <svg
+          className="absolute inset-0 w-full h-full"
+          preserveAspectRatio="xMidYMid slice"
+          viewBox="0 0 1200 900"
+        >
+          <defs>
+            <filter
+              id="hero-liquid-filter"
+              x="-15%"
+              y="-15%"
+              width="130%"
+              height="130%"
+              colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.009 0.013"
+                numOctaves="2"
+                seed="7"
+                result="noise"
+              >
+                <animate
+                  attributeName="baseFrequency"
+                  dur="24s"
+                  values="0.009 0.013;0.014 0.018;0.011 0.015;0.009 0.013"
+                  repeatCount="indefinite"
+                />
+              </feTurbulence>
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale="70"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              >
+                <animate
+                  attributeName="scale"
+                  dur="18s"
+                  values="50;90;65;50"
+                  repeatCount="indefinite"
+                />
+              </feDisplacementMap>
+            </filter>
+
+            <radialGradient
+              id="hero-liquid-blue"
+              cx="22%"
+              cy="34%"
+              r="55%"
+            >
+              <stop offset="0%" stopColor="rgba(15, 98, 254, 0.45)" />
+              <stop offset="70%" stopColor="rgba(15, 98, 254, 0)" />
+            </radialGradient>
+            <radialGradient
+              id="hero-liquid-emerald"
+              cx="78%"
+              cy="62%"
+              r="50%"
+            >
+              <stop offset="0%" stopColor="rgba(16, 185, 129, 0.32)" />
+              <stop offset="70%" stopColor="rgba(16, 185, 129, 0)" />
+            </radialGradient>
+            <radialGradient
+              id="hero-liquid-blue-2"
+              cx="58%"
+              cy="86%"
+              r="55%"
+            >
+              <stop offset="0%" stopColor="rgba(15, 98, 254, 0.22)" />
+              <stop offset="70%" stopColor="rgba(15, 98, 254, 0)" />
+            </radialGradient>
+          </defs>
+
+          <g filter="url(#hero-liquid-filter)">
+            <rect width="1200" height="900" fill="url(#hero-liquid-blue)" />
+            <rect
+              width="1200"
+              height="900"
+              fill="url(#hero-liquid-emerald)"
+            />
+            <rect
+              width="1200"
+              height="900"
+              fill="url(#hero-liquid-blue-2)"
+            />
+          </g>
+        </svg>
+      </div>
+
+      <div className="relative z-10 max-w-[1400px] mx-auto w-full">
         <Reveal delay={100} direction="none">
           <div className="mb-10">
             <AvailabilityBadge />

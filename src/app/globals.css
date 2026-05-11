@@ -938,4 +938,13 @@ main > * + *::before {
   ::view-transition-group(*) {
     animation: none !important;
   }
+  /* Hide the SVG liquid layer entirely under reduced-motion. SMIL
+     animations inside the filter (feTurbulence + feDisplacementMap)
+     don't always honor the CSS reduced-motion rule, and the static
+     image without the displacement animation isn't a meaningful
+     visual anyway. The AGB orbs behind the section still provide
+     ambient color, just no liquid distortion. */
+  .hero-liquid {
+    display: none;
+  }
 }
