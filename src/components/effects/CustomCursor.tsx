@@ -26,6 +26,12 @@ export function CustomCursor() {
   const [hoverState, setHoverState] = useState<"idle" | "link" | "card">(
     "idle",
   );
+  // Separate from hoverState: controls whether the 'Click for more'
+  // hint pill is shown. Hovering a 'negative' action (X close button,
+  // dismiss backdrop) keeps the pulse signal but suppresses the hint,
+  // so the cursor doesn't suggest 'click for more' on something that
+  // is actually closing/dismissing.
+  const [showHint, setShowHint] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
   const isFinePointer = useFinePointer();
@@ -136,19 +142,36 @@ export function CustomCursor() {
       }
     };
 
+    let lastShowHint = false;
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
       let next: "idle" | "link" | "card" = "idle";
-      if (target.closest(".hover-target") || target.closest("a") || target.closest("button")) {
+      if (
+        target.closest(".hover-target") ||
+        target.closest("a") ||
+        target.closest("button")
+      ) {
         next = "link";
       }
       if (target.closest("[data-card]")) {
         next = "card";
       }
+      // Hint pill defaults to ON whenever the cursor is on a clickable.
+      // Negative actions (close buttons, dismiss backdrops) opt out via
+      // data-cursor-no-hint="true" so the visitor doesn't see 'Click
+      // for more' on something that closes/cancels.
+      const negative = !!target.closest(
+        '[data-cursor-no-hint="true"]',
+      );
+      const nextShowHint = next !== "idle" && !negative;
       if (next !== lastHover) {
         lastHover = next;
         setHoverState(next);
+      }
+      if (nextShowHint !== lastShowHint) {
+        lastShowHint = nextShowHint;
+        setShowHint(nextShowHint);
       }
     };
 
@@ -252,22 +275,22 @@ export function CustomCursor() {
   if (!isFinePointer) return null;
 
   // Refined cursor: small ring + small dot. No giant blob expansion.
-  const ringSize = hoverState === "card" ? "w-12 h-12 -ml-6 -mt-6" : "w-7 h-7 -ml-3.5 -mt-3.5";
+  // Hover state always uses emerald (#10b981) - one consistent color
+  // for every interactive element rather than switching by type.
+  const ringSize =
+    hoverState === "card" ? "w-12 h-12 -ml-6 -mt-6" : "w-7 h-7 -ml-3.5 -mt-3.5";
   const ringStyle =
-    hoverState === "link"
-      ? "border-[1.5px] border-[#0f62fe] bg-[#0f62fe]/10"
-      : hoverState === "card"
-        ? "border-[1.5px] border-[#10b981] bg-[#10b981]/8"
-        : "border-[1.5px] border-white/40";
+    hoverState !== "idle"
+      ? "border-[1.5px] border-[#10b981] bg-[#10b981]/10"
+      : "border-[1.5px] border-white/40";
   const ringScale = isClicked ? "scale-90" : "scale-100";
 
-  // Pulse rings: visible only when hovering a clickable target.
-  // Two concentric rings with staggered animation delays create the
-  // 'electrified pulse' feel. Color matches the hover state (blue for
-  // links, emerald for cards).
+  // Pulse rings: visible whenever the cursor is on a clickable target
+  // (positive OR negative). Color is always emerald - the pulse signals
+  // 'interactive', not 'positive action'. The 'Click for more' hint
+  // text below handles the positive/negative distinction.
   const showPulse = hoverState !== "idle";
-  const pulseColor =
-    hoverState === "card" ? "#10b981" : "#0f62fe";
+  const pulseColor = "#10b981";
   const pulseSize = hoverState === "card" ? 48 : 28;
 
   // z-index sits ABOVE the modal layer (z-[200]) so the cursor stays
@@ -325,11 +348,13 @@ export function CustomCursor() {
           }}
         />
         {/* 'Click for More' hint pill. Offset below-right of the cursor
-            so it doesn't cover what the visitor is hovering. Slight
-            scale-in on appearance for a tasteful entrance. */}
+            so it doesn't cover what the visitor is hovering. Only
+            shown on POSITIVE clickables; negative actions (X close,
+            backdrop dismiss) opt out via data-cursor-no-hint="true"
+            and skip this pill while still getting the pulse. */}
         <span
           className={`absolute font-mono text-[9px] tracking-[0.22em] uppercase whitespace-nowrap text-white px-3 py-1.5 rounded-full backdrop-blur-md bg-black/70 border transition-all duration-300 ease-[var(--ease-out)] ${
-            showPulse
+            showHint
               ? "opacity-100 translate-x-0 translate-y-0 scale-100"
               : "opacity-0 translate-x-1 translate-y-1 scale-95"
           }`}

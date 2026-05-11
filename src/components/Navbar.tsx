@@ -77,6 +77,7 @@ export function Navbar() {
         <button
           type="button"
           aria-label="Close menu"
+          data-cursor-no-hint="true"
           onClick={() => setIsMenuOpen(false)}
           className="absolute inset-0 bg-black/80 backdrop-blur-2xl w-full h-full hover-target cursor-default"
         />
@@ -93,6 +94,7 @@ export function Navbar() {
               type="button"
               onClick={() => setIsMenuOpen(false)}
               aria-label="Close menu"
+              data-cursor-no-hint="true"
               className="text-white hover-target p-2"
             >
               <X className="w-8 h-8" />
