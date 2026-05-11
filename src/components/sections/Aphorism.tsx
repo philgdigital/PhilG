@@ -115,7 +115,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
     <section
       id={id}
       ref={ref}
-      className="relative z-10 py-40 md:py-52 lg:py-64 px-6 md:px-12 lg:px-24 overflow-hidden"
+      className="relative z-10 py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-24 overflow-hidden"
       style={{
         background:
           "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.86) 18%, rgba(2,2,5,0.86) 82%, rgba(2,2,5,0) 100%)",

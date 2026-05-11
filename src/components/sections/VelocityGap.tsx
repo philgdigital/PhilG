@@ -139,7 +139,14 @@ export function VelocityGap() {
   return (
     <section
       id="velocity"
-      className="relative z-10 py-32 md:py-44 px-6 md:px-12 lg:px-24 overflow-hidden"
+      // Padding tightened: previous py-32 md:py-44 was leaving a huge
+      // black gap between the tool row and the next section's
+      // headline (Aphorism's "Shipped is truth."). The block is a
+      // punchy 3-element composition (headline + body + tool row) so
+      // it doesn't need monumental top/bottom air. pt slightly bigger
+      // than pb so the headline still feels intentionally arrived at;
+      // pb-16 lets the Aphorism's own top air absorb the rest.
+      className="relative z-10 pt-24 md:pt-32 pb-16 md:pb-20 px-6 md:px-12 lg:px-24 overflow-hidden"
       style={{
         // Soft dark band. Top fade tightened to 6% (was 20%) so the
         // dark surface starts immediately after the universal section
