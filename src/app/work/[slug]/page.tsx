@@ -76,7 +76,10 @@ export default async function CaseStudy({ params }: RouteProps) {
         </Reveal>
 
         <Reveal delay={100}>
-          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter leading-[0.9] text-white mb-12 max-w-[15ch]">
+          <h1
+            className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter leading-[0.9] text-white mb-12 max-w-[15ch]"
+            style={{ viewTransitionName: `work-title-${project.slug}` }}
+          >
             {project.title}
           </h1>
         </Reveal>
@@ -110,7 +113,10 @@ export default async function CaseStudy({ params }: RouteProps) {
 
         {/* Hero visual */}
         <Reveal delay={400}>
-          <div className="relative w-full aspect-[16/10] rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/8 mb-32 shadow-2xl">
+          <div
+            className="relative w-full aspect-[16/10] rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/8 mb-32 shadow-2xl"
+            style={{ viewTransitionName: `work-card-${project.slug}` }}
+          >
             <Image
               src={project.img}
               alt={project.title}

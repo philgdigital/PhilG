@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { projects } from "@/lib/projects";
 import { Reveal } from "@/components/ui/Reveal";
@@ -8,7 +10,43 @@ import { TiltCard } from "@/components/ui/TiltCard";
 import { ParallaxImage } from "@/components/ui/ParallaxImage";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
+/**
+ * Type augmentation for the browser View Transitions API. Stable in
+ * Chrome 111+, Edge 111+, Safari 18+. Not yet in Firefox. We use it
+ * with feature-detection and fall back to default Next.js navigation
+ * when unsupported, so visitors on every browser still get a working
+ * link, just without the morph.
+ */
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (callback: () => void | Promise<void>) => unknown;
+};
+
 export function Work() {
+  const router = useRouter();
+
+  /**
+   * Intercept the card click. If the browser supports the View
+   * Transitions API, wrap the navigation in startViewTransition so the
+   * card image + title morph into the case-study page's hero image +
+   * title (the matching viewTransitionName values are set on both
+   * pages). If unsupported, let the Next.js <Link> default to native
+   * client-side navigation.
+   */
+  const handleCardClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, slug: string) => {
+      const doc = document as ViewTransitionDocument;
+      if (typeof doc.startViewTransition !== "function") return;
+      // Modifier-click should still open in new tab without animation.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      doc.startViewTransition(() => {
+        router.push(`/work/${slug}`);
+      });
+    },
+    [router],
+  );
+
+
   return (
     <section id="work" className="px-6 md:px-12 lg:px-24 relative z-10 py-32">
       <Reveal>
@@ -56,7 +94,11 @@ export function Work() {
                       href={`/work/${p.slug}`}
                       data-card="true"
                       data-magnetic="true"
+                      onClick={(e) => handleCardClick(e, p.slug)}
                       className="group relative block w-full rounded-[2rem] md:rounded-[2.5rem] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] md:aspect-[5/6] transition-all duration-700 hover:border-white/15 shadow-2xl will-change-transform"
+                      style={{
+                        viewTransitionName: `work-card-${p.slug}`,
+                      }}
                     >
                       <ElectricBorder />
                       <ParallaxImage
@@ -85,7 +127,12 @@ export function Work() {
 
                       {/* Title overlaid bottom-left, monumental display */}
                       <div className="absolute bottom-0 left-0 right-0 z-10 p-6 md:p-10 flex items-end justify-between gap-4">
-                        <h3 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl break-words">
+                        <h3
+                          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl break-words"
+                          style={{
+                            viewTransitionName: `work-title-${p.slug}`,
+                          }}
+                        >
                           {p.title}
                         </h3>
                         <span className="shrink-0 hidden md:inline-flex w-12 h-12 rounded-full bg-white/10 backdrop-blur-md items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-x-0 -translate-x-3">
