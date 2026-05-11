@@ -259,7 +259,7 @@ export function Hero() {
                   left to right like a pen stroke.
 
                   After the strike completes, the 'Design' text drops
-                  to 60% opacity (it's the corrected/struck-out word,
+                  to 30% opacity (it's the corrected/struck-out word,
                   so it visually recedes while 'Builder' is the new
                   authoritative read). The opacity transition's delay
                   (700ms) matches the strike animation duration, so
@@ -269,7 +269,7 @@ export function Hero() {
                 <span
                   className="transition-opacity duration-500 ease-out"
                   style={{
-                    opacity: lineDrawn ? 0.6 : 1,
+                    opacity: lineDrawn ? 0.3 : 1,
                     transitionDelay: lineDrawn ? "700ms" : "0ms",
                   }}
                 >
@@ -402,65 +402,6 @@ export function Hero() {
                 </svg>
               </p>
             </div>
-          </Reveal>
-
-          {/* Languages row. Three flags + proficiency level. Sits
-              directly under the role/location meta so it reads as
-              part of Phil's signature. EN reads as British Union
-              Jack (where Phil's design English convention sits);
-              PT as the Brazilian flag (Phil's native), ES as the
-              Spanish flag (Phil's working professional). All flags
-              are inline path-drawn SVGs (same approach as the
-              Czechia flag above) so no emoji-font dependency. */}
-          <Reveal delay={860}>
-            <p className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-500 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <span className="inline-flex items-center gap-2 whitespace-nowrap">
-                <svg
-                  aria-label="United Kingdom"
-                  role="img"
-                  viewBox="0 0 60 30"
-                  className="w-[1.6em] h-[0.95em] inline-block rounded-[1.5px] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] shrink-0"
-                >
-                  <rect width="60" height="30" fill="#012169" />
-                  <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
-                  <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" strokeWidth="3" clipPath="url(#uk-stripe-clip)" />
-                  <path d="M30,0 V30 M0,15 H60" stroke="#fff" strokeWidth="10" />
-                  <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" strokeWidth="5" />
-                </svg>
-                <span className="text-zinc-300">English</span>
-                <span className="text-zinc-500">(Fluent)</span>
-              </span>
-              <span aria-hidden className="text-zinc-700">·</span>
-              <span className="inline-flex items-center gap-2 whitespace-nowrap">
-                <svg
-                  aria-label="Brazil"
-                  role="img"
-                  viewBox="0 0 60 42"
-                  className="w-[1.6em] h-[0.95em] inline-block rounded-[1.5px] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] shrink-0"
-                >
-                  <rect width="60" height="42" fill="#009C3B" />
-                  <polygon points="30,4 56,21 30,38 4,21" fill="#FFDF00" />
-                  <circle cx="30" cy="21" r="8" fill="#002776" />
-                  <path d="M22,21 Q30,17 38,21" fill="none" stroke="#fff" strokeWidth="1.2" />
-                </svg>
-                <span className="text-zinc-300">Portuguese</span>
-                <span className="text-emerald-400/80">(Native)</span>
-              </span>
-              <span aria-hidden className="text-zinc-700">·</span>
-              <span className="inline-flex items-center gap-2 whitespace-nowrap">
-                <svg
-                  aria-label="Spain"
-                  role="img"
-                  viewBox="0 0 60 40"
-                  className="w-[1.6em] h-[0.95em] inline-block rounded-[1.5px] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] shrink-0"
-                >
-                  <rect width="60" height="40" fill="#AA151B" />
-                  <rect y="10" width="60" height="20" fill="#F1BF00" />
-                </svg>
-                <span className="text-zinc-300">Spanish</span>
-                <span className="text-zinc-500">(Professional)</span>
-              </span>
-            </p>
           </Reveal>
 
         </div>
