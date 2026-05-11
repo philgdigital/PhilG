@@ -133,7 +133,7 @@ export function Clients() {
   return (
     <section
       id="clients"
-      className="py-24 md:py-32 relative z-10 border-t border-b border-white/5 overflow-hidden"
+      className="pt-24 md:pt-32 relative z-10 overflow-hidden"
     >
       {/* Ambient glow under the marquee. Anchors the section visually. */}
       <div
@@ -165,9 +165,11 @@ export function Clients() {
         </Reveal>
       </div>
 
-      {/* Full-bleed double marquee, framed top + bottom by hairline rules */}
+      {/* Full-bleed marquee. Top hairline frames it; no bottom border or
+          extra section padding below, so the marquee ends cleanly into
+          the next section without leaving empty space or a double line. */}
       <Reveal delay={200}>
-        <div className="relative w-full border-y border-white/5">
+        <div className="relative w-full border-t border-white/5">
           {/* Edge fade masks: dissolve the rows into the page background */}
           <div className="pointer-events-none absolute inset-y-0 left-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-r from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-l from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
