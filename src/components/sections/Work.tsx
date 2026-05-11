@@ -197,8 +197,18 @@ function ProjectComposition({
 export function Work() {
   const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
-  /** 0 -> 1 progress through the pinned horizontal scroll. */
-  const [progress, setProgress] = useState(0);
+  /** Direct refs for the elements whose styles need to update at
+   *  60fps (track translateX, progress-bar scaleX). Mutating these
+   *  via refs instead of via React state means we don't pay the
+   *  reconciliation cost of a full re-render on every scroll frame;
+   *  the only React state that changes per-frame is the rounded
+   *  activeIdx, which only flips at project boundaries. */
+  const trackRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+  /** Active project index (0-based). Only changes at project
+   *  boundaries, used to drive the pip counter, inert/aria-hidden
+   *  on offscreen articles, and the side-menu hash. */
+  const [activeIdx, setActiveIdx] = useState(0);
   /** matchMedia(lg+); pin scroll only activates on desktop. */
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -228,52 +238,153 @@ export function Work() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // SCROLL -> HORIZONTAL TRACK PROGRESS (desktop only).
-  // Outer wrapper is N * 100vh tall. Inside, the sticky child is
-  // 100vh tall and pins to top:0 of the viewport for (N - 1) * 100vh
-  // of vertical scroll. During that pin period, the horizontal track
-  // translates from 0 to -(N - 1) * 100vw, so each viewport-height
-  // of vertical scroll maps to one viewport-width of horizontal
-  // motion = exactly one project transition.
+  // SMOOTHED SCROLL -> HORIZONTAL TRACK (desktop only).
   //
-  // Math: wrapperRect.top goes from 0 (pin start) to -(N-1)*vh
-  //       (pin end). progress = clamp(-rect.top / pinDuration, 0, 1).
+  // Previous implementation: setProgress(raw) on every rAF, which
+  // re-rendered the whole component each frame AND mapped raw
+  // scroll position directly to translateX. Two visible bugs from
+  // that:
+  //   (a) On macOS / trackpad momentum scroll, scroll events fire in
+  //       bursts with quiet periods between them. The transform
+  //       jumped on each burst and froze between, reading as stutter.
+  //   (b) React re-rendered the entire ProjectComposition tree on
+  //       every frame, including 9 cards w/ TiltCard + Image. On
+  //       slower hardware that bottlenecked at the React reconciler.
+  //
+  // New approach:
+  //   - Scroll events update a target progress (raw, clamped to
+  //     [0, 1]) stored in a ref.
+  //   - A continuous rAF loop lerps current toward target with an
+  //     exponential approach (~95% in 180ms). The lerp irons out
+  //     scroll bursts so the transform is fluid even when the input
+  //     is stuttery.
+  //   - The transform is written DIRECTLY to the track element's
+  //     style via the trackRef. No React state involved per frame.
+  //   - The progress bar's scaleX is updated the same way via
+  //     progressBarRef.
+  //   - React state (activeIdx) is only updated when the rounded
+  //     active project changes (e.g., progress crosses 0.5/(N-1) -
+  //     0.5 ratio). That triggers the pip + inert flip but happens
+  //     at most ~9 times per full scroll, not 60 times per second.
   useEffect(() => {
-    // Mobile (<lg) skips the pinned-scroll subscription entirely.
-    // We don't reset progress to 0 here because trackTransform is
-    // gated on isDesktop above; on mobile the leftover progress
-    // value is never read, so resetting it would just trigger an
-    // extra render that React's set-state-in-effect lint rule
-    // (rightly) discourages.
     if (!isDesktop) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    let rafId = 0;
-    const measure = () => {
-      rafId = 0;
+    const N = projects.length;
+    const transitions = Math.max(1, N - 1);
+    let target = 0;
+    let current = 0;
+    let lastFrameTime = 0;
+    let alive = true;
+    let lastIdx = -1;
+
+    const measureTarget = () => {
       const rect = wrapper.getBoundingClientRect();
       const vh = window.innerHeight;
-      const pinDuration = (projects.length - 1) * vh;
+      const pinDuration = transitions * vh;
       if (pinDuration <= 0) {
-        setProgress(0);
+        target = 0;
         return;
       }
       const raw = -rect.top / pinDuration;
-      setProgress(Math.max(0, Math.min(1, raw)));
-    };
-    const onScroll = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(measure);
+      target = Math.max(0, Math.min(1, raw));
     };
 
-    measure();
+    const applyToDOM = (p: number) => {
+      const tx = -p * transitions * 100;
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${tx}vw, 0, 0)`;
+      }
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleX(${p})`;
+      }
+      const idx = Math.round(p * transitions);
+      if (idx !== lastIdx) {
+        lastIdx = idx;
+        setActiveIdx(idx);
+      }
+    };
+
+    const tick = (now: number) => {
+      if (!alive) return;
+      const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.1) : 0;
+      lastFrameTime = now;
+      // Exponential approach. k = 18 -> ~95% caught up in ~180ms,
+      // ~99% in ~280ms. Fast enough to feel direct, slow enough to
+      // sand off scroll bursts.
+      const k = 18;
+      const alpha = 1 - Math.exp(-k * dt);
+      const diff = target - current;
+      if (Math.abs(diff) < 0.0002) {
+        current = target;
+      } else {
+        current += diff * alpha;
+      }
+      applyToDOM(current);
+      requestAnimationFrame(tick);
+    };
+
+    const onScroll = () => {
+      measureTarget();
+    };
+
+    // Initial measure + render so the track is positioned correctly
+    // on first paint (e.g. if the visitor lands mid-page via a
+    // deep link).
+    measureTarget();
+    current = target;
+    applyToDOM(current);
+    lastFrameTime = performance.now();
+    requestAnimationFrame(tick);
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", measureTarget);
+
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
+      alive = false;
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", measureTarget);
+    };
+  }, [isDesktop]);
+
+  // INITIAL-LOAD HASH NAVIGATION.
+  // If the visitor lands on the page with a hash like #work-sap
+  // (e.g. a shared deep link), the browser's native anchor scroll
+  // can't position correctly because all the desktop article
+  // elements share the same vertical y inside the pinned track.
+  // Programmatically scroll to the project's pin position once the
+  // InitialLoader has released the body-scroll lock (the loader
+  // dispatches 'philg:loader-done' when its overlay fades out).
+  useEffect(() => {
+    if (!isDesktop) return;
+    if (typeof window === "undefined") return;
+
+    const handleHashNav = () => {
+      const hash = window.location.hash;
+      if (!hash.startsWith("#work-")) return;
+      const slug = hash.slice("#work-".length);
+      const idx = projects.findIndex((p) => p.slug === slug);
+      if (idx < 0) return;
+      const wrapper = wrapperRef.current;
+      if (!wrapper) return;
+      // Wait one frame so layout has settled before measuring
+      // offsetTop (especially after web-font swap).
+      requestAnimationFrame(() => {
+        if (!wrapper) return;
+        const targetY = wrapper.offsetTop + idx * window.innerHeight;
+        window.scrollTo({ top: targetY, behavior: "auto" });
+      });
+    };
+
+    type WithFlag = Window & { __philgLoaderDone?: boolean };
+    if ((window as WithFlag).__philgLoaderDone) {
+      handleHashNav();
+      return;
+    }
+    window.addEventListener("philg:loader-done", handleHashNav, { once: true });
+    return () => {
+      window.removeEventListener("philg:loader-done", handleHashNav);
     };
   }, [isDesktop]);
 
@@ -340,18 +451,9 @@ export function Work() {
   }, [isDesktop]);
 
   const N = projects.length;
-  // Inline transform for the horizontal track. translate3d locks the
-  // GPU compositor on so the scroll-linked animation stays smooth
-  // even under heavy paint load from the bg orbs + electric border.
-  const trackTransform = isDesktop
-    ? `translate3d(-${progress * (N - 1) * 100}vw, 0, 0)`
-    : undefined;
-
   // Header pip counter (e.g. "03 / 09") tracks the closest project
-  // to the current scroll position. Rounded so the pip flips at the
-  // halfway point of each transition rather than only at integer
-  // boundaries.
-  const activeIdx = Math.round(progress * (N - 1));
+  // to the current scroll position. Driven by the activeIdx state
+  // that the rAF lerp loop only updates on integer transitions.
   const pip = `${String(activeIdx + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
 
   return (
@@ -409,34 +511,44 @@ export function Work() {
 
         {/* Progress bar: thin hairline along the bottom of the
             pinned window, fills left-to-right as the visitor scrolls
-            through the gallery. Gives a real-time sense of "how far
-            in" you are. */}
+            through the gallery. Updated via progressBarRef directly
+            (DOM mutation) so the bar tracks the smoothed transform
+            at 60fps without paying a React re-render per frame. */}
         <div
           aria-hidden
           className="absolute bottom-0 left-0 right-0 z-30 h-px bg-white/5 pointer-events-none"
         >
           <div
+            ref={progressBarRef}
             className="h-full bg-gradient-to-r from-[#0f62fe] via-[#4589ff] to-[#10b981] shadow-[0_0_12px_rgba(15,98,254,0.5)] origin-left"
-            style={{ transform: `scaleX(${progress})` }}
+            style={{ transform: "scaleX(0)" }}
           />
         </div>
 
         {/* Horizontal track. Width = N * 100vw, transform driven by
-            scroll progress via the inline style above. will-change
-            keeps the GPU layer warm so the animation stays glassy
-            under load. */}
+            the rAF lerp loop directly via trackRef (no React state
+            per frame). will-change keeps the GPU layer warm so the
+            transform animation stays glassy under paint load.
+
+            Each article is `inert` + `aria-hidden` when it's not the
+            currently active project, so keyboard tab navigation
+            and screen readers skip past the offscreen cards. The
+            visitor can still tab through links inside the active
+            project. */}
         <div
+          ref={trackRef}
           className="flex h-full will-change-transform"
           style={{
             width: `${N * 100}vw`,
-            transform: trackTransform,
-            transition: "none",
+            transform: "translate3d(0, 0, 0)",
           }}
         >
           {projects.map((p, index) => (
             <article
               key={p.id}
               id={`work-${p.slug}`}
+              aria-hidden={index !== activeIdx ? "true" : undefined}
+              inert={index !== activeIdx}
               className="shrink-0 w-screen h-screen flex items-center justify-center px-12 lg:px-24 pt-32 pb-24"
             >
               <ProjectComposition
