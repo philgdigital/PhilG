@@ -358,7 +358,7 @@ body {
 /* Funnel fast-zoom transition. The outgoing page zooms aggressively
    forward (scale 1.35) + blurs + fades, reading as 'flying through'.
    The incoming page rushes in from small (scale 0.75) + sharpens from
-   blur, arriving softly. Total ~500-600ms — fast, cinematic.
+   blur, arriving softly. Total ~500-600ms. Fast, cinematic.
    Shared elements (card image + title) morph in parallel over 550ms,
    so the card visually 'opens' into the hero while the page tunnels. */
 @keyframes vt-funnel-out {
