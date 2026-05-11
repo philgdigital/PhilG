@@ -153,12 +153,13 @@ export function Clients() {
 
         <Reveal delay={100}>
           <p className="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.05] max-w-5xl mb-16 md:mb-20 text-white">
-            From Fortune 500 enterprises to category-leading scale-ups.{" "}
+            Built for Fortune 500. Read by category leaders.{" "}
             <span className="shine-text italic font-serif font-light">
               17 years
-            </span>{" "}
+            </span>
+            ,{" "}
             <span className="text-zinc-400 font-light">
-              building products with the world&apos;s most demanding teams.
+              no recycled decks.
             </span>
           </p>
         </Reveal>

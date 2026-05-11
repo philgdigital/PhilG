@@ -85,9 +85,9 @@ export function FAQ() {
 
         <Reveal delay={100}>
           <h3 className="text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-white tracking-tight max-w-5xl mb-16 md:mb-20">
-            What enterprise leaders ask{" "}
+            Questions enterprise leaders ask.{" "}
             <span className="shine-text italic font-serif font-light">
-              before booking the call
+              Answers before the call
             </span>
             .
           </h3>

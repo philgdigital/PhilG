@@ -18,26 +18,32 @@ import { Expertise } from "@/components/sections/Expertise";
 import { AILab } from "@/components/sections/AILab";
 import { Process } from "@/components/sections/Process";
 import { FAQ } from "@/components/sections/FAQ";
+import { Aphorism } from "@/components/sections/Aphorism";
+import { AntiPattern } from "@/components/sections/AntiPattern";
 
 /**
  * Homepage section order (conversion arc):
  *   01  Clients (Trusted By)              proof
+ *   --  Aphorism 1 (Shipped is truth)     editorial pause
  *   02  About (The Architect)             who
  *   03  Advantage (Enterprise Advantage)  promise
- *   --  PullQuote interlude               validation
+ *   --  PullQuote interlude               testimonial
  *   04  ImpactMetrics                     numbers
  *   05  Work                              case studies
  *   06  Testimonials (Client Voice)       social proof
  *   07  Expertise (Capabilities)          breadth
  *   08  AILab                             AI focus
+ *   --  Aphorism 2 (Outcomes not optics)  editorial pause
  *   09  Process (How I Work)              engagement model
  *   10  FAQ (Common Questions)            objection handling
- *   11  Insights                          thought leadership (last; voice + parting gift)
- *   12  Footer (Initiate)                 CTA
+ *   11  Anti-Pattern (Things I don't do)  negative positioning
+ *   12  Insights                          thought leadership
+ *   13  Footer (Initiate)                 CTA
  *
- * Insights moved to position 11 in round 6: works as the parting moment
- * before the contact CTA. Visitor leaves with Phil's voice (writings)
- * top-of-mind instead of mid-page.
+ * Two Aphorism interstitials added in round 8 (end.game-style Phil-
+ * authored aphorisms, NOT testimonials; those rotate in PullQuote).
+ * Anti-Pattern section added between FAQ and Insights to name what
+ * Phil won't do (frees the buyer from agency overhead fears).
  *
  * Alternating sections receive `data-tonal="lift"` so section boundaries
  * are felt rather than seen. See globals.css `[data-tonal="lift"]`.
@@ -64,6 +70,7 @@ export default function Home() {
         <div data-tonal="lift">
           <Clients />
         </div>
+        <Aphorism lines={["Shipped is truth.", "Figma is opinion."]} />
         <About />
         <div data-tonal="lift">
           <Advantage />
@@ -78,8 +85,10 @@ export default function Home() {
         </div>
         <Expertise />
         <AILab />
+        <Aphorism lines={["Outcomes, not optics.", "Decks don't ship."]} />
         <Process />
         <FAQ />
+        <AntiPattern />
         <Insights />
       </main>
       <Footer onOpenForm={() => setIsFormOpen(true)} />

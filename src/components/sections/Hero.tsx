@@ -49,21 +49,28 @@ export function Hero() {
           (no mx-auto) so it doesn't drift into the center of the page.
         */}
         <div className="mt-24 md:mt-32 flex flex-col gap-10 max-w-5xl">
+          {/* Two-tier body (frog pattern: promise first, context underneath).
+              Tier 1 is the headline-level promise the eye lands on. Tier 2
+              is the supporting context, smaller and softer. */}
           <Reveal delay={700}>
-            <p className="text-xl md:text-3xl font-light text-zinc-300 leading-snug">
-              <span className="font-serif italic text-white text-2xl md:text-4xl mr-2">
+            <p className="text-2xl md:text-4xl font-light text-zinc-100 leading-snug">
+              <span className="font-serif italic text-white">
                 I&apos;m Phil G.
-              </span>
+              </span>{" "}
               A Senior Product Design Leader who{" "}
-              <span className="text-white font-medium">designs and builds</span>
-              . <span className="text-white font-medium">17+ years</span>{" "}
-              turning Fortune 500 problems into shipped products: leading{" "}
-              <span className="text-white font-medium">product discovery</span>
-              , crafting{" "}
               <span className="text-white font-medium">
-                AI-ready design systems
+                designs and builds
               </span>
-              , and shipping production-grade React prototypes 10× faster.
+              .
+            </p>
+          </Reveal>
+
+          <Reveal delay={780}>
+            <p className="text-base md:text-xl font-light text-zinc-400 leading-relaxed max-w-3xl">
+              <span className="text-white font-medium">17+ years</span> turning
+              Fortune 500 problems into shipped products. Leading product
+              discovery, crafting AI-ready design systems, and shipping
+              production-grade React prototypes 10× faster.
             </p>
           </Reveal>
 

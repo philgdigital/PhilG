@@ -104,39 +104,68 @@ export function Process() {
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-stretch mb-16 md:mb-20">
-          {STEPS.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <Reveal key={step.num} delay={300 + i * 100} className="h-full">
-                <TiltCard scale={1.03} maxRotation={4} className="h-full">
-                  <div className="group glass h-full rounded-3xl p-8 md:p-10 border-white/5 hover:border-[#0f62fe]/40 transition-all duration-500 hover:shadow-[0_18px_50px_rgba(15,98,254,0.15)] flex flex-col relative overflow-hidden">
-                    <ElectricBorder />
+        {/*
+          Horizontal Blueprint timeline. Reads as one methodology Blueprint
+          (end.game pattern) rather than four parallel cards. A thin gradient
+          connector runs between the four steps at desktop; vertical
+          orientation on mobile so the flow is still visible.
+        */}
+        <div className="relative mb-16 md:mb-20">
+          {/* Desktop connector: horizontal line at the icon-row vertical
+              level, runs from step 1 through step 4. Hidden on mobile. */}
+          <div
+            aria-hidden
+            className="hidden lg:block absolute top-[112px] left-[12%] right-[12%] h-px bg-gradient-to-r from-[#0f62fe]/40 via-[#10b981]/30 to-[#0f62fe]/40 z-0"
+          />
+          {/* Mobile connector: vertical line at the left edge, runs
+              through the stacked cards. */}
+          <div
+            aria-hidden
+            className="lg:hidden absolute left-[18px] top-12 bottom-12 w-px bg-gradient-to-b from-[#0f62fe]/40 via-[#10b981]/30 to-[#0f62fe]/40 z-0"
+          />
 
-                    <div className="flex items-center justify-between mb-8 relative z-10">
-                      <span className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
-                        Step <span className="text-white">{step.num}</span>
-                      </span>
-                      <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-[#4589ff]">
-                        {step.duration}
-                      </span>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-6 items-stretch relative z-10">
+            {STEPS.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <Reveal
+                  key={step.num}
+                  delay={300 + i * 120}
+                  className="h-full"
+                >
+                  <TiltCard scale={1.03} maxRotation={4} className="h-full">
+                    <div className="group glass h-full rounded-3xl p-7 md:p-8 border-white/5 hover:border-[#0f62fe]/40 transition-all duration-500 hover:shadow-[0_18px_50px_rgba(15,98,254,0.15)] flex flex-col relative overflow-hidden">
+                      <ElectricBorder />
+
+                      <div className="flex items-center justify-between mb-6 relative z-10">
+                        <span className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
+                          <span className="text-white">{step.num}</span>
+                        </span>
+                        <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-[#4589ff]">
+                          {step.duration}
+                        </span>
+                      </div>
+
+                      {/* Icon sits at the timeline level. On desktop, the
+                          connector line crosses behind this icon's row, so
+                          a solid bg ring on the icon container hides the
+                          line where it would otherwise cross through. */}
+                      <div className="p-3.5 rounded-2xl bg-[#0a0a0c] w-fit mb-6 border border-white/15 group-hover:border-[#0f62fe]/60 group-hover:scale-110 transition-all duration-500 backdrop-blur-md relative z-10">
+                        <Icon className="w-6 h-6 text-[#4589ff] drop-shadow-[0_0_10px_rgba(15,98,254,0.4)]" />
+                      </div>
+
+                      <h4 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight relative z-10">
+                        {step.title}
+                      </h4>
+                      <p className="text-zinc-400 font-light text-sm md:text-base leading-relaxed group-hover:text-zinc-200 transition-colors mt-auto relative z-10">
+                        {step.desc}
+                      </p>
                     </div>
-
-                    <div className="p-4 rounded-2xl bg-white/5 w-fit mb-8 border border-white/10 group-hover:border-[#0f62fe]/50 group-hover:scale-110 transition-all duration-500 backdrop-blur-md relative z-10">
-                      <Icon className="w-7 h-7 text-[#4589ff] drop-shadow-[0_0_10px_rgba(15,98,254,0.4)]" />
-                    </div>
-
-                    <h4 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight relative z-10">
-                      {step.title}
-                    </h4>
-                    <p className="text-zinc-400 font-light text-base leading-relaxed group-hover:text-zinc-200 transition-colors mt-auto relative z-10">
-                      {step.desc}
-                    </p>
-                  </div>
-                </TiltCard>
-              </Reveal>
-            );
-          })}
+                  </TiltCard>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
 
         <Reveal delay={700}>

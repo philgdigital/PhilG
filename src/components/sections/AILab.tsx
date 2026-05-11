@@ -94,7 +94,7 @@ export function AILab() {
               production
             </span>
             .{" "}
-            <span className="text-zinc-400">The AI capability stack.</span>
+            <span className="text-zinc-400">Not from prompt to demo.</span>
           </h3>
         </Reveal>
 
