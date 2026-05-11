@@ -187,8 +187,9 @@ export function Process() {
 
         <Reveal delay={200}>
           <p className="text-zinc-400 font-light text-xl md:text-2xl max-w-3xl mb-20 md:mb-28 leading-relaxed">
-            No 90-day onboarding. No 12-person agency team. One senior
-            operator embedded with your squad, shipping real product.
+            No 90-day onboarding. No 12-person agency team. Just me. One
+            senior product builder, embedded with your squad, designing
+            and shipping the actual product.
           </p>
         </Reveal>
 
