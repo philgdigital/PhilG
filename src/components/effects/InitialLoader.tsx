@@ -288,8 +288,18 @@ export function InitialLoader() {
   // phaseIdx counts up forever (see brand-reel cycle effect), so we
   // mod it by PHASES.length for both the visible counter and the
   // current-phrase lookup.
-  const visibleIdx = phaseIdx % PHASES.length;
-  const stepLabel = `0 ${visibleIdx + 1}`;
+  //
+  // Defensive guard: clamp via Math.max + double-mod so that even if
+  // phaseIdx somehow lands at a negative value (e.g. via a future
+  // refactor or a stray setPhaseIdx(-1)), the displayed counter
+  // stays inside [1, PHASES.length] and can never render "0 0". The
+  // user has flagged the "0 0" symptom multiple times across stale-
+  // bundle deploys; this guard makes the bug impossible at the
+  // source regardless of what phaseIdx contains.
+  const safeIdx = Math.max(0, phaseIdx);
+  const visibleIdx = ((safeIdx % PHASES.length) + PHASES.length) % PHASES.length;
+  const stepNumber = visibleIdx + 1;
+  const stepLabel = `0 ${stepNumber}`;
   // Phrase strip: pre-render enough copies of PHASES that the strip
   // never runs out before the loader's 9s ceiling. Each phrase tile
   // is exactly PHASE_TILE_PX tall, and the strip translates upward
