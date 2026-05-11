@@ -7,24 +7,48 @@ import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function Hero() {
   // Editorial-correction sequence on the first headline:
-  //   'pristine' (start)    : just "Product Design", no marks
-  //   'striking' (~2.4s)    : strikethrough line draws across "Design"
-  //   'writing'  (~3.0s)    : "Builder" writes itself in above
-  //   'settled'  (~4.0s)    : both states locked in
-  // The delays are calibrated so the sequence fires AFTER the typical
-  // InitialLoader hold (~2-3s on the homepage) so visitors actually
-  // see it. Reload-resistant: same sequence runs every mount.
+  //   'pristine'  : just "Product Design", no marks
+  //   'striking'  : strikethrough line draws across "Design" (600ms)
+  //   'writing'   : "Builder" writes itself in above (900ms)
+  //   'settled'   : both states locked in
+  // The sequence is gated on the InitialLoader being gone. The loader
+  // sets document.body.style.overflow = 'hidden' while it's holding;
+  // when it transitions to 'done' the effect cleanup restores the
+  // previous value (empty string). We poll for that release and then
+  // run the sequence, so visitors ALWAYS see the animation regardless
+  // of how long the loader took to resolve. On subpages where the
+  // loader doesn't render, the first poll returns immediately.
   const [editPhase, setEditPhase] = useState<
     "pristine" | "striking" | "writing" | "settled"
   >("pristine");
   useEffect(() => {
-    const t1 = window.setTimeout(() => setEditPhase("striking"), 2400);
-    const t2 = window.setTimeout(() => setEditPhase("writing"), 3000);
-    const t3 = window.setTimeout(() => setEditPhase("settled"), 4000);
+    const timeouts: number[] = [];
+    let pollInterval = 0;
+
+    const startSequence = () => {
+      // 600ms breathing room after the loader fades, then the strike
+      // draws, then the writing finishes ~2s after sequence start.
+      timeouts.push(
+        window.setTimeout(() => setEditPhase("striking"), 600),
+        window.setTimeout(() => setEditPhase("writing"), 1200),
+        window.setTimeout(() => setEditPhase("settled"), 2200),
+      );
+    };
+
+    if (document.body.style.overflow !== "hidden") {
+      startSequence();
+    } else {
+      pollInterval = window.setInterval(() => {
+        if (document.body.style.overflow !== "hidden") {
+          window.clearInterval(pollInterval);
+          startSequence();
+        }
+      }, 150);
+    }
+
     return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-      window.clearTimeout(t3);
+      timeouts.forEach((id) => window.clearTimeout(id));
+      if (pollInterval !== 0) window.clearInterval(pollInterval);
     };
   }, []);
   const lineDrawn = editPhase !== "pristine";
@@ -185,10 +209,15 @@ export function Hero() {
               {/* Handwritten 'Builder' written above 'Design'.
                   clip-path inset shrinks the right inset 100% -> 0%
                   to "write" the word from left to right. opacity
-                  fades in on the same beat. */}
+                  fades in on the same beat.
+                  z-50 + isolate so it sits ABOVE every other Hero
+                  element (the liquid bg, the strikethrough line,
+                  the headline glow halos) and is never visually
+                  clipped by the parent's transform stacking
+                  context. */}
               <span
                 aria-hidden
-                className="absolute right-1 font-serif italic font-medium text-[#4589ff] pointer-events-none transition-[clip-path,opacity] duration-[900ms] ease-[var(--ease-out)]"
+                className="absolute right-1 z-50 isolate font-serif italic font-medium text-[#4589ff] pointer-events-none transition-[clip-path,opacity] duration-[900ms] ease-[var(--ease-out)]"
                 style={{
                   top: "-0.5em",
                   fontSize: "0.42em",
