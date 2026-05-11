@@ -15,7 +15,7 @@ export function Footer({ onOpenForm }: FooterProps) {
   return (
     <footer
       id="contact"
-      className="pt-32 pb-12 flex flex-col items-center justify-between min-h-screen relative overflow-hidden z-10 border-t border-white/5"
+      className="pt-32 pb-12 flex flex-col items-center justify-between min-h-screen relative overflow-hidden z-10"
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-[#0f62fe]/8 blur-[150px] rounded-full pointer-events-none" />
 

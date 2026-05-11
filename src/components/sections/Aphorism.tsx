@@ -55,6 +55,18 @@ const NBSP = " ";
 export function Aphorism({ lines, id }: AphorismProps) {
   const ref = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
+  // `postEntry` flips on after the per-char stagger has completed.
+  // It gates the CONTINUOUS animation (char wave + line shimmer +
+  // dot pulse) so those motions only kick in once the entry has
+  // landed. Without this gate the entry transitions would fight
+  // the keyframe animation for control of transform/opacity.
+  const [postEntry, setPostEntry] = useState(false);
+
+  // Compute total chars upfront so the post-entry timer is correct.
+  const totalChars = lines.reduce(
+    (sum, l) => sum + Array.from(l).length,
+    0,
+  );
 
   useEffect(() => {
     const el = ref.current;
@@ -84,11 +96,20 @@ export function Aphorism({ lines, id }: AphorismProps) {
     return () => observer.disconnect();
   }, []);
 
+  // Once revealed, schedule the continuous post-entry motion to
+  // start AFTER the slowest character finishes its entrance.
+  useEffect(() => {
+    if (!revealed) return;
+    const totalEntryMs =
+      totalChars * STAGGER_MS + CHAR_DURATION_MS + 150;
+    const t = window.setTimeout(() => setPostEntry(true), totalEntryMs);
+    return () => window.clearTimeout(t);
+  }, [revealed, totalChars]);
+
   // Cumulative char index across all lines so the stagger is one
   // continuous wave from the first letter of line 1 to the last
   // letter of line N.
   let cumulativeCharIndex = 0;
-  const totalChars = lines.reduce((sum, l) => sum + Array.from(l).length, 0);
 
   return (
     <section
@@ -106,11 +127,16 @@ export function Aphorism({ lines, id }: AphorismProps) {
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110vw] h-[55vh] rounded-full bg-[#0f62fe]/[0.05] blur-[140px]"
       />
 
-      <div className="relative z-10 max-w-5xl mx-auto text-center">
-        {/* Thin vertical accent line ABOVE the text. */}
+      <div className="relative z-10 max-w-6xl mx-auto text-center">
+        {/* Thin vertical accent line ABOVE the text. After the entry
+            scaleY animation completes, a continuous slow shimmer
+            cycles its inner gradient brightness so the line stays
+            visually alive instead of going static. */}
         <span
           aria-hidden
-          className="block mx-auto h-16 md:h-20 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent mb-12 md:mb-16 origin-top transition-transform duration-[900ms] ease-[var(--ease-out)]"
+          className={`block mx-auto h-16 md:h-20 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent mb-12 md:mb-16 origin-top transition-transform duration-[900ms] ease-[var(--ease-out)] ${
+            postEntry ? "aphorism-line-shimmer" : ""
+          }`}
           style={{
             transform: revealed ? "scaleY(1)" : "scaleY(0)",
           }}
@@ -121,10 +147,11 @@ export function Aphorism({ lines, id }: AphorismProps) {
           // own token via the capture group). Each word becomes a
           // single inline-block group with whitespace:nowrap so the
           // per-character spans inside can never break MID-WORD.
-          // Before this fix the browser was free to wrap "optics."
-          // between "optic" and "s." since every char was its own
-          // inline-block. Now words are atomic; only whitespace
-          // tokens are wrap points.
+          // Font size capped at lg:text-[6rem] so each line fits on
+          // ONE line inside max-w-6xl. The earlier text-[7.5rem]
+          // was overflowing and wrapping "Outcomes, not optics."
+          // onto two lines, making the aphorism read as three lines
+          // total instead of the intended two.
           const tokens = line.split(/(\s+)/).filter((t) => t.length > 0);
           const lineStartIndex = cumulativeCharIndex;
           cumulativeCharIndex += Array.from(line).length;
@@ -132,7 +159,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
           return (
             <p
               key={lineIdx}
-              className="font-serif italic font-light text-5xl md:text-7xl lg:text-[7.5rem] text-white/95 leading-[1.05] tracking-tight"
+              className="font-serif italic font-light text-5xl md:text-7xl lg:text-[6rem] text-white/95 leading-[1.05] tracking-[-0.01em]"
             >
               {tokens.map((token, tokenIdx) => {
                 // Whitespace token: render as a non-breaking space
@@ -159,10 +186,21 @@ export function Aphorism({ lines, id }: AphorismProps) {
                     {wordChars.map((char, i) => {
                       const globalIdx = wordStart + i;
                       const delay = globalIdx * STAGGER_MS;
+                      // After the entry settles, each char drifts on
+                      // a slow sine-wave: opacity 1 -> 0.78 -> 1 and
+                      // translateY 0 -> -2px -> 0 over 4s. Different
+                      // characters offset by their position so the
+                      // whole line reads as a continuous gentle wave,
+                      // not a uniform pulse. The class is added only
+                      // after the entry stagger has completed so the
+                      // two animations never fight.
+                      const waveDelay = globalIdx * 70;
                       return (
                         <span
                           key={i}
-                          className="inline-block transition-[opacity,transform] ease-[var(--ease-out)]"
+                          className={`inline-block transition-[opacity,transform] ease-[var(--ease-out)] ${
+                            postEntry ? "aphorism-char-wave" : ""
+                          }`}
                           style={{
                             opacity: revealed ? 1 : 0,
                             transform: revealed
@@ -170,6 +208,9 @@ export function Aphorism({ lines, id }: AphorismProps) {
                               : "translateY(22px)",
                             transitionDuration: `${CHAR_DURATION_MS}ms`,
                             transitionDelay: `${delay}ms`,
+                            animationDelay: postEntry
+                              ? `${waveDelay}ms`
+                              : undefined,
                           }}
                         >
                           {char}
@@ -183,7 +224,10 @@ export function Aphorism({ lines, id }: AphorismProps) {
           );
         })}
 
-        {/* Mirror hairline BELOW the text + IBM-blue accent dot. */}
+        {/* Mirror hairline BELOW the text + IBM-blue accent dot.
+            After entrance, the bottom dot continuously pulses (scale
+            + glow intensity) and the hairline gets the same shimmer
+            class as the top one, so the whole frame breathes. */}
         <div
           aria-hidden
           className="flex flex-col items-center mt-14 md:mt-20 transition-opacity duration-[900ms] ease-[var(--ease-out)]"
@@ -192,8 +236,16 @@ export function Aphorism({ lines, id }: AphorismProps) {
             transitionDelay: `${Math.min(totalChars * STAGGER_MS + 200, 1400)}ms`,
           }}
         >
-          <span className="block h-16 md:h-20 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent" />
-          <span className="mt-4 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
+          <span
+            className={`block h-16 md:h-20 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent ${
+              postEntry ? "aphorism-line-shimmer" : ""
+            }`}
+          />
+          <span
+            className={`mt-4 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)] ${
+              postEntry ? "aphorism-dot-pulse" : ""
+            }`}
+          />
         </div>
       </div>
     </section>

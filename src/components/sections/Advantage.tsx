@@ -9,7 +9,7 @@ export function Advantage() {
   return (
     <section
       id="advantage"
-      className="py-24 px-6 md:px-12 lg:px-24 relative z-10 border-t border-white/5 bg-gradient-to-b from-zinc-950/80 to-transparent"
+      className="py-24 px-6 md:px-12 lg:px-24 relative z-10 bg-gradient-to-b from-zinc-950/80 to-transparent"
     >
       <Reveal>
         <div className="flex items-center gap-4 mb-16">

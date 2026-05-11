@@ -30,7 +30,7 @@ export function AntiPattern() {
   return (
     <section
       id="anti-pattern"
-      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24 border-t border-white/5"
+      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24"
     >
       <div className="max-w-5xl mx-auto">
         <Reveal>

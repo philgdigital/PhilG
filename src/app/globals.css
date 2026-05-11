@@ -218,6 +218,65 @@ body {
   will-change: transform;
 }
 
+/* APHORISM continuous motion (post-entry).
+   Three layered loops kick in AFTER the per-character entry stagger
+   completes (gated by React state postEntry). All three are slow
+   sine-like cycles so the aphorism feels alive without ever reading
+   as a gimmick.
+
+   1. aphorism-char-wave: each character drifts vertically +-2px and
+      breathes opacity 1 -> 0.78 -> 1 over 4s. Animation-delay is
+      staggered per-char from React so the whole line reads as a
+      continuous left-to-right wave.
+   2. aphorism-line-shimmer: the thin vertical accent line above +
+      below the text cycles its opacity 1 -> 0.45 -> 1 over 5s,
+      so the IBM-blue gradient inside it appears to slowly breathe.
+   3. aphorism-dot-pulse: the bottom IBM-blue accent dot scales
+      1 -> 1.25 -> 1 + brightens its box-shadow on the same cadence,
+      reading as a quiet "still on" signal. */
+@keyframes aphorism-char-wave {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.78;
+    transform: translateY(-2px);
+  }
+}
+.aphorism-char-wave {
+  animation: aphorism-char-wave 4s ease-in-out infinite;
+}
+
+@keyframes aphorism-line-shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.aphorism-line-shimmer {
+  animation: aphorism-line-shimmer 5s ease-in-out infinite;
+}
+
+@keyframes aphorism-dot-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(15, 98, 254, 0.8);
+  }
+  50% {
+    transform: scale(1.25);
+    box-shadow: 0 0 18px rgba(15, 98, 254, 1);
+  }
+}
+.aphorism-dot-pulse {
+  animation: aphorism-dot-pulse 3.6s ease-in-out infinite;
+}
+
 /* Pause orb drifts while the visitor is actively scrolling. The orbs
    are blurred at 100-140px which means each animated transform forces
    a large GPU layer recomposite per frame; combined with main's scroll-

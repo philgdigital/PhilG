@@ -168,7 +168,7 @@ export function Process({ onOpenForm }: ProcessProps) {
   return (
     <section
       id="process"
-      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24 border-t border-white/5"
+      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24"
     >
       <div className="max-w-7xl mx-auto">
         <Reveal>

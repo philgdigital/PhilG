@@ -226,7 +226,7 @@ export function Insights() {
   return (
     <section
       id="insights"
-      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24 border-t border-white/5"
+      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24"
     >
       <Reveal>
         <div className="flex items-center gap-4 mb-10">

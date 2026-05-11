@@ -64,7 +64,7 @@ export function AILab() {
   return (
     <section
       id="ai-lab"
-      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24 overflow-hidden border-t border-white/5"
+      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24 overflow-hidden"
     >
       {/* Distinctive gradient mesh: blue + emerald orbs.
           Marks this section as a different gear from the rest of the page. */}
