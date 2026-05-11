@@ -154,10 +154,12 @@ export function SectionProgress() {
       {/* Soft cloud-like scrim. blur-3xl on the element itself feathers
           all edges into nothing so the dark bg reads as a diffuse halo
           around the menu, not a contained box. Generous -inset so the
-          blurred extent reaches past the items without cutting off. */}
+          blurred extent reaches past the items without cutting off.
+          Bumped the dark ramp so labels stay legible on bright sections
+          (Hero gradient, Work cards) without losing the diffuse feel. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-y-24 -left-24 -right-12 -z-10 bg-gradient-to-l from-black/55 via-black/30 to-transparent blur-3xl"
+        className="pointer-events-none absolute -inset-y-24 -left-24 -right-12 -z-10 bg-gradient-to-l from-black/80 via-black/50 to-transparent blur-3xl"
       />
 
       {SECTIONS.map((s) => {
@@ -183,11 +185,17 @@ export function SectionProgress() {
               aria-current={isActive ? "true" : undefined}
               className="group flex items-center justify-end gap-3 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-3 will-change-transform"
             >
+              {/* Label gets its own pill backdrop (backdrop-blur-md +
+                  bg-black/45) so the mono text stays readable on
+                  whatever page section sits underneath. The pill is
+                  always rendered but is invisible until the label is
+                  active or hovered (opacity gates both the text and
+                  the backdrop together). */}
               <span
-                className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap transition-all duration-500 ease-[var(--ease-out)] ${
+                className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap backdrop-blur-md rounded-full px-3 py-1 transition-all duration-500 ease-[var(--ease-out)] ${
                   isActive
-                    ? "opacity-100 text-white translate-x-0"
-                    : "opacity-0 -translate-x-2 text-zinc-300 group-hover:opacity-100 group-hover:translate-x-0"
+                    ? "opacity-100 text-white translate-x-0 bg-black/45 ring-1 ring-white/10"
+                    : "opacity-0 -translate-x-2 text-zinc-200 bg-black/40 group-hover:opacity-100 group-hover:translate-x-0 group-hover:ring-1 group-hover:ring-white/10"
                 }`}
               >
                 <span className="text-[#4589ff] mr-2">{s.num}</span>
@@ -229,8 +237,14 @@ export function SectionProgress() {
                           : "0ms",
                       }}
                     >
+                      {/* Sub-item label: same pill-backdrop treatment as
+                          the top-level labels, slightly smaller padding so
+                          the indented sub-list reads as a child of the
+                          parent. backdrop-blur-md keeps the label readable
+                          even when the active Work project's image fills
+                          the sticky horizontal track underneath. */}
                       <span
-                        className={`font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap transition-all duration-500 ease-[var(--ease-out)] ${
+                        className={`font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap backdrop-blur-md rounded-full px-2.5 py-1 bg-black/40 ring-1 ring-white/5 transition-all duration-500 ease-[var(--ease-out)] ${
                           subActive
                             ? "opacity-100 text-[#4589ff]"
                             : "opacity-70 group-hover:opacity-100 text-zinc-300"
