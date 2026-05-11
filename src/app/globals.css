@@ -715,61 +715,63 @@ main > * + *::before {
      100% gone     : translateY(-50px) opacity 0.15 */
 @keyframes work-card-scroll {
   0% {
-    transform: scale(0.86) translateY(130px);
+    transform: scale(0.88) translateY(120px);
     opacity: 0;
     filter: blur(10px);
   }
-  15% {
-    transform: scale(0.96) translateY(38px);
-    opacity: 0.65;
-    filter: blur(2px);
+  10% {
+    transform: scale(0.96) translateY(30px);
+    opacity: 0.7;
+    filter: blur(1.5px);
   }
-  /* IN-FOCUS plateau widened from 35-65% to 25-78%. That's 53% of
-     the article's scroll range spent fully sharp + opacity 1, so
-     the visitor has real time on the centered, in-focus frame
-     before the blur-out kicks in. */
-  25%,
-  78% {
+  /* IN-FOCUS plateau MUCH wider: 18-88% = 70% of the article's
+     scroll range spent fully sharp + opacity 1. Entry compressed
+     to 0-18% so the card arrives quickly, exit compressed to
+     88-100% so the blur-out is brief. The visitor now spends the
+     overwhelming majority of each project in a clean, readable
+     frame. */
+  18%,
+  88% {
     transform: scale(1) translateY(0);
     opacity: 1;
     filter: blur(0);
   }
-  90% {
-    transform: scale(1.06) translateY(-60px);
-    opacity: 0.5;
-    filter: blur(3px);
+  94% {
+    transform: scale(1.04) translateY(-45px);
+    opacity: 0.55;
+    filter: blur(2.5px);
   }
   100% {
-    transform: scale(1.12) translateY(-130px);
+    transform: scale(1.1) translateY(-120px);
     opacity: 0;
     filter: blur(10px);
   }
 }
 @keyframes work-text-scroll {
   0% {
-    transform: translateY(80px);
+    transform: translateY(75px);
     opacity: 0;
   }
-  17% {
-    transform: translateY(28px);
-    opacity: 0.45;
+  12% {
+    transform: translateY(22px);
+    opacity: 0.5;
   }
-  /* IN-FOCUS plateau widened from 30-75% to 25-82%. The right-
-     column copy stays solid white for 57% of the article's scroll
-     range, so visitors have a real reading window before the text
-     starts fading on exit. */
-  25%,
-  82% {
+  /* Text in-focus plateau pushed to 18-90% = 72% of the article's
+     scroll range. The right-column copy stays solid white for
+     almost three-quarters of each project's scroll window so
+     visitors have real reading time before fade-out kicks in. */
+  18%,
+  90% {
     transform: translateY(0);
     opacity: 1;
   }
-  93% {
-    transform: translateY(-22px);
-    opacity: 0.5;
+  96% {
+    transform: translateY(-18px);
+    opacity: 0.55;
   }
   100% {
-    transform: translateY(-50px);
-    opacity: 0.15;
+    transform: translateY(-45px);
+    opacity: 0.2;
   }
 }
 
