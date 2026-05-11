@@ -106,7 +106,27 @@ export function Footer({ onOpenForm }: FooterProps) {
         </div>
       </div>
 
-      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-12 z-10">
+      {/* Build credits note. Editorial signature that doubles as a
+          reinforcement of Phil's "code ships, Figma is opinion"
+          stance. 'Figma' wears the same strikethrough treatment as
+          'Design' in the Hero headline. */}
+      <div className="w-full px-6 md:px-12 lg:px-24 mt-12 z-10 flex justify-center">
+        <p className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500 text-center leading-relaxed max-w-3xl">
+          Vibe-coded in Claude Code · Git-versioned · Shipped on Vercel ·{" "}
+          <span
+            style={{
+              textDecoration: "line-through",
+              textDecorationThickness: "0.06em",
+              textDecorationColor: "rgba(168, 168, 175, 0.9)",
+            }}
+          >
+            Figma
+          </span>{" "}
+          never opened
+        </p>
+      </div>
+
+      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-6 md:mt-8 z-10">
         <span>© {YEAR} PHIL G.</span>
         <div className="mt-4 md:mt-0">
           <AvailabilityBadge variant="compact" onClick={onOpenForm} />
