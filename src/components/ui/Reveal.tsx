@@ -58,15 +58,14 @@ export function Reveal({
       return;
     }
 
-    // Fire ~80% of a viewport early. This is the sweet spot:
-    //   - Late enough that the entry motion is VISIBLE as the
-    //     element scrolls into view (the visitor actually watches
-    //     the reveal happen, not "already done by the time you see
-    //     it" like a 200% rootMargin produces).
-    //   - Early enough that even at fast scroll speeds the 600ms
-    //     animation finishes before the element reaches the center
-    //     of the viewport, so reading is never interrupted.
-    // threshold: 0 = fire on any pixel cross.
+    // Fire WHEN THE ELEMENT IS IN FOCUS, i.e., as it first enters
+    // the viewport, not 80% ahead of time. The 80% lookahead was
+    // doing the animation before the visitor's eye reached the
+    // element, so by the time they saw it the motion was already
+    // over. With rootMargin "0px 0px -8% 0px" the observer fires
+    // when ~8% of the element is inside the viewport (i.e., just as
+    // it crosses into focus). The 600ms entry then runs WHILE the
+    // visitor is reading it scroll into the screen.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -75,7 +74,7 @@ export function Reveal({
           observer.unobserve(node);
         }
       },
-      { threshold: 0, rootMargin: "0px 0px 80% 0px" },
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(node);
     return () => observer.unobserve(node);

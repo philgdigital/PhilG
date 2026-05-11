@@ -5,7 +5,6 @@ import { Footer } from "@/components/Footer";
 import { SectionProgress } from "@/components/SectionProgress";
 import { useFormContext } from "@/lib/form-context";
 import { Hero } from "@/components/sections/Hero";
-import { Clients } from "@/components/sections/Clients";
 import { About } from "@/components/sections/About";
 import { Advantage } from "@/components/sections/Advantage";
 import { PullQuote } from "@/components/sections/PullQuote";
@@ -23,28 +22,28 @@ import { VelocityGap } from "@/components/sections/VelocityGap";
 
 /**
  * Homepage section order (conversion arc):
- *   01  Clients (Trusted By)              proof
- *   --  Aphorism 1 (Shipped is truth)     editorial pause
- *   02  About (The Architect)             who
- *   03  Advantage (Enterprise Advantage)  promise
- *   --  PullQuote interlude               testimonial
- *   04  ImpactMetrics                     numbers
- *   05  Expertise (Capabilities)          breadth (moved up in round 9)
- *   06  Testimonials (Client Voice)       social proof (now precedes Work)
- *   07  Work (Selected Work)              case studies (moved after Voice)
- *   08  AILab                             AI focus
- *   --  Aphorism 2 (Outcomes not optics)  editorial pause
- *   09  Process (How I Work)              engagement model
- *   10  FAQ (Common Questions)            objection handling
- *   11  Anti-Pattern (Things I don't do)  negative positioning
- *   12  Insights                          thought leadership
- *   13  Footer (Initiate)                 CTA
+ *   --  Hero (with embedded trust row of brand wordmarks)
+ *   --  VelocityGap (THE SHIPPING GAP IS WIDENING + 8 tools)
+ *   --  Aphorism 1 (Shipped is truth)
+ *   01  About (The Architect)
+ *   02  Advantage (Enterprise Advantage)
+ *   --  PullQuote interlude
+ *   03  ImpactMetrics
+ *   04  Expertise (Capabilities)
+ *   05  Testimonials (Client Voice)
+ *   06  Work (Selected Work)
+ *   07  AILab
+ *   --  Aphorism 2 (Outcomes not optics)
+ *   08  Process (How I Work)
+ *   09  FAQ (Common Questions)
+ *   10  Anti-Pattern (Things I don't do)
+ *   11  Insights
+ *   12  Footer (Initiate)
  *
- * Round 9 reorder: Capabilities -> Client Voice -> Selected Work
- * (was Selected Work -> Client Voice -> Capabilities). The new flow
- * builds credibility before showing case studies: "here is what I do"
- * (Capabilities) -> "here is what clients say" (Voice) -> "here is the
- * work that backs it up" (Selected Work).
+ * Round 12: the standalone "01 Trusted By" Clients section was
+ * removed. The 13 brand wordmarks now live as a compact trust row
+ * INSIDE the Hero, right below the CTA. About is now 01, every
+ * later section shifts up one.
  *
  * Section IDs (#work, #testimonials, #expertise) stay unchanged so
  * existing deep links + the Navbar #work anchor still resolve.
@@ -74,12 +73,9 @@ export default function Home() {
       <main id="main-content">
         <Hero />
         {/* Velocity Gap interlude: punchy "THE SHIPPING GAP IS WIDENING"
-            block + 8-tool stack row. Sits between Hero and Trusted By
-            as the immediate "why care" hit after the Hero promise. */}
+            block + 8-tool stack row. Sits between Hero and the first
+            numbered section. */}
         <VelocityGap />
-        <div data-tonal="lift">
-          <Clients />
-        </div>
         <Aphorism lines={["Shipped is truth.", "Figma is opinion."]} />
         <div data-tonal="lift">
           <About />

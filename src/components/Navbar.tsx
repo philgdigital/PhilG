@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { XIcon as X } from "@/components/icons/Icons";
 
 const NAV_LINKS = [
@@ -13,6 +15,24 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  /**
+   * Logo click handler. On the homepage, smooth-scrolls to the top.
+   * On any other page (/work/[slug], /insights/[slug]), navigates
+   * back to the homepage. Either way the visitor ends up at the
+   * very top of the homepage, which is what they expect when they
+   * click the logo.
+   */
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push("/");
+    }
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -51,15 +71,17 @@ export function Navbar() {
             the logo against bright content underneath. */}
       <nav
         aria-label="Primary"
-        className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] md:w-[min(96%,1120px)] px-3 md:px-4 py-2.5 flex justify-between items-center gap-4 rounded-full backdrop-blur-2xl bg-black/55 border border-white/8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)]"
+        className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] md:w-[min(96%,1120px)] px-3 md:px-4 py-2.5 flex justify-between items-center gap-4 rounded-full backdrop-blur-3xl bg-black/30 border border-white/8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)]"
       >
-        <a
-          href="#"
+        <Link
+          href="/"
+          onClick={handleLogoClick}
           data-cursor-no-hint="true"
           className="shrink-0 pl-3 md:pl-4 font-black text-xl md:text-2xl tracking-tighter text-white hover-target"
+          aria-label="Phil G, back to home"
         >
           PG<span className="text-[#0f62fe]">®</span>
-        </a>
+        </Link>
         <div className="hidden md:flex items-center gap-1 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
           {NAV_LINKS.map((link) => (
             <a

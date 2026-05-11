@@ -53,7 +53,7 @@ export function Work() {
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-            <span className="text-zinc-400">07 ·</span> Selected Work
+            <span className="text-zinc-400">06 ·</span> Selected Work
           </h2>
         </div>
       </Reveal>
@@ -92,21 +92,38 @@ export function Work() {
           } else {
             background = "rgba(2,2,5,0.52)";
           }
+          // Each article declares its own NAMED view-timeline
+          // (--w-article-N). The card image + right-column text use
+          // animation-timeline: that name. This is the only way the
+          // scroll-driven motion can progress while the inner card
+          // is sticky-pinned: view() applied directly to the sticky
+          // element freezes during pinning, but the article wrapper
+          // itself genuinely moves through the viewport.
+          const timelineName = `--w-${p.slug.replace(/[^a-z0-9]/gi, "-")}`;
           return (
             <div
               key={p.id}
-              className="relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24"
+              className="relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-6 md:py-10"
               style={{ background }}
             >
               <article
                 id={`work-${p.slug}`}
-                className="relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[90vh] scroll-mt-32"
+                className="work-article relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[72vh] scroll-mt-32"
+                style={
+                  {
+                    viewTimelineName: timelineName,
+                    viewTimelineAxis: "block",
+                  } as React.CSSProperties
+                }
               >
               {/* LEFT: image card pins to viewport center while content scrolls.
-                  work-card-scroll applies a CSS scroll-driven scale/translate/
-                  opacity breath cycle on browsers that support animation-
-                  timeline: view(). Others see the static layout. */}
-              <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1 work-card-scroll">
+                  The sticky container itself doesn't get the scroll-driven
+                  animation (view() freezes during sticky pinning). Instead
+                  the card LINK inside carries .work-card-anim with
+                  animation-timeline referencing the article's named
+                  view-timeline declared above. Browsers without
+                  animation-timeline see the static layout. */}
+              <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">
                 <Reveal direction="left" className="w-full">
                   <TiltCard scale={1.02} maxRotation={3} className="w-full">
                     <Link
@@ -114,10 +131,17 @@ export function Work() {
                       data-card="true"
                       data-magnetic="true"
                       onClick={(e) => handleCardClick(e, p.slug)}
-                      className="group relative block w-full rounded-[2rem] md:rounded-[2.5rem] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] md:aspect-[5/6] transition-all duration-700 hover:border-white/15 shadow-2xl will-change-transform"
-                      style={{
-                        viewTransitionName: `work-card-${p.slug}`,
-                      }}
+                      className="work-card-anim group relative block w-full rounded-[2rem] md:rounded-[2.5rem] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] md:aspect-[5/6] transition-all duration-700 hover:border-white/15 shadow-2xl will-change-transform"
+                      style={
+                        {
+                          viewTransitionName: `work-card-${p.slug}`,
+                          // Refer to the article's named view-timeline
+                          // so scroll progress drives the card's
+                          // animation (work-card-scroll keyframe) even
+                          // while the sticky container is pinned.
+                          animationTimeline: timelineName,
+                        } as React.CSSProperties
+                      }
                     >
                       <ElectricBorder />
                       <ParallaxImage
@@ -164,11 +188,19 @@ export function Work() {
               </div>
 
               {/* RIGHT: content scrolls past the sticky image.
-                  work-text-scroll applies a CSS scroll-driven slide+fade
-                  from translateX(-28px) opacity(0.4) at entry to 0/1 at
-                  cover-50%. Same progressive-enhancement caveat as
-                  work-card-scroll. */}
-              <div className="md:order-2 flex flex-col justify-center gap-8 md:py-[18vh] work-text-scroll">
+                  work-text-anim uses the same NAMED view-timeline as
+                  the card so the slide-in is driven by the article's
+                  scroll position, not the text element's own. md:py
+                  reduced from 18vh to 10vh so projects sit closer
+                  together with less wasted space between them. */}
+              <div
+                className="work-text-anim md:order-2 flex flex-col justify-center gap-8 md:py-[10vh]"
+                style={
+                  {
+                    animationTimeline: timelineName,
+                  } as React.CSSProperties
+                }
+              >
                 <Reveal>
                   <div className="flex items-center gap-3">
                     <div

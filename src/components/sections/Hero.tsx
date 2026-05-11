@@ -118,6 +118,69 @@ export function Hero() {
               </p>
             </div>
           </Reveal>
+
+          {/* TRUST ROW (replaces the standalone Trusted By section).
+              A small editorial intro line above a static row of brand
+              wordmarks. Each wordmark carries its own typographic
+              treatment (weight / italic / tracking) so the row reads
+              as a curated brand wall, not a uniform list. Hover
+              brightens each mark to full white + scales slightly. */}
+          <Reveal delay={900}>
+            <div className="mt-10 md:mt-14 flex flex-col gap-5 md:gap-7">
+              <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 max-w-2xl">
+                Built for Fortune 500 · Read by category leaders ·{" "}
+                <span className="text-zinc-300">17 years</span>, no recycled
+                decks.
+              </p>
+              <ul className="flex flex-wrap items-center gap-x-6 md:gap-x-9 gap-y-3 md:gap-y-4">
+                {[
+                  {
+                    name: "Walmart",
+                    cls: "font-sans font-bold tracking-tight text-lg md:text-xl",
+                  },
+                  {
+                    name: "VMware",
+                    cls: "font-sans italic font-medium tracking-wide text-lg md:text-xl",
+                  },
+                  {
+                    name: "SAP",
+                    cls: "font-sans font-black uppercase tracking-[0.06em] text-base md:text-lg",
+                  },
+                  {
+                    name: "Microsoft",
+                    cls: "font-sans font-light tracking-tight text-lg md:text-xl",
+                  },
+                  {
+                    name: "Vodafone",
+                    cls: "font-sans font-bold tracking-tight text-lg md:text-xl",
+                  },
+                  {
+                    name: "Cemex",
+                    cls: "font-sans font-black uppercase tracking-[0.08em] text-base md:text-lg",
+                  },
+                  {
+                    name: "Nespresso",
+                    cls: "font-serif italic font-light tracking-tight text-lg md:text-xl",
+                  },
+                  {
+                    name: "Kuoni Tumlare",
+                    cls: "font-sans font-medium tracking-tight text-lg md:text-xl",
+                  },
+                  {
+                    name: "Royal Air Force",
+                    cls: "font-mono font-medium uppercase tracking-[0.18em] text-[11px] md:text-xs",
+                  },
+                ].map((b) => (
+                  <li
+                    key={b.name}
+                    className={`group ${b.cls} text-zinc-500 hover:text-white transition-all duration-500 ease-[var(--ease-out)] cursor-default whitespace-nowrap hover:scale-[1.03] origin-left`}
+                  >
+                    {b.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>

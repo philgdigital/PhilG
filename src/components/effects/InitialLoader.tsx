@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { projects } from "@/lib/projects";
 import { insights } from "@/lib/insights";
 
@@ -128,6 +129,14 @@ function whenIdle(timeout = 800): Promise<void> {
 }
 
 export function InitialLoader() {
+  const pathname = usePathname();
+  // The loader is a HOMEPAGE moment. Subpages (/work/[slug],
+  // /insights/[slug]) skip it entirely, even on hard refresh, so
+  // clicking into a case study never reads as "the loader is back".
+  // Returning null before any state/effect setup means subpages have
+  // zero loader cost.
+  const isHomepage = pathname === "/";
+
   const [phase, setPhase] = useState<"holding" | "fading" | "done">(
     "holding",
   );
@@ -233,17 +242,25 @@ export function InitialLoader() {
     return () => window.clearTimeout(t);
   }, [phaseIdx, phase]);
 
-  // Lock body scroll while visible.
+  // Lock body scroll while the loader is visible. Subpages skip the
+  // lock since they never render the overlay; locking them anyway
+  // would freeze the page until the loader's done state.
   useEffect(() => {
+    if (!isHomepage) return;
     if (phase === "done") return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [phase]);
+  }, [phase, isHomepage]);
 
   if (phase === "done") return null;
+  // Subpages: skip the loader entirely after the (non-blocking)
+  // hooks above have been called. Returning null means /work/[slug]
+  // and /insights/[slug] never paint the overlay, even on hard
+  // refresh.
+  if (!isHomepage) return null;
 
   const RING_SIZE = 280;
   const INNER_INSET = 52;

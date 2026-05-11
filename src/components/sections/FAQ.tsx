@@ -85,7 +85,7 @@ export function FAQ({ onOpenForm }: FAQProps) {
           <div className="flex items-center gap-4 mb-10">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-              <span className="text-zinc-400">10 ·</span> Common Questions
+              <span className="text-zinc-400">09 ·</span> Common Questions
             </h2>
           </div>
         </Reveal>

@@ -346,6 +346,40 @@ html[data-scrolling="true"] .animate-blob-d {
 }
 
 /* ─────────────────────────────────────────────
+   Universal section divider.
+   Every direct child of <main> (except the very first one, which is
+   the Hero) gets a soft gradient-fade hairline along its top edge,
+   so every section-to-section transition has the same visible cue
+   the user explicitly called out between 05 and 06.
+
+   Implemented as a ::before pseudo-element so we don't need to
+   touch every section component. position:relative is applied to
+   the same children so the absolute pseudo-element resolves to
+   their own top edge. The divider is centered horizontally (left/
+   right 6%) so it doesn't reach the screen edges; alpha is low
+   enough that it never reads as a hard line.
+   ───────────────────────────────────────────── */
+main > * + * {
+  position: relative;
+}
+main > * + *::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 6%;
+  right: 6%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* ─────────────────────────────────────────────
    Editorial section tonal lift.
    Applied via data-tonal="lift" on selected sections. A darker band
    with VERY WIDE fade zones (32% top, 32% bottom) so the bg melts in
@@ -427,15 +461,21 @@ html[data-scrolling="true"] .animate-blob-d {
    keyframes so the "peak" state holds for the middle portion rather
    than zipping past at center.
    ───────────────────────────────────────────── */
+/* The Work card image + right-column text animate on their parent
+   ARTICLE's named view-timeline (declared inline via view-timeline-
+   name="--w-<slug>" on each <article>). The inline animation-timeline
+   prop on each element points at that name. Here we just provide
+   the animation declarations + ranges. Using a named timeline (vs
+   view() directly on the element) is what makes the motion progress
+   while the inner card is sticky-pinned. The article wrapper itself
+   keeps moving through the viewport. */
 @supports (animation-timeline: view()) {
-  .work-card-scroll {
+  .work-card-anim {
     animation: work-card-scroll linear both;
-    animation-timeline: view();
     animation-range: entry 0% exit 100%;
   }
-  .work-text-scroll {
+  .work-text-anim {
     animation: work-text-scroll linear both;
-    animation-timeline: view();
     animation-range: entry 0% cover 50%;
   }
 }

@@ -34,30 +34,29 @@ type Section = {
 };
 
 const SECTIONS: Section[] = [
-  { id: "clients", num: "01", label: "Trusted By" },
-  { id: "about", num: "02", label: "The Architect" },
-  { id: "advantage", num: "03", label: "The Enterprise Advantage" },
-  { id: "impact", num: "04", label: "Impact" },
-  // Round 9 reorder: Capabilities (was 07) moves up before Client Voice,
-  // Selected Work (was 05) moves down after Client Voice. Section IDs
-  // stay unchanged so deep links still resolve.
-  { id: "expertise", num: "05", label: "Capabilities" },
-  { id: "testimonials", num: "06", label: "Client Voice" },
+  // Round 12: standalone Clients (Trusted By) removed; brand logos
+  // now live inside the Hero. Every remaining section shifts up by
+  // one number. Section IDs unchanged so deep links keep working.
+  { id: "about", num: "01", label: "The Architect" },
+  { id: "advantage", num: "02", label: "The Enterprise Advantage" },
+  { id: "impact", num: "03", label: "Impact" },
+  { id: "expertise", num: "04", label: "Capabilities" },
+  { id: "testimonials", num: "05", label: "Client Voice" },
   {
     id: "work",
-    num: "07",
+    num: "06",
     label: "Selected Work",
     subItems: projects.map((p) => ({
       id: `work-${p.slug}`,
       label: p.title,
     })),
   },
-  { id: "ai-lab", num: "08", label: "The AI Lab" },
-  { id: "process", num: "09", label: "How I Work" },
-  { id: "faq", num: "10", label: "Common Questions" },
-  { id: "anti-pattern", num: "11", label: "Anti-Pattern" },
-  { id: "insights", num: "12", label: "Insights" },
-  { id: "contact", num: "13", label: "Initiate" },
+  { id: "ai-lab", num: "07", label: "The AI Lab" },
+  { id: "process", num: "08", label: "How I Work" },
+  { id: "faq", num: "09", label: "Common Questions" },
+  { id: "anti-pattern", num: "10", label: "Anti-Pattern" },
+  { id: "insights", num: "11", label: "Insights" },
+  { id: "contact", num: "12", label: "Initiate" },
 ];
 
 export function SectionProgress() {
@@ -256,22 +255,32 @@ export function SectionProgress() {
         );
       })}
 
-      {/* Scroll-to-top control. INTEGRATED INTO the dot column rather
-          than floating off below it. To match the dot-column visually:
-            - Wrap in a row that mimics the section-link layout
-              (flex items-end justify-end, same gap-3 as the section
-              row's label/dot pair) so the button right-edge sits on
-              the same vertical line as the active dot.
-            - The button is a 24px hairline circle, MUCH smaller than
-              the earlier 36px glass-card so it reads as the next item
-              in the rhythm rather than a separate widget.
-            - mr-[-11px] pulls the button outward so its CENTER, not
-              its right edge, aligns with the dot column's vertical
-              axis (dot ~2px wide; arrow 24px; offset = (24-2)/2 = 11).
-            - On hover: same floating-fluid -translate-x-1.5 pull as
-              section links, border + arrow shift to IBM blue, soft
-              blue glow. */}
-      <div className="flex flex-col items-end gap-2 mt-2">
+      {/* Scroll-to-top control, perfectly center-aligned with the
+          dot column.
+
+          Geometry: the dots in each section row are right-aligned
+          inside the nav, with the active dot 10px wide (w-2.5) and
+          the inactive dots 6px wide (w-1.5). The "dot column center"
+          we want to align with is the vertical axis running through
+          the dots' geometric centers, which for the dominant inactive
+          state sits ~3px to the left of the nav's right edge.
+
+          Implementation:
+            - Outer wrapper is self-end (aligns to nav right) and
+              w-1.5 (6px wide), matching the inactive dot diameter.
+            - The button is absolutely positioned with
+              left-1/2 -translate-x-1/2 inside the 6px wrapper, so
+              the BUTTON CENTER lines up exactly on the wrapper
+              center (= the dot column center).
+            - This puts the arrow's middle precisely on the same
+              vertical line the inactive dots sit on, with the active
+              dot being only 2px off (negligible visual).
+            - On hover: floating-fluid -translate-x-1.5 pull (same
+              as section links), border + arrow shift to IBM blue. */}
+      <div
+        className="relative self-end mt-4 h-7"
+        style={{ width: "6px" }}
+      >
         <button
           type="button"
           onClick={() =>
@@ -280,9 +289,9 @@ export function SectionProgress() {
           data-magnetic="true"
           data-cursor-no-hint="true"
           aria-label="Back to top"
-          className="group flex items-center justify-center w-6 h-6 rounded-full border border-white/20 hover-target transition-all duration-500 ease-[var(--ease-out)] hover:-translate-x-1.5 hover:border-[#0f62fe] hover:shadow-[0_0_14px_rgba(15,98,254,0.55)] will-change-transform mr-[-11px]"
+          className="group absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-7 h-7 rounded-full border border-white/20 hover-target transition-all duration-500 ease-[var(--ease-out)] hover:border-[#0f62fe] hover:shadow-[0_0_14px_rgba(15,98,254,0.55)] hover:[transform:translate(calc(-50%-6px),-50%)] will-change-transform"
         >
-          <ArrowUp className="w-3 h-3 text-zinc-400 transition-all duration-500 ease-[var(--ease-out)] group-hover:text-[#4589ff] group-hover:-translate-y-px" />
+          <ArrowUp className="w-3.5 h-3.5 text-zinc-400 transition-all duration-500 ease-[var(--ease-out)] group-hover:text-[#4589ff] group-hover:-translate-y-px" />
         </button>
       </div>
     </nav>

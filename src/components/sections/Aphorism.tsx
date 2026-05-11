@@ -67,10 +67,10 @@ export function Aphorism({ lines, id }: AphorismProps) {
       return;
     }
 
-    // Fire ~80% viewport-height early so the visitor sees the
-    // per-character entrance happen as the section scrolls in (not
-    // already-done). Matches Reveal's rootMargin for a consistent
-    // reveal rhythm site-wide.
+    // Fire when the section is IN FOCUS (just crosses into the
+    // viewport), so the per-character entrance happens while the
+    // visitor is watching it scroll in, not before. Matches Reveal's
+    // rootMargin for a consistent reveal rhythm site-wide.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -78,7 +78,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
           observer.disconnect();
         }
       },
-      { threshold: 0, rootMargin: "0px 0px 80% 0px" },
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -117,36 +117,65 @@ export function Aphorism({ lines, id }: AphorismProps) {
         />
 
         {lines.map((line, lineIdx) => {
-          const chars = Array.from(line);
+          // Split the line into WORDS (preserving whitespace as its
+          // own token via the capture group). Each word becomes a
+          // single inline-block group with whitespace:nowrap so the
+          // per-character spans inside can never break MID-WORD.
+          // Before this fix the browser was free to wrap "optics."
+          // between "optic" and "s." since every char was its own
+          // inline-block. Now words are atomic; only whitespace
+          // tokens are wrap points.
+          const tokens = line.split(/(\s+)/).filter((t) => t.length > 0);
           const lineStartIndex = cumulativeCharIndex;
-          cumulativeCharIndex += chars.length;
+          cumulativeCharIndex += Array.from(line).length;
+          let cursor = lineStartIndex;
           return (
             <p
               key={lineIdx}
               className="font-serif italic font-light text-5xl md:text-7xl lg:text-[7.5rem] text-white/95 leading-[1.05] tracking-tight"
             >
-              {chars.map((char, i) => {
-                const globalIdx = lineStartIndex + i;
-                const delay = globalIdx * STAGGER_MS;
-                // Spaces become non-breaking so the inline-block span
-                // doesn't collapse to zero width.
-                const display = char === " " ? NBSP : char;
+              {tokens.map((token, tokenIdx) => {
+                // Whitespace token: render as a non-breaking space
+                // glyph (so it always has width) BUT keep it as a
+                // normal inline span (not inline-block), which is the
+                // only wrap point in the line.
+                if (/^\s+$/.test(token)) {
+                  const span = (
+                    <span key={`ws-${tokenIdx}`}> </span>
+                  );
+                  cursor += token.length;
+                  return span;
+                }
+                // Word token: inline-block wrapper with whitespace-
+                // nowrap so the chars inside stay glued together.
+                const wordChars = Array.from(token);
+                const wordStart = cursor;
+                cursor += wordChars.length;
                 return (
                   <span
-                    key={i}
-                    className="inline-block transition-[opacity,transform] ease-[var(--ease-out)]"
-                    style={{
-                      opacity: revealed ? 1 : 0,
-                      // 22px lift gives each character a chunky drop-
-                      // into-place feel. Was 14px; that was too subtle.
-                      transform: revealed
-                        ? "translateY(0)"
-                        : "translateY(22px)",
-                      transitionDuration: `${CHAR_DURATION_MS}ms`,
-                      transitionDelay: `${delay}ms`,
-                    }}
+                    key={`w-${tokenIdx}`}
+                    className="inline-block whitespace-nowrap"
                   >
-                    {display}
+                    {wordChars.map((char, i) => {
+                      const globalIdx = wordStart + i;
+                      const delay = globalIdx * STAGGER_MS;
+                      return (
+                        <span
+                          key={i}
+                          className="inline-block transition-[opacity,transform] ease-[var(--ease-out)]"
+                          style={{
+                            opacity: revealed ? 1 : 0,
+                            transform: revealed
+                              ? "translateY(0)"
+                              : "translateY(22px)",
+                            transitionDuration: `${CHAR_DURATION_MS}ms`,
+                            transitionDelay: `${delay}ms`,
+                          }}
+                        >
+                          {char}
+                        </span>
+                      );
+                    })}
                   </span>
                 );
               })}
