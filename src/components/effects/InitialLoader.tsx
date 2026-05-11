@@ -255,6 +255,19 @@ export function InitialLoader() {
     };
   }, [phase, isHomepage]);
 
+  // Broadcast loader-done so dependent components (e.g. the Hero
+  // headline edit sequence) can gate their entry animations on the
+  // overlay actually being gone. Setting a window flag in addition
+  // to the event covers the case where a listener mounts late and
+  // misses the dispatch.
+  useEffect(() => {
+    if (phase !== "done") return;
+    if (typeof window === "undefined") return;
+    type WithFlag = Window & { __philgLoaderDone?: boolean };
+    (window as WithFlag).__philgLoaderDone = true;
+    window.dispatchEvent(new Event("philg:loader-done"));
+  }, [phase]);
+
   if (phase === "done") return null;
   // Subpages: skip the loader entirely after the (non-blocking)
   // hooks above have been called. Returning null means /work/[slug]

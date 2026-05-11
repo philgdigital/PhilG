@@ -211,7 +211,7 @@ export function VelocityGap() {
                 key={tool.name}
                 className="group flex items-center gap-3 text-zinc-300 transition-colors duration-500 ease-[var(--ease-out)] hover:text-[#4589ff]"
               >
-                <span className="w-[22px] h-[22px] flex items-center justify-center transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(15,98,254,0.55)]">
+                <span className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(15,98,254,0.55)]">
                   {tool.glyph}
                 </span>
                 <span className="font-mono text-sm md:text-base font-medium tracking-[0.02em] whitespace-nowrap">

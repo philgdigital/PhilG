@@ -6,28 +6,29 @@ import { Reveal } from "@/components/ui/Reveal";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function Hero() {
-  // Editorial-correction sequence on the first headline:
+  // Editorial-correction sequence on the first headline.
   //   'pristine'  : just "Product Design", no marks
   //   'striking'  : strikethrough line draws across "Design" (600ms)
   //   'writing'   : "Builder" writes itself in above (900ms)
   //   'settled'   : both states locked in
-  // The sequence is gated on the InitialLoader being gone. The loader
-  // sets document.body.style.overflow = 'hidden' while it's holding;
-  // when it transitions to 'done' the effect cleanup restores the
-  // previous value (empty string). We poll for that release and then
-  // run the sequence, so visitors ALWAYS see the animation regardless
-  // of how long the loader took to resolve. On subpages where the
-  // loader doesn't render, the first poll returns immediately.
+  //
+  // The sequence is gated on the InitialLoader broadcasting its
+  // done state via a `philg:loader-done` event + a window flag.
+  // Previous attempts polled document.body.style.overflow, but that
+  // had a race condition: if Hero's effect ran BEFORE the loader's
+  // overflow:hidden lock applied, the poll saw "not hidden" and
+  // started the sequence behind the loader. The event-based signal
+  // is deterministic. On subpages where the loader doesn't render,
+  // a 700ms fallback timer fires the sequence so the animation still
+  // plays.
   const [editPhase, setEditPhase] = useState<
     "pristine" | "striking" | "writing" | "settled"
   >("pristine");
   useEffect(() => {
+    type WithFlag = Window & { __philgLoaderDone?: boolean };
     const timeouts: number[] = [];
-    let pollInterval = 0;
 
     const startSequence = () => {
-      // 600ms breathing room after the loader fades, then the strike
-      // draws, then the writing finishes ~2s after sequence start.
       timeouts.push(
         window.setTimeout(() => setEditPhase("striking"), 600),
         window.setTimeout(() => setEditPhase("writing"), 1200),
@@ -35,20 +36,32 @@ export function Hero() {
       );
     };
 
-    if (document.body.style.overflow !== "hidden") {
+    // If the loader already finished before this effect ran (e.g.
+    // returning to the page from another tab), start immediately.
+    if ((window as WithFlag).__philgLoaderDone) {
       startSequence();
-    } else {
-      pollInterval = window.setInterval(() => {
-        if (document.body.style.overflow !== "hidden") {
-          window.clearInterval(pollInterval);
-          startSequence();
-        }
-      }, 150);
+      return () => {
+        timeouts.forEach((id) => window.clearTimeout(id));
+      };
     }
 
+    const handler = () => {
+      startSequence();
+    };
+    window.addEventListener("philg:loader-done", handler, { once: true });
+
+    // Subpage fallback: if no event arrives in 700ms (loader isn't
+    // rendered on /work/[slug] or /insights/[slug]), kick off anyway.
+    const fallback = window.setTimeout(() => {
+      if (!(window as WithFlag).__philgLoaderDone) {
+        startSequence();
+      }
+    }, 700);
+
     return () => {
+      window.removeEventListener("philg:loader-done", handler);
+      window.clearTimeout(fallback);
       timeouts.forEach((id) => window.clearTimeout(id));
-      if (pollInterval !== 0) window.clearInterval(pollInterval);
     };
   }, []);
   const lineDrawn = editPhase !== "pristine";
