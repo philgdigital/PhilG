@@ -136,14 +136,36 @@ export default async function CaseStudy({ params }: RouteProps) {
           </div>
         </Reveal>
 
+        {/*
+          LADDER LAYOUT for case-study sections (Scope / Team /
+          Challenge / Approach / Outcome).
+
+          Each section is a 12-col grid:
+            col-span-2 (md) / col-span-3 (lg)  : section LABEL
+            col-span-10 (md) / col-span-9 (lg) : section CONTENT
+
+          The label column is RIGHT-aligned (md:text-right) and
+          sticky-top-aligned so it hugs the inner column gap. The
+          earlier 4/8 split with left-aligned labels left a large
+          dead gap between the short mono label and the content
+          column; that gap read as a layout bug. The new split
+          tightens the label to the right edge of its column and
+          gives the content more reading width.
+
+          The label gets `md:sticky md:top-32 self-start` so on
+          long sections (Challenge, Approach) it stays visible at
+          the top of the viewport while the visitor reads past
+          multiple paragraphs.
+        */}
+
         {/* Scope chips */}
-        <section className="grid md:grid-cols-12 gap-12 mb-24">
-          <Reveal className="md:col-span-4">
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-y-6 gap-x-8 md:gap-x-12 mb-24">
+          <Reveal className="md:col-span-2 lg:col-span-3 md:text-right md:sticky md:top-32 self-start">
             <h3 className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
               Scope
             </h3>
           </Reveal>
-          <div className="md:col-span-8 flex flex-wrap gap-3">
+          <div className="md:col-span-10 lg:col-span-9 flex flex-wrap gap-3">
             {project.scope.map((s, i) => (
               <Reveal key={s} delay={i * 80}>
                 <span className="glass px-5 py-2.5 rounded-full font-mono text-[11px] font-medium tracking-[0.18em] uppercase text-white">
@@ -155,64 +177,67 @@ export default async function CaseStudy({ params }: RouteProps) {
         </section>
 
         {/* Team */}
-        <section className="grid md:grid-cols-12 gap-12 mb-24 border-t border-white/8 pt-16">
-          <Reveal className="md:col-span-4">
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-y-6 gap-x-8 md:gap-x-12 mb-24 border-t border-white/8 pt-16">
+          <Reveal className="md:col-span-2 lg:col-span-3 md:text-right md:sticky md:top-32 self-start">
             <h3 className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
               Team
             </h3>
           </Reveal>
-          <Reveal delay={100} className="md:col-span-8">
-            <p className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-2xl">
+          <Reveal delay={100} className="md:col-span-10 lg:col-span-9">
+            <p className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-3xl">
               {project.team}
             </p>
           </Reveal>
         </section>
 
         {/* Challenge */}
-        <section className="grid md:grid-cols-12 gap-12 mb-24 border-t border-white/8 pt-16">
-          <Reveal className="md:col-span-4">
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-y-6 gap-x-8 md:gap-x-12 mb-24 border-t border-white/8 pt-16">
+          <Reveal className="md:col-span-2 lg:col-span-3 md:text-right md:sticky md:top-32 self-start">
             <h3 className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
               Challenge
             </h3>
           </Reveal>
-          <Reveal delay={100} className="md:col-span-8">
-            <div className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-2xl space-y-6 whitespace-pre-line">
+          <Reveal delay={100} className="md:col-span-10 lg:col-span-9">
+            <div className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-3xl space-y-6 whitespace-pre-line">
               {project.challenge}
             </div>
           </Reveal>
         </section>
 
         {/* Approach */}
-        <section className="grid md:grid-cols-12 gap-12 mb-24 border-t border-white/8 pt-16">
-          <Reveal className="md:col-span-4">
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-y-6 gap-x-8 md:gap-x-12 mb-24 border-t border-white/8 pt-16">
+          <Reveal className="md:col-span-2 lg:col-span-3 md:text-right md:sticky md:top-32 self-start">
             <h3 className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
               Approach
             </h3>
           </Reveal>
-          <Reveal delay={100} className="md:col-span-8">
-            <div className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-2xl space-y-6 whitespace-pre-line">
+          <Reveal delay={100} className="md:col-span-10 lg:col-span-9">
+            <div className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-3xl space-y-6 whitespace-pre-line">
               {project.approach}
             </div>
           </Reveal>
         </section>
 
         {/* Outcome + metrics */}
-        <section className="grid md:grid-cols-12 gap-12 mb-24 border-t border-white/8 pt-16">
-          <Reveal className="md:col-span-4">
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-y-6 gap-x-8 md:gap-x-12 mb-24 border-t border-white/8 pt-16">
+          <Reveal className="md:col-span-2 lg:col-span-3 md:text-right md:sticky md:top-32 self-start">
             <h3 className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
               Outcome
             </h3>
           </Reveal>
-          <div className="md:col-span-8">
+          <div className="md:col-span-10 lg:col-span-9">
             <Reveal>
-              <p className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-2xl mb-12">
+              <p className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-3xl mb-12">
                 {project.outcome}
               </p>
             </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
               {project.metrics.map((m, i) => (
                 <Reveal key={m.label} delay={i * 100}>
-                  <div className="flex flex-col gap-3 border-l-2 pl-6 py-2" style={{ borderColor: project.accent }}>
+                  <div
+                    className="flex flex-col gap-3 border-l-2 pl-6 py-2"
+                    style={{ borderColor: project.accent }}
+                  >
                     <span className="text-3xl md:text-4xl font-mono font-medium tabular-nums text-white tracking-tight">
                       {m.value}
                     </span>
