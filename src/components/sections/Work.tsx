@@ -116,6 +116,29 @@ export function Work() {
                   } as React.CSSProperties
                 }
               >
+              {/* BACKGROUND PROJECT NUMBER. Giant ghost number sits
+                  behind the grid like a billboard the visitor scrolls
+                  past. Scales 0.55 -> 1 -> 1.6 across the article's
+                  view-timeline, tied to the same named timeline as
+                  the card + text so all three move in sync.
+                  pointer-events-none + low alpha so it's depth, not
+                  content. */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 z-0 hidden md:flex items-center justify-center overflow-hidden"
+              >
+                <span
+                  className="work-bg-number-anim block font-black tracking-tighter leading-none text-white/[0.035] select-none"
+                  style={
+                    {
+                      fontSize: "min(38vw, 520px)",
+                      animationTimeline: timelineName,
+                    } as React.CSSProperties
+                  }
+                >
+                  {padded(index + 1)}
+                </span>
+              </div>
               {/* LEFT: image card pins to viewport center while content scrolls.
                   The sticky container itself doesn't get the scroll-driven
                   animation (view() freezes during sticky pinning). Instead

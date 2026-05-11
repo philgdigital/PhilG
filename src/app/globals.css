@@ -676,85 +676,116 @@ main > * + *::before {
   }
   .work-text-anim {
     animation: work-text-scroll linear both;
-    /* entry 0% -> exit 100% so the text slides in AND out across
-       the article's full viewport range, matching the card's
-       hand-off flow rather than stopping at cover 50%. */
+    animation-range: entry 0% exit 100%;
+  }
+  .work-bg-number-anim {
+    animation: work-bg-number-scroll linear both;
     animation-range: entry 0% exit 100%;
   }
 }
-/* PROJECT-TO-PROJECT HAND-OFF (award-level, asymmetric).
-   Multi-stop asymmetric keyframes so entry feels weighty (the card
-   arrives from below) and exit feels graceful (the card lifts away).
-   The 20/40-60/85 split places the centered-plateau a touch earlier
-   than the geometric center so the visitor lands on a finished frame
-   the moment the article sticky-pins, not after.
+/* PROJECT-TO-PROJECT HAND-OFF (cinematic version).
+   The previous version felt weak because the card was just sliding +
+   fading. This version adds two cinematic ingredients:
+     (1) BLUR through entry + exit. The card emerges from a soft-
+         focus blur as it arrives + dissolves back into blur as it
+         leaves, so the in-focus frame reads as a sharp moment
+         between two blurry edges. Like a camera pulling focus.
+     (2) SCALE-UP on exit instead of scale-down. The card grows
+         past 1.0 (scale 1.12) as it lifts off, reading as the
+         camera moving THROUGH the project into the next, not the
+         card shrinking back down. This is what makes the
+         transition feel cinematic rather than mechanical.
 
    CARD (.work-card-anim on the Link):
-     0%   entering : scale(0.92) translateY(70px) opacity 0.4
-     20%  arriving : scale(0.97) translateY(28px) opacity 0.78
-     40-60% sticky : scale(1)    translateY(0)    opacity 1
-     85%  leaving  : scale(0.98) translateY(-22px) opacity 0.78
-     100% gone     : scale(0.95) translateY(-48px) opacity 0.55
+     0%   far below   : scale(0.86) translateY(130px) blur(10px) op 0
+     18%  arriving    : scale(0.96) translateY(38px)  blur(2px)  op 0.65
+     35-65% in focus  : scale(1)    translateY(0)     blur(0)    op 1
+     85%  leaving     : scale(1.06) translateY(-60px) blur(3px)  op 0.5
+     100% past        : scale(1.12) translateY(-130px) blur(10px) op 0
 
-   TEXT (.work-text-anim on the right column):
-     0%   entering : translateY(70px) opacity 0
-     22%  arriving : translateY(20px) opacity 0.55
-     40-60% sticky : translateY(0)    opacity 1
-     85%  leaving  : translateY(-18px) opacity 0.6
-     100% gone     : translateY(-40px) opacity 0.3
+   TEXT (.work-text-anim on the right column).
+     Centered plateau widened to 30%-75% (was 40-60%) so the text
+     stays SOLID WHITE for almost half the scroll range. Reading
+     window is no longer interrupted by opacity fluctuations.
 
-   Asymmetry: entry uses larger translates (70px) + a lower opacity
-   floor than exit (translateY -48px). The eye reads the card as
-   "arriving from below" with weight, then "lifting away" with the
-   next project rising into focus. Rotation deliberately omitted;
-   combined with rounded corners + overflow:hidden it was producing
-   a brief unrounded-corner flash when the GPU re-rasterized the
-   composited layer. The Link itself carries a stable clip-path so
-   the rounded clipping survives every transform composition. */
+     0%   entering : translateY(80px) opacity 0
+     20%  arriving : translateY(28px) opacity 0.45
+     30-75% solid  : translateY(0)    opacity 1
+     90%  leaving  : translateY(-22px) opacity 0.5
+     100% gone     : translateY(-50px) opacity 0.15 */
 @keyframes work-card-scroll {
   0% {
-    transform: scale(0.92) translateY(70px);
-    opacity: 0.4;
+    transform: scale(0.86) translateY(130px);
+    opacity: 0;
+    filter: blur(10px);
   }
-  20% {
-    transform: scale(0.97) translateY(28px);
-    opacity: 0.78;
+  18% {
+    transform: scale(0.96) translateY(38px);
+    opacity: 0.65;
+    filter: blur(2px);
   }
-  40%,
-  60% {
+  35%,
+  65% {
     transform: scale(1) translateY(0);
     opacity: 1;
+    filter: blur(0);
   }
   85% {
-    transform: scale(0.98) translateY(-22px);
-    opacity: 0.78;
+    transform: scale(1.06) translateY(-60px);
+    opacity: 0.5;
+    filter: blur(3px);
   }
   100% {
-    transform: scale(0.95) translateY(-48px);
-    opacity: 0.55;
+    transform: scale(1.12) translateY(-130px);
+    opacity: 0;
+    filter: blur(10px);
   }
 }
 @keyframes work-text-scroll {
   0% {
-    transform: translateY(70px);
+    transform: translateY(80px);
     opacity: 0;
   }
-  22% {
-    transform: translateY(20px);
-    opacity: 0.55;
+  20% {
+    transform: translateY(28px);
+    opacity: 0.45;
   }
-  40%,
-  60% {
+  30%,
+  75% {
     transform: translateY(0);
     opacity: 1;
   }
-  85% {
-    transform: translateY(-18px);
-    opacity: 0.6;
+  90% {
+    transform: translateY(-22px);
+    opacity: 0.5;
   }
   100% {
-    transform: translateY(-40px);
-    opacity: 0.3;
+    transform: translateY(-50px);
+    opacity: 0.15;
+  }
+}
+
+/* BACKGROUND PROJECT NUMBER scroll. A giant ghost number sits
+   behind each Work article (e.g. "07" for the 7th project). It
+   scales + slides as you scroll through, like passing a billboard
+   on a highway. Pure depth element; the visitor never reads it
+   consciously but it makes the transitions feel spatial. */
+@keyframes work-bg-number-scroll {
+  0% {
+    transform: scale(0.55) translateY(80px);
+    opacity: 0;
+    letter-spacing: 0.04em;
+  }
+  35%,
+  65% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    letter-spacing: -0.01em;
+  }
+  100% {
+    transform: scale(1.6) translateY(-80px);
+    opacity: 0;
+    letter-spacing: -0.05em;
   }
 }
 
