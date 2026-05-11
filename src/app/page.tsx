@@ -59,18 +59,23 @@ export default function Home() {
 
   return (
     <>
-      {/* Skip-to-content link. Visible only when keyboard-focused (otherwise
-          translated off-screen). Lets screen-reader and keyboard users jump
-          past the navbar + section-progress to the start of the page. */}
+      {/* Skip-to-content link. Visible ONLY on KEYBOARD focus (tab
+          navigation), never on mouse / click focus. The earlier
+          `focus:` modifiers matched any focus state, so clicking
+          the Phil G. logo (or any focusable element via mouse)
+          briefly revealed the pill in the top-left. Switching to
+          `focus-visible:` uses the browser's heuristic for
+          'genuinely came from the keyboard', which is the canonical
+          pattern for accessibility skip-links. */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[400] focus:bg-white focus:text-black focus:font-mono focus:font-medium focus:tracking-[0.18em] focus:uppercase focus:text-xs focus:px-4 focus:py-3 focus:rounded-full focus:shadow-lg"
+        className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-3 focus-visible:left-3 focus-visible:z-[400] focus-visible:bg-white focus-visible:text-black focus-visible:font-mono focus-visible:font-medium focus-visible:tracking-[0.18em] focus-visible:uppercase focus-visible:text-xs focus-visible:px-4 focus-visible:py-3 focus-visible:rounded-full focus-visible:shadow-lg"
       >
         Skip to main content
       </a>
       <Navbar />
       <SectionProgress />
-      <main id="main-content">
+      <main id="main-content" data-section-dividers>
         <Hero />
         {/* Velocity Gap interlude: punchy "THE SHIPPING GAP IS WIDENING"
             block + 8-tool stack row. Sits between Hero and the first

@@ -547,10 +547,19 @@ html[data-scrolling="true"] .animate-blob-d {
 
 /* ─────────────────────────────────────────────
    Universal section divider.
-   Every direct child of <main> (except the very first one, which is
-   the Hero) gets a soft gradient-fade hairline along its top edge,
-   so every section-to-section transition has the same visible cue
-   the user explicitly called out between 05 and 06.
+   Every direct child of <main data-section-dividers> (except the
+   very first one, which is the Hero) gets a soft gradient-fade
+   hairline along its top edge, so every section-to-section
+   transition has the same visible cue between 01..12 on the
+   homepage.
+
+   Scoped to [data-section-dividers] so this only fires on the
+   HOMEPAGE main. The insight detail page and work case study
+   page have multiple structural children inside their <main>
+   (back-link row, header, hero image, article, etc.) that would
+   each pick up a hairline if this rule were global; that was
+   reading as a stack of faint lines piling up the start of those
+   pages.
 
    Implemented as a ::before pseudo-element so we don't need to
    touch every section component. position:relative is applied to
@@ -559,10 +568,10 @@ html[data-scrolling="true"] .animate-blob-d {
    right 6%) so it doesn't reach the screen edges; alpha is low
    enough that it never reads as a hard line.
    ───────────────────────────────────────────── */
-main > * + * {
+main[data-section-dividers] > * + * {
   position: relative;
 }
-main > * + *::before {
+main[data-section-dividers] > * + *::before {
   content: "";
   position: absolute;
   top: 0;
