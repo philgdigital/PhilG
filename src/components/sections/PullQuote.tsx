@@ -68,10 +68,15 @@ const QUOTES: QuoteSource[] = [
 
 export function PullQuote() {
   // Initial render uses QUOTES[0] so SSR and client first-paint match
-  // (avoiding hydration mismatch). Swap to a random pick after mount.
+  // (avoiding hydration mismatch). After mount we pick a random quote.
+  // The set-state-in-effect lint rule (react-hooks/set-state-in-effect)
+  // flags this pattern as a perf concern, but the cost here is a single
+  // setState on mount of a one-time component, not a render cascade,
+  // and the SSR-safe deferred-randomization is the entire point.
   const [quote, setQuote] = useState<QuoteSource>(QUOTES[0]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
   }, []);
 

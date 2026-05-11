@@ -47,10 +47,6 @@ type AphorismProps = {
 // the section just as the last letter settles.
 const STAGGER_MS = 16;
 const CHAR_DURATION_MS = 520;
-// Non-breaking space. Use this for any " " character inside an
-// inline-block span; a regular space collapses to zero width in that
-// layout context.
-const NBSP = " ";
 
 export function Aphorism({ lines, id }: AphorismProps) {
   const ref = useRef<HTMLElement>(null);
@@ -108,8 +104,18 @@ export function Aphorism({ lines, id }: AphorismProps) {
 
   // Cumulative char index across all lines so the stagger is one
   // continuous wave from the first letter of line 1 to the last
-  // letter of line N.
-  let cumulativeCharIndex = 0;
+  // letter of line N. Pre-computed once per render (immutable array
+  // lookups inside the render below) so we don't reassign a render-
+  // scoped variable; that pattern trips React's render-immutability
+  // lint rule.
+  const lineStartIndices = lines.reduce<number[]>((acc, line, i) => {
+    if (i === 0) {
+      acc.push(0);
+    } else {
+      acc.push(acc[i - 1] + Array.from(lines[i - 1]).length);
+    }
+    return acc;
+  }, []);
 
   return (
     <section
@@ -150,8 +156,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
           // Font size capped at lg:text-[6rem] so each line fits on
           // ONE line inside max-w-6xl.
           const tokens = line.split(/(\s+)/).filter((t) => t.length > 0);
-          const lineStartIndex = cumulativeCharIndex;
-          cumulativeCharIndex += Array.from(line).length;
+          const lineStartIndex = lineStartIndices[lineIdx];
           let cursor = lineStartIndex;
           // Detect lines that should render with a "broken ship"
           // wobble at the WORD level (currently the line about decks
