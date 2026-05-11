@@ -336,21 +336,14 @@ export function Hero() {
                 </span>
               </li>
 
-              {/* VODAFONE: red filled circle with a white curl
-                  shape inside, evoking the brand's iconic
-                  speechmark glyph. */}
-              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <svg
-                  viewBox="0 0 20 20"
-                  aria-hidden
-                  className="w-[18px] h-[18px] shrink-0 group-hover:drop-shadow-[0_0_8px_rgba(255,44,44,0.6)] transition-all duration-500"
-                >
-                  <circle cx="10" cy="10" r="9" fill="#ff2c2c" />
-                  <path
-                    d="M7.5 5.5 C 5 7, 4.5 11, 6.5 13.5 C 8 15.5, 10.5 15, 12 13 L 10.5 12 C 9.5 13, 8 13, 7.5 11.5 C 6.5 9, 8 6.5, 10 6 Z"
-                    fill="#ffffff"
-                  />
-                </svg>
+              {/* VODAFONE: text-only red wordmark. Earlier
+                  attempts at a graphical mark (red dot, red circle
+                  with an internal curl) were reading as imitations
+                  of a trademarked logo; safest treatment for a
+                  trusted-by row is a plain wordmark in the brand's
+                  signature red. Matches how WWF / OpenSC is handled
+                  in the same row. */}
+              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
                 <span className="font-sans font-extrabold tracking-tight text-base md:text-lg text-[#ff2c2c] group-hover:text-[#ff5757] transition-colors duration-500">
                   Vodafone
                 </span>
