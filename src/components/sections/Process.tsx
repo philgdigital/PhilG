@@ -176,7 +176,8 @@ export function Process() {
 
         <Reveal delay={100}>
           <h3 className="text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-white tracking-tight max-w-5xl mb-8">
-            From kickoff to shipped product.{" "}
+            From kickoff to shipped product.
+            <br />
             <span className="shine-text italic font-serif font-light">
               In four steps
             </span>
