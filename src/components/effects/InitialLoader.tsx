@@ -3,49 +3,46 @@
 import { useEffect, useState } from "react";
 
 /**
- * Initial-paint loader.
+ * Initial-paint loader. Editorial / mechanical-watch composition.
  *
- * Hides the page behind a Carbon-Black overlay for ~700-900ms while the
- * browser settles: web-fonts swap in (display: swap), the
- * AnimatedGradientBackground's blurred orbs raster to their GPU layer,
- * Reveal observers register, and the first scroll snap settles. Without
- * this, the first second of the page reads as 'system font then real
- * font' + 'flat then gradient' + 'instant then animated', three
- * visible flickers stacked on top of each other.
+ * Two concentric circles orbit a central PHIL G. wordmark:
+ *   - Outer ring (280px): single IBM-blue dot orbits clockwise at 5s,
+ *     four IBM-blue tick marks at 12 / 3 / 6 / 9 o'clock anchor the
+ *     composition like a blueprint registration target.
+ *   - Inner ring (176px): single emerald dot orbits counter-clockwise
+ *     at 3.5s so the two orbits never sync into one coupled motion.
+ *   - Center: tracked mono "INITIATING" label, monumental "PHIL G."
+ *     wordmark with the shine-text gradient sweep, "2026 SESSION" footer.
+ *   - Bottom of screen: mono "SENIOR PRODUCT DESIGN LEADER" label.
+ *
+ * The composition reads as a precision instrument: deliberate, crafted,
+ * measured. Matches the rest of the site's "10x faster, shipped quality"
+ * positioning rather than a generic progress bar.
  *
  * Sequence:
- *   1. Server renders the overlay solid (no JS needed for SSR paint).
- *   2. On mount, wait until the page is interactive (next animation
- *      frame after `load` so first paint + first layout pass are
- *      committed) + a small floor of 500ms so the overlay reads as
- *      a deliberate moment, not a flash.
- *   3. Trigger a 600ms opacity transition to 0.
- *   4. After the transition, set `display:none` so the loader stops
- *      capturing any pointer/scroll events.
+ *   1. Server renders the overlay solid (no JS needed for first paint).
+ *   2. On mount, wait for window.load + a 700ms floor so the loader
+ *      reads as a deliberate moment, not a flash.
+ *   3. Trigger a 700ms opacity transition to 0.
+ *   4. Set display:none so nothing intercepts pointer/scroll.
  *
- * Visual: Carbon-Black bg, centered "PHIL G." wordmark in IBM Plex Mono,
- * a single thin IBM-blue progress hairline that grows left to right. No
- * spinner, no logo animation. Quiet and editorial.
+ * z-[500] sits above modal (z-[200]) and CustomCursor (z-[298-300]).
  *
- * z-[500] sits above the modal layer (z-[200]) and CustomCursor
- * (z-[298-300]) so absolutely nothing is interactable during the hold.
+ * Fixed composition size (280px) so the tick-mark geometry is
+ * predictable; fits any device >= 320px wide. Body scroll is locked
+ * during the hold so any layout shift behind the overlay can't cause
+ * a scroll glitch when the loader fades.
  */
 export function InitialLoader() {
   const [phase, setPhase] = useState<"holding" | "fading" | "done">("holding");
 
   useEffect(() => {
-    // Wait for the browser to finish initial layout + paint before
-    // starting the fade. window.load fires after stylesheets, fonts,
-    // and same-page images have resolved. requestAnimationFrame inside
-    // the load handler ensures the first frame has been committed.
     let startTimer = 0;
     let fadeTimer = 0;
-    const FLOOR_MS = 500; // minimum hold even if load fires instantly
-    const FADE_MS = 600;
+    const FLOOR_MS = 700;
+    const FADE_MS = 700;
 
     const begin = () => {
-      // After the load event + one rAF, set a floor so the loader is
-      // always visible long enough to read as a moment.
       startTimer = window.setTimeout(() => {
         setPhase("fading");
         fadeTimer = window.setTimeout(() => setPhase("done"), FADE_MS);
@@ -53,9 +50,6 @@ export function InitialLoader() {
     };
 
     if (document.readyState === "complete") {
-      // load already fired (cached navigation, fast connection). Still
-      // schedule via rAF so we don't fight the same frame as React's
-      // initial commit.
       requestAnimationFrame(begin);
     } else {
       const onLoad = () => requestAnimationFrame(begin);
@@ -73,8 +67,6 @@ export function InitialLoader() {
     };
   }, []);
 
-  // Lock body scroll while the loader is visible so any layout work
-  // happening underneath doesn't cause a scroll-snap glitch.
   useEffect(() => {
     if (phase === "done") return;
     const prev = document.body.style.overflow;
@@ -86,35 +78,98 @@ export function InitialLoader() {
 
   if (phase === "done") return null;
 
+  // Fixed geometry. RING_SIZE is the outer ring diameter; INNER_INSET
+  // is how far the inner ring is pulled in from the outer rim.
+  const RING_SIZE = 280;
+  const INNER_INSET = 52;
+  // Tick marks sit on the outer rim; offset them outward from center
+  // by half the ring size minus a small inset so the tick crosses the
+  // border line.
+  const TICK_RADIUS = RING_SIZE / 2 - 1;
+
   return (
     <div
       aria-hidden
-      className={`fixed inset-0 z-[500] flex items-center justify-center bg-[#0a0a0c] transition-opacity duration-[600ms] ease-[cubic-bezier(0.33,1,0.68,1)] ${
+      className={`fixed inset-0 z-[500] flex items-center justify-center bg-[#0a0a0c] transition-opacity duration-[700ms] ease-[cubic-bezier(0.33,1,0.68,1)] ${
         phase === "fading" ? "opacity-0" : "opacity-100"
       }`}
     >
-      {/* Wordmark + hairline progress. Both fade out together with the
-          overlay. The hairline is a sub-pixel-thick IBM-blue line that
-          grows from 0 to full width across the hold, giving the eye a
-          deliberate cadence to follow. */}
-      <div className="flex flex-col items-center gap-6">
-        <span className="font-mono text-[11px] md:text-xs font-medium tracking-[0.32em] uppercase text-zinc-400">
-          PHIL G.
-        </span>
-        <span
-          aria-hidden
-          className="block h-px w-[140px] md:w-[180px] overflow-hidden bg-white/5"
-        >
+      {/* Ambient halo under the composition. Soft IBM-blue glow gives
+          depth without a hard light source. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] h-[560px] rounded-full bg-[#0f62fe]/10 blur-[140px]"
+      />
+
+      <div
+        className="relative"
+        style={{ width: RING_SIZE, height: RING_SIZE }}
+      >
+        {/* OUTER RING. 1px hairline circle. */}
+        <div className="absolute inset-0 rounded-full border border-white/[0.08]" />
+
+        {/* OUTER TICK MARKS at 12 / 3 / 6 / 9 o'clock. Each tick is a
+            small horizontal hairline rotated to its cardinal position
+            and pushed outward to the rim via translateY. */}
+        {[0, 90, 180, 270].map((deg) => (
           <span
-            className={`block h-px bg-gradient-to-r from-transparent via-[#0f62fe] to-transparent transition-transform duration-[900ms] ease-[cubic-bezier(0.33,1,0.68,1)] ${
-              phase === "fading"
-                ? "translate-x-0 scale-x-100"
-                : "-translate-x-full scale-x-100"
-            }`}
-            style={{ transformOrigin: "left center" }}
+            key={`tick-${deg}`}
+            aria-hidden
+            className="absolute top-1/2 left-1/2 w-[14px] h-px bg-[#0f62fe]/70 shadow-[0_0_6px_rgba(15,98,254,0.55)]"
+            style={{
+              transform: `translate(-50%, -50%) rotate(${deg}deg) translateY(-${TICK_RADIUS}px)`,
+            }}
           />
-        </span>
+        ))}
+
+        {/* OUTER ORBIT: rotating wrapper containing a single IBM-blue
+            dot positioned at 12 o'clock. As the wrapper rotates around
+            the composition's center, the dot traces the outer rim. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 motion-safe:animate-[loader-orbit-cw_5s_linear_infinite]"
+        >
+          <span className="absolute top-0 left-1/2 -ml-[7px] -mt-[7px] w-[14px] h-[14px] rounded-full bg-[#0f62fe] shadow-[0_0_18px_rgba(15,98,254,0.95),0_0_36px_rgba(15,98,254,0.5)]" />
+        </div>
+
+        {/* INNER RING. Tighter circle inside the outer. */}
+        <div
+          className="absolute rounded-full border border-white/[0.06]"
+          style={{
+            inset: INNER_INSET,
+          }}
+        />
+
+        {/* INNER ORBIT: emerald dot rotating counter-clockwise at a
+            faster cadence so the two rings don't read as coupled. */}
+        <div
+          aria-hidden
+          className="absolute motion-safe:animate-[loader-orbit-ccw_3.5s_linear_infinite]"
+          style={{ inset: INNER_INSET }}
+        >
+          <span className="absolute bottom-0 left-1/2 -ml-[5px] -mb-[5px] w-[10px] h-[10px] rounded-full bg-[#10b981] shadow-[0_0_14px_rgba(16,185,129,0.9),0_0_28px_rgba(16,185,129,0.4)]" />
+        </div>
+
+        {/* CENTER: editorial typography stack. Same hierarchy used in
+            every page eyebrow (dot + tracked mono uppercase label). */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3.5">
+          <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500">
+            Initiating
+          </span>
+          <span className="shine-text font-mono text-2xl md:text-3xl font-bold tracking-[0.18em] uppercase">
+            PHIL G.
+          </span>
+          <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-600">
+            2026 Session
+          </span>
+        </div>
       </div>
+
+      {/* Bottom-edge mono label. Positioned absolutely at the page
+          bottom so the central composition stays uncluttered. */}
+      <span className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-600">
+        Senior Product Design Leader
+      </span>
     </div>
   );
 }

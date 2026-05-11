@@ -366,6 +366,31 @@ html[data-scrolling="true"] main {
 }
 
 /* ─────────────────────────────────────────────
+   Initial loader orbits.
+   Two concentric rotating layers carry a single dot each; the dot is
+   absolute-positioned at the rim of the layer, so when the layer
+   rotates the dot traces a perfect circle around the composition
+   center. The CW and CCW directions + different durations (5s / 3.5s)
+   ensure the two orbits never sync into a coupled motion.
+   ───────────────────────────────────────────── */
+@keyframes loader-orbit-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader-orbit-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* ─────────────────────────────────────────────
    Modal entry
    ───────────────────────────────────────────── */
 @keyframes modalFadeIn {
