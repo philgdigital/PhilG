@@ -218,6 +218,21 @@ body {
   will-change: transform;
 }
 
+/* Pause orb drifts while the visitor is actively scrolling. The orbs
+   are blurred at 100-140px which means each animated transform forces
+   a large GPU layer recomposite per frame; combined with main's scroll-
+   blur filter and the 60fps scroll itself, that competes for the same
+   compositor budget and can drop scroll frames on lower-end devices.
+   Pausing for the ~150ms of active scroll costs nothing visually (the
+   orbs are barely-moving ambient drift) and gives the scroll its
+   frame budget back. data-scrolling="true" is toggled by ScrollBlur. */
+html[data-scrolling="true"] .animate-blob-a,
+html[data-scrolling="true"] .animate-blob-b,
+html[data-scrolling="true"] .animate-blob-c,
+html[data-scrolling="true"] .animate-blob-d {
+  animation-play-state: paused;
+}
+
 /* Legacy single blob keyframe kept for any external code that may
    still reference it. New orbs should use the per-orb variants
    above so they don't sync. */
@@ -288,19 +303,51 @@ body {
 /* ─────────────────────────────────────────────
    Editorial section tonal lift.
    Applied via data-tonal="lift" on selected sections. A darker band
-   with WIDE fade zones (22% top, 22% bottom) so the bg melts in and
-   out of the page without a hard edge anywhere. The visitor feels
+   with VERY WIDE fade zones (32% top, 32% bottom) so the bg melts in
+   and out of the page without a hard edge anywhere. The visitor feels
    the dark band but never sees its boundary.
+
+   When two lifted sections sit adjacent in the DOM, the +sibling rule
+   below removes the bottom fade-out + top fade-in on the join, so the
+   two darks merge into one continuous band instead of dipping back to
+   transparent at the seam between them (which read as a visible edge).
    ───────────────────────────────────────────── */
 [data-tonal="lift"] {
   background:
     linear-gradient(
       180deg,
       rgba(3, 3, 8, 0) 0%,
-      rgba(3, 3, 8, 0.5) 22%,
-      rgba(3, 3, 8, 0.5) 78%,
+      rgba(3, 3, 8, 0.55) 32%,
+      rgba(3, 3, 8, 0.55) 68%,
       rgba(3, 3, 8, 0) 100%
     );
+}
+/* When a lift is followed by another lift: don't fade back to
+   transparent at the bottom. Stay solid through the seam. */
+[data-tonal="lift"]:has(+ [data-tonal="lift"]) {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3, 3, 8, 0) 0%,
+      rgba(3, 3, 8, 0.55) 32%,
+      rgba(3, 3, 8, 0.55) 100%
+    );
+}
+/* When a lift is preceded by another lift: don't fade IN at the top,
+   start at full darkness. Combined with the rule above this produces
+   one continuous dark band across any run of adjacent lifted sections. */
+[data-tonal="lift"] + [data-tonal="lift"] {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3, 3, 8, 0.55) 0%,
+      rgba(3, 3, 8, 0.55) 68%,
+      rgba(3, 3, 8, 0) 100%
+    );
+}
+/* Middle of a run of three or more: stay solid top to bottom. */
+[data-tonal="lift"] + [data-tonal="lift"]:has(+ [data-tonal="lift"]) {
+  background: rgba(3, 3, 8, 0.55);
 }
 
 /* ─────────────────────────────────────────────

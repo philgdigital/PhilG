@@ -19,9 +19,21 @@ const ScrollBlur = dynamic(
   { ssr: false },
 );
 
+// Initial loader is also client-only (needs window.load + body scroll
+// lock). Loading it via next/dynamic means it doesn't ship in the
+// initial server HTML; we instead render an inline SSR overlay in
+// layout.tsx so the visitor sees the Carbon-Black canvas IMMEDIATELY
+// on first paint, and this client component just handles the fade-out
+// + scroll lock + removal.
+const InitialLoader = dynamic(
+  () => import("./InitialLoader").then((m) => m.InitialLoader),
+  { ssr: false },
+);
+
 export function ClientEffects() {
   return (
     <>
+      <InitialLoader />
       <CursorTrail />
       <CustomCursor />
       <ScrollBlur />

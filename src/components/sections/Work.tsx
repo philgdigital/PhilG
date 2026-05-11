@@ -60,39 +60,43 @@ export function Work() {
 
       {/*
         Each project is a 2-column scrollytelling chapter that left-pins
-        an image while the right column scrolls. Alternating projects
-        sit on a noticeably darker bg via their wrapper, so the eye
-        reads a clear 'chapter changed' shift when scrolling between
-        projects. The wrapper escapes the section padding via negative
-        margins so the dark band is full-bleed, then re-adds padding
-        so the article content stays centered.
+        an image while the right column scrolls. EVERY project sits on a
+        soft darker band so the supporting text is easier to read on top
+        of the AnimatedGradientBackground. The dark bands are seamed
+        together via the +sibling rule below: the first project fades
+        IN from transparent, the last fades OUT, but the middle projects
+        stay solid top-to-bottom so the eye reads one continuous reading
+        surface across all nine case studies instead of nine separately-
+        edged cells. The wrapper escapes the section padding via negative
+        margins so the dark band is full-bleed.
       */}
       <div className="flex flex-col">
         {projects.map((p, index) => {
           const total = projects.length;
           const padded = (n: number) => (n < 10 ? `0${n}` : `${n}`);
           const indexLabel = `${padded(index + 1)} / ${padded(total)}`;
-          // Alternating chapter wrapper. Odd-index projects get a soft
-          // darker band; even-index projects sit on the base page bg
-          // (so the AnimatedGradientBackground orbs come through). The
-          // alternation gives a clear 'project changed' shift without
-          // every project becoming a flat dark cell.
-          const isAlternate = index % 2 === 1;
+          // Every project wrapper carries a soft dark reading surface
+          // (0.52 alpha). First project fades in from transparent at
+          // the top, last project fades out to transparent at the
+          // bottom, middle projects stay solid edge-to-edge so the
+          // run reads as one continuous dark surface.
+          const isFirst = index === 0;
+          const isLast = index === total - 1;
+          let background: string;
+          if (isFirst) {
+            background =
+              "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.52) 30%, rgba(2,2,5,0.52) 100%)";
+          } else if (isLast) {
+            background =
+              "linear-gradient(180deg, rgba(2,2,5,0.52) 0%, rgba(2,2,5,0.52) 70%, rgba(2,2,5,0) 100%)";
+          } else {
+            background = "rgba(2,2,5,0.52)";
+          }
           return (
             <div
               key={p.id}
               className="relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24"
-              style={
-                isAlternate
-                  ? {
-                      // Vertical gradient with wide fade zones so the
-                      // darker band melts into the page above + below.
-                      // No visible top/bottom edge.
-                      background:
-                        "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.38) 84%, rgba(0,0,0,0) 100%)",
-                    }
-                  : undefined
-              }
+              style={{ background }}
             >
               <article
                 id={`work-${p.slug}`}

@@ -68,10 +68,16 @@ export function Aphorism({ lines, id }: AphorismProps) {
     <section
       id={id}
       ref={ref}
-      className="relative z-10 py-32 md:py-40 px-6 md:px-12 lg:px-24 overflow-hidden"
+      className="relative z-10 py-36 md:py-48 px-6 md:px-12 lg:px-24 overflow-hidden"
       style={{
+        // Deeper darkness (0.78 vs 0.42) so the aphorism feels like a
+        // contained reading moment, with VERY wide fade zones (0→34% in,
+        // 66→100% out) so the dark band melts into the surrounding page
+        // with no visible top/bottom edge. The previous 18%/82% fade was
+        // still readable as a hard transition; widening to 34%/66% means
+        // a third of the section is gradient on each side.
         background:
-          "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.42) 18%, rgba(0,0,0,0.42) 82%, rgba(0,0,0,0) 100%)",
+          "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.78) 34%, rgba(2,2,5,0.78) 66%, rgba(2,2,5,0) 100%)",
       }}
     >
       <div className="max-w-5xl mx-auto text-center">

@@ -163,30 +163,39 @@ export function SectionProgress() {
         const showSubItems = hasSubItems && isActive;
         return (
           <div key={s.id} className="flex flex-col items-end gap-2">
+            {/* Floating fluid hover:
+                - Whole row pulls LEFT (-translate-x-3) like the cursor is
+                  magnetically pulling it forward.
+                - Label slides in from -8px → 0 + fades on hover.
+                - Dot grows to 2× + glows in IBM blue.
+                - data-magnetic="true" lets CustomCursor add the magnetic
+                  pull to the cursor ring itself.
+                - data-cursor-no-hint suppresses the 'Click for more' pill
+                  (the dot + label already signal the link). */}
             <a
               href={`#${s.id}`}
               data-magnetic="true"
               data-cursor-no-hint="true"
               aria-label={`${s.num} · ${s.label}`}
               aria-current={isActive ? "true" : undefined}
-              className="group flex items-center justify-end gap-3 hover-target transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-x-1.5 will-change-transform"
+              className="group flex items-center justify-end gap-3 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-3 will-change-transform"
             >
               <span
-                className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap transition-all duration-300 ${
+                className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap transition-all duration-500 ease-[var(--ease-out)] ${
                   isActive
-                    ? "opacity-100 text-white"
-                    : "opacity-0 group-hover:opacity-100 text-zinc-400 group-hover:translate-x-0 -translate-x-2"
+                    ? "opacity-100 text-white translate-x-0"
+                    : "opacity-0 -translate-x-2 text-zinc-300 group-hover:opacity-100 group-hover:translate-x-0"
                 }`}
               >
-                <span className="text-zinc-400 mr-2">{s.num}</span>
+                <span className="text-[#4589ff] mr-2">{s.num}</span>
                 {s.label}
               </span>
               <span
                 aria-hidden
-                className={`shrink-0 rounded-full transition-all duration-300 ease-[var(--ease-out)] ${
+                className={`shrink-0 rounded-full transition-all duration-500 ease-[var(--ease-out)] ${
                   isActive
-                    ? "w-2.5 h-2.5 bg-[#0f62fe] shadow-[0_0_12px_rgba(15,98,254,0.8)]"
-                    : "w-1.5 h-1.5 bg-white/30 group-hover:bg-white/70 group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                    ? "w-2.5 h-2.5 bg-[#0f62fe] shadow-[0_0_14px_rgba(15,98,254,0.9)]"
+                    : "w-1.5 h-1.5 bg-white/30 group-hover:bg-[#4589ff] group-hover:scale-[1.8] group-hover:shadow-[0_0_14px_rgba(69,137,255,0.7)]"
                 }`}
               />
             </a>
@@ -210,7 +219,7 @@ export function SectionProgress() {
                       data-cursor-no-hint="true"
                       aria-label={sub.label}
                       aria-current={subActive ? "true" : undefined}
-                      className="group flex items-center justify-end gap-2.5 hover-target transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-x-1 will-change-transform"
+                      className="group flex items-center justify-end gap-2.5 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-2 will-change-transform"
                       style={{
                         transitionDelay: showSubItems
                           ? `${i * 60 + 100}ms`
@@ -218,20 +227,20 @@ export function SectionProgress() {
                       }}
                     >
                       <span
-                        className={`font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap transition-all duration-300 ${
+                        className={`font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap transition-all duration-500 ease-[var(--ease-out)] ${
                           subActive
                             ? "opacity-100 text-[#4589ff]"
-                            : "opacity-70 group-hover:opacity-100 text-zinc-400"
+                            : "opacity-70 group-hover:opacity-100 text-zinc-300"
                         }`}
                       >
                         {sub.label}
                       </span>
                       <span
                         aria-hidden
-                        className={`shrink-0 rounded-full transition-all duration-300 ${
+                        className={`shrink-0 rounded-full transition-all duration-500 ease-[var(--ease-out)] ${
                           subActive
-                            ? "w-2 h-2 bg-[#4589ff] shadow-[0_0_8px_rgba(69,137,255,0.7)]"
-                            : "w-1 h-1 bg-white/25 group-hover:bg-white/60 group-hover:scale-150"
+                            ? "w-2 h-2 bg-[#4589ff] shadow-[0_0_10px_rgba(69,137,255,0.8)]"
+                            : "w-1 h-1 bg-white/25 group-hover:bg-[#4589ff] group-hover:scale-[1.8] group-hover:shadow-[0_0_10px_rgba(69,137,255,0.6)]"
                         }`}
                       />
                     </a>
