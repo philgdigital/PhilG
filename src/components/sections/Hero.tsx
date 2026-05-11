@@ -145,8 +145,44 @@ export function Hero() {
           outline on hover so the three lines share one motion language.
         */}
         <Reveal delay={200}>
+          {/* Editorial cross-out: 'Design' gets a clean strikethrough,
+              and 'Builder' is written by hand above it in italic serif
+              at IBM-blue, like a margin-note correction. The framing
+              reinforces Phil's "I don't just design, I build" stance. */}
           <h1 className="headline-line group text-[11vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
-            Product Design
+            Product{" "}
+            <span className="relative inline-block">
+              {/* Handwritten 'Builder' floats above 'Design'. Italic
+                  serif as the closest approximation of a pen note;
+                  rotated -5deg for a hand-written feel; pointer-events
+                  off so it doesn't capture hover. Sized as a fraction
+                  of the parent em so it scales with the headline. */}
+              <span
+                aria-hidden
+                className="absolute right-1 font-serif italic font-medium text-[#4589ff] pointer-events-none"
+                style={{
+                  top: "-0.5em",
+                  fontSize: "0.42em",
+                  letterSpacing: "0.005em",
+                  textTransform: "none",
+                  transform: "rotate(-5deg)",
+                  textShadow: "0 0 18px rgba(15, 98, 254, 0.45)",
+                }}
+              >
+                Builder
+              </span>
+              {/* 'Design' with a soft strikethrough so the original word
+                  stays legible underneath. */}
+              <span
+                style={{
+                  textDecoration: "line-through",
+                  textDecorationThickness: "0.045em",
+                  textDecorationColor: "rgba(161, 161, 170, 0.7)",
+                }}
+              >
+                Design
+              </span>
+            </span>
           </h1>
         </Reveal>
 
@@ -156,7 +192,7 @@ export function Hero() {
           </Reveal>
           <Reveal delay={400}>
             <h1 className="headline-line headline-line-shine group text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase shine-text">
-              Acceleration
+              Accelerated
             </h1>
           </Reveal>
         </div>
