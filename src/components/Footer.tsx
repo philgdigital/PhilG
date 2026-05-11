@@ -1,18 +1,9 @@
 "use client";
 
-import { Mail } from "@/components/icons/Icons";
+import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { LinkedinIcon } from "@/components/icons/BrandIcons";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
-
-const SOCIAL_LINKS = [
-  {
-    name: "Email",
-    icon: Mail,
-    link: "mailto:hello@philg.cz",
-  },
-  { name: "LinkedIn", icon: LinkedinIcon, link: "#" },
-];
 
 const YEAR = new Date().getFullYear();
 
@@ -59,30 +50,46 @@ export function Footer({ onOpenForm }: FooterProps) {
         </Reveal>
 
         <Reveal delay={400}>
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8 mt-16 text-zinc-300">
-            {SOCIAL_LINKS.map((social) => {
-              const Icon = social.icon;
-              return (
-                <a
-                  key={social.name}
-                  href={social.link}
-                  data-magnetic="true"
-                  className="text-white group hover-target flex items-center gap-3 glass px-8 py-5 rounded-full hover:bg-white transition-all duration-500 hover:scale-105 shadow-lg will-change-transform"
-                >
-                  <Icon className="w-5 h-5 text-white group-hover:text-black transition-colors duration-500" />
-                  <span className="font-mono text-xs uppercase tracking-[0.22em] font-medium group-hover:text-black transition-colors duration-500">
-                    {social.name}
-                  </span>
-                </a>
-              );
-            })}
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-16 text-zinc-300">
+            {/* Book a 30-min intro: opens the same ProjectFormModal as
+                the big Initiate Project button above. Lower-commitment
+                CTA for visitors not ready to fill the full form. */}
+            <button
+              type="button"
+              onClick={onOpenForm}
+              data-magnetic="true"
+              className="group hover-target flex items-center gap-3 px-8 py-5 rounded-full border-2 border-[#0f62fe] bg-[#0f62fe]/10 text-white hover:bg-[#0f62fe] hover:shadow-[0_0_30px_rgba(15,98,254,0.5)] transition-all duration-500 ease-[var(--ease-out)] will-change-transform"
+            >
+              <ArrowUpRight className="w-5 h-5 transition-transform duration-500 group-hover:rotate-45" />
+              <span className="font-mono text-xs uppercase tracking-[0.22em] font-medium">
+                Book a 30-min intro
+              </span>
+            </button>
+
+            {/* LinkedIn (only social link kept; email button removed
+                per user request - email visible in the meta line below). */}
+            <a
+              href="#"
+              data-magnetic="true"
+              className="text-white group hover-target flex items-center gap-3 glass px-8 py-5 rounded-full hover:bg-white transition-all duration-500 hover:scale-105 shadow-lg will-change-transform"
+            >
+              <LinkedinIcon className="w-5 h-5 text-white group-hover:text-black transition-colors duration-500" />
+              <span className="font-mono text-xs uppercase tracking-[0.22em] font-medium group-hover:text-black transition-colors duration-500">
+                LinkedIn
+              </span>
+            </a>
           </div>
         </Reveal>
 
         <Reveal delay={500}>
-          <p className="mt-10 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400 text-center">
-            Prague, Czech Republic · hello@philg.cz
-          </p>
+          <div className="mt-12 flex flex-col items-center gap-2 text-center">
+            <p className="font-mono text-[11px] md:text-xs font-medium tracking-[0.28em] uppercase text-white">
+              Designing Digital Products since 2009
+            </p>
+            <p className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400">
+              Based in Prague, Czechia · hello@philg.cz
+            </p>
+          </div>
         </Reveal>
       </div>
 

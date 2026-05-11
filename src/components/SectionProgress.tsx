@@ -166,6 +166,7 @@ export function SectionProgress() {
             <a
               href={`#${s.id}`}
               data-magnetic="true"
+              data-cursor-no-hint="true"
               aria-label={`${s.num} · ${s.label}`}
               aria-current={isActive ? "true" : undefined}
               className="group flex items-center justify-end gap-3 hover-target transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-x-1.5 will-change-transform"
@@ -206,6 +207,7 @@ export function SectionProgress() {
                       key={sub.id}
                       href={`#${sub.id}`}
                       data-magnetic="true"
+                      data-cursor-no-hint="true"
                       aria-label={sub.label}
                       aria-current={subActive ? "true" : undefined}
                       className="group flex items-center justify-end gap-2.5 hover-target transition-transform duration-300 ease-[var(--ease-out)] hover:-translate-x-1 will-change-transform"

@@ -13,15 +13,15 @@ type RevealProps = {
 };
 
 const translateMap: Record<Direction, string> = {
-  up: "translate-y-6",
-  down: "-translate-y-6",
-  left: "translate-x-6",
-  right: "-translate-x-6",
+  up: "translate-y-4",
+  down: "-translate-y-4",
+  left: "translate-x-4",
+  right: "-translate-x-4",
   none: "translate-y-0 translate-x-0 scale-[0.98]",
 };
 
-/** Animation duration in ms. Matches the duration-[800ms] Tailwind class. */
-const REVEAL_DURATION_MS = 800;
+/** Animation duration in ms. Matches the duration-[450ms] Tailwind class. */
+const REVEAL_DURATION_MS = 450;
 
 export function Reveal({
   children,
@@ -53,6 +53,12 @@ export function Reveal({
       return;
     }
 
+    // Fire EARLY: rootMargin extends the viewport 200px below the
+    // visible bottom so content starts revealing while it's still
+    // below the fold. Combined with threshold 0 (fire on any pixel
+    // cross), the visitor never sees a still-hidden element come
+    // into view; by the time they reach it, the entry animation
+    // has already completed.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -61,7 +67,7 @@ export function Reveal({
           observer.unobserve(node);
         }
       },
-      { threshold, rootMargin: "0px 0px -50px 0px" },
+      { threshold: 0, rootMargin: "0px 0px 200px 0px" },
     );
     observer.observe(node);
     return () => observer.unobserve(node);
@@ -81,14 +87,14 @@ export function Reveal({
   return (
     <div
       ref={ref}
-      className={`transition-all duration-[800ms] ease-[var(--ease-out)] ${
+      className={`transition-[opacity,transform] duration-[450ms] ease-[var(--ease-out)] ${
         isVisible
-          ? "opacity-100 translate-y-0 translate-x-0 scale-100 blur-none"
-          : `opacity-0 blur-[6px] ${translateMap[direction]}`
+          ? "opacity-100 translate-y-0 translate-x-0 scale-100"
+          : `opacity-0 ${translateMap[direction]}`
       } ${className}`}
       style={{
         transitionDelay: `${delay}ms`,
-        willChange: animating ? "opacity, transform, filter" : "auto",
+        willChange: animating ? "opacity, transform" : "auto",
       }}
     >
       {children}
