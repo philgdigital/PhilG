@@ -1,10 +1,36 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 
 export function Hero() {
+  // Editorial-correction sequence on the first headline:
+  //   'pristine' (start)    : just "Product Design", no marks
+  //   'striking' (~2.4s)    : strikethrough line draws across "Design"
+  //   'writing'  (~3.0s)    : "Builder" writes itself in above
+  //   'settled'  (~4.0s)    : both states locked in
+  // The delays are calibrated so the sequence fires AFTER the typical
+  // InitialLoader hold (~2-3s on the homepage) so visitors actually
+  // see it. Reload-resistant: same sequence runs every mount.
+  const [editPhase, setEditPhase] = useState<
+    "pristine" | "striking" | "writing" | "settled"
+  >("pristine");
+  useEffect(() => {
+    const t1 = window.setTimeout(() => setEditPhase("striking"), 2400);
+    const t2 = window.setTimeout(() => setEditPhase("writing"), 3000);
+    const t3 = window.setTimeout(() => setEditPhase("settled"), 4000);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, []);
+  const lineDrawn = editPhase !== "pristine";
+  const builderWritten =
+    editPhase === "writing" || editPhase === "settled";
+
   return (
     <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-44 md:pt-52 pb-20 relative z-10 overflow-hidden">
       {/* LIQUID BG LAYER (Hero-only).
@@ -145,21 +171,24 @@ export function Hero() {
           outline on hover so the three lines share one motion language.
         */}
         <Reveal delay={200}>
-          {/* Editorial cross-out: 'Design' gets a clean strikethrough,
-              and 'Builder' is written by hand above it in italic serif
-              at IBM-blue, like a margin-note correction. The framing
-              reinforces Phil's "I don't just design, I build" stance. */}
+          {/* Editorial-correction SEQUENCE.
+              Step 1 (pristine): "Product Design" appears as-is, no
+              marks. The user reads the headline normally.
+              Step 2 (striking, t+2.4s): an IBM-blue line draws
+              left-to-right across "Design" via scaleX(0 -> 1).
+              Step 3 (writing, t+3.0s): "Builder" writes itself in
+              above the now-struck "Design" via a clip-path inset
+              that opens left-to-right, simulating a pen stroke. */}
           <h1 className="headline-line group text-[11vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
             Product{" "}
             <span className="relative inline-block">
-              {/* Handwritten 'Builder' floats above 'Design'. Italic
-                  serif as the closest approximation of a pen note;
-                  rotated -5deg for a hand-written feel; pointer-events
-                  off so it doesn't capture hover. Sized as a fraction
-                  of the parent em so it scales with the headline. */}
+              {/* Handwritten 'Builder' written above 'Design'.
+                  clip-path inset shrinks the right inset 100% -> 0%
+                  to "write" the word from left to right. opacity
+                  fades in on the same beat. */}
               <span
                 aria-hidden
-                className="absolute right-1 font-serif italic font-medium text-[#4589ff] pointer-events-none"
+                className="absolute right-1 font-serif italic font-medium text-[#4589ff] pointer-events-none transition-[clip-path,opacity] duration-[900ms] ease-[var(--ease-out)]"
                 style={{
                   top: "-0.5em",
                   fontSize: "0.42em",
@@ -167,20 +196,34 @@ export function Hero() {
                   textTransform: "none",
                   transform: "rotate(-5deg)",
                   textShadow: "0 0 18px rgba(15, 98, 254, 0.45)",
+                  opacity: builderWritten ? 1 : 0,
+                  clipPath: builderWritten
+                    ? "inset(0 0 0 0)"
+                    : "inset(0 100% 0 0)",
                 }}
               >
                 Builder
               </span>
-              {/* 'Design' with a soft strikethrough so the original word
-                  stays legible underneath. */}
-              <span
-                style={{
-                  textDecoration: "line-through",
-                  textDecorationThickness: "0.045em",
-                  textDecorationColor: "rgba(161, 161, 170, 0.7)",
-                }}
-              >
+              {/* 'Design' word with an animated strikethrough line
+                  layered on top via an absolutely-positioned span.
+                  Default state (pristine): the line is scaleX(0) at
+                  the left origin, invisible. When the sequence kicks
+                  off, it scales to 1 over 600ms, drawing left -> right
+                  like a pen stroke crossing out the word. */}
+              <span className="relative inline-block">
                 Design
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-0 top-[55%] origin-left transition-transform duration-[600ms] ease-[var(--ease-out)]"
+                  style={{
+                    width: "100%",
+                    height: "0.07em",
+                    backgroundColor: "rgba(168, 168, 175, 0.85)",
+                    transform: lineDrawn ? "scaleX(1)" : "scaleX(0)",
+                    transformOrigin: "left center",
+                    boxShadow: "0 0 8px rgba(0, 0, 0, 0.4)",
+                  }}
+                />
               </span>
             </span>
           </h1>
