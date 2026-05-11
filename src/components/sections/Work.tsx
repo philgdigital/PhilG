@@ -108,7 +108,12 @@ export function Work() {
             >
               <article
                 id={`work-${p.slug}`}
-                className="work-article relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[72vh] scroll-mt-32"
+                /* LAYOUT CHANGE: from horizontal 2-column to vertical
+                   single-column. Image stacks on top, supporting copy
+                   below it. Breaks the horizontal sticky-card pattern
+                   so the flow reads as continuous vertical scroll
+                   from one project to the next. */
+                className="work-article relative flex flex-col items-center gap-12 md:gap-16 py-12 md:py-20 md:min-h-[80vh] scroll-mt-32"
                 style={
                   {
                     viewTimelineName: timelineName,
@@ -139,15 +144,15 @@ export function Work() {
                   {padded(index + 1)}
                 </span>
               </div>
-              {/* LEFT: image card pins to viewport center while content scrolls.
-                  The sticky container itself doesn't get the scroll-driven
-                  animation (view() freezes during sticky pinning). Instead
-                  the card LINK inside carries .work-card-anim with
-                  animation-timeline referencing the article's named
-                  view-timeline declared above. Browsers without
-                  animation-timeline see the static layout. */}
-              <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">
-                <Reveal direction="left" className="w-full">
+              {/* CARD IMAGE: now centered at the top of each project
+                  (no more sticky pinning side-by-side with the text).
+                  Constrained to max-w-xl so the portrait card sits as
+                  a focused centered moment, with the text reading
+                  underneath it. work-card-anim still drives the
+                  cinematic scroll-blur / scale via the article's
+                  named view-timeline. */}
+              <div className="relative z-10 w-full max-w-xl">
+                <Reveal direction="up" className="w-full">
                   <TiltCard scale={1.02} maxRotation={3} className="w-full">
                     <Link
                       href={`/work/${p.slug}`}
@@ -224,14 +229,14 @@ export function Work() {
                 </Reveal>
               </div>
 
-              {/* RIGHT: content scrolls past the sticky image.
-                  work-text-anim uses the same NAMED view-timeline as
-                  the card so the slide-in is driven by the article's
-                  scroll position, not the text element's own. md:py
-                  reduced from 18vh to 10vh so projects sit closer
-                  together with less wasted space between them. */}
+              {/* TEXT: now sits BELOW the card image (was the right
+                  column in the previous 2-column layout). Centered
+                  block, max-w-xl matching the card width so the two
+                  read as one composed unit. work-text-anim still
+                  drives the cinematic slide+fade off the article's
+                  named view-timeline. */}
               <div
-                className="work-text-anim md:order-2 flex flex-col justify-center gap-8 md:py-[10vh]"
+                className="work-text-anim relative z-10 w-full max-w-xl flex flex-col items-start gap-6 md:gap-8"
                 style={
                   {
                     animationTimeline: timelineName,
