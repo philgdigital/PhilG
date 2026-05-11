@@ -70,7 +70,7 @@ export function AntiPattern() {
 
         <Reveal delay={200 + ANTI_PATTERNS.length * 70 + 100}>
           <p className="mt-16 md:mt-20 pt-10 border-t border-white/8 font-serif italic font-light text-2xl md:text-3xl lg:text-4xl text-white/90 leading-snug max-w-2xl">
-            Lean. Embedded. Shipping by week three.
+            Lean. Embedded. Shipping.
           </p>
         </Reveal>
       </div>
