@@ -129,9 +129,16 @@ export function Footer({ onOpenForm }: FooterProps) {
         <span className="md:flex-1 md:text-left text-center">
           © {YEAR} PHIL G.
         </span>
+        {/* Build credits on TWO lines:
+              Line 1: timeline + vibe-code + git
+              Line 2: deploy target + the Figma strikethrough
+            Hard <br /> forces the split regardless of viewport
+            so the cadence reads as two distinct beats. */}
         <p className="md:absolute md:left-1/2 md:-translate-x-1/2 font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500 text-center leading-relaxed max-w-2xl pointer-events-none">
           <span className="text-white">Zero to live in 3 days</span> ·
-          Vibe-coded in Claude Code · Git-versioned · Shipped on Vercel ·{" "}
+          Vibe-coded in Claude Code · Git-versioned
+          <br />
+          Shipped on Vercel ·{" "}
           <span
             style={{
               textDecoration: "line-through",
