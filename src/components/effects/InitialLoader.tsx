@@ -266,40 +266,46 @@ export function InitialLoader() {
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] h-[560px] rounded-full bg-[#0f62fe]/10 blur-[140px]"
       />
 
-      {/* PRAGUE BG MAP.
-          Geographically grounded representation of Phil's home city
-          (not the earlier abstract flat curve). The Vltava actually
-          flows south to north through Prague, making a sharp eastward
-          bend around Letná Park north of the Old Town before
-          continuing north toward Holešovice. That signature loop +
-          the river's S-shape is what reads as "Prague" rather than
-          "any river."
+      {/* PRAGUE MAP. PURE LINE DRAWING, NO TEXT.
+          Dense annotated map of central Prague drawn entirely with
+          paths, lines, and dots. Reads as a real cartographic
+          surface without a single word, so the loader stays purely
+          visual.
 
-          On the SVG canvas (viewBox 1600x900, north pointing up):
-            - River enters from the south, near the bottom of the
-              composition (around x=720, y=910).
-            - Flows north with a slight westward dip past Vyšehrad.
-            - Curves east just past the Old Town centerline (the
-              Letná loop / Holešovice bend).
-            - Continues north and exits at the top right of the
-              canvas (x=1080, y=-50).
-            - Four bridges (Vyšehrad / Karlův / Mánesův / Štefánikův
-              from south to north) cross the river at their actual
-              relative positions.
-            - Five landmark dots sit at their real positions relative
-              to the river:
-                * Vyšehrad: east bank, south of center
-                * Charles Bridge: ON the river, slightly south of mid
-                * Prague Castle (Hradčany): WEST of the river, mid
-                * Old Town (Staré Město): EAST of the river, mid
-                * Letná Park: north, INSIDE the eastward bend
-            - Each landmark carries a tiny mono uppercase label
-              positioned offset from the dot, so the map reads as a
-              real annotated map, not just dots on a line.
+          What's drawn (viewBox 1600x900, north up, sequence top-to-
+          bottom in render order, but stagger-animated from broad
+          context layers up to specific landmark dots):
 
-          All strokes / fills use low-alpha IBM blue or white so the
-          map is FELT behind the orbital composition, not visually
-          competing with it. The whole layer dissolves with the loader. */}
+            1. DISTRICT HAIRLINES (faintest layer). Two dashed outer
+               curves west + east of the river suggesting where the
+               historic center ends.
+            2. CONTOUR LINES. Concentric curves around Petřín hill +
+               Hradčany ridge (west bank) and Letná plateau (inside
+               the eastward bend). These read as elevation rings.
+            3. STREET GRID. Five short hairlines crossing the Old
+               Town area east of the river, hinting at the medieval
+               street pattern.
+            4. VLTAVA RIVER (the centerpiece). South-to-north with
+               the signature Letná eastward loop. Drawn as two
+               parallel banks ~30px apart for visible river width.
+            5. ISLANDS. Three small ovals on the river at the real
+               positions of Slovanský / Střelecký / Štvanice.
+            6. BRIDGES. Six perpendicular line segments crossing the
+               river at real bridge positions.
+            7. VYŠEHRAD PROMONTORY. Small triangular cliff shape
+               east of the river at the south.
+            8. LANDMARK DOTS. Six glowing IBM-blue / emerald dots
+               at: Vyšehrad, Charles Bridge (on river), Castle
+               (west bank), Old Town Square (east bank), National
+               Theatre (east bank, south), Letná Park (north).
+               No labels, dot positions alone do the work.
+            9. COMPASS CROSS. Top-left, four arms with an IBM-blue
+               triangle pointing up (north). No "N" letter.
+
+          All strokes use low-alpha IBM blue or white so the map is
+          felt behind the orbital composition, not competing with it.
+          Sequenced via stroke-dashoffset draw-in + the loader-
+          landmark-in keyframe so the map "builds itself" over ~3.5s. */}
       <svg
         aria-hidden
         className="pointer-events-none absolute inset-0 w-full h-full"
@@ -322,39 +328,112 @@ export function InitialLoader() {
           </filter>
         </defs>
 
-        {/* DISTRICT HAIRLINES. Two very faint curves that hint at the
-            district boundaries west + east of the river, giving the
-            map a "this is a city" feel rather than a single line on
-            a black canvas. */}
+        {/* 1. DISTRICT HAIRLINES. Two outer dashed curves framing the
+              historic center on each side of the river. */}
         <path
-          d="M 480 110 C 520 250, 560 400, 610 560 C 650 700, 700 820, 760 900"
+          d="M 380 80 C 420 240, 480 410, 540 580 C 600 740, 680 870, 740 950"
           fill="none"
-          stroke="rgba(255, 255, 255, 0.04)"
+          stroke="rgba(255, 255, 255, 0.05)"
           strokeWidth="1"
-          strokeDasharray="2 6"
+          strokeDasharray="3 7"
+          pathLength={1}
+          strokeDashoffset="1"
+          className="motion-safe:animate-[loader-draw_3s_cubic-bezier(0.33,1,0.68,1)_500ms_forwards]"
+          style={{ strokeDasharray: "1" }}
+        />
+        <path
+          d="M 1380 80 C 1330 240, 1240 400, 1200 560 C 1160 720, 1100 850, 1040 950"
+          fill="none"
+          stroke="rgba(255, 255, 255, 0.05)"
+          strokeWidth="1"
+          strokeDasharray="3 7"
           pathLength={1}
           strokeDashoffset="1"
           className="motion-safe:animate-[loader-draw_3s_cubic-bezier(0.33,1,0.68,1)_700ms_forwards]"
           style={{ strokeDasharray: "1" }}
         />
-        <path
-          d="M 1280 110 C 1240 250, 1180 380, 1150 540 C 1120 700, 1080 820, 1020 900"
-          fill="none"
-          stroke="rgba(255, 255, 255, 0.04)"
-          strokeWidth="1"
-          strokeDasharray="2 6"
-          pathLength={1}
-          strokeDashoffset="1"
-          className="motion-safe:animate-[loader-draw_3s_cubic-bezier(0.33,1,0.68,1)_900ms_forwards]"
-          style={{ strokeDasharray: "1" }}
-        />
 
-        {/* VLTAVA RIVER (main line).
-            South-to-north flow with the eastward Letná bend. Each
-            Bezier control was chosen by tracing a simplified outline
-            of the real river in Prague's center; the proportions
-            are deliberately simplified for the loader composition
-            but the signature S/loop shape is preserved. */}
+        {/* 2. CONTOUR LINES. Concentric curves around Petřín hill
+              (west of river, mid-south) and Letná plateau (north
+              of the bend). Each set is three nested curves so the
+              eye reads it as a hill in plan view. */}
+        {/* Petřín / Hradčany ridge (west bank) */}
+        <g>
+          {[
+            "M 540 700 C 560 600, 580 520, 620 440 C 660 360, 700 320, 740 280",
+            "M 580 700 C 600 620, 620 540, 660 480 C 690 420, 720 380, 750 350",
+            "M 620 680 C 640 620, 660 560, 690 510 C 715 470, 735 440, 760 410",
+          ].map((d, i) => (
+            <path
+              key={`petrin-${i}`}
+              d={d}
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.06)"
+              strokeWidth="1"
+              pathLength={1}
+              strokeDasharray="1"
+              strokeDashoffset="1"
+              className="motion-safe:animate-[loader-draw_2.4s_cubic-bezier(0.33,1,0.68,1)_forwards]"
+              style={{ animationDelay: `${1100 + i * 150}ms` }}
+            />
+          ))}
+        </g>
+        {/* Letná plateau (inside the eastward bend, north) */}
+        <g>
+          {[
+            "M 880 260 C 940 240, 1000 230, 1060 250 C 1090 260, 1100 270, 1100 280",
+            "M 900 280 C 950 265, 1000 260, 1050 275 C 1075 280, 1085 285, 1085 290",
+            "M 920 300 C 960 290, 1000 290, 1040 300",
+          ].map((d, i) => (
+            <path
+              key={`letna-${i}`}
+              d={d}
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.06)"
+              strokeWidth="1"
+              pathLength={1}
+              strokeDasharray="1"
+              strokeDashoffset="1"
+              className="motion-safe:animate-[loader-draw_2s_cubic-bezier(0.33,1,0.68,1)_forwards]"
+              style={{ animationDelay: `${1400 + i * 150}ms` }}
+            />
+          ))}
+        </g>
+
+        {/* 3. OLD TOWN STREET GRID. Five short crossing hairlines
+              east of the river suggesting the medieval street
+              pattern. Drawn at slight angles so they don't read as
+              a regular grid. */}
+        {[
+          { x1: 880, y1: 460, x2: 980, y2: 480 },
+          { x1: 890, y1: 510, x2: 970, y2: 540 },
+          { x1: 940, y1: 480, x2: 920, y2: 560 },
+          { x1: 990, y1: 490, x2: 980, y2: 570 },
+          { x1: 860, y1: 600, x2: 1000, y2: 590 },
+        ].map((s, i) => (
+          <line
+            key={`street-${i}`}
+            x1={s.x1}
+            y1={s.y1}
+            x2={s.x2}
+            y2={s.y2}
+            stroke="rgba(255, 255, 255, 0.08)"
+            strokeWidth="1"
+            strokeLinecap="round"
+            pathLength={1}
+            strokeDasharray="1"
+            strokeDashoffset="1"
+            className="motion-safe:animate-[loader-draw_900ms_cubic-bezier(0.33,1,0.68,1)_forwards]"
+            style={{ animationDelay: `${2100 + i * 100}ms` }}
+          />
+        ))}
+
+        {/* 4. VLTAVA RIVER. Centerpiece. Drawn as two parallel banks
+              so the river has visible width. The west bank is the
+              brighter line (the "definite" coast); the east bank is
+              softer. Both follow the S-shape with the Letná
+              eastward loop. */}
+        {/* West bank (brighter) */}
         <path
           d="
             M 760 950
@@ -367,8 +446,8 @@ export function InitialLoader() {
             L 1080 -50
           "
           fill="none"
-          stroke="rgba(15, 98, 254, 0.32)"
-          strokeWidth="1.6"
+          stroke="rgba(15, 98, 254, 0.45)"
+          strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
           pathLength={1}
@@ -376,23 +455,21 @@ export function InitialLoader() {
           strokeDashoffset="1"
           className="motion-safe:animate-[loader-draw_2.8s_cubic-bezier(0.33,1,0.68,1)_300ms_forwards]"
         />
-        {/* Soft second bank line for river depth. Slightly east-
-            offset to suggest the width of the Vltava across central
-            Prague (river is ~150-300m wide). */}
+        {/* East bank (softer) */}
         <path
           d="
-            M 790 950
-            C 800 870, 760 800, 790 720
-            C 820 660, 880 620, 850 540
-            C 830 480, 770 450, 800 380
-            C 830 320, 910 320, 990 320
-            C 1070 320, 1150 320, 1170 250
-            C 1180 190, 1140 130, 1110 80
-            L 1110 -50
+            M 800 950
+            C 810 870, 770 800, 800 720
+            C 830 660, 890 620, 860 540
+            C 840 480, 780 450, 810 380
+            C 840 320, 920 320, 1000 320
+            C 1080 320, 1160 320, 1180 250
+            C 1190 190, 1150 130, 1120 80
+            L 1120 -50
           "
           fill="none"
-          stroke="rgba(15, 98, 254, 0.14)"
-          strokeWidth="1"
+          stroke="rgba(15, 98, 254, 0.22)"
+          strokeWidth="1.2"
           strokeLinecap="round"
           strokeLinejoin="round"
           pathLength={1}
@@ -401,21 +478,56 @@ export function InitialLoader() {
           className="motion-safe:animate-[loader-draw_2.8s_cubic-bezier(0.33,1,0.68,1)_500ms_forwards]"
         />
 
-        {/* BRIDGES. Short perpendicular segments at the real relative
-            positions of major Prague bridges (south to north). Each
-            tilts to roughly cross the river at its actual angle. */}
+        {/* 5. ISLANDS. Three small ovals at real positions on the
+              Vltava: Slovanský (Žofín), Střelecký, Štvanice. */}
         {[
-          // Železniční (railway) bridge: south, near Vyšehrad
-          { x1: 740, y1: 880, x2: 800, y2: 870 },
-          // Palackého: just south of Old Town
-          { x1: 745, y1: 760, x2: 805, y2: 750 },
-          // Karlův Most (Charles Bridge): the famous one. Crosses
-          // east-west between Old Town and Malá Strana.
-          { x1: 740, y1: 640, x2: 870, y2: 620 },
-          // Mánesův: north of Charles Bridge
-          { x1: 760, y1: 520, x2: 850, y2: 510 },
-          // Štefánikův / Čechův: around the Letná bend
-          { x1: 920, y1: 320, x2: 990, y2: 320 },
+          // Slovanský / Žofín: just south of the Charles Bridge area
+          { cx: 776, cy: 680, rx: 8, ry: 18 },
+          // Střelecký: between Charles Bridge and Mánesův
+          { cx: 790, cy: 600, rx: 7, ry: 14 },
+          // Štvanice: inside the eastward bend, north
+          { cx: 1080, cy: 280, rx: 22, ry: 9 },
+        ].map((isl, i) => (
+          <ellipse
+            key={`island-${i}`}
+            cx={isl.cx}
+            cy={isl.cy}
+            rx={isl.rx}
+            ry={isl.ry}
+            fill="none"
+            stroke="rgba(15, 98, 254, 0.35)"
+            strokeWidth="1"
+            opacity={0}
+            className="motion-safe:animate-[loader-landmark-in_500ms_cubic-bezier(0.33,1,0.68,1)_forwards]"
+            style={{
+              animationDelay: `${2700 + i * 120}ms`,
+              transformBox: "fill-box",
+              transformOrigin: "center",
+            }}
+          />
+        ))}
+
+        {/* 6. BRIDGES. Six perpendicular segments at real positions
+              along the river, south to north. Each line is sized
+              to roughly span the local river width. */}
+        {[
+          // Vyšehrad / Železniční (railway): south
+          { x1: 740, y1: 870, x2: 810, y2: 855 },
+          // Palackého
+          { x1: 745, y1: 780, x2: 815, y2: 765 },
+          // Jiráskův
+          { x1: 750, y1: 700, x2: 815, y2: 685 },
+          // Most Legií
+          { x1: 755, y1: 620, x2: 825, y2: 605 },
+          // Karlův Most (Charles Bridge): the famous one. Longer
+          //   segment so it visually dominates.
+          { x1: 720, y1: 540, x2: 870, y2: 520 },
+          // Mánesův
+          { x1: 760, y1: 450, x2: 830, y2: 440 },
+          // Štefánikův / Čechův (around the eastward bend)
+          { x1: 920, y1: 320, x2: 1000, y2: 320 },
+          // Hlávkův (north, end of the bend)
+          { x1: 1100, y1: 220, x2: 1180, y2: 235 },
         ].map((b, i) => (
           <line
             key={`bridge-${i}`}
@@ -423,162 +535,103 @@ export function InitialLoader() {
             y1={b.y1}
             x2={b.x2}
             y2={b.y2}
-            stroke="rgba(255, 255, 255, 0.18)"
-            strokeWidth="1"
+            stroke={
+              i === 4
+                ? "rgba(255, 255, 255, 0.32)"
+                : "rgba(255, 255, 255, 0.18)"
+            }
+            strokeWidth={i === 4 ? 1.4 : 1}
             strokeLinecap="round"
             pathLength={1}
             strokeDasharray="1"
             strokeDashoffset="1"
             className="motion-safe:animate-[loader-draw_700ms_cubic-bezier(0.33,1,0.68,1)_forwards]"
             style={{
-              animationDelay: `${2600 + i * 160}ms`,
+              animationDelay: `${2400 + i * 110}ms`,
             }}
           />
         ))}
 
-        {/* LANDMARK DOTS + LABELS. Real positions relative to the
-            river. Each dot fades + scales in with the loader-landmark
-            keyframe; each text label fades in alongside via the
-            stagger delay. */}
+        {/* 7. VYŠEHRAD PROMONTORY. Small triangular cliff shape
+              jutting into the river from the east bank, south. */}
+        <path
+          d="M 820 880 L 855 860 L 855 900 Z"
+          fill="rgba(15, 98, 254, 0.18)"
+          stroke="rgba(15, 98, 254, 0.5)"
+          strokeWidth="1"
+          opacity={0}
+          className="motion-safe:animate-[loader-landmark-in_500ms_cubic-bezier(0.33,1,0.68,1)_3100ms_forwards]"
+          style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        />
+
+        {/* 8. LANDMARK DOTS. Six glowing IBM-blue / emerald dots
+              at the real positions of major Prague landmarks. NO
+              text labels; the dot positions on the river / banks
+              do the cartographic work. */}
         {[
-          // Vyšehrad: south, on the east bank cliffs
-          {
-            cx: 820,
-            cy: 870,
-            color: "#0f62fe",
-            label: "Vyšehrad",
-            labelX: 860,
-            labelY: 875,
-            anchor: "start" as const,
-          },
-          // Charles Bridge: on the river, mid-south
-          {
-            cx: 800,
-            cy: 632,
-            color: "#10b981",
-            label: "Karlův most",
-            labelX: 900,
-            labelY: 628,
-            anchor: "start" as const,
-          },
-          // Prague Castle (Hradčany): west of river, mid
-          {
-            cx: 670,
-            cy: 480,
-            color: "#0f62fe",
-            label: "Hradčany",
-            labelX: 645,
-            labelY: 462,
-            anchor: "end" as const,
-          },
-          // Old Town (Staré Město): east of river, mid
-          {
-            cx: 920,
-            cy: 510,
-            color: "#0f62fe",
-            label: "Staré Město",
-            labelX: 950,
-            labelY: 510,
-            anchor: "start" as const,
-          },
-          // Letná park: inside the Letná bend (north)
-          {
-            cx: 950,
-            cy: 250,
-            color: "#10b981",
-            label: "Letná",
-            labelX: 980,
-            labelY: 246,
-            anchor: "start" as const,
-          },
+          // Vyšehrad (east bank, south)
+          { cx: 838, cy: 880, color: "#0f62fe" },
+          // Charles Bridge (ON the river, middle of the famous bridge line)
+          { cx: 795, cy: 530, color: "#10b981" },
+          // Prague Castle (west bank, mid)
+          { cx: 680, cy: 440, color: "#0f62fe" },
+          // Old Town Square (east bank, mid)
+          { cx: 940, cy: 510, color: "#0f62fe" },
+          // National Theatre (east bank, south of Charles Bridge)
+          { cx: 850, cy: 640, color: "#0f62fe" },
+          // Letná (inside the bend, north)
+          { cx: 990, cy: 270, color: "#10b981" },
         ].map((d, i) => (
-          <g
+          <circle
             key={`landmark-${i}`}
+            cx={d.cx}
+            cy={d.cy}
+            r={3.5}
+            fill={d.color}
             opacity={0}
+            filter="url(#loader-landmark-glow)"
             className="motion-safe:animate-[loader-landmark-in_500ms_cubic-bezier(0.33,1,0.68,1)_forwards]"
             style={{
-              animationDelay: `${3100 + i * 160}ms`,
+              animationDelay: `${3200 + i * 120}ms`,
               transformBox: "fill-box",
               transformOrigin: "center",
             }}
-          >
-            <circle
-              cx={d.cx}
-              cy={d.cy}
-              r={3.5}
-              fill={d.color}
-              filter="url(#loader-landmark-glow)"
-            />
-            <text
-              x={d.labelX}
-              y={d.labelY}
-              fill="rgba(255, 255, 255, 0.45)"
-              fontSize="11"
-              fontFamily="var(--font-mono)"
-              letterSpacing="0.22em"
-              textAnchor={d.anchor}
-              style={{ textTransform: "uppercase" }}
-            >
-              {d.label}
-            </text>
-          </g>
+          />
         ))}
 
-        {/* COMPASS rose: small N indicator top-left so the map reads
-            as a real annotated cartographic surface. */}
+        {/* 9. COMPASS CROSS. Top-left. Four arms; the north arm is
+              a small IBM-blue triangle. NO 'N' letter. */}
         <g
           opacity={0}
           className="motion-safe:animate-[loader-landmark-in_500ms_cubic-bezier(0.33,1,0.68,1)_2800ms_forwards]"
-          transform="translate(120, 130)"
+          transform="translate(130, 140)"
         >
           <line
             x1="0"
-            y1="-22"
+            y1="-26"
             x2="0"
-            y2="22"
-            stroke="rgba(255, 255, 255, 0.3)"
+            y2="26"
+            stroke="rgba(255, 255, 255, 0.32)"
             strokeWidth="1"
             strokeLinecap="round"
           />
           <line
-            x1="-12"
+            x1="-18"
             y1="0"
-            x2="12"
+            x2="18"
             y2="0"
-            stroke="rgba(255, 255, 255, 0.15)"
+            stroke="rgba(255, 255, 255, 0.18)"
             strokeWidth="1"
             strokeLinecap="round"
           />
-          <path d="M 0 -22 L -4 -14 L 4 -14 Z" fill="#0f62fe" />
-          <text
-            x="0"
-            y="-30"
-            textAnchor="middle"
-            fill="rgba(255, 255, 255, 0.55)"
-            fontSize="9"
-            fontFamily="var(--font-mono)"
-            letterSpacing="0.32em"
-          >
-            N
-          </text>
+          <circle cx="0" cy="0" r="2" fill="rgba(255, 255, 255, 0.5)" />
+          <path
+            d="M 0 -26 L -5 -16 L 5 -16 Z"
+            fill="#0f62fe"
+            stroke="rgba(15, 98, 254, 0.7)"
+            strokeWidth="0.5"
+          />
         </g>
-
-        {/* "PRAGUE" main label, top-right of the SVG. Mono, tracked,
-            small enough to read as cartographic annotation. */}
-        <text
-          x="1480"
-          y="160"
-          textAnchor="end"
-          fill="rgba(255, 255, 255, 0.55)"
-          fontSize="13"
-          fontFamily="var(--font-mono)"
-          letterSpacing="0.42em"
-          opacity={0}
-          className="motion-safe:animate-[loader-landmark-in_600ms_cubic-bezier(0.33,1,0.68,1)_3200ms_forwards]"
-          style={{ textTransform: "uppercase" }}
-        >
-          Praha · Vltava
-        </text>
       </svg>
 
       {/* Mono coordinate label, bottom-left. Editorial nod to where
