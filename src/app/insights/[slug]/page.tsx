@@ -188,7 +188,10 @@ export default async function InsightPage({ params }: RouteProps) {
           </Reveal>
 
           <Reveal delay={100}>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.05] mb-8">
+            <h1
+              className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.05] mb-8"
+              style={{ viewTransitionName: `insight-title-${insight.slug}` }}
+            >
               {insight.title}
             </h1>
           </Reveal>
@@ -206,7 +209,10 @@ export default async function InsightPage({ params }: RouteProps) {
 
         {/* Hero image */}
         <Reveal delay={400}>
-          <div className="relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 mb-20 md:mb-32 shadow-2xl max-w-6xl mx-auto">
+          <div
+            className="relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 mb-20 md:mb-32 shadow-2xl max-w-6xl mx-auto"
+            style={{ viewTransitionName: `insight-card-${insight.slug}` }}
+          >
             <Image
               src={insight.image}
               alt={insight.title}

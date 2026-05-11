@@ -1,11 +1,41 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 import { insights, type Insight, type InsightType } from "@/lib/insights";
+
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (callback: () => void | Promise<void>) => unknown;
+};
+
+/**
+ * Hook + handler: intercept the click on an Insights card, wrap the
+ * Next.js navigation in document.startViewTransition() when the
+ * browser supports it, and fall back to native navigation otherwise.
+ * The card image + title carry matching viewTransitionName values
+ * with the /insights/[slug] page's hero image + h1, so the browser
+ * morphs them across the page change.
+ */
+function useInsightTransitionClick() {
+  const router = useRouter();
+  return useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      const doc = document as ViewTransitionDocument;
+      if (typeof doc.startViewTransition !== "function") return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      doc.startViewTransition(() => {
+        router.push(href);
+      });
+    },
+    [router],
+  );
+}
 
 /**
  * Insights section. Featured-Hero + 4-card grid (IDEO Journal pattern).
@@ -59,17 +89,22 @@ function MetaRow({ insight }: { insight: Insight }) {
 }
 
 function FeaturedCard({ insight }: { insight: Insight }) {
+  const handleClick = useInsightTransitionClick();
   return (
     <TiltCard scale={1.02} maxRotation={3} className="h-full">
       <a
         href={insight.href}
+        onClick={(e) => handleClick(e, insight.href)}
         data-magnetic="true"
         className="group glass relative overflow-hidden rounded-3xl border-white/5 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_50px_rgba(15,98,254,0.18)] transition-all duration-500 grid grid-cols-1 lg:grid-cols-[58%_42%] hover-target"
       >
         <ElectricBorder />
 
         {/* IMAGE. 16:9 on mobile, full-height on lg. */}
-        <div className="relative aspect-[16/9] lg:aspect-auto overflow-hidden">
+        <div
+          className="relative aspect-[16/9] lg:aspect-auto overflow-hidden"
+          style={{ viewTransitionName: `insight-card-${insight.slug}` }}
+        >
           <Image
             src={insight.image}
             alt={insight.title}
@@ -98,7 +133,10 @@ function FeaturedCard({ insight }: { insight: Insight }) {
             </span>
           </div>
 
-          <h4 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.05]">
+          <h4
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.05]"
+            style={{ viewTransitionName: `insight-title-${insight.slug}` }}
+          >
             <span className="inline-flex items-baseline gap-3 flex-wrap">
               <span>{insight.title}</span>
               <ArrowUpRight className="w-6 h-6 md:w-7 md:h-7 text-[#4589ff] shrink-0 transition-transform duration-500 group-hover:rotate-45" />
@@ -119,17 +157,22 @@ function FeaturedCard({ insight }: { insight: Insight }) {
 }
 
 function RegularCard({ insight }: { insight: Insight }) {
+  const handleClick = useInsightTransitionClick();
   return (
     <TiltCard scale={1.03} maxRotation={4} className="h-full">
       <a
         href={insight.href}
+        onClick={(e) => handleClick(e, insight.href)}
         data-magnetic="true"
         className="group glass relative overflow-hidden rounded-2xl border-white/5 hover:border-[#0f62fe]/40 hover:shadow-[0_12px_40px_rgba(15,98,254,0.14)] transition-all duration-500 flex flex-col h-full hover-target"
       >
         <ElectricBorder />
 
         {/* IMAGE. 16:9 thumbnail. */}
-        <div className="relative aspect-[16/9] overflow-hidden">
+        <div
+          className="relative aspect-[16/9] overflow-hidden"
+          style={{ viewTransitionName: `insight-card-${insight.slug}` }}
+        >
           <Image
             src={insight.image}
             alt={insight.title}
@@ -153,7 +196,10 @@ function RegularCard({ insight }: { insight: Insight }) {
 
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col gap-4 p-6 md:p-7 flex-1">
-          <h4 className="text-lg md:text-xl font-bold text-white tracking-tight leading-snug">
+          <h4
+            className="text-lg md:text-xl font-bold text-white tracking-tight leading-snug"
+            style={{ viewTransitionName: `insight-title-${insight.slug}` }}
+          >
             <span className="inline-flex items-baseline gap-2 flex-wrap">
               <span>{insight.title}</span>
               <ArrowUpRight className="w-4 h-4 text-[#4589ff] shrink-0 transition-transform duration-500 group-hover:rotate-45" />
