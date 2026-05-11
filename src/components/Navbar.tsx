@@ -73,27 +73,32 @@ export function Navbar() {
         aria-label="Primary"
         className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] md:w-[min(96%,1120px)] px-3 md:px-4 py-2.5 flex justify-between items-center gap-4 rounded-full backdrop-blur-3xl bg-black/30 border border-white/8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)]"
       >
-        {/* Logo: square monogram badge instead of the old 'PG R' text.
-            36px rounded-square with a hairline border + glass bg +
-            mono-black 'PG' centered + a small IBM-blue corner dot.
-            Hover lights up the border, fills the bg with a blue tint,
-            adds an ambient glow + scales the corner dot. Reads as a
-            real mark rather than a typographic placeholder. */}
+        {/* Logo: pure typographic mark, no frame.
+            - IBM Plex Mono Black for both letters at 32px desktop /
+              28px mobile, tracking tighter than default so the
+              letters read as one tight word.
+            - The signature is a 7px IBM-blue dot wedged at the
+              baseline between P and G, with a soft glow halo. This
+              is the brand mark; the letters are the wordmark.
+            - On hover both letters shift toward IBM blue and the
+              dot pulses + brightens its halo, so the whole mark
+              feels alive without a box. */}
         <Link
           href="/"
           onClick={handleLogoClick}
           data-cursor-no-hint="true"
-          className="group shrink-0 ml-1 md:ml-2 hover-target"
+          className="group shrink-0 ml-2 md:ml-3 hover-target inline-flex items-baseline gap-1 leading-none"
           aria-label="Phil G, back to home"
         >
-          <span className="relative flex items-center justify-center w-9 h-9 rounded-[10px] border border-white/15 bg-white/[0.04] backdrop-blur-md transition-all duration-500 ease-[var(--ease-out)] group-hover:border-[#0f62fe]/60 group-hover:bg-[#0f62fe]/15 group-hover:shadow-[0_0_18px_rgba(15,98,254,0.45)]">
-            <span className="font-mono font-black text-white text-[13px] tracking-tighter leading-none">
-              PG
-            </span>
-            <span
-              aria-hidden
-              className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.75)] transition-all duration-500 ease-[var(--ease-out)] group-hover:scale-125 group-hover:shadow-[0_0_14px_rgba(15,98,254,1)]"
-            />
+          <span className="font-mono font-black text-[28px] md:text-[32px] tracking-[-0.06em] leading-none text-white transition-colors duration-500 ease-[var(--ease-out)] group-hover:text-[#4589ff]">
+            P
+          </span>
+          <span
+            aria-hidden
+            className="self-end mb-[7px] md:mb-2 w-[7px] h-[7px] md:w-2 md:h-2 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.85)] transition-all duration-500 ease-[var(--ease-out)] group-hover:scale-[1.45] group-hover:shadow-[0_0_16px_rgba(15,98,254,1)]"
+          />
+          <span className="font-mono font-black text-[28px] md:text-[32px] tracking-[-0.06em] leading-none text-white transition-colors duration-500 ease-[var(--ease-out)] group-hover:text-[#4589ff]">
+            G
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-1 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
@@ -143,16 +148,20 @@ export function Navbar() {
           }`}
         >
           <div className="flex justify-between items-center mb-16">
-            {/* Mobile drawer logo: same square monogram as the desktop
-                pill so the brand mark stays consistent across surfaces. */}
-            <span className="relative flex items-center justify-center w-9 h-9 rounded-[10px] border border-white/15 bg-white/[0.04] backdrop-blur-md">
-              <span className="font-mono font-black text-white text-[13px] tracking-tighter leading-none">
-                PG
+            {/* Mobile drawer logo: same typographic mark as the
+                desktop pill so the brand stays consistent across
+                surfaces. Bold mono P + IBM-blue dot + bold mono G. */}
+            <span className="inline-flex items-baseline gap-1 leading-none">
+              <span className="font-mono font-black text-[28px] tracking-[-0.06em] leading-none text-white">
+                P
               </span>
               <span
                 aria-hidden
-                className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.75)]"
+                className="self-end mb-[7px] w-[7px] h-[7px] rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.85)]"
               />
+              <span className="font-mono font-black text-[28px] tracking-[-0.06em] leading-none text-white">
+                G
+              </span>
             </span>
             <button
               type="button"
