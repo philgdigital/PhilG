@@ -222,16 +222,19 @@ export function InitialLoader() {
   }, []);
 
   // BRAND-REEL PHASE CYCLE
-  // Advances through PHASES every PHASE_DURATION_MS. Loops back to 0
-  // until the resources are ready, then completes the current word
-  // and triggers the fade.
+  // Advances through PHASES every PHASE_DURATION_MS. phaseIdx keeps
+  // counting up forever (0, 1, 2, 3, 4, 5, ...); the display reads
+  // PHASES[phaseIdx % PHASES.length], and the cycledOnce flag flips
+  // the moment we've passed PHASES.length entries. Counting forward
+  // (instead of mod-ing back to 0) is what lets the phrase-strip
+  // translate continuously upward with no jump on the loop reset:
+  // there's no "0 -> 3" snap-back, just a forever-incrementing
+  // translateY tied directly to phaseIdx.
   useEffect(() => {
     if (phase !== "holding") return;
     const t = window.setTimeout(() => {
-      const nextIdx = (phaseIdx + 1) % PHASES.length;
-      if (nextIdx === 0) cycledOnceRef.current = true;
-      // If we've finished a full cycle AND resources are ready, fade
-      // instead of advancing further.
+      const nextIdx = phaseIdx + 1;
+      if (nextIdx >= PHASES.length) cycledOnceRef.current = true;
       if (cycledOnceRef.current && readyRef.current) {
         setPhase("fading");
         window.setTimeout(() => setPhase("done"), FADE_MS);
@@ -279,12 +282,23 @@ export function InitialLoader() {
   const INNER_INSET = 52;
   const TICK_RADIUS = RING_SIZE / 2 - 1;
 
-  // Step counter: 01 / 04, 02 / 04, etc. Mono uppercase.
   // Step counter: "0 1", "0 2", "0 3", "0 4". A leading 0 + the
   // current phase number, no slash + denominator. Reads like a
   // sequence index rather than a "current of total" fraction.
-  const stepLabel = `0 ${phaseIdx + 1}`;
-  const currentPhase = PHASES[phaseIdx];
+  // phaseIdx counts up forever (see brand-reel cycle effect), so we
+  // mod it by PHASES.length for both the visible counter and the
+  // current-phrase lookup.
+  const visibleIdx = phaseIdx % PHASES.length;
+  const stepLabel = `0 ${visibleIdx + 1}`;
+  // Phrase strip: pre-render enough copies of PHASES that the strip
+  // never runs out before the loader's 9s ceiling. Each phrase tile
+  // is exactly PHASE_TILE_PX tall, and the strip translates upward
+  // by phaseIdx * PHASE_TILE_PX so the active phrase always sits in
+  // the visible window. Because every phrase is already painted, the
+  // transition between phaseIdx values is a pure transform tween:
+  // no React unmount, no opacity-0 frame, no empty gap.
+  const STRIP_REPEATS = 12;
+  const PHASE_TILE_PX = 20;
 
   return (
     <div
@@ -729,18 +743,39 @@ export function InitialLoader() {
           <span className="shine-text font-mono text-2xl md:text-3xl font-bold tracking-[0.18em] uppercase">
             PHIL G.
           </span>
-          {/* Cycling service phrase. Re-keyed on each phase so React
-              unmounts the previous span; the new one enters via the
-              loader-phase-in keyframe (fade + lift). Fixed height
-              container prevents the surrounding layout from jittering
-              as words of different widths cycle through. */}
-          <div className="relative h-5 w-[200px] overflow-hidden">
-            <span
-              key={phaseIdx}
-              className="absolute inset-0 flex items-center justify-center font-mono text-[11px] tracking-[0.32em] uppercase text-[#4589ff] motion-safe:animate-[loader-phase-in_500ms_cubic-bezier(0.33,1,0.68,1)_both]"
+          {/* Cycling service phrase. ALL phrases are pre-rendered in
+              a vertical strip; phaseIdx counts up forever and the
+              strip translates by phaseIdx * PHASE_TILE_PX so the
+              active phrase sits in the visible window. The previous
+              implementation re-keyed a single span on each phase,
+              which unmounted+remounted via React and left a 500ms
+              opacity-0 frame between phrases (read by users as a
+              ~1s empty gap). With the strip, the transition is a
+              pure transform tween, since every phrase is already painted,
+              so there's no empty frame. Fixed height container
+              keeps surrounding layout from jittering. */}
+          <div
+            className="relative w-[200px] overflow-hidden"
+            style={{ height: PHASE_TILE_PX }}
+          >
+            <div
+              className="absolute inset-x-0 top-0 transition-transform duration-[500ms] ease-[cubic-bezier(0.33,1,0.68,1)]"
+              style={{
+                transform: `translateY(-${phaseIdx * PHASE_TILE_PX}px)`,
+              }}
             >
-              {currentPhase}
-            </span>
+              {Array.from({ length: STRIP_REPEATS }).flatMap((_, repeat) =>
+                PHASES.map((phrase, i) => (
+                  <span
+                    key={`${repeat}-${i}`}
+                    className="flex items-center justify-center font-mono text-[11px] tracking-[0.32em] uppercase text-[#4589ff] whitespace-nowrap"
+                    style={{ height: PHASE_TILE_PX }}
+                  >
+                    {phrase}
+                  </span>
+                )),
+              )}
+            </div>
           </div>
         </div>
       </div>
