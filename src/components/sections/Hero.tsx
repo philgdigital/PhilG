@@ -378,8 +378,28 @@ export function Hero() {
                   Explore the Work
                 </span>
               </a>
-              <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
-                Senior Product Design Leader & Builder · Prague, CZ
+              {/* Meta line. 'Prague' is paired with a small inline
+                  Czech tricolor flag glyph (path-drawn, no emoji or
+                  external asset) so the location reads as a clean
+                  national signal without a generic 'CZ' country
+                  code abbreviation. */}
+              <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap inline-flex items-center gap-2">
+                <span>
+                  Senior Product Design Leader & Builder · Prague
+                </span>
+                <svg
+                  aria-label="Czechia"
+                  role="img"
+                  viewBox="0 0 30 20"
+                  className="w-[1.4em] h-[0.95em] inline-block rounded-[1.5px] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] shrink-0"
+                >
+                  {/* Top white stripe */}
+                  <rect width="30" height="10" fill="#ffffff" />
+                  {/* Bottom red stripe */}
+                  <rect y="10" width="30" height="10" fill="#d7141a" />
+                  {/* Blue chevron pointing right from the hoist */}
+                  <polygon points="0,0 15,10 0,20" fill="#11457e" />
+                </svg>
               </p>
             </div>
           </Reveal>
