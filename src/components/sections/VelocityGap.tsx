@@ -40,6 +40,11 @@ type Tool = {
  * that evokes the tool without reproducing its logo. currentColor is
  * used for stroke/fill so the hover-state color shift propagates.
  */
+// Order: lead with the primary daily ship-tools (design + AI), then
+// the ideation toolchain (Miro / Pen & Paper / Whiteboard), close
+// with delivery (Jira). Reflects Phil's actual day-in-the-life
+// sequence: design surface -> AI engineering -> support / sync ->
+// ship tracking.
 const TOOLS: Tool[] = [
   {
     name: "Figma",
@@ -51,6 +56,35 @@ const TOOLS: Tool[] = [
         <rect x="6" y="8.5" width="7" height="5" rx="2.5" fill="currentColor" />
         <circle cx="13.5" cy="16.5" r="2.5" fill="currentColor" />
         <rect x="6" y="14" width="5" height="5" rx="2.5" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    name: "Claude Code",
+    glyph: (
+      // Eight-point starburst evoking Anthropic / Claude's signature mark.
+      <svg viewBox="0 0 22 22" fill="currentColor">
+        <path d="M11 1 L12.2 9.8 L21 11 L12.2 12.2 L11 21 L9.8 12.2 L1 11 L9.8 9.8 Z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Codex",
+    glyph: (
+      // Angle brackets, the universal "code" glyph.
+      <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="8 5 3 11 8 17" />
+        <polyline points="14 5 19 11 14 17" />
+      </svg>
+    ),
+  },
+  {
+    name: "Gemini",
+    glyph: (
+      // Four-point star (Gemini's signature blade-of-light shape).
+      <svg viewBox="0 0 22 22" fill="currentColor">
+        <path d="M11 1 C11.2 6 13 8.8 18 9.5 C13 10.2 11.2 13 11 18 C10.8 13 9 10.2 4 9.5 C9 8.8 10.8 6 11 1 Z" />
+        <path d="M11 11 C11.1 17 12.5 19.5 16 20 C12.5 20.5 11.1 22 11 22 C10.9 22 9.5 20.5 6 20 C9.5 19.5 10.9 17 11 11 Z" opacity="0" />
       </svg>
     ),
   },
@@ -85,35 +119,6 @@ const TOOLS: Tool[] = [
         <line x1="3" y1="10" x2="19" y2="10" />
         <line x1="8" y1="16" x2="8" y2="19" strokeLinecap="round" />
         <line x1="14" y1="16" x2="14" y2="19" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    name: "Claude Code",
-    glyph: (
-      // Eight-point starburst evoking Anthropic / Claude's signature mark.
-      <svg viewBox="0 0 22 22" fill="currentColor">
-        <path d="M11 1 L12.2 9.8 L21 11 L12.2 12.2 L11 21 L9.8 12.2 L1 11 L9.8 9.8 Z" />
-      </svg>
-    ),
-  },
-  {
-    name: "Codex",
-    glyph: (
-      // Angle brackets, the universal "code" glyph.
-      <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="8 5 3 11 8 17" />
-        <polyline points="14 5 19 11 14 17" />
-      </svg>
-    ),
-  },
-  {
-    name: "Gemini",
-    glyph: (
-      // Four-point star (Gemini's signature blade-of-light shape).
-      <svg viewBox="0 0 22 22" fill="currentColor">
-        <path d="M11 1 C11.2 6 13 8.8 18 9.5 C13 10.2 11.2 13 11 18 C10.8 13 9 10.2 4 9.5 C9 8.8 10.8 6 11 1 Z" />
-        <path d="M11 11 C11.1 17 12.5 19.5 16 20 C12.5 20.5 11.1 22 11 22 C10.9 22 9.5 20.5 6 20 C9.5 19.5 10.9 17 11 11 Z" opacity="0" />
       </svg>
     ),
   },
