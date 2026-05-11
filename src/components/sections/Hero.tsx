@@ -256,9 +256,25 @@ export function Hero() {
                   scaleX(0) is the resting state; when lineDrawn
                   flips true the animation runs scaleX(0 -> 1) over
                   700ms with cubic-bezier easing, drawing the line
-                  left to right like a pen stroke. */}
+                  left to right like a pen stroke.
+
+                  After the strike completes, the 'Design' text drops
+                  to 60% opacity (it's the corrected/struck-out word,
+                  so it visually recedes while 'Builder' is the new
+                  authoritative read). The opacity transition's delay
+                  (700ms) matches the strike animation duration, so
+                  the dim starts the instant the line finishes
+                  drawing, not before, not after. */}
               <span className="relative inline-block">
-                Design
+                <span
+                  className="transition-opacity duration-500 ease-out"
+                  style={{
+                    opacity: lineDrawn ? 0.6 : 1,
+                    transitionDelay: lineDrawn ? "700ms" : "0ms",
+                  }}
+                >
+                  Design
+                </span>
                 <span
                   aria-hidden
                   className="pointer-events-none absolute left-0 origin-left"
