@@ -130,31 +130,115 @@ body {
 /* ─────────────────────────────────────────────
    Background orbs (animated blob keyframes).
    ───────────────────────────────────────────── */
-@keyframes blob {
-  0% {
-    transform: translate(0%, 0%) scale(1);
-  }
-  33% {
-    transform: translate(10%, -15%) scale(1.2);
-  }
-  66% {
-    transform: translate(-10%, 10%) scale(0.8);
-  }
+/* Four distinct blob drift paths. Each orb in AnimatedGradientBackground
+   gets its own keyframe + duration so the orbs never visually sync,
+   producing a continuously evolving gradient. Long durations (24-36s)
+   + five-stop keyframes make the motion smooth and languid, not
+   bouncing or repetitive. */
+@keyframes blob-drift-a {
+  0%,
   100% {
     transform: translate(0%, 0%) scale(1);
   }
+  20% {
+    transform: translate(18%, -12%) scale(1.15);
+  }
+  40% {
+    transform: translate(28%, 8%) scale(1.05);
+  }
+  60% {
+    transform: translate(15%, 22%) scale(0.95);
+  }
+  80% {
+    transform: translate(-8%, 14%) scale(0.9);
+  }
+}
+@keyframes blob-drift-b {
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  20% {
+    transform: translate(-15%, 18%) scale(1.1);
+  }
+  40% {
+    transform: translate(-25%, -5%) scale(0.92);
+  }
+  60% {
+    transform: translate(-10%, -20%) scale(1.18);
+  }
+  80% {
+    transform: translate(8%, -8%) scale(1.05);
+  }
+}
+@keyframes blob-drift-c {
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  25% {
+    transform: translate(20%, 12%) scale(0.85);
+  }
+  50% {
+    transform: translate(8%, -10%) scale(1.1);
+  }
+  75% {
+    transform: translate(-15%, -22%) scale(1.25);
+  }
+}
+@keyframes blob-drift-d {
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  30% {
+    transform: translate(-12%, -20%) scale(1.2);
+  }
+  55% {
+    transform: translate(18%, 10%) scale(0.88);
+  }
+  80% {
+    transform: translate(-5%, 22%) scale(1.08);
+  }
+}
+.animate-blob-a {
+  animation: blob-drift-a 28s infinite ease-in-out;
+  will-change: transform;
+}
+.animate-blob-b {
+  animation: blob-drift-b 32s infinite ease-in-out;
+  will-change: transform;
+}
+.animate-blob-c {
+  animation: blob-drift-c 24s infinite ease-in-out;
+  will-change: transform;
+}
+.animate-blob-d {
+  animation: blob-drift-d 36s infinite ease-in-out;
+  will-change: transform;
+}
+
+/* Legacy single blob keyframe kept for any external code that may
+   still reference it. New orbs should use the per-orb variants
+   above so they don't sync. */
+@keyframes blob {
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  25% {
+    transform: translate(15%, -10%) scale(1.15);
+  }
+  50% {
+    transform: translate(20%, 15%) scale(1.05);
+  }
+  75% {
+    transform: translate(-8%, 8%) scale(0.9);
+  }
 }
 .animate-blob {
-  animation: blob 15s infinite alternate ease-in-out;
-}
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-.animation-delay-6000 {
-  animation-delay: 6s;
+  animation: blob 28s infinite ease-in-out;
+  will-change: transform;
 }
 
 /* ─────────────────────────────────────────────
@@ -442,6 +526,10 @@ body {
     scroll-behavior: auto !important;
   }
   .animate-blob,
+  .animate-blob-a,
+  .animate-blob-b,
+  .animate-blob-c,
+  .animate-blob-d,
   .animate-marquee,
   .animate-marquee-slow,
   .animate-marquee-reverse,
