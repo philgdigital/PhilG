@@ -29,7 +29,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
   return (
     <section
       id={id}
-      className="relative z-10 py-24 md:py-32 px-6 md:px-12 lg:px-24 border-y border-white/5"
+      className="relative z-10 py-24 md:py-32 px-6 md:px-12 lg:px-24 border-y border-white/5 bg-black/65"
     >
       <div className="relative z-10 max-w-5xl mx-auto text-center">
         {lines.map((line, i) => (

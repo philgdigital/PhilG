@@ -121,12 +121,24 @@ export function SectionProgress() {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => {
+    // rAF-throttled scroll handler. Coalesces multiple scroll events
+    // into one state read per animation frame. Prevents React setState
+    // from firing 60-120 times per second during fast scrolls.
+    let rafId = 0;
+    const compute = () => {
+      rafId = 0;
       setVisible(window.scrollY > window.innerHeight * 0.6);
+    };
+    const onScroll = () => {
+      if (rafId !== 0) return;
+      rafId = requestAnimationFrame(compute);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      if (rafId !== 0) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (

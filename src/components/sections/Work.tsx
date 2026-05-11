@@ -72,13 +72,10 @@ export function Work() {
           const total = projects.length;
           const padded = (n: number) => (n < 10 ? `0${n}` : `${n}`);
           const indexLabel = `${padded(index + 1)} / ${padded(total)}`;
-          const isAlternate = index % 2 === 1;
           return (
             <div
               key={p.id}
-              className={`relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24 transition-colors duration-700 ${
-                isAlternate ? "bg-black/45" : ""
-              }`}
+              className="relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24 bg-black/45"
             >
               <article
                 id={`work-${p.slug}`}

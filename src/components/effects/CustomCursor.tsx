@@ -40,6 +40,24 @@ export function CustomCursor() {
     let raf = 0;
     let lastHover: "idle" | "link" | "card" = "idle";
 
+    // Track whether the visitor is actively scrolling. We skip magnetic
+    // getBoundingClientRect() reads during scroll because each rect call
+    // can force a layout flush; with 20+ magnetic targets on screen, that
+    // burns the scroll's frame budget. Resumes 150ms after the last
+    // scroll event so the magnetic-pull feel is restored as soon as
+    // they stop. Performance win: scrolling stays at 60fps even with the
+    // cursor effect active.
+    let isScrolling = false;
+    let scrollIdleTimer = 0;
+    const onScrollSignal = () => {
+      isScrolling = true;
+      window.clearTimeout(scrollIdleTimer);
+      scrollIdleTimer = window.setTimeout(() => {
+        isScrolling = false;
+      }, 150);
+    };
+    window.addEventListener("scroll", onScrollSignal, { passive: true });
+
     // Magnetic targets are tracked each frame so we don't query the DOM in
     // mousemove (which fires 60-120Hz). They're refreshed on scroll/resize.
     let magneticTargets: HTMLElement[] = [];
@@ -129,9 +147,20 @@ export function CustomCursor() {
     const RING_LERP = 0.65;
 
     const render = () => {
-      const { pullX, pullY } = applyMagnetism(mouseX, mouseY);
-      const targetX = mouseX + pullX;
-      const targetY = mouseY + pullY;
+      // During scroll, skip the magnetic loop (no DOM reads at all) and
+      // just lerp the ring toward the raw mouse position. Pure transform
+      // writes are compositor-only and don't cost layout time, so the
+      // browser keeps the scroll smooth.
+      let targetX: number;
+      let targetY: number;
+      if (isScrolling) {
+        targetX = mouseX;
+        targetY = mouseY;
+      } else {
+        const { pullX, pullY } = applyMagnetism(mouseX, mouseY);
+        targetX = mouseX + pullX;
+        targetY = mouseY + pullY;
+      }
       ringX += (targetX - ringX) * RING_LERP;
       ringY += (targetY - ringY) * RING_LERP;
       if (ringRef.current) {
@@ -177,6 +206,7 @@ export function CustomCursor() {
 
     return () => {
       stop();
+      window.clearTimeout(scrollIdleTimer);
       magneticTargets.forEach((t) => {
         t.style.transform = "";
       });
@@ -185,6 +215,7 @@ export function CustomCursor() {
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScrollSignal);
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [isFinePointer]);
