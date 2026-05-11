@@ -47,8 +47,10 @@ export function Hero() {
           edge aligns with the headline's left edge. The body p stays
           constrained to max-w-5xl for reading width, but is left-anchored
           (no mx-auto) so it doesn't drift into the center of the page.
+          Tighter top margin (mt-16 md:mt-20) brings the body closer to
+          the giant headline for better hero spacing rhythm.
         */}
-        <div className="mt-24 md:mt-32 flex flex-col gap-10 max-w-5xl">
+        <div className="mt-16 md:mt-20 flex flex-col gap-8 max-w-5xl">
           {/* Two-tier body (frog pattern: promise first, context underneath).
               Tier 1 is the headline-level promise the eye lands on; the
               <br /> gives 'I'm Phil G.' its own line. Tier 2 is the
