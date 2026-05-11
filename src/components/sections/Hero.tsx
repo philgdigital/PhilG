@@ -293,6 +293,25 @@ export function Hero() {
                 </span>
               </li>
 
+              {/* PIVOTAL LABS: muted-green wordmark with the bracket
+                  glyph evoking the lab's old engineering-paired-
+                  programming identity. */}
+              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <span
+                  aria-hidden
+                  className="font-mono font-bold text-base md:text-lg text-[#82c63a] group-hover:text-[#a3df60] transition-colors duration-500"
+                >
+                  []
+                </span>
+                <span className="font-sans font-bold tracking-tight text-base md:text-lg text-[#82c63a] group-hover:text-[#a3df60] transition-colors duration-500">
+                  Pivotal
+                  <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors duration-500">
+                    {" "}
+                    Labs
+                  </span>
+                </span>
+              </li>
+
               {/* SAP: cyan-blue black uppercase. */}
               <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
                 <span className="font-sans font-black uppercase tracking-[0.04em] text-base md:text-lg text-[#21a8ec] group-hover:text-[#4dbdf2] transition-colors duration-500">
