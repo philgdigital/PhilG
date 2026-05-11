@@ -20,7 +20,7 @@ const METRICS: Metric[] = [
     value: 17,
     suffix: "+",
     label: "Years",
-    desc: "Building products end-to-end for Fortune 500 teams: leading product discovery, AI-native prototyping, and shipping production-ready code. Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Royal Air Force.",
+    desc: "Building products for Walmart, VMware, Microsoft, SAP, Cemex, Vodafone, WWF, and the Royal Air Force.",
   },
   {
     icon: Users,
