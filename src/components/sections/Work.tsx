@@ -58,46 +58,32 @@ export function Work() {
         </div>
       </Reveal>
 
-      {/* Each project is a 2-column scrollytelling chapter:
-          left image stays sticky while right content scrolls past it. */}
-      <div className="flex flex-col gap-24 md:gap-32">
+      {/*
+        Each project is a 2-column scrollytelling chapter that left-pins
+        an image while the right column scrolls. Alternating projects
+        sit on a noticeably darker bg via their wrapper, so the eye
+        reads a clear 'chapter changed' shift when scrolling between
+        projects. The wrapper escapes the section padding via negative
+        margins so the dark band is full-bleed, then re-adds padding
+        so the article content stays centered.
+      */}
+      <div className="flex flex-col">
         {projects.map((p, index) => {
           const total = projects.length;
           const padded = (n: number) => (n < 10 ? `0${n}` : `${n}`);
           const indexLabel = `${padded(index + 1)} / ${padded(total)}`;
-          // Alternating chapter backdrop. Every other project gets a
-          // clearly darker scrim so the visitor feels the project
-          // changing as they scroll. Combined with the per-project
-          // accent tint, even-index projects read 'normal' while odd-
-          // index projects read 'darker chapter'. Visible enough to
-          // perceive without competing with the case-study content.
           const isAlternate = index % 2 === 1;
           return (
-            <article
+            <div
               key={p.id}
-              id={`work-${p.slug}`}
-              className="relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[100vh] scroll-mt-32"
+              className={`relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24 transition-colors duration-700 ${
+                isAlternate ? "bg-black/45" : ""
+              }`}
             >
-              {/* Per-project accent tint, always present, very soft. */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -inset-x-6 md:-inset-x-12 lg:-inset-x-24 inset-y-0 -z-10"
-                style={{
-                  background: `linear-gradient(180deg, transparent 0%, ${p.accent}10 18%, ${p.accent}10 82%, transparent 100%)`,
-                }}
-              />
-              {/* Alternating darker scrim, only on odd-index projects.
-                  Creates the visible 'chapter changed' background shift. */}
-              {isAlternate && (
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -inset-x-6 md:-inset-x-12 lg:-inset-x-24 inset-y-0 -z-10"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 14%, rgba(0,0,0,0.55) 86%, transparent 100%)",
-                  }}
-                />
-              )}
+              <article
+                id={`work-${p.slug}`}
+                className="relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[90vh] scroll-mt-32"
+              >
               {/* LEFT: image card pins to viewport center while content scrolls */}
               <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">
                 <Reveal direction="left" className="w-full">
@@ -121,9 +107,9 @@ export function Work() {
                         className="opacity-60 group-hover:opacity-100 transition-all duration-[1500ms] ease-[var(--ease-out)] z-0"
                       />
                       <div
-                        className="absolute inset-0 opacity-80 mix-blend-multiply transition-opacity duration-700 z-0"
+                        className="absolute inset-0 opacity-70 mix-blend-multiply transition-opacity duration-700 z-0"
                         style={{
-                          backgroundImage: `linear-gradient(to top, ${p.accent}D9, rgba(0,0,0,0.45) 55%, transparent)`,
+                          backgroundImage: `linear-gradient(to top, ${p.accent}80, rgba(0,0,0,0.5) 55%, transparent)`,
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent opacity-90 group-hover:opacity-50 transition-opacity duration-700 z-0" />
@@ -211,7 +197,8 @@ export function Work() {
                   </Link>
                 </Reveal>
               </div>
-            </article>
+              </article>
+            </div>
           );
         })}
       </div>
