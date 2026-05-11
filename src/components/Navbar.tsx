@@ -35,25 +35,38 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 px-6 md:px-12 lg:px-24 py-8 flex justify-between items-center backdrop-blur-md bg-black/20 border-b border-white/5 transition-all duration-500">
-        {/* Logo + nav links: cursor pulse rings stay (interactivity
-            signal), but the 'Click for More' hint pill is suppressed
-            via data-cursor-no-hint="true" since these are navigation
-            anchors and don't need the pill to advertise themselves. */}
+      {/* Floating PILL header (builders-secrets pattern).
+          - mx-auto centered with max-width 1120px so it doesn't run
+            edge-to-edge; pulls in slightly from the side gutters.
+          - top-3 + rounded-full + backdrop-blur-2xl + bg-black/55 +
+            white/8 hairline border so it reads as a glass capsule
+            floating above the page.
+          - Soft drop shadow under the pill so it lifts off the
+            content beneath without a hard line.
+          - Each nav link is a px-4 py-2 rounded-full pill itself;
+            hover fills with a soft white/8 bg so the hover hit-area
+            reads as a unit rather than just a text color change.
+          - The mix-blend-difference logo trick is dropped here: the
+            pill bg is consistently dark so we don't need to invert
+            the logo against bright content underneath. */}
+      <nav
+        aria-label="Primary"
+        className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] md:w-[min(96%,1120px)] px-3 md:px-4 py-2.5 flex justify-between items-center gap-4 rounded-full backdrop-blur-2xl bg-black/55 border border-white/8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)]"
+      >
         <a
           href="#"
           data-cursor-no-hint="true"
-          className="font-black text-2xl tracking-tighter text-white hover-target mix-blend-difference"
+          className="shrink-0 pl-3 md:pl-4 font-black text-xl md:text-2xl tracking-tighter text-white hover-target"
         >
           PG<span className="text-[#0f62fe]">®</span>
         </a>
-        <div className="hidden md:flex gap-12 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
+        <div className="hidden md:flex items-center gap-1 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
               data-cursor-no-hint="true"
-              className="hover-target hover:text-white transition-colors uppercase"
+              className="hover-target px-4 py-2 rounded-full uppercase transition-all duration-300 ease-[var(--ease-out)] hover:text-white hover:bg-white/[0.08]"
             >
               {link.label}
             </a>
@@ -65,10 +78,10 @@ export function Navbar() {
           aria-label="Open menu"
           aria-expanded={isMenuOpen}
           data-cursor-no-hint="true"
-          className="md:hidden text-white hover-target p-2 -mr-2"
+          className="md:hidden text-white hover-target p-2 mr-1"
         >
-          <span className="block w-8 h-0.5 bg-white mb-2" />
-          <span className="block w-8 h-0.5 bg-white" />
+          <span className="block w-7 h-0.5 bg-white mb-1.5" />
+          <span className="block w-7 h-0.5 bg-white" />
         </button>
       </nav>
 

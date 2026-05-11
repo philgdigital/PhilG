@@ -19,6 +19,7 @@ import { Process } from "@/components/sections/Process";
 import { FAQ } from "@/components/sections/FAQ";
 import { Aphorism } from "@/components/sections/Aphorism";
 import { AntiPattern } from "@/components/sections/AntiPattern";
+import { VelocityGap } from "@/components/sections/VelocityGap";
 
 /**
  * Homepage section order (conversion arc):
@@ -72,6 +73,10 @@ export default function Home() {
       <SectionProgress />
       <main id="main-content">
         <Hero />
+        {/* Velocity Gap interlude: punchy "THE SHIPPING GAP IS WIDENING"
+            block + 8-tool stack row. Sits between Hero and Trusted By
+            as the immediate "why care" hit after the Hero promise. */}
+        <VelocityGap />
         <div data-tonal="lift">
           <Clients />
         </div>
