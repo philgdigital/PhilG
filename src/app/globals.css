@@ -105,38 +105,6 @@ body {
 }
 
 /* ─────────────────────────────────────────────
-   Aphorism shimmer. Slow IBM-blue highlight sweeping across white
-   letters. Used by the Aphorism section to give the editorial pause
-   a sense of being lit from within. Slower + softer than the main
-   shine-text effect so it reads as ambient, not animated.
-   ───────────────────────────────────────────── */
-@keyframes aphorism-shimmer {
-  0% {
-    background-position: -150% center;
-  }
-  100% {
-    background-position: 150% center;
-  }
-}
-.aphorism-shimmer {
-  background-image: linear-gradient(
-    100deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.95) 35%,
-    rgba(69, 137, 255, 1) 50%,
-    rgba(255, 255, 255, 0.95) 65%,
-    rgba(255, 255, 255, 0.85) 100%
-  );
-  background-size: 200% auto;
-  background-position: -150% center;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: aphorism-shimmer 7s linear infinite;
-  will-change: background-position;
-}
-
-/* ─────────────────────────────────────────────
    Shine text: white → IBM blue → emerald → white sweep.
    ───────────────────────────────────────────── */
 .shine-text {
@@ -582,17 +550,8 @@ html[data-scrolling="true"] main {
   .animate-marquee-reverse,
   .animate-marquee-slowest,
   .shine-text,
-  .aphorism-shimmer,
   .electric-border-container::before {
     animation: none !important;
-  }
-  /* When the shimmer animation is disabled, restore a static white
-     fill so the aphorism text doesn't render as transparent. */
-  .aphorism-shimmer {
-    color: rgba(255, 255, 255, 0.9) !important;
-    background-image: none !important;
-    -webkit-background-clip: border-box !important;
-    background-clip: border-box !important;
   }
   /* Disable the view transition animations under reduced-motion so the
      page change is instant for visitors who prefer no motion. */

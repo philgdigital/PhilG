@@ -41,9 +41,15 @@ export function CursorTrail() {
       mouseY = e.clientY;
     };
 
+    // Tracks whether the previous frame had visible trail content.
+    // When transitioning from 'had content' to 'empty', we clear the
+    // canvas one last time, then skip clearRect on subsequent frames
+    // until there's new content to draw. Avoids a full-viewport
+    // clearRect call every single frame when the cursor is idle.
+    let hadContent = false;
+
     const draw = () => {
       const now = performance.now();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const last = trail[trail.length - 1];
       if (
@@ -57,6 +63,15 @@ export function CursorTrail() {
         trail.shift();
       }
 
+      const hasContent = trail.length > 0;
+      // Skip work entirely when nothing changed last frame either.
+      if (!hasContent && !hadContent) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       for (let i = 0; i < trail.length; i++) {
         const p = trail[i];
         const age = (now - p.t) / TRAIL_LIFETIME_MS;
@@ -69,6 +84,7 @@ export function CursorTrail() {
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fill();
       }
+      hadContent = hasContent;
       raf = requestAnimationFrame(draw);
     };
 
