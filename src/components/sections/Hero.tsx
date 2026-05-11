@@ -14,8 +14,20 @@ export function Hero() {
           </div>
         </Reveal>
 
+        {/*
+          Each headline line is wrapped in a `.headline-line` group so the
+          hover state cascades to children. The hover effect lives in
+          globals.css:
+            - Fill goes transparent
+            - text-stroke 2px white outlines the letters
+            - IBM-blue drop-shadow appears, growing as the eye holds
+            - tracking tightens slightly so the stroke doesn't widen the line
+            - 700ms ease-out throughout
+          The Acceleration line's shine-text gradient inverts to a stroked
+          outline on hover so the three lines share one motion language.
+        */}
         <Reveal delay={200}>
-          <h1 className="text-[11vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
+          <h1 className="headline-line group text-[11vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl">
             Product Design
           </h1>
         </Reveal>
@@ -25,7 +37,7 @@ export function Hero() {
             <div className="w-16 h-2 md:w-40 md:h-3 rounded-full bg-gradient-to-r from-[#0f62fe] to-[#10b981] shadow-[0_0_30px_rgba(15,98,254,0.5)]" />
           </Reveal>
           <Reveal delay={400}>
-            <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase shine-text">
+            <h1 className="headline-line headline-line-shine group text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase shine-text">
               Acceleration
             </h1>
           </Reveal>
@@ -33,8 +45,8 @@ export function Hero() {
 
         <div className="flex justify-start md:justify-end w-full md:w-[95%] mt-4 md:mt-0">
           <Reveal delay={500}>
-            <h1 className="text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white flex items-center gap-4">
-              <span className="text-zinc-400 italic font-light lowercase text-[7vw] md:text-[5vw] -mt-4 font-serif">
+            <h1 className="headline-line group text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase text-white flex items-center gap-4">
+              <span className="text-zinc-400 italic font-light lowercase text-[7vw] md:text-[5vw] -mt-4 font-serif transition-colors duration-700 ease-[var(--ease-out)] group-hover:text-[#4589ff]">
                 with
               </span>
               AI.

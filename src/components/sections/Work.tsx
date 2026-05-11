@@ -102,8 +102,11 @@ export function Work() {
                 id={`work-${p.slug}`}
                 className="relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[90vh] scroll-mt-32"
               >
-              {/* LEFT: image card pins to viewport center while content scrolls */}
-              <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">
+              {/* LEFT: image card pins to viewport center while content scrolls.
+                  work-card-scroll applies a CSS scroll-driven scale/translate/
+                  opacity breath cycle on browsers that support animation-
+                  timeline: view(). Others see the static layout. */}
+              <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1 work-card-scroll">
                 <Reveal direction="left" className="w-full">
                   <TiltCard scale={1.02} maxRotation={3} className="w-full">
                     <Link
@@ -160,8 +163,12 @@ export function Work() {
                 </Reveal>
               </div>
 
-              {/* RIGHT: content scrolls past the sticky image */}
-              <div className="md:order-2 flex flex-col justify-center gap-8 md:py-[18vh]">
+              {/* RIGHT: content scrolls past the sticky image.
+                  work-text-scroll applies a CSS scroll-driven slide+fade
+                  from translateX(-28px) opacity(0.4) at entry to 0/1 at
+                  cover-50%. Same progressive-enhancement caveat as
+                  work-card-scroll. */}
+              <div className="md:order-2 flex flex-col justify-center gap-8 md:py-[18vh] work-text-scroll">
                 <Reveal>
                   <div className="flex items-center gap-3">
                     <div

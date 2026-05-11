@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { projects } from "@/lib/projects";
+import { ArrowUp } from "@/components/icons/Icons";
 
 /**
  * Sticky section progress nav.
@@ -251,6 +252,24 @@ export function SectionProgress() {
           </div>
         );
       })}
+
+      {/* Scroll-to-top circle. Sits below the last section dot, separated
+          by a slight margin so it reads as a control, not another section
+          item. Smooth-scrolls to the very top of the page. Carries the
+          same magnetic + no-hint cursor treatment as the section dots so
+          the floating-fluid hover feels consistent across the whole nav. */}
+      <button
+        type="button"
+        onClick={() =>
+          window.scrollTo({ top: 0, behavior: "smooth" })
+        }
+        data-magnetic="true"
+        data-cursor-no-hint="true"
+        aria-label="Back to top"
+        className="group mt-4 self-end flex items-center justify-center w-9 h-9 rounded-full border border-white/15 bg-white/[0.04] backdrop-blur-md hover-target transition-all duration-500 ease-[var(--ease-out)] hover:-translate-x-1.5 hover:-translate-y-0.5 hover:border-[#0f62fe]/60 hover:bg-[#0f62fe]/15 hover:shadow-[0_0_18px_rgba(15,98,254,0.45)] will-change-transform"
+      >
+        <ArrowUp className="w-4 h-4 text-zinc-300 transition-all duration-500 ease-[var(--ease-out)] group-hover:text-white group-hover:-translate-y-0.5" />
+      </button>
     </nav>
   );
 }

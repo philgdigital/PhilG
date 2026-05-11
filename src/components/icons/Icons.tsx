@@ -49,6 +49,14 @@ export const ArrowUpLeft: IconComponent = (p) => (
   </Svg>
 );
 
+/** Vertical up arrow, used by the SectionProgress scroll-to-top button. */
+export const ArrowUp: IconComponent = (p) => (
+  <Svg {...p}>
+    <line x1="12" y1="19" x2="12" y2="5" />
+    <polyline points="5 12 12 5 19 12" />
+  </Svg>
+);
+
 export const XIcon: IconComponent = (p) => (
   <Svg {...p}>
     <line x1="18" y1="6" x2="6" y2="18" />

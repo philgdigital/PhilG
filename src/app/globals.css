@@ -301,6 +301,51 @@ html[data-scrolling="true"] .animate-blob-d {
 }
 
 /* ─────────────────────────────────────────────
+   Hero headline hover.
+   Each of the three giant Hero h1 lines carries `.headline-line`. On
+   hover the text fill goes transparent, a 2px white text-stroke
+   outlines the letters, and an IBM-blue drop-shadow blooms behind
+   them. The result is a "hollowed out" headline backlit in IBM blue
+   that reads as an interactive, considered moment without breaking
+   the editorial weight of the typography.
+
+   The Acceleration line carries `.headline-line-shine` in addition,
+   which neutralises the shine-text gradient (sets background:none +
+   forces text-color so the stroke is visible) so the three lines
+   share one consistent hover state instead of one of them keeping
+   the shine and the other two going hollow.
+   ───────────────────────────────────────────── */
+.headline-line {
+  cursor: default;
+  transition:
+    color 700ms cubic-bezier(0.33, 1, 0.68, 1),
+    letter-spacing 700ms cubic-bezier(0.33, 1, 0.68, 1),
+    filter 700ms cubic-bezier(0.33, 1, 0.68, 1),
+    -webkit-text-stroke-color 700ms cubic-bezier(0.33, 1, 0.68, 1),
+    -webkit-text-stroke-width 700ms cubic-bezier(0.33, 1, 0.68, 1);
+  -webkit-text-stroke: 0 transparent;
+}
+@media (hover: hover) and (pointer: fine) {
+  .headline-line:hover {
+    color: transparent;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: #ffffff;
+    letter-spacing: -0.045em;
+    filter: drop-shadow(0 0 32px rgba(15, 98, 254, 0.55))
+      drop-shadow(0 0 64px rgba(15, 98, 254, 0.25));
+  }
+  /* Shine-text variant: neutralise the gradient fill on hover so the
+     stroke is visible. background-clip:initial + transparent stays
+     so the stroke shows; the shine animation pauses while hollow. */
+  .headline-line-shine:hover {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    animation-play-state: paused;
+  }
+}
+
+/* ─────────────────────────────────────────────
    Editorial section tonal lift.
    Applied via data-tonal="lift" on selected sections. A darker band
    with VERY WIDE fade zones (32% top, 32% bottom) so the bg melts in
@@ -351,18 +396,73 @@ html[data-scrolling="true"] .animate-blob-d {
 }
 
 /* ─────────────────────────────────────────────
-   Scroll-blur. Subtle 1.2px blur on main content while the visitor
-   is actively scrolling. Softens edges + reduces visual strain
-   during fast scrolling, then crisps back to sharp as soon as the
-   scroll stops. Toggled via data-scrolling="true" on <html> by
-   src/components/effects/ScrollBlur.tsx.
+   Scroll-blur REMOVED.
+   The earlier filter: blur(1.2px) on <main> during data-scrolling
+   was producing visible tile-boundary artifacts ("boxes") when the
+   browser composited the large blurred GPU layer with the underlying
+   gradient sections, and the 280ms ease-out unblur was perceived as
+   too slow on stop. The page already has soft gradient transitions
+   between sections and an ambient orb backdrop, so we don't need
+   scroll-blur to soften the experience. Sharp scroll, no artifacts.
+
+   data-scrolling="true" is still toggled by ScrollBlur.tsx and used
+   by other rules (.animate-blob-* pause-during-scroll). Just no
+   filter on main.
    ───────────────────────────────────────────── */
-main {
-  transition: filter 280ms cubic-bezier(0.33, 1, 0.68, 1);
+
+/* ─────────────────────────────────────────────
+   Selected Work scroll-driven motion.
+   When the browser supports animation-timeline: view(), each project
+   "breathes" through the viewport: the card image scales 0.94 -> 1 -> 0.94
+   as it enters / centers / exits, and the right-column text slides in
+   from -32px / 0.5 opacity at entry to 0 / 1 at center.
+
+   Progressive enhancement: browsers without animation-timeline (Safari
+   <= 18, Firefox, older Chrome) just see the existing static layout +
+   Reveal-based entrance. No JS, no rAF cost.
+
+   `animation-range: entry 0% cover 70%` means the animation runs from
+   the moment the element enters the viewport (entry 0%) through 70%
+   of the time it's fully covered by the scrollport. We split the
+   keyframes so the "peak" state holds for the middle portion rather
+   than zipping past at center.
+   ───────────────────────────────────────────── */
+@supports (animation-timeline: view()) {
+  .work-card-scroll {
+    animation: work-card-scroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+  .work-text-scroll {
+    animation: work-text-scroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 50%;
+  }
 }
-html[data-scrolling="true"] main {
-  filter: blur(1.2px);
-  transition: filter 90ms ease-out;
+@keyframes work-card-scroll {
+  0% {
+    transform: scale(0.94) translateY(40px);
+    opacity: 0.55;
+  }
+  40%,
+  60% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.94) translateY(-40px);
+    opacity: 0.55;
+  }
+}
+@keyframes work-text-scroll {
+  from {
+    transform: translateX(-28px);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* ─────────────────────────────────────────────
