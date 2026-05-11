@@ -10,6 +10,15 @@ import {
 } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 
+type ProcessProps = {
+  /**
+   * Opens the ProjectFormModal (same one the Footer's monumental
+   * 'Initiate Project' button uses). Wires the Process section's
+   * secondary CTA into the site's single conversion surface.
+   */
+  onOpenForm: () => void;
+};
+
 /**
  * Process section. "How I Work" rendered as a vertical step-by-step
  * storyline (not a grid of cards).
@@ -63,9 +72,6 @@ const STEPS: Step[] = [
     icon: Code2,
   },
 ];
-
-const INTRO_HREF =
-  "mailto:hello@philg.cz?subject=Intro%20call%20with%20Phil%20G.&body=Hi%20Phil%2C%0A%0AI%27d%20like%20to%20book%20a%2030-min%20intro%20call.%20Here%27s%20what%20I%27m%20thinking%3A%0A%0A";
 
 type StepRowProps = {
   step: Step;
@@ -158,7 +164,7 @@ function StepContent({
   );
 }
 
-export function Process() {
+export function Process({ onOpenForm }: ProcessProps) {
   return (
     <section
       id="process"
@@ -224,21 +230,30 @@ export function Process() {
           </div>
         </div>
 
+        {/*
+          Lifted closing-CTA card. Visually prominent next step that
+          opens the same ProjectFormModal as the footer's 'Initiate
+          Project' button. One conversion surface across the site.
+        */}
         <Reveal delay={300}>
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-10 mt-12 md:mt-16 border-t border-white/8">
-            <p className="text-zinc-300 text-base md:text-lg font-light">
-              Want to talk through whether this fits your team?
-            </p>
-            <a
-              href={INTRO_HREF}
+          <div className="mt-12 md:mt-16 glass rounded-3xl p-8 md:p-10 border border-[#0f62fe]/25 hover:border-[#0f62fe]/40 shadow-[0_20px_60px_rgba(15,98,254,0.12)] flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-10 transition-all duration-500">
+            <div className="flex-1">
+              <h4 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-snug mb-2">
+                Want to talk through whether this fits your team?
+              </h4>
+              <p className="text-zinc-400 font-light text-base md:text-lg">
+                Let&apos;s walk through your context on a 30-min call.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onOpenForm}
               data-magnetic="true"
-              className="group flex items-center gap-3 text-white font-mono font-medium tracking-[0.18em] uppercase text-xs hover-target px-6 py-4 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[var(--ease-out)] whitespace-nowrap"
+              className="shrink-0 group flex items-center gap-3 text-white font-mono font-medium tracking-[0.18em] uppercase text-xs hover-target px-8 py-5 rounded-full border-2 border-[#0f62fe] bg-[#0f62fe]/10 hover:bg-[#0f62fe] hover:shadow-[0_0_30px_rgba(15,98,254,0.5)] transition-all duration-500 ease-[var(--ease-out)] whitespace-nowrap"
             >
-              <ArrowUpRight className="w-4 h-4 text-white group-hover:text-black transition-all duration-500 group-hover:rotate-45" />
-              <span className="group-hover:text-black transition-colors duration-500">
-                Book a 30-min intro
-              </span>
-            </a>
+              <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
+              <span>Book a 30-min intro</span>
+            </button>
           </div>
         </Reveal>
       </div>

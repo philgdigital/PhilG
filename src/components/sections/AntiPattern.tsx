@@ -19,7 +19,7 @@ import { Reveal } from "@/components/ui/Reveal";
 const ANTI_PATTERNS = [
   "No 90-day onboarding.",
   'No 12-person agency team.',
-  'No "discovery decks."',
+  'No "discovery decks".',
   "No design handoff friction.",
   "No buzzword roadmaps.",
   "No invoicing for slide decks.",

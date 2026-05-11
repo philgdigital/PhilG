@@ -3,6 +3,16 @@
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 
+type FAQProps = {
+  /**
+   * Callback that opens the same ProjectFormModal the footer uses.
+   * Wires the FAQ's secondary CTA into the site's single conversion
+   * surface so visitors converge on one form regardless of where they
+   * decide to engage.
+   */
+  onOpenForm: () => void;
+};
+
 /**
  * FAQ section. "Common Questions".
  *
@@ -64,10 +74,7 @@ const FAQS: FAQ[] = [
   },
 ];
 
-const INTRO_HREF =
-  "mailto:hello@philg.cz?subject=Intro%20call%20with%20Phil%20G.&body=Hi%20Phil%2C%0A%0AI%27d%20like%20to%20book%20a%2030-min%20intro%20call.%20Here%27s%20what%20I%27m%20thinking%3A%0A%0A";
-
-export function FAQ() {
+export function FAQ({ onOpenForm }: FAQProps) {
   return (
     <section
       id="faq"
@@ -113,21 +120,33 @@ export function FAQ() {
           ))}
         </div>
 
+        {/*
+          Lifted closing-CTA card. Prominent enough to read as a clear
+          next step, not a footnote. Glass surface + IBM-blue accent
+          border + soft accent shadow pull the eye. Clicking the button
+          opens the SAME ProjectFormModal as the footer's monumental
+          'Initiate Project' button, so all conversion surfaces funnel
+          to one form.
+        */}
         <Reveal delay={700}>
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-10 border-t border-white/8">
-            <p className="text-zinc-300 text-base md:text-lg font-light">
-              Got a question that&apos;s not here?
-            </p>
-            <a
-              href={INTRO_HREF}
+          <div className="mt-4 glass rounded-3xl p-8 md:p-10 border border-[#0f62fe]/25 hover:border-[#0f62fe]/40 shadow-[0_20px_60px_rgba(15,98,254,0.12)] flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-10 transition-all duration-500">
+            <div className="flex-1">
+              <h4 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-snug mb-2">
+                Got a question that&apos;s not here?
+              </h4>
+              <p className="text-zinc-400 font-light text-base md:text-lg">
+                Let&apos;s talk it through on a 30-min call.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onOpenForm}
               data-magnetic="true"
-              className="group flex items-center gap-3 text-white font-mono font-medium tracking-[0.18em] uppercase text-xs hover-target px-6 py-4 rounded-full border border-white/20 hover:bg-white transition-all duration-500 ease-[var(--ease-out)] whitespace-nowrap"
+              className="shrink-0 group flex items-center gap-3 text-white font-mono font-medium tracking-[0.18em] uppercase text-xs hover-target px-8 py-5 rounded-full border-2 border-[#0f62fe] bg-[#0f62fe]/10 hover:bg-[#0f62fe] hover:shadow-[0_0_30px_rgba(15,98,254,0.5)] transition-all duration-500 ease-[var(--ease-out)] whitespace-nowrap"
             >
-              <ArrowUpRight className="w-4 h-4 text-white group-hover:text-black transition-all duration-500 group-hover:rotate-45" />
-              <span className="group-hover:text-black transition-colors duration-500">
-                Book a 30-min intro
-              </span>
-            </a>
+              <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
+              <span>Book a 30-min intro</span>
+            </button>
           </div>
         </Reveal>
       </div>
