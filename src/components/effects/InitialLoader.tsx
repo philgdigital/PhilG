@@ -282,24 +282,6 @@ export function InitialLoader() {
   const INNER_INSET = 52;
   const TICK_RADIUS = RING_SIZE / 2 - 1;
 
-  // Step counter: "0 1", "0 2", "0 3", "0 4". A leading 0 + the
-  // current phase number, no slash + denominator. Reads like a
-  // sequence index rather than a "current of total" fraction.
-  // phaseIdx counts up forever (see brand-reel cycle effect), so we
-  // mod it by PHASES.length for both the visible counter and the
-  // current-phrase lookup.
-  //
-  // Defensive guard: clamp via Math.max + double-mod so that even if
-  // phaseIdx somehow lands at a negative value (e.g. via a future
-  // refactor or a stray setPhaseIdx(-1)), the displayed counter
-  // stays inside [1, PHASES.length] and can never render "0 0". The
-  // user has flagged the "0 0" symptom multiple times across stale-
-  // bundle deploys; this guard makes the bug impossible at the
-  // source regardless of what phaseIdx contains.
-  const safeIdx = Math.max(0, phaseIdx);
-  const visibleIdx = ((safeIdx % PHASES.length) + PHASES.length) % PHASES.length;
-  const stepNumber = visibleIdx + 1;
-  const stepLabel = `0 ${stepNumber}`;
   // Phrase strip: pre-render enough copies of PHASES that the strip
   // never runs out before the loader's 9s ceiling. Each phrase tile
   // is exactly PHASE_TILE_PX tall, and the strip translates upward
@@ -742,13 +724,16 @@ export function InitialLoader() {
           <span className="absolute bottom-0 left-1/2 -ml-[5px] -mb-[5px] w-[10px] h-[10px] rounded-full bg-[#10b981] shadow-[0_0_14px_rgba(16,185,129,0.9),0_0_28px_rgba(16,185,129,0.4)]" />
         </div>
 
-        {/* CENTER STACK */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-          {/* Step counter advances with the phase. tabular-nums keeps
-              the digit widths fixed so the layout doesn't jitter. */}
-          <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500 tabular-nums">
-            {stepLabel}
-          </span>
+        {/* CENTER STACK. The earlier step counter (small mono digit
+            pair above PHIL G.) was removed per the user's repeated
+            'I see 0 0' flag: at small mono sizes with the page's
+            wide letter-spacing, the digits sat alongside the map's
+            street-grid lines and could read as a stacked '0 / 0'
+            artefact. With it gone the wordmark + phrase strip are
+            the only content of the center stack and there's no
+            chance of the misread. Gap widened slightly to give the
+            two remaining elements a touch more breath. */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
           {/* PHIL G. wordmark with the shine sweep. Always on. */}
           <span className="shine-text font-mono text-2xl md:text-3xl font-bold tracking-[0.18em] uppercase">
             PHIL G.
