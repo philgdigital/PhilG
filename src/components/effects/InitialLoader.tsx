@@ -280,10 +280,10 @@ export function InitialLoader() {
   const TICK_RADIUS = RING_SIZE / 2 - 1;
 
   // Step counter: 01 / 04, 02 / 04, etc. Mono uppercase.
-  // Drop the leading zeros: 1 / 4 instead of 01 / 04. The two visible
-  // leading zeros in the earlier format read as redundant on a counter
-  // that only ever counts to 4.
-  const stepLabel = `${phaseIdx + 1} / ${PHASES.length}`;
+  // Step counter: "0 1", "0 2", "0 3", "0 4". A leading 0 + the
+  // current phase number, no slash + denominator. Reads like a
+  // sequence index rather than a "current of total" fraction.
+  const stepLabel = `0 ${phaseIdx + 1}`;
   const currentPhase = PHASES[phaseIdx];
 
   return (
