@@ -37,8 +37,12 @@ type AphorismProps = {
   id?: string;
 };
 
-const STAGGER_MS = 22;
-const CHAR_DURATION_MS = 600;
+// Tightened from 22ms / 600ms so the full reveal finishes in well
+// under a second even on the longer aphorism (~38 chars * 12ms +
+// 320ms = 776ms). Visitor never has to wait for words to land
+// during scroll.
+const STAGGER_MS = 12;
+const CHAR_DURATION_MS = 320;
 // Non-breaking space. Use this for any " " character inside an
 // inline-block span; a regular space collapses to zero width in that
 // layout context.
@@ -59,6 +63,9 @@ export function Aphorism({ lines, id }: AphorismProps) {
       return;
     }
 
+    // Fire two full viewport-heights early so the section is already
+    // revealed by the time it scrolls into actual view. Avoids the
+    // user catching mid-reveal characters during fast scrolling.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -66,7 +73,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
           observer.disconnect();
         }
       },
-      { threshold: 0, rootMargin: "0px 0px 200px 0px" },
+      { threshold: 0, rootMargin: "0px 0px 200% 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();

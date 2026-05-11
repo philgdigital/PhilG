@@ -11,6 +11,7 @@ import {
 } from "@/lib/insights";
 import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
+import { DiscussProjectButton } from "@/components/DiscussProjectButton";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -136,19 +137,34 @@ export default async function InsightPage({ params }: RouteProps) {
   return (
     <>
       <Navbar />
+      {/*
+        TWO-LAYER bg softening so the page's bg orbs feel ambient, never
+        "marked" with hard edges:
+
+        1. Full-bleed RADIAL VIGNETTE fixed to the viewport: transparent
+           at center, darkening to ~55% / ~78% at the edges. Sits at
+           z-[-1] (above the AnimatedGradientBackground orbs at z-[-2],
+           below the main content). This dims the orb extremes uniformly
+           so the orbs' outer edges don't read as visible color stops.
+
+        2. Centered ARTICLE-COLUMN HALO: a softer, narrower dark column
+           directly behind the reading width. Larger blur (140px) and
+           lower alpha (0.6) than the previous /80 version so it feathers
+           more gently into the surrounding bg and doesn't introduce its
+           own edge.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-[-1]"
+        style={{
+          background:
+            "radial-gradient(ellipse 75% 55% at center, transparent 0%, rgba(10,10,12,0.55) 65%, rgba(10,10,12,0.82) 100%)",
+        }}
+      />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
-        {/*
-          ONE big soft blurred dark halo behind ALL the article content.
-          Centered column, max ~1280px wide, spans the full vertical of
-          the main content. blur-3xl feathers every edge invisibly. The
-          colorful AnimatedGradientBackground from the root layout stays
-          visible past the halo on either side, so the page keeps the
-          'index' palette while every text block lands on a calm dark
-          surface.
-        */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 inset-y-20 w-[min(95vw,1280px)] -z-10 bg-[#06060a]/80 blur-3xl"
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 inset-y-0 w-[min(88vw,1100px)] -z-10 bg-[#06060a]/60 blur-[140px]"
         />
 
         {/* Top: back link */}
@@ -233,8 +249,14 @@ export default async function InsightPage({ params }: RouteProps) {
           {insight.body && <ArticleBody blocks={insight.body} />}
         </article>
 
-        {/* Closing: next + related */}
-        <section className="border-t border-white/8 pt-16 mt-24 md:mt-32 max-w-5xl mx-auto">
+        {/* Closing: next + related. Section divider is a gradient-fade
+            hairline (transparent -> white/12 -> transparent) so the top
+            edge isn't a hard horizontal line cutting across the page. */}
+        <section className="relative pt-16 mt-24 md:mt-32 max-w-5xl mx-auto">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
+          />
           <Reveal>
             <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400 mb-4 block">
               Read next
@@ -254,7 +276,11 @@ export default async function InsightPage({ params }: RouteProps) {
           </Reveal>
 
           <Reveal delay={200}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 border-t border-white/8">
+            <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
+              />
               {related.map((r) => (
                 <Link
                   key={r.slug}
@@ -281,7 +307,21 @@ export default async function InsightPage({ params }: RouteProps) {
           </Reveal>
 
           <Reveal delay={400}>
-            <div className="mt-20 md:mt-24 pt-16 border-t border-white/8 flex flex-col md:flex-row md:items-end md:justify-between gap-12">
+            {/* Closing CTA. Uses DiscussProjectButton (renamed to a more
+                generic shared component) with the "Initiate a project"
+                label so it visually matches the home page's primary CTA
+                style (border-2 IBM blue + bg-blue/10 + hover-fill).
+                Clicking opens the global ProjectFormModal directly
+                instead of jumping to the /#contact anchor.
+
+                The border-t hairline that previously divided this block
+                is replaced with a gradient-fade hairline so the section
+                no longer reads as a "marked" edge. */}
+            <div className="mt-20 md:mt-24 pt-16 relative flex flex-col md:flex-row md:items-end md:justify-between gap-12">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
+              />
               <div>
                 <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400 mb-3 block">
                   Want to talk?
@@ -290,14 +330,7 @@ export default async function InsightPage({ params }: RouteProps) {
                   Most projects start with a 30-min call.
                 </h3>
               </div>
-              <Link
-                href="/#contact"
-                data-magnetic="true"
-                className="group shrink-0 inline-flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-8 py-5 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-500"
-              >
-                <span>Initiate a project</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
-              </Link>
+              <DiscussProjectButton label="Initiate a project" />
             </div>
           </Reveal>
         </section>

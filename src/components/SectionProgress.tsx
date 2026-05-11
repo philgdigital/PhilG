@@ -256,23 +256,35 @@ export function SectionProgress() {
         );
       })}
 
-      {/* Scroll-to-top circle. Sits below the last section dot, separated
-          by a slight margin so it reads as a control, not another section
-          item. Smooth-scrolls to the very top of the page. Carries the
-          same magnetic + no-hint cursor treatment as the section dots so
-          the floating-fluid hover feels consistent across the whole nav. */}
-      <button
-        type="button"
-        onClick={() =>
-          window.scrollTo({ top: 0, behavior: "smooth" })
-        }
-        data-magnetic="true"
-        data-cursor-no-hint="true"
-        aria-label="Back to top"
-        className="group mt-4 self-end flex items-center justify-center w-9 h-9 rounded-full border border-white/15 bg-white/[0.04] backdrop-blur-md hover-target transition-all duration-500 ease-[var(--ease-out)] hover:-translate-x-1.5 hover:-translate-y-0.5 hover:border-[#0f62fe]/60 hover:bg-[#0f62fe]/15 hover:shadow-[0_0_18px_rgba(15,98,254,0.45)] will-change-transform"
-      >
-        <ArrowUp className="w-4 h-4 text-zinc-300 transition-all duration-500 ease-[var(--ease-out)] group-hover:text-white group-hover:-translate-y-0.5" />
-      </button>
+      {/* Scroll-to-top control. INTEGRATED INTO the dot column rather
+          than floating off below it. To match the dot-column visually:
+            - Wrap in a row that mimics the section-link layout
+              (flex items-end justify-end, same gap-3 as the section
+              row's label/dot pair) so the button right-edge sits on
+              the same vertical line as the active dot.
+            - The button is a 24px hairline circle, MUCH smaller than
+              the earlier 36px glass-card so it reads as the next item
+              in the rhythm rather than a separate widget.
+            - mr-[-11px] pulls the button outward so its CENTER, not
+              its right edge, aligns with the dot column's vertical
+              axis (dot ~2px wide; arrow 24px; offset = (24-2)/2 = 11).
+            - On hover: same floating-fluid -translate-x-1.5 pull as
+              section links, border + arrow shift to IBM blue, soft
+              blue glow. */}
+      <div className="flex flex-col items-end gap-2 mt-2">
+        <button
+          type="button"
+          onClick={() =>
+            window.scrollTo({ top: 0, behavior: "smooth" })
+          }
+          data-magnetic="true"
+          data-cursor-no-hint="true"
+          aria-label="Back to top"
+          className="group flex items-center justify-center w-6 h-6 rounded-full border border-white/20 hover-target transition-all duration-500 ease-[var(--ease-out)] hover:-translate-x-1.5 hover:border-[#0f62fe] hover:shadow-[0_0_14px_rgba(15,98,254,0.55)] will-change-transform mr-[-11px]"
+        >
+          <ArrowUp className="w-3 h-3 text-zinc-400 transition-all duration-500 ease-[var(--ease-out)] group-hover:text-[#4589ff] group-hover:-translate-y-px" />
+        </button>
+      </div>
     </nav>
   );
 }

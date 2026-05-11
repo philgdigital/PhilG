@@ -83,11 +83,18 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={780}>
+            {/* Body context, set on TWO LINES: the first establishes
+                depth ("17 years, Fortune 500, shipped"), the second
+                names the specific outputs Phil delivers. The explicit
+                <br /> forces the line break on every viewport that
+                fits, instead of relying on word-wrap to land where
+                the reader's eye wants the pause. */}
             <p className="text-base md:text-xl font-light text-zinc-400 leading-relaxed max-w-3xl">
               <span className="text-white font-medium">17+ years</span> turning
-              Fortune 500 problems into shipped products. Leading product
-              discovery, crafting AI-ready design systems, and shipping
-              production-grade React prototypes 10× faster.
+              Fortune 500 problems into shipped products.
+              <br />
+              Leading product discovery, crafting AI-ready design systems,
+              and shipping production-grade React prototypes 10× faster.
             </p>
           </Reveal>
 

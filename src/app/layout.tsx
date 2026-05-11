@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { AnimatedGradientBackground } from "@/components/effects/AnimatedGradientBackground";
 import { NoiseOverlay } from "@/components/effects/NoiseOverlay";
 import { ClientEffects } from "@/components/effects/ClientEffects";
+import { InitialLoader } from "@/components/effects/InitialLoader";
 import { FormProvider } from "@/lib/form-context";
 import "./globals.css";
 
@@ -102,6 +103,15 @@ export default function RootLayout({
       className={`${plexSans.variable} ${plexMono.variable} antialiased`}
     >
       <body className="selection:bg-[#0f62fe] selection:text-white">
+        {/* InitialLoader rendered FIRST in the body so its overlay is
+            in the very first server-painted frame. Without this the
+            visitor briefly saw page content before the dynamic-imported
+            client component mounted. The component itself is a Client
+            Component but Next.js still SSRs its markup, so the orbital
+            ring composition + Prague map paths are present on first
+            byte; client-side hydration takes over the readiness gates
+            and the cycling brand reel. */}
+        <InitialLoader />
         <AnimatedGradientBackground />
         {/* Global readability dim removed. The AnimatedGradientBackground's
             own base flatten (~10%) + Carbon Black foundation give body

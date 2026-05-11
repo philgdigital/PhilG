@@ -439,10 +439,15 @@ html[data-scrolling="true"] .animate-blob-d {
     animation-range: entry 0% cover 50%;
   }
 }
+/* Card breath: much smaller scale/translate range + opacity never
+   drops below 0.92 so the card is always readable during scroll.
+   Earlier 0.55 floor made the card feel half-hidden at the edges
+   of its scroll window; the visitor saw a faded card and assumed
+   the content wasn't loaded. */
 @keyframes work-card-scroll {
   0% {
-    transform: scale(0.94) translateY(40px);
-    opacity: 0.55;
+    transform: scale(0.98) translateY(18px);
+    opacity: 0.92;
   }
   40%,
   60% {
@@ -450,14 +455,16 @@ html[data-scrolling="true"] .animate-blob-d {
     opacity: 1;
   }
   100% {
-    transform: scale(0.94) translateY(-40px);
-    opacity: 0.55;
+    transform: scale(0.98) translateY(-18px);
+    opacity: 0.92;
   }
 }
+/* Text reveal: smaller slide + opacity never below 0.85 so the
+   visitor can always read the supporting copy. */
 @keyframes work-text-scroll {
   from {
-    transform: translateX(-28px);
-    opacity: 0.4;
+    transform: translateX(-14px);
+    opacity: 0.85;
   }
   to {
     transform: translateX(0);
