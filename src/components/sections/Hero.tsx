@@ -266,11 +266,14 @@ export function Hero() {
                     top: "46%",
                     width: "100%",
                     height: "0.09em",
-                    backgroundColor: "rgba(232, 232, 235, 0.92)",
+                    // Mid-grey (zinc-400-ish) so the strike reads as
+                    // an editor's pen mark over the white "Design"
+                    // word rather than a bright highlight.
+                    backgroundColor: "rgba(161, 161, 170, 0.85)",
                     transform: "scaleX(0)",
                     transformOrigin: "left center",
                     boxShadow:
-                      "0 0 8px rgba(255, 255, 255, 0.35), 0 0 16px rgba(15, 98, 254, 0.45)",
+                      "0 0 6px rgba(0, 0, 0, 0.45)",
                     animation: lineDrawn
                       ? "hero-strike-draw 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards"
                       : "none",
