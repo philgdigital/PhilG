@@ -67,9 +67,14 @@ export function Footer({ onOpenForm }: FooterProps) {
             </button>
 
             {/* LinkedIn (only social link kept; email button removed
-                per user request - email visible in the meta line below). */}
+                per user request - email visible in the meta line below).
+                Opens in a new tab so the visitor doesn't lose their
+                place on the site. rel="noopener noreferrer" is the
+                standard external-link safety pairing. */}
             <a
-              href="#"
+              href="https://www.linkedin.com/in/felipeaela/"
+              target="_blank"
+              rel="noopener noreferrer"
               data-magnetic="true"
               className="text-white group hover-target flex items-center gap-3 glass px-8 py-5 rounded-full hover:bg-white transition-all duration-500 hover:scale-105 shadow-lg will-change-transform"
             >
