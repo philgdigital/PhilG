@@ -263,6 +263,68 @@ export function Work() {
     };
   }, [isDesktop]);
 
+  // SIDE-MENU NAVIGATION INTERCEPT.
+  // The SectionProgress sub-items render anchor links like
+  // <a href="#work-{slug}">. Native anchor scroll on desktop is
+  // BROKEN here because every project article lives at the same
+  // vertical position inside the sticky horizontal track, so the
+  // browser sees them all at the same scrollY and can't land on the
+  // right one. This document-level click interceptor catches those
+  // clicks before the browser handles them and programmatically
+  // scrolls to the EXACT scrollY that puts the requested project in
+  // view via the pinned-horizontal scroll math:
+  //
+  //   targetScrollY = wrapper.offsetTop + idx * window.innerHeight
+  //
+  // The native window.scrollTo({ smooth }) animation drives the
+  // page's scrollY over 200-500ms; the measure() effect above
+  // re-reads scroll position every frame and updates the horizontal
+  // track's translateX, so the visitor sees the gallery scroll
+  // smoothly to the requested project (vertical scroll + horizontal
+  // track motion happen in lockstep, exactly like a real scroll).
+  //
+  // On mobile we hand off to scrollIntoView on the article's
+  // data-anchor element, since the articles there are in a normal
+  // vertical column and we just want to land on the right one.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest(
+        'a[href^="#work-"]',
+      ) as HTMLAnchorElement | null;
+      if (!link) return;
+      // Honor modifier clicks (open in new tab / window).
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const hash = link.getAttribute("href");
+      if (!hash) return;
+      const slug = hash.slice("#work-".length);
+      const idx = projects.findIndex((p) => p.slug === slug);
+      if (idx < 0) return;
+
+      e.preventDefault();
+      history.replaceState(null, "", hash);
+
+      if (isDesktop) {
+        const wrapper = wrapperRef.current;
+        if (!wrapper) return;
+        const targetY =
+          wrapper.offsetTop + idx * window.innerHeight;
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+      } else {
+        const article = document.querySelector<HTMLElement>(
+          `[data-work-anchor="${slug}"]`,
+        );
+        if (article) {
+          article.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [isDesktop]);
+
   const N = projects.length;
   // Inline transform for the horizontal track. translate3d locks the
   // GPU compositor on so the scroll-linked animation stays smooth
@@ -283,7 +345,19 @@ export function Work() {
       id="work"
       ref={wrapperRef}
       className="relative z-10 lg:[height:calc(var(--work-n)*100vh)]"
-      style={{ "--work-n": N } as React.CSSProperties}
+      style={
+        {
+          "--work-n": N,
+          // Strong dark band beneath the gallery so the cards and
+          // their accent washes don't fight with the page's ambient
+          // bg orbs. 4% top fade + 4% bottom fade give a soft handoff
+          // to the neighbouring sections (Testimonials above, AI Lab
+          // below) so the dark band doesn't read as a hard horizontal
+          // edge cutting the page.
+          background:
+            "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.88) 4%, rgba(2,2,5,0.92) 50%, rgba(2,2,5,0.88) 96%, rgba(2,2,5,0) 100%)",
+        } as React.CSSProperties
+      }
     >
       {/* DESKTOP: pinned horizontal scroll.
           The outer section is N * 100vh tall. The sticky child pins
@@ -384,6 +458,7 @@ export function Work() {
             <article
               key={p.id}
               id={`work-${p.slug}-m`}
+              data-work-anchor={p.slug}
               className="px-6 md:px-12 py-16"
             >
               <ProjectComposition
