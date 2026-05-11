@@ -59,7 +59,8 @@ export function Hero() {
               <span className="font-serif italic text-white">
                 I&apos;m Phil G.
               </span>
-              <br />A Senior Product Design Leader who{" "}
+              <br />A Senior Product Design Leader
+              <br />who{" "}
               <span className="text-white font-medium">
                 designs and builds
               </span>
