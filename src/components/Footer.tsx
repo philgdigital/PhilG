@@ -108,10 +108,13 @@ export function Footer({ onOpenForm }: FooterProps) {
 
       {/* Build credits note. Editorial signature that doubles as a
           reinforcement of Phil's "code ships, Figma is opinion"
-          stance. 'Figma' wears the same strikethrough treatment as
-          'Design' in the Hero headline. */}
+          stance. The 'Zero to live in 3 days' lead anchors the
+          velocity claim that the rest of the site argues for; the
+          strikethrough on 'Figma' ties the bottom of the page back
+          to the Hero's 'Design' correction. */}
       <div className="w-full px-6 md:px-12 lg:px-24 mt-12 z-10 flex justify-center">
         <p className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500 text-center leading-relaxed max-w-3xl">
+          <span className="text-white">Zero to live in 3 days</span> ·
           Vibe-coded in Claude Code · Git-versioned · Shipped on Vercel ·{" "}
           <span
             style={{
