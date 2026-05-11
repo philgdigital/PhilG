@@ -134,11 +134,16 @@ export function Footer({ onOpenForm }: FooterProps) {
         </p>
       </div>
 
-      <div className="w-full flex flex-col md:flex-row justify-between items-center px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-6 md:mt-8 z-10">
+      {/* Bottom three-up: build-credits line above is centered, and
+          the copyright + availability badge sit centered below it on
+          their own line, so all three editorial elements share the
+          same horizontal center axis. Previously the © and the badge
+          were split to left/right via justify-between, which clashed
+          with the centered credits line above and read as a layout
+          mismatch. */}
+      <div className="w-full flex flex-col items-center justify-center gap-4 md:gap-5 px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-6 md:mt-8 z-10">
         <span>© {YEAR} PHIL G.</span>
-        <div className="mt-4 md:mt-0">
-          <AvailabilityBadge variant="compact" onClick={onOpenForm} />
-        </div>
+        <AvailabilityBadge variant="compact" onClick={onOpenForm} />
       </div>
     </footer>
   );
