@@ -24,6 +24,24 @@ type ViewTransitionDocument = Document & {
 type Project = (typeof projects)[number];
 
 /**
+ * Stable wrapper that either bypasses Reveal (when `skip` is true)
+ * or wraps the children in a Reveal entrance. Declared at module
+ * level so it isn't re-created on every render of ProjectComposition
+ * (which would trip React's static-components rule and remount its
+ * children each render, losing animation state).
+ */
+function MaybeReveal({
+  skip,
+  children,
+}: {
+  skip: boolean;
+  children: React.ReactNode;
+}) {
+  if (skip) return <>{children}</>;
+  return <Reveal>{children}</Reveal>;
+}
+
+/**
  * Shared 2-column composition for a single project: BANNER (card
  * image on the left) + TEXT AREA (category, description, role/year,
  * CTA on the right). Used by BOTH the desktop pinned horizontal
@@ -55,19 +73,12 @@ function ProjectComposition({
 }) {
   const padded = (n: number) => (n < 10 ? `0${n}` : `${n}`);
   const indexLabel = `${padded(index + 1)} / ${padded(total)}`;
-  // Inside the pinned track, Reveal would fire on every project at
-  // once (they all enter the viewport together with the wrapper).
-  // Render the same children without the observer wrapping so the
-  // content shows immediately; the horizontal slide is the entrance.
-  const RevealOrPass = insidePinnedTrack
-    ? ({ children }: { children: React.ReactNode }) => <>{children}</>
-    : Reveal;
 
   return (
     <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
       {/* BANNER (card image, left column on lg). */}
       <div className="relative w-full">
-        <RevealOrPass>
+        <MaybeReveal skip={insidePinnedTrack}>
           <TiltCard scale={1.02} maxRotation={3} className="w-full">
             <Link
               href={`/work/${p.slug}`}
@@ -123,12 +134,12 @@ function ProjectComposition({
               </div>
             </Link>
           </TiltCard>
-        </RevealOrPass>
+        </MaybeReveal>
       </div>
 
       {/* TEXT AREA (right column on lg). */}
       <div className="flex flex-col items-start gap-6 md:gap-8">
-        <RevealOrPass>
+        <MaybeReveal skip={insidePinnedTrack}>
           <div className="flex items-center gap-3">
             <div
               className="w-1.5 h-1.5 rounded-full"
@@ -141,15 +152,15 @@ function ProjectComposition({
               {p.category}
             </span>
           </div>
-        </RevealOrPass>
+        </MaybeReveal>
 
-        <RevealOrPass>
+        <MaybeReveal skip={insidePinnedTrack}>
           <p className="text-zinc-200 font-light text-2xl md:text-3xl leading-snug max-w-xl">
             {p.desc}
           </p>
-        </RevealOrPass>
+        </MaybeReveal>
 
-        <RevealOrPass>
+        <MaybeReveal skip={insidePinnedTrack}>
           <dl className="grid grid-cols-2 gap-x-8 gap-y-6 max-w-md mt-2">
             <div className="flex flex-col gap-1.5">
               <dt className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400">
@@ -166,9 +177,9 @@ function ProjectComposition({
               </dd>
             </div>
           </dl>
-        </RevealOrPass>
+        </MaybeReveal>
 
-        <RevealOrPass>
+        <MaybeReveal skip={insidePinnedTrack}>
           <Link
             href={`/work/${p.slug}`}
             data-magnetic="true"
@@ -177,7 +188,7 @@ function ProjectComposition({
             <span>Read case study</span>
             <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
           </Link>
-        </RevealOrPass>
+        </MaybeReveal>
       </div>
     </div>
   );
@@ -228,10 +239,13 @@ export function Work() {
   // Math: wrapperRect.top goes from 0 (pin start) to -(N-1)*vh
   //       (pin end). progress = clamp(-rect.top / pinDuration, 0, 1).
   useEffect(() => {
-    if (!isDesktop) {
-      setProgress(0);
-      return;
-    }
+    // Mobile (<lg) skips the pinned-scroll subscription entirely.
+    // We don't reset progress to 0 here because trackTransform is
+    // gated on isDesktop above; on mobile the leftover progress
+    // value is never read, so resetting it would just trigger an
+    // extra render that React's set-state-in-effect lint rule
+    // (rightly) discourages.
+    if (!isDesktop) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
