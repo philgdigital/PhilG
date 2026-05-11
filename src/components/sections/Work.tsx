@@ -65,20 +65,20 @@ export function Work() {
           const total = projects.length;
           const padded = (n: number) => (n < 10 ? `0${n}` : `${n}`);
           const indexLabel = `${padded(index + 1)} / ${padded(total)}`;
+          // Alternating chapter backdrop. Every other project gets a
+          // clearly darker scrim so the visitor feels the project
+          // changing as they scroll. Combined with the per-project
+          // accent tint, even-index projects read 'normal' while odd-
+          // index projects read 'darker chapter'. Visible enough to
+          // perceive without competing with the case-study content.
+          const isAlternate = index % 2 === 1;
           return (
             <article
               key={p.id}
               id={`work-${p.slug}`}
               className="relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[100vh] scroll-mt-32"
             >
-              {/*
-                Per-project accent-tinted backdrop. Very soft (~5% alpha,
-                hex 0D) so the eye picks up that the project changed
-                without the background competing with the case-study
-                content. Extends horizontally past the section padding
-                so the tint reads as full-bleed; fades at top + bottom
-                so transitions between projects feel seamless.
-              */}
+              {/* Per-project accent tint, always present, very soft. */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute -inset-x-6 md:-inset-x-12 lg:-inset-x-24 inset-y-0 -z-10"
@@ -86,6 +86,18 @@ export function Work() {
                   background: `linear-gradient(180deg, transparent 0%, ${p.accent}10 18%, ${p.accent}10 82%, transparent 100%)`,
                 }}
               />
+              {/* Alternating darker scrim, only on odd-index projects.
+                  Creates the visible 'chapter changed' background shift. */}
+              {isAlternate && (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-x-6 md:-inset-x-12 lg:-inset-x-24 inset-y-0 -z-10"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 14%, rgba(0,0,0,0.55) 86%, transparent 100%)",
+                  }}
+                />
+              )}
               {/* LEFT: image card pins to viewport center while content scrolls */}
               <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">
                 <Reveal direction="left" className="w-full">
