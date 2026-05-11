@@ -165,16 +165,27 @@ export function Clients() {
         </Reveal>
       </div>
 
-      {/* Full-bleed marquee. Top hairline frames it; no bottom border or
-          extra section padding below, so the marquee ends cleanly into
-          the next section without leaving empty space or a double line. */}
+      {/* Full-bleed marquee.
+          - No top/bottom border any more (the previous border-t was
+            drawing a visible hairline that made the block read as a
+            boxed-in rectangle on top of the data-tonal=lift surface).
+          - Edge fades now use CSS mask-image (an alpha gradient
+            applied to the content) instead of a dark bg-gradient
+            overlay. The marquee TEXT fades to transparent at the
+            edges; the surrounding bg (lift + orbs) shows through
+            naturally, so there's no visible "dark band" mismatch
+            with the data-tonal=lift surface anymore. */}
       <Reveal delay={200}>
-        <div className="relative w-full border-t border-white/5">
-          {/* Edge fade masks: dissolve the rows into the page background */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-r from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 md:w-64 lg:w-80 z-10 bg-gradient-to-l from-[#0a0a0c] via-[#0a0a0c]/95 to-transparent" />
-
-          <div className="flex flex-col gap-5 md:gap-8 py-8 md:py-10">
+        <div
+          className="relative w-full"
+          style={{
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+            maskImage:
+              "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+          }}
+        >
+          <div className="flex flex-col gap-5 md:gap-8 py-6 md:py-8">
             <MarqueeRow variant="slow" rowIndex={0} />
             <MarqueeRow variant="reverse" rowIndex={1} />
             <MarqueeRow variant="slowest" rowIndex={2} />
