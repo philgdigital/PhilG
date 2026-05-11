@@ -117,12 +117,19 @@ export function CustomCursor() {
     const onMouseDown = () => setIsClicked(true);
     const onMouseUp = () => setIsClicked(false);
 
+    // Lerp factor controls how snappy the cursor ring catches up to the
+    // mouse position. Was 0.22 (visibly trails the mouse by ~50ms);
+    // bumped to 0.65 so the ring follows essentially in real time
+    // (~30ms catch-up) while keeping just enough smoothing to read as
+    // natural and avoid sub-pixel jitter.
+    const RING_LERP = 0.65;
+
     const render = () => {
       const { pullX, pullY } = applyMagnetism(mouseX, mouseY);
       const targetX = mouseX + pullX;
       const targetY = mouseY + pullY;
-      ringX += (targetX - ringX) * 0.22;
-      ringY += (targetY - ringY) * 0.22;
+      ringX += (targetX - ringX) * RING_LERP;
+      ringY += (targetY - ringY) * RING_LERP;
       if (ringRef.current) {
         ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
       }
