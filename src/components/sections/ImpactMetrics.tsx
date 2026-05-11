@@ -69,7 +69,7 @@ export function ImpactMetrics() {
               className="h-full"
             >
               <TiltCard scale={1.05} maxRotation={6} className="h-full">
-                <div className="glass p-12 rounded-[2rem] h-full flex flex-col border-white/5 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_50px_rgba(15,98,254,0.15)] group preserve-3d relative">
+                <div className="glass p-12 md:p-14 lg:p-16 rounded-[2rem] h-full flex flex-col border-white/5 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_50px_rgba(15,98,254,0.15)] group preserve-3d relative">
                   <ElectricBorder />
                   <Icon className="w-10 h-10 text-[#0f62fe] mb-8 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ease-out translate-z-10 relative z-10" />
                   <h3 className="text-6xl md:text-7xl font-mono font-medium tabular-nums tracking-tight text-white mb-2 translate-z-20 relative z-10">
