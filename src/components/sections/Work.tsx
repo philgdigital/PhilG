@@ -81,9 +81,18 @@ export function Work() {
           return (
             <div
               key={p.id}
-              className={`relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24 ${
-                isAlternate ? "bg-black/35" : ""
-              }`}
+              className="relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24"
+              style={
+                isAlternate
+                  ? {
+                      // Vertical gradient with wide fade zones so the
+                      // darker band melts into the page above + below.
+                      // No visible top/bottom edge.
+                      background:
+                        "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.38) 84%, rgba(0,0,0,0) 100%)",
+                    }
+                  : undefined
+              }
             >
               <article
                 id={`work-${p.slug}`}

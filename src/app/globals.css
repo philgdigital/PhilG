@@ -287,20 +287,35 @@ body {
 
 /* ─────────────────────────────────────────────
    Editorial section tonal lift.
-   Applied via data-tonal="lift" on alternating sections. Creates a
-   subtly darker band (45% peak) for chapter rhythm. Strong enough
-   to register as 'section changed', soft enough not to flatten the
-   whole page into one tone.
+   Applied via data-tonal="lift" on selected sections. A darker band
+   with WIDE fade zones (22% top, 22% bottom) so the bg melts in and
+   out of the page without a hard edge anywhere. The visitor feels
+   the dark band but never sees its boundary.
    ───────────────────────────────────────────── */
 [data-tonal="lift"] {
   background:
     linear-gradient(
       180deg,
       rgba(3, 3, 8, 0) 0%,
-      rgba(3, 3, 8, 0.45) 14%,
-      rgba(3, 3, 8, 0.45) 86%,
+      rgba(3, 3, 8, 0.5) 22%,
+      rgba(3, 3, 8, 0.5) 78%,
       rgba(3, 3, 8, 0) 100%
     );
+}
+
+/* ─────────────────────────────────────────────
+   Scroll-blur. Subtle 1.2px blur on main content while the visitor
+   is actively scrolling. Softens edges + reduces visual strain
+   during fast scrolling, then crisps back to sharp as soon as the
+   scroll stops. Toggled via data-scrolling="true" on <html> by
+   src/components/effects/ScrollBlur.tsx.
+   ───────────────────────────────────────────── */
+main {
+  transition: filter 280ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+html[data-scrolling="true"] main {
+  filter: blur(1.2px);
+  transition: filter 90ms ease-out;
 }
 
 /* ─────────────────────────────────────────────

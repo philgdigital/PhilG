@@ -73,7 +73,9 @@ export default function Home() {
           <Clients />
         </div>
         <Aphorism lines={["Shipped is truth.", "Figma is opinion."]} />
-        <About />
+        <div data-tonal="lift">
+          <About />
+        </div>
         <div data-tonal="lift">
           <Advantage />
         </div>
@@ -91,7 +93,9 @@ export default function Home() {
         <div data-tonal="lift">
           <Process onOpenForm={openForm} />
         </div>
-        <FAQ onOpenForm={openForm} />
+        <div data-tonal="lift">
+          <FAQ onOpenForm={openForm} />
+        </div>
         <div data-tonal="lift">
           <AntiPattern />
         </div>
