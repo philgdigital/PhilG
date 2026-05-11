@@ -72,6 +72,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
       <button
         type="button"
         aria-label="Close dialog"
+        data-cursor-no-hint="true"
         className="absolute inset-0 bg-[#0a0a0c]/70 hover-target cursor-default"
         onClick={onClose}
       />
@@ -85,6 +86,7 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
           type="button"
           onClick={onClose}
           aria-label="Close dialog"
+          data-cursor-no-hint="true"
           className="absolute top-6 right-6 text-neutral-500 hover:text-white transition-colors hover-target"
         >
           <X className="w-8 h-8" />
