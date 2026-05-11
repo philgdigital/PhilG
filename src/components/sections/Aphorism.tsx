@@ -148,14 +148,23 @@ export function Aphorism({ lines, id }: AphorismProps) {
           // single inline-block group with whitespace:nowrap so the
           // per-character spans inside can never break MID-WORD.
           // Font size capped at lg:text-[6rem] so each line fits on
-          // ONE line inside max-w-6xl. The earlier text-[7.5rem]
-          // was overflowing and wrapping "Outcomes, not optics."
-          // onto two lines, making the aphorism read as three lines
-          // total instead of the intended two.
+          // ONE line inside max-w-6xl.
           const tokens = line.split(/(\s+)/).filter((t) => t.length > 0);
           const lineStartIndex = cumulativeCharIndex;
           cumulativeCharIndex += Array.from(line).length;
           let cursor = lineStartIndex;
+          // Detect lines that should render with a "broken ship"
+          // wobble at the WORD level (currently the line about decks
+          // not shipping). Each word in such a line gets the
+          // aphorism-word-broken class with a per-word delay so the
+          // words drift out of phase like floating debris.
+          const lineLower = line.toLowerCase();
+          const isBrokenLine =
+            lineLower.includes("don't ship") ||
+            lineLower.includes("dont ship");
+          // Tracks the word index inside this line so each broken-
+          // word gets a different animation-delay.
+          let wordIdxInLine = 0;
           return (
             <p
               key={lineIdx}
@@ -185,10 +194,23 @@ export function Aphorism({ lines, id }: AphorismProps) {
                   .toLowerCase()
                   .replace(/[^a-z]/g, "");
                 const isRedWord = wordLower === "opinion";
+                // Per-word stagger for the broken-ship wobble so
+                // adjacent words drift out of phase.
+                const brokenDelay = wordIdxInLine * 1300;
+                wordIdxInLine += 1;
                 return (
                   <span
                     key={`w-${tokenIdx}`}
-                    className="inline-block whitespace-nowrap"
+                    className={`inline-block whitespace-nowrap ${
+                      isBrokenLine && postEntry
+                        ? "aphorism-word-broken"
+                        : ""
+                    }`}
+                    style={
+                      isBrokenLine && postEntry
+                        ? { animationDelay: `${brokenDelay}ms` }
+                        : undefined
+                    }
                   >
                     {wordChars.map((char, i) => {
                       const globalIdx = wordStart + i;

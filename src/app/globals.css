@@ -279,6 +279,31 @@ body {
   animation: aphorism-char-wave-red 4s ease-in-out infinite;
 }
 
+/* BROKEN-SHIP wobble. Applied at the WORD level (not char) on
+   specific aphorism lines (currently "Decks don't ship."). Each
+   word rotates + translates on a slow asymmetric cycle and the
+   per-word animation-delay (set inline from React based on word
+   index) means adjacent words drift OUT OF PHASE. The line reads
+   as floating pieces of a broken ship rather than one rigid
+   string. Pairs with the existing aphorism-char-wave inside each
+   word so characters still breathe individually. */
+@keyframes aphorism-word-broken {
+  0%,
+  100% {
+    transform: rotate(-2.5deg) translateY(0);
+  }
+  33% {
+    transform: rotate(3deg) translateY(-3px);
+  }
+  66% {
+    transform: rotate(-0.5deg) translateY(2px);
+  }
+}
+.aphorism-word-broken {
+  animation: aphorism-word-broken 5.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
 /* Line shimmer: deeper opacity dip + a hue lift on the IBM-blue
    gradient stop so the hairlines visibly pulse rather than just
    dimming. */
