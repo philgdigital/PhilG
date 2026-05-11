@@ -901,6 +901,38 @@ main > * + *::before {
     transform: scale(1);
   }
 }
+/* HERO EDITORIAL CORRECTION sequence.
+   Two one-shot keyframes triggered by React state via the inline
+   `animation` property:
+     - hero-strike-draw: the strikethrough line scales horizontally
+       from scaleX(0) to scaleX(1), left-to-right, over 700ms.
+     - hero-builder-write: 'Builder' fades in + a clip-path inset
+       opens left-to-right, simulating a pen stroke writing the
+       word, over 1000ms.
+   `forwards` fill-mode locks in the final state. Using keyframes
+   instead of CSS transitions because transitions only fire on a
+   property CHANGE; with state-driven inline styles a class swap
+   would work in most cases but keyframe animations are more
+   reliable across browsers, especially for clip-path interpolation. */
+@keyframes hero-strike-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes hero-builder-write {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 /* Cycling service-phase entrance. Each phase (Discovery, AI-Prototyping,
    Product Design, Shipping) re-keys the span, which mounts with this
    animation: fade up + slightly enlarged tracking that settles into

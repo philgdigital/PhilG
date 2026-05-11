@@ -8,19 +8,18 @@ import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 export function Hero() {
   // Editorial-correction sequence on the first headline.
   //   'pristine'  : just "Product Design", no marks
-  //   'striking'  : strikethrough line draws across "Design" (600ms)
-  //   'writing'   : "Builder" writes itself in above (900ms)
+  //   'striking'  : strikethrough line draws across "Design"
+  //   'writing'   : "Builder" writes itself in above
   //   'settled'   : both states locked in
   //
-  // The sequence is gated on the InitialLoader broadcasting its
-  // done state via a `philg:loader-done` event + a window flag.
-  // Previous attempts polled document.body.style.overflow, but that
-  // had a race condition: if Hero's effect ran BEFORE the loader's
-  // overflow:hidden lock applied, the poll saw "not hidden" and
-  // started the sequence behind the loader. The event-based signal
-  // is deterministic. On subpages where the loader doesn't render,
-  // a 700ms fallback timer fires the sequence so the animation still
-  // plays.
+  // Gated on InitialLoader's 'philg:loader-done' event + window flag.
+  // The loader always fires this event when its phase transitions to
+  // 'done' (on both homepage and subpages; on subpages it just
+  // happens silently since the loader returned null). A long 10s
+  // ceiling fallback covers the (extremely rare) case where the
+  // event somehow never arrives. The earlier 700ms fallback was a
+  // bug: on the homepage it fired BEFORE the loader was done, so
+  // the entire sequence played invisibly behind the overlay.
   const [editPhase, setEditPhase] = useState<
     "pristine" | "striking" | "writing" | "settled"
   >("pristine");
@@ -31,13 +30,13 @@ export function Hero() {
     const startSequence = () => {
       timeouts.push(
         window.setTimeout(() => setEditPhase("striking"), 600),
-        window.setTimeout(() => setEditPhase("writing"), 1200),
-        window.setTimeout(() => setEditPhase("settled"), 2200),
+        window.setTimeout(() => setEditPhase("writing"), 1500),
+        window.setTimeout(() => setEditPhase("settled"), 2700),
       );
     };
 
-    // If the loader already finished before this effect ran (e.g.
-    // returning to the page from another tab), start immediately.
+    // If the loader already broadcast 'done' before this effect ran
+    // (e.g. returning to the tab), start immediately.
     if ((window as WithFlag).__philgLoaderDone) {
       startSequence();
       return () => {
@@ -50,17 +49,18 @@ export function Hero() {
     };
     window.addEventListener("philg:loader-done", handler, { once: true });
 
-    // Subpage fallback: if no event arrives in 700ms (loader isn't
-    // rendered on /work/[slug] or /insights/[slug]), kick off anyway.
-    const fallback = window.setTimeout(() => {
+    // Hard safety net: if the event hasn't fired in 10s (well past
+    // the loader's own 9s ceiling), force the sequence so the
+    // visitor isn't stuck on the un-edited "Product Design".
+    const safety = window.setTimeout(() => {
       if (!(window as WithFlag).__philgLoaderDone) {
         startSequence();
       }
-    }, 700);
+    }, 10000);
 
     return () => {
       window.removeEventListener("philg:loader-done", handler);
-      window.clearTimeout(fallback);
+      window.clearTimeout(safety);
       timeouts.forEach((id) => window.clearTimeout(id));
     };
   }, []);
@@ -220,17 +220,21 @@ export function Hero() {
             Product{" "}
             <span className="relative inline-block">
               {/* Handwritten 'Builder' written above 'Design'.
-                  clip-path inset shrinks the right inset 100% -> 0%
-                  to "write" the word from left to right. opacity
-                  fades in on the same beat.
+                  Uses a one-shot CSS keyframe animation
+                  (hero-builder-write) that fires the moment the
+                  inline 'animation' property is set when
+                  builderWritten flips true. opacity 0 + clip-path
+                  inset(0 100% 0 0) is the resting (pre-animation)
+                  state; the keyframe interpolates to opacity 1 +
+                  fully open clip-path, simulating a pen writing
+                  the word left to right.
                   z-50 + isolate so it sits ABOVE every other Hero
-                  element (the liquid bg, the strikethrough line,
-                  the headline glow halos) and is never visually
-                  clipped by the parent's transform stacking
-                  context. */}
+                  element (liquid bg, strikethrough line, headline
+                  glow halos) and is never visually clipped by the
+                  parent's transform stacking context. */}
               <span
                 aria-hidden
-                className="absolute right-1 z-50 isolate font-serif italic font-medium text-[#4589ff] pointer-events-none transition-[clip-path,opacity] duration-[900ms] ease-[var(--ease-out)]"
+                className="absolute right-1 z-50 isolate font-serif italic font-medium text-[#4589ff] pointer-events-none"
                 style={{
                   top: "-0.5em",
                   fontSize: "0.42em",
@@ -238,32 +242,38 @@ export function Hero() {
                   textTransform: "none",
                   transform: "rotate(-5deg)",
                   textShadow: "0 0 18px rgba(15, 98, 254, 0.45)",
-                  opacity: builderWritten ? 1 : 0,
-                  clipPath: builderWritten
-                    ? "inset(0 0 0 0)"
-                    : "inset(0 100% 0 0)",
+                  opacity: 0,
+                  clipPath: "inset(0 100% 0 0)",
+                  animation: builderWritten
+                    ? "hero-builder-write 1000ms cubic-bezier(0.22, 1, 0.36, 1) forwards"
+                    : "none",
                 }}
               >
                 Builder
               </span>
               {/* 'Design' word with an animated strikethrough line
-                  layered on top via an absolutely-positioned span.
-                  Default state (pristine): the line is scaleX(0) at
-                  the left origin, invisible. When the sequence kicks
-                  off, it scales to 1 over 600ms, drawing left -> right
-                  like a pen stroke crossing out the word. */}
+                  via a one-shot CSS keyframe (hero-strike-draw).
+                  scaleX(0) is the resting state; when lineDrawn
+                  flips true the animation runs scaleX(0 -> 1) over
+                  700ms with cubic-bezier easing, drawing the line
+                  left to right like a pen stroke. */}
               <span className="relative inline-block">
                 Design
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute left-0 top-[55%] origin-left transition-transform duration-[600ms] ease-[var(--ease-out)]"
+                  className="pointer-events-none absolute left-0 origin-left"
                   style={{
+                    top: "46%",
                     width: "100%",
-                    height: "0.07em",
-                    backgroundColor: "rgba(168, 168, 175, 0.85)",
-                    transform: lineDrawn ? "scaleX(1)" : "scaleX(0)",
+                    height: "0.09em",
+                    backgroundColor: "rgba(232, 232, 235, 0.92)",
+                    transform: "scaleX(0)",
                     transformOrigin: "left center",
-                    boxShadow: "0 0 8px rgba(0, 0, 0, 0.4)",
+                    boxShadow:
+                      "0 0 8px rgba(255, 255, 255, 0.35), 0 0 16px rgba(15, 98, 254, 0.45)",
+                    animation: lineDrawn
+                      ? "hero-strike-draw 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards"
+                      : "none",
                   }}
                 />
               </span>
