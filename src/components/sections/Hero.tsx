@@ -255,19 +255,28 @@ export function Hero() {
             {/* lg:flex-nowrap forces single line on desktop; on
                 smaller viewports flex-wrap is the default fallback. */}
             <ul className="flex flex-wrap lg:flex-nowrap items-center gap-x-5 md:gap-x-7 gap-y-4 md:gap-y-5">
-              {/* WALMART: 4-point sparkle (clean SVG path, fits inside
-                  the viewBox with no clipping) + bright IBM-blue
-                  wordmark. */}
+              {/* WALMART: clean 6-ray sparkle. Three rounded rects
+                  rotated 0/60/120 deg around the center, each giving
+                  two opposing rays. Reads as a clean asterisk-style
+                  burst rather than the previous 4-point lozenge. */}
               <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
                 <svg
                   viewBox="0 0 20 20"
                   aria-hidden
                   className="w-[18px] h-[18px] shrink-0 text-[#ffc220] group-hover:drop-shadow-[0_0_8px_rgba(255,194,32,0.6)] transition-all duration-500"
                 >
-                  <path
-                    d="M10 1 L11.4 8.6 L19 10 L11.4 11.4 L10 19 L8.6 11.4 L1 10 L8.6 8.6 Z"
-                    fill="currentColor"
-                  />
+                  {[0, 60, 120].map((deg) => (
+                    <rect
+                      key={deg}
+                      x="9.1"
+                      y="2"
+                      width="1.8"
+                      height="16"
+                      rx="0.9"
+                      fill="currentColor"
+                      transform={`rotate(${deg} 10 10)`}
+                    />
+                  ))}
                 </svg>
                 <span className="font-sans font-bold tracking-tight text-base md:text-lg text-[#0a8fff] group-hover:text-[#2da5ff] transition-colors duration-500">
                   Walmart
@@ -308,12 +317,21 @@ export function Hero() {
                 </span>
               </li>
 
-              {/* VODAFONE: bright red wordmark with dot accent. */}
-              <li className="group flex items-baseline gap-1 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span
+              {/* VODAFONE: red filled circle with a white curl
+                  shape inside, evoking the brand's iconic
+                  speechmark glyph. */}
+              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
+                <svg
+                  viewBox="0 0 20 20"
                   aria-hidden
-                  className="shrink-0 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#ff2c2c] group-hover:shadow-[0_0_10px_rgba(255,44,44,0.7)] transition-all duration-500"
-                />
+                  className="w-[18px] h-[18px] shrink-0 group-hover:drop-shadow-[0_0_8px_rgba(255,44,44,0.6)] transition-all duration-500"
+                >
+                  <circle cx="10" cy="10" r="9" fill="#ff2c2c" />
+                  <path
+                    d="M7.5 5.5 C 5 7, 4.5 11, 6.5 13.5 C 8 15.5, 10.5 15, 12 13 L 10.5 12 C 9.5 13, 8 13, 7.5 11.5 C 6.5 9, 8 6.5, 10 6 Z"
+                    fill="#ffffff"
+                  />
+                </svg>
                 <span className="font-sans font-extrabold tracking-tight text-base md:text-lg text-[#ff2c2c] group-hover:text-[#ff5757] transition-colors duration-500">
                   Vodafone
                 </span>
@@ -334,39 +352,9 @@ export function Hero() {
                 </span>
               </li>
 
-              {/* WWF / OpenSC: simple globe ring mark + clean sans. */}
-              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <svg
-                  viewBox="0 0 16 16"
-                  aria-hidden
-                  className="w-4 h-4 shrink-0 text-zinc-200"
-                >
-                  <circle
-                    cx="8"
-                    cy="8"
-                    r="7"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                  />
-                  <ellipse
-                    cx="8"
-                    cy="8"
-                    rx="7"
-                    ry="3"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.1"
-                  />
-                  <line
-                    x1="8"
-                    y1="1"
-                    x2="8"
-                    y2="15"
-                    stroke="currentColor"
-                    strokeWidth="1.1"
-                  />
-                </svg>
+              {/* WWF / OpenSC: text-only wordmark (icon removed per
+                  user request). Two-tone with WWF emphasized. */}
+              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
                 <span className="font-sans font-bold tracking-tight text-base md:text-lg text-zinc-200">
                   WWF
                   <span className="text-zinc-500"> / OpenSC</span>

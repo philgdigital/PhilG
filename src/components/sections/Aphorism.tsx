@@ -178,6 +178,13 @@ export function Aphorism({ lines, id }: AphorismProps) {
                 const wordChars = Array.from(token);
                 const wordStart = cursor;
                 cursor += wordChars.length;
+                // Words that should render in shades of red instead
+                // of the default white -> IBM blue wave. The check
+                // strips trailing punctuation so "opinion." matches.
+                const wordLower = token
+                  .toLowerCase()
+                  .replace(/[^a-z]/g, "");
+                const isRedWord = wordLower === "opinion";
                 return (
                   <span
                     key={`w-${tokenIdx}`}
@@ -186,20 +193,21 @@ export function Aphorism({ lines, id }: AphorismProps) {
                     {wordChars.map((char, i) => {
                       const globalIdx = wordStart + i;
                       const delay = globalIdx * STAGGER_MS;
-                      // After the entry settles, each char drifts on
-                      // a slow sine-wave: opacity 1 -> 0.78 -> 1 and
-                      // translateY 0 -> -2px -> 0 over 4s. Different
-                      // characters offset by their position so the
-                      // whole line reads as a continuous gentle wave,
-                      // not a uniform pulse. The class is added only
-                      // after the entry stagger has completed so the
-                      // two animations never fight.
+                      // Per-char animation-delay so the wave runs
+                      // left-to-right across the line.
                       const waveDelay = globalIdx * 70;
+                      // Pick the variant of the wave keyframe based
+                      // on whether the word is a "red" word. Red
+                      // words cycle through red shades; everything
+                      // else cycles through white -> light IBM blue.
+                      const waveClass = isRedWord
+                        ? "aphorism-char-wave-red"
+                        : "aphorism-char-wave";
                       return (
                         <span
                           key={i}
                           className={`inline-block transition-[opacity,transform] ease-[var(--ease-out)] ${
-                            postEntry ? "aphorism-char-wave" : ""
+                            postEntry ? waveClass : ""
                           }`}
                           style={{
                             opacity: revealed ? 1 : 0,
@@ -211,6 +219,15 @@ export function Aphorism({ lines, id }: AphorismProps) {
                             animationDelay: postEntry
                               ? `${waveDelay}ms`
                               : undefined,
+                            // Static red base color while the wave
+                            // hasn't started yet (pre-entry + during
+                            // the entry stagger). Once postEntry is
+                            // true the wave keyframe takes over and
+                            // animates the color through red shades.
+                            color:
+                              isRedWord && !postEntry
+                                ? "rgba(255, 110, 110, 0.95)"
+                                : undefined,
                           }}
                         >
                           {char}

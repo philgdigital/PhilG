@@ -131,7 +131,13 @@ export function Work() {
                       data-card="true"
                       data-magnetic="true"
                       onClick={(e) => handleCardClick(e, p.slug)}
-                      className="work-card-anim group relative block w-full rounded-[2rem] md:rounded-[2.5rem] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] md:aspect-[5/6] transition-all duration-700 hover:border-white/15 shadow-2xl will-change-transform"
+                      // transition-[border-color,box-shadow,opacity]
+                      // (not transition-all) so border-radius is never
+                      // implicitly transitioned. With transition-all
+                      // the GPU was briefly re-rasterizing the rounded
+                      // corner on hover, producing a momentary
+                      // "unrounded corner" flash.
+                      className="work-card-anim group relative block w-full rounded-[2rem] md:rounded-[2.5rem] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] md:aspect-[5/6] transition-[border-color,box-shadow,opacity] duration-700 ease-[var(--ease-out)] hover:border-white/15 shadow-2xl will-change-transform"
                       style={
                         {
                           viewTransitionName: `work-card-${p.slug}`,

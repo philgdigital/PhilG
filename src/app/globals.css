@@ -256,6 +256,29 @@ body {
   animation: aphorism-char-wave 4s ease-in-out infinite;
 }
 
+/* RED variant of the char wave. Used for words flagged via the
+   Aphorism component's redWords logic (currently "opinion"). The
+   word still rocks + breathes the same way as the rest of the line,
+   but cycles through warm-red shades instead of the default white
+   to IBM blue. Creates a clear "warning / opinion / risk" reading
+   for words Phil wants to mark visually distinct. */
+@keyframes aphorism-char-wave-red {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateZ(0);
+    color: rgba(255, 110, 110, 0.95);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(-5px) rotateZ(-1.4deg);
+    color: rgba(255, 45, 45, 1);
+  }
+}
+.aphorism-char-wave-red {
+  animation: aphorism-char-wave-red 4s ease-in-out infinite;
+}
+
 /* Line shimmer: deeper opacity dip + a hue lift on the IBM-blue
    gradient stop so the hairlines visibly pulse rather than just
    dimming. */
@@ -634,51 +657,55 @@ main > * + *::before {
     animation-range: entry 0% exit 100%;
   }
 }
-/* PROJECT-TO-PROJECT HAND-OFF.
+/* PROJECT-TO-PROJECT HAND-OFF (professional version).
    Each Work project's card and text animate across the FULL viewport
-   range of its article (entry 0% -> exit 100%):
-     - 0%   (article entering from below): card is 100px below its
-       sticky position, scaled 0.82, rotated -2deg, fully transparent.
-       Reads as "card rising up from the next section".
-     - 25-75% (article centered, sticky engaged): card hits its
-       resting state (scale 1, translate 0, rotate 0, full opacity).
-       Holds for half the scroll range so the visitor has a clear
-       "centered, in focus" moment.
-     - 100% (article exiting to the top): card is 100px above its
-       sticky position, scaled 0.82, rotated +2deg, fully transparent.
-       Reads as "card lifting up and out, handing off to the next".
-   The opposite-direction rotation (-2deg in / +2deg out) gives each
-   project a subtle personality on its entrance and exit.
-   The text column mirrors the same up-from-below / up-and-out flow
-   without rotation so the supporting copy stays readable. */
+   range of its article (entry 0% -> exit 100%) with a measured
+   scale + vertical slide:
+     - 0%   (article entering from below): scale(0.94) translateY(50px)
+                                            opacity 0.35
+     - 30-70% (article centered, sticky engaged): scale(1) translateY(0)
+                                                  opacity 1
+     - 100% (article exiting to the top): scale(0.94) translateY(-50px)
+                                          opacity 0.35
+
+   The earlier version had cards rotating +-2deg, scaling to 0.82,
+   and fading to opacity 0 at the edges. That read as "flying /
+   disappearing" rather than a controlled hand-off. Toned down to a
+   deliberate scale + vertical slide that always leaves the card
+   softly visible at the edges of its scroll window (opacity 0.35
+   floor). Reads as a polished presentation transition.
+
+   Rotation removed entirely. Combined with rounded corners +
+   overflow:hidden it was causing a brief unrounded-corner flash
+   when the GPU re-rasterized the layer during hover. */
 @keyframes work-card-scroll {
   0% {
-    transform: scale(0.82) translateY(100px) rotate(-2deg);
-    opacity: 0;
+    transform: scale(0.94) translateY(50px);
+    opacity: 0.35;
   }
-  25%,
-  75% {
-    transform: scale(1) translateY(0) rotate(0deg);
+  30%,
+  70% {
+    transform: scale(1) translateY(0);
     opacity: 1;
   }
   100% {
-    transform: scale(0.82) translateY(-100px) rotate(2deg);
-    opacity: 0;
+    transform: scale(0.94) translateY(-50px);
+    opacity: 0.35;
   }
 }
 @keyframes work-text-scroll {
   0% {
-    transform: translateY(80px);
-    opacity: 0;
+    transform: translateY(45px);
+    opacity: 0.25;
   }
-  25%,
-  75% {
+  30%,
+  70% {
     transform: translateY(0);
     opacity: 1;
   }
   100% {
-    transform: translateY(-80px);
-    opacity: 0;
+    transform: translateY(-45px);
+    opacity: 0.25;
   }
 }
 
