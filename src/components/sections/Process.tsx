@@ -9,28 +9,29 @@ import {
   type IconComponent,
 } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
-import { TiltCard } from "@/components/ui/TiltCard";
-import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
 /**
- * Process section. "How I Work".
+ * Process section. "How I Work" rendered as a vertical step-by-step
+ * storyline (not a grid of cards).
  *
- * Conversion-focused: enterprise buyers want to know the engagement
- * model BEFORE they click Initiate. Four steps over a clear timeline
- * removes the "what am I signing up for" objection.
+ * Each of the four steps becomes a chapter in a narrative scroll. A
+ * central vertical thread runs top to bottom; an icon medallion sits
+ * on the thread at each step. Content (number + title + description)
+ * alternates left/right of the thread to give the storyline visual
+ * rhythm and prevent monotony.
  *
- * 4 step cards in a 1/2/4 responsive grid. Each card: step number,
- * duration, icon, title, description. Cards are equal-height with
- * mt-auto on the description so the timing label aligns at the bottom.
+ * Durations intentionally omitted: engagement length varies per
+ * project. The sequence is fixed; the cadence depends on the team.
  *
- * A low-commitment secondary CTA at the end ("Book a 30-min intro")
- * gives the visitor a friction-free alternative to the high-commitment
- * "Initiate Project" footer button.
+ * Visual interaction:
+ *   - Each step reveals on scroll (existing Reveal component).
+ *   - Hovering the icon medallion lights up the step (scale, glow,
+ *     thread color shifts toward emerald in the icon's neighborhood).
+ *   - Active step icon has an outer pulse ring.
  */
 
 type Step = {
   num: string;
-  duration: string;
   title: string;
   desc: string;
   icon: IconComponent;
@@ -39,28 +40,24 @@ type Step = {
 const STEPS: Step[] = [
   {
     num: "01",
-    duration: "Week 1",
     title: "Discover",
-    desc: "User research, customer interviews, jobs-to-be-done, journey mapping. You leave the week with a discovery readout your leadership team can act on.",
+    desc: "User research, customer interviews, jobs-to-be-done, journey mapping. You leave with a discovery readout your leadership team can act on.",
     icon: Workflow,
   },
   {
     num: "02",
-    duration: "Week 2",
     title: "Prototype",
     desc: "AI-native rapid prototyping. Custom GPTs, generative UI, and real React components grounded in your design tokens. Not a deck. A clickable product.",
     icon: Cpu,
   },
   {
     num: "03",
-    duration: "Weeks 3+",
     title: "Iterate",
     desc: "Embedded with your team. Weekly sprints, working sessions, design reviews. Roadmap decisions backed by real user data, not guesswork.",
     icon: Sparkles,
   },
   {
     num: "04",
-    duration: "Continuous",
     title: "Ship",
     desc: "Production-ready React + Tailwind in your repo. AI-ready design system. Engineers use what I deliver because it was built to be used, not handed off.",
     icon: Code2,
@@ -69,6 +66,97 @@ const STEPS: Step[] = [
 
 const INTRO_HREF =
   "mailto:hello@philg.cz?subject=Intro%20call%20with%20Phil%20G.&body=Hi%20Phil%2C%0A%0AI%27d%20like%20to%20book%20a%2030-min%20intro%20call.%20Here%27s%20what%20I%27m%20thinking%3A%0A%0A";
+
+type StepRowProps = {
+  step: Step;
+  alignLeft: boolean;
+  isLast: boolean;
+};
+
+function StepRow({ step, alignLeft, isLast }: StepRowProps) {
+  const Icon = step.icon;
+  return (
+    <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-12 lg:gap-20 items-center pb-20 md:pb-28 last:pb-0">
+      {/* LEFT cell: content (only when alignLeft = true on md+) */}
+      <div
+        className={`order-2 md:order-1 ${
+          alignLeft ? "" : "md:invisible md:pointer-events-none"
+        } ${alignLeft ? "md:text-right" : ""}`}
+      >
+        {alignLeft && <StepContent step={step} alignRight />}
+      </div>
+
+      {/* CENTER cell: icon medallion sits on the thread */}
+      <div className="order-1 md:order-2 flex md:block justify-start md:justify-center relative">
+        <Reveal direction="none">
+          <div className="group relative">
+            {/* Outer pulse ring on hover */}
+            <div className="absolute inset-0 rounded-full bg-[#0f62fe]/0 group-hover:bg-[#0f62fe]/20 blur-2xl scale-150 group-hover:scale-[2] transition-all duration-700" />
+            {/* Medallion */}
+            <div className="relative bg-[#0a0a0c] border-2 border-[#0f62fe]/40 rounded-full p-5 md:p-6 group-hover:border-[#0f62fe] group-hover:scale-110 transition-all duration-500 z-10">
+              <Icon className="w-7 h-7 md:w-9 md:h-9 text-[#4589ff] drop-shadow-[0_0_15px_rgba(15,98,254,0.6)] group-hover:text-white transition-colors duration-500" />
+            </div>
+          </div>
+        </Reveal>
+      </div>
+
+      {/* RIGHT cell: content (only when alignLeft = false on md+) */}
+      <div
+        className={`order-3 ${
+          !alignLeft ? "" : "md:invisible md:pointer-events-none"
+        }`}
+      >
+        {!alignLeft && <StepContent step={step} alignRight={false} />}
+      </div>
+
+      {/* MOBILE content: stacked below the icon. Renders only on mobile
+          since md+ uses the alternating columns above. */}
+      <div className="order-3 md:hidden col-span-1 -mt-4">
+        <StepContent step={step} alignRight={false} />
+      </div>
+
+      {/* Hide order-3 mobile when both desktop cells are visible.
+          Actual mobile rendering uses this single block. The md:hidden
+          ensures clean fall-through on mobile. */}
+      <span aria-hidden className="sr-only">
+        {isLast ? "End of process" : ""}
+      </span>
+    </div>
+  );
+}
+
+function StepContent({
+  step,
+  alignRight,
+}: {
+  step: Step;
+  alignRight: boolean;
+}) {
+  return (
+    <Reveal delay={120}>
+      <div className={alignRight ? "md:ml-auto md:max-w-md" : "md:max-w-md"}>
+        <div
+          className={`flex items-baseline gap-4 mb-3 ${
+            alignRight ? "md:justify-end" : ""
+          }`}
+        >
+          <span className="font-serif italic font-light text-5xl md:text-6xl text-[#4589ff] leading-none tracking-tight">
+            {step.num}
+          </span>
+          <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400">
+            Step
+          </span>
+        </div>
+        <h4 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight leading-[1.1]">
+          {step.title}
+        </h4>
+        <p className="text-zinc-300 font-light text-base md:text-lg leading-relaxed">
+          {step.desc}
+        </p>
+      </div>
+    </Reveal>
+  );
+}
 
 export function Process() {
   return (
@@ -88,88 +176,54 @@ export function Process() {
 
         <Reveal delay={100}>
           <h3 className="text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-white tracking-tight max-w-5xl mb-8">
-            Three weeks from kickoff to your{" "}
+            From kickoff to shipped product.{" "}
             <span className="shine-text italic font-serif font-light">
-              first shipped prototype
+              In four steps
             </span>
             .
           </h3>
         </Reveal>
 
         <Reveal delay={200}>
-          <p className="text-zinc-400 font-light text-xl md:text-2xl max-w-3xl mb-16 md:mb-20 leading-relaxed">
+          <p className="text-zinc-400 font-light text-xl md:text-2xl max-w-3xl mb-20 md:mb-28 leading-relaxed">
             No 90-day onboarding. No 12-person agency team. One senior
-            operator embedded with your squad, shipping real product on a
-            timeline you can defend to your CEO.
+            operator embedded with your squad, shipping real product.
           </p>
         </Reveal>
 
         {/*
-          Horizontal Blueprint timeline. Reads as one methodology Blueprint
-          (end.game pattern) rather than four parallel cards. A thin gradient
-          connector runs between the four steps at desktop; vertical
-          orientation on mobile so the flow is still visible.
+          Storyline container. A vertical gradient thread runs through
+          the icon medallions. Content alternates left/right of the
+          thread to give the narrative scroll visual rhythm.
         */}
-        <div className="relative mb-16 md:mb-20">
-          {/* Desktop connector: horizontal line at the icon-row vertical
-              level, runs from step 1 through step 4. Hidden on mobile. */}
+        <div className="relative">
+          {/* Central vertical thread (desktop). Sits behind the icon
+              medallions which use a solid bg to hide the line where
+              it would otherwise cut through them. */}
           <div
             aria-hidden
-            className="hidden lg:block absolute top-[112px] left-[12%] right-[12%] h-px bg-gradient-to-r from-[#0f62fe]/40 via-[#10b981]/30 to-[#0f62fe]/40 z-0"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-8 bottom-32 w-px bg-gradient-to-b from-[#0f62fe]/50 via-[#10b981]/30 to-[#0f62fe]/50 pointer-events-none"
           />
-          {/* Mobile connector: vertical line at the left edge, runs
-              through the stacked cards. */}
+          {/* Mobile thread (left rail) */}
           <div
             aria-hidden
-            className="lg:hidden absolute left-[18px] top-12 bottom-12 w-px bg-gradient-to-b from-[#0f62fe]/40 via-[#10b981]/30 to-[#0f62fe]/40 z-0"
+            className="md:hidden absolute left-[34px] top-8 bottom-32 w-px bg-gradient-to-b from-[#0f62fe]/40 via-[#10b981]/30 to-[#0f62fe]/40 pointer-events-none"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-6 items-stretch relative z-10">
-            {STEPS.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <Reveal
-                  key={step.num}
-                  delay={300 + i * 120}
-                  className="h-full"
-                >
-                  <TiltCard scale={1.03} maxRotation={4} className="h-full">
-                    <div className="group glass h-full rounded-3xl p-7 md:p-8 border-white/5 hover:border-[#0f62fe]/40 transition-all duration-500 hover:shadow-[0_18px_50px_rgba(15,98,254,0.15)] flex flex-col relative overflow-hidden">
-                      <ElectricBorder />
-
-                      <div className="flex items-center justify-between mb-6 relative z-10">
-                        <span className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
-                          <span className="text-white">{step.num}</span>
-                        </span>
-                        <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-[#4589ff]">
-                          {step.duration}
-                        </span>
-                      </div>
-
-                      {/* Icon sits at the timeline level. On desktop, the
-                          connector line crosses behind this icon's row, so
-                          a solid bg ring on the icon container hides the
-                          line where it would otherwise cross through. */}
-                      <div className="p-3.5 rounded-2xl bg-[#0a0a0c] w-fit mb-6 border border-white/15 group-hover:border-[#0f62fe]/60 group-hover:scale-110 transition-all duration-500 backdrop-blur-md relative z-10">
-                        <Icon className="w-6 h-6 text-[#4589ff] drop-shadow-[0_0_10px_rgba(15,98,254,0.4)]" />
-                      </div>
-
-                      <h4 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight relative z-10">
-                        {step.title}
-                      </h4>
-                      <p className="text-zinc-400 font-light text-sm md:text-base leading-relaxed group-hover:text-zinc-200 transition-colors mt-auto relative z-10">
-                        {step.desc}
-                      </p>
-                    </div>
-                  </TiltCard>
-                </Reveal>
-              );
-            })}
+          <div className="relative z-10">
+            {STEPS.map((step, i) => (
+              <StepRow
+                key={step.num}
+                step={step}
+                alignLeft={i % 2 === 0}
+                isLast={i === STEPS.length - 1}
+              />
+            ))}
           </div>
         </div>
 
-        <Reveal delay={700}>
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-10 border-t border-white/8">
+        <Reveal delay={300}>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-10 mt-12 md:mt-16 border-t border-white/8">
             <p className="text-zinc-300 text-base md:text-lg font-light">
               Want to talk through whether this fits your team?
             </p>
