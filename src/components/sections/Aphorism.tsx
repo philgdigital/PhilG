@@ -9,16 +9,18 @@ import { useEffect, useRef, useState } from "react";
  * Premium / editorial entrance:
  *   - A thin vertical accent line above the text grows from a point
  *     when the section enters the viewport.
- *   - Each character of each line then fades + lifts into place with
- *     a small stagger (22ms per char). The eye reads each line being
+ *   - Each character of each line fades + lifts into place with a
+ *     small stagger (22ms per char). The eye reads each line being
  *     "set" letter by letter, like a typewriter for the modern era.
+ *   - A mirror hairline + IBM-blue accent dot closes the composition
+ *     below the text, framing the moment as a deliberate editorial
+ *     pause without using border edges.
  *   - After the entrance completes, the text sits perfectly still.
  *     No looped shimmer, no mouse-tracking glow, no animated pulse.
- *     The words carry the weight themselves.
  *
- * This intentionally drops the previous shimmer + mouse-glow attempt,
- * which read as gimmicky. Editorial gravity comes from confident
- * stillness, not constant motion.
+ * The section is INTENTIONALLY tall (py-64+ on desktop). Combined with
+ * a wide solid dark zone (18-82% solid, alpha 0.86) the aphorism reads
+ * as a real cinematic pause between sections, not a small interlude.
  */
 
 type AphorismProps = {
@@ -63,29 +65,42 @@ export function Aphorism({ lines, id }: AphorismProps) {
   // continuous wave from the first letter of line 1 to the last
   // letter of line N.
   let cumulativeCharIndex = 0;
+  // Pre-compute the total character count so the closing-hairline
+  // reveal can wait until after the last character lands.
+  const totalChars = lines.reduce((sum, l) => sum + Array.from(l).length, 0);
 
   return (
     <section
       id={id}
       ref={ref}
-      className="relative z-10 py-36 md:py-48 px-6 md:px-12 lg:px-24 overflow-hidden"
+      className="relative z-10 py-64 md:py-80 lg:py-96 px-6 md:px-12 lg:px-24 overflow-hidden"
       style={{
-        // Deeper darkness (0.78 vs 0.42) so the aphorism feels like a
-        // contained reading moment, with VERY wide fade zones (0→34% in,
-        // 66→100% out) so the dark band melts into the surrounding page
-        // with no visible top/bottom edge. The previous 18%/82% fade was
-        // still readable as a hard transition; widening to 34%/66% means
-        // a third of the section is gradient on each side.
+        // Tall section (py-64+) combined with WIDE solid darkness
+        // (18-82% solid) means the dark band dominates as a real
+        // editorial moment, not a soft tinge. The 0-18% and 82-100%
+        // fade zones are still wide enough that the band's top +
+        // bottom edges are invisible. Alpha bumped to 0.86 so the
+        // band reads as a deliberate dark reading surface, not a
+        // faint shadow.
         background:
-          "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.78) 34%, rgba(2,2,5,0.78) 66%, rgba(2,2,5,0) 100%)",
+          "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.86) 18%, rgba(2,2,5,0.86) 82%, rgba(2,2,5,0) 100%)",
       }}
     >
-      <div className="max-w-5xl mx-auto text-center">
-        {/* Thin vertical accent line above the text. Grows from a
+      {/* Soft IBM-blue inner halo behind the text. Wide + low alpha
+          so it gives depth to the dark band without introducing color.
+          The aphorism floats above a subtle glow rather than flat
+          black. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110vw] h-[55vh] rounded-full bg-[#0f62fe]/[0.05] blur-[140px]"
+      />
+
+      <div className="relative z-10 max-w-5xl mx-auto text-center">
+        {/* Thin vertical accent line ABOVE the text. Grows from a
             point at the top into a full hairline. Quiet, considered. */}
         <span
           aria-hidden
-          className="block mx-auto h-12 md:h-16 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent mb-10 md:mb-14 origin-top transition-transform duration-[900ms] ease-[var(--ease-out)]"
+          className="block mx-auto h-16 md:h-20 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent mb-12 md:mb-16 origin-top transition-transform duration-[900ms] ease-[var(--ease-out)]"
           style={{
             transform: revealed ? "scaleY(1)" : "scaleY(0)",
           }}
@@ -98,7 +113,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
           return (
             <p
               key={lineIdx}
-              className="font-serif italic font-light text-5xl md:text-7xl lg:text-8xl text-white/90 leading-[1.1] tracking-tight"
+              className="font-serif italic font-light text-5xl md:text-7xl lg:text-[7.5rem] text-white/95 leading-[1.05] tracking-tight"
             >
               {chars.map((char, i) => {
                 const globalIdx = lineStartIndex + i;
@@ -116,13 +131,29 @@ export function Aphorism({ lines, id }: AphorismProps) {
                       transitionDelay: `${delay}ms`,
                     }}
                   >
-                    {char === " " ? " " : char}
+                    {char === " " ? " " : char}
                   </span>
                 );
               })}
             </p>
           );
         })}
+
+        {/* Mirror hairline BELOW the text + IBM-blue accent dot. Closes
+            the editorial composition: a top hairline above, the words
+            in the middle, a bottom hairline + signature dot below.
+            Reveals after the last character lands. */}
+        <div
+          aria-hidden
+          className="flex flex-col items-center mt-14 md:mt-20 transition-opacity duration-[900ms] ease-[var(--ease-out)]"
+          style={{
+            opacity: revealed ? 1 : 0,
+            transitionDelay: `${Math.min(totalChars * STAGGER_MS + 200, 1400)}ms`,
+          }}
+        >
+          <span className="block h-16 md:h-20 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent" />
+          <span className="mt-4 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
+        </div>
       </div>
     </section>
   );
