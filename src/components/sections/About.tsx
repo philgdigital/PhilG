@@ -111,6 +111,9 @@ export function About() {
               <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
                 Systems Thinking
               </span>
+              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
+                Agile
+              </span>
             </div>
           </Reveal>
         </div>
