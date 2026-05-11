@@ -116,6 +116,71 @@ export function About() {
               </span>
             </div>
           </Reveal>
+
+          {/* Languages row. Three flags + proficiency level, sitting
+              under the skill chips as a separate editorial signature.
+              EN = British Union Jack (working language for design
+              conventions); PT = Brazilian flag (Phil's native);
+              ES = Spanish flag (working professional). Each flag is
+              a small inline path-drawn SVG (no emoji-font dependency,
+              identical render across platforms). The 'Native' tag
+              gets the emerald accent so the eye registers the
+              hierarchy of proficiency at a glance. */}
+          <Reveal delay={560}>
+            <div className="flex flex-col gap-3 mt-4">
+              <span className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.32em] uppercase text-zinc-500">
+                <span className="text-[#4589ff] mr-2">·</span>
+                Languages
+              </span>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-xs md:text-sm tracking-[0.08em] text-zinc-300">
+                <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
+                  <svg
+                    aria-label="United Kingdom"
+                    role="img"
+                    viewBox="0 0 60 30"
+                    className="w-[1.7em] h-[1em] inline-block rounded-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.1)] shrink-0"
+                  >
+                    <rect width="60" height="30" fill="#012169" />
+                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
+                    <path d="M30,0 V30 M0,15 H60" stroke="#fff" strokeWidth="10" />
+                    <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" strokeWidth="5" />
+                  </svg>
+                  <span className="font-medium text-white">English</span>
+                  <span className="text-zinc-500 text-[11px] tracking-[0.16em] uppercase">Fluent</span>
+                </span>
+                <span aria-hidden className="text-zinc-700">·</span>
+                <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
+                  <svg
+                    aria-label="Brazil"
+                    role="img"
+                    viewBox="0 0 60 42"
+                    className="w-[1.7em] h-[1em] inline-block rounded-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.1)] shrink-0"
+                  >
+                    <rect width="60" height="42" fill="#009C3B" />
+                    <polygon points="30,4 56,21 30,38 4,21" fill="#FFDF00" />
+                    <circle cx="30" cy="21" r="8" fill="#002776" />
+                    <path d="M22,21 Q30,17 38,21" fill="none" stroke="#fff" strokeWidth="1.2" />
+                  </svg>
+                  <span className="font-medium text-white">Portuguese</span>
+                  <span className="text-emerald-400 text-[11px] tracking-[0.16em] uppercase">Native</span>
+                </span>
+                <span aria-hidden className="text-zinc-700">·</span>
+                <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
+                  <svg
+                    aria-label="Spain"
+                    role="img"
+                    viewBox="0 0 60 40"
+                    className="w-[1.7em] h-[1em] inline-block rounded-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.1)] shrink-0"
+                  >
+                    <rect width="60" height="40" fill="#AA151B" />
+                    <rect y="10" width="60" height="20" fill="#F1BF00" />
+                  </svg>
+                  <span className="font-medium text-white">Spanish</span>
+                  <span className="text-zinc-500 text-[11px] tracking-[0.16em] uppercase">Professional</span>
+                </span>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
