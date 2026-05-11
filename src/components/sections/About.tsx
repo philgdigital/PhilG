@@ -119,13 +119,14 @@ export function About() {
 
           {/* Languages row. Three flags + proficiency level, sitting
               under the skill chips as a separate editorial signature.
-              EN = British Union Jack (working language for design
-              conventions); PT = Brazilian flag (Phil's native);
-              ES = Spanish flag (working professional). Each flag is
-              a small inline path-drawn SVG (no emoji-font dependency,
-              identical render across platforms). The 'Native' tag
-              gets the emerald accent so the eye registers the
-              hierarchy of proficiency at a glance. */}
+              EN = US flag (English is Phil's main working language
+              with US-based teams); PT = Brazilian flag (Phil's
+              native); ES = Spanish flag (working professional).
+              Each flag is a small inline path-drawn SVG (no
+              emoji-font dependency, identical render across
+              platforms). The 'Fluent' tag on English gets the
+              emerald accent so the eye registers the working
+              language for client engagements at a glance. */}
           <Reveal delay={560}>
             <div className="flex flex-col gap-3 mt-4">
               <span className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.32em] uppercase text-zinc-500">
@@ -134,19 +135,43 @@ export function About() {
               </span>
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-xs md:text-sm tracking-[0.08em] text-zinc-300">
                 <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
+                  {/* US flag glyph. 13 horizontal stripes (alternating
+                      red + white) + a dark-blue canton in the upper
+                      hoist with a 6-row x 5-col star field (30 stars,
+                      not 50, but reads as 'US flag' at this small
+                      size without trying to count). All path-drawn so
+                      no emoji-font dependency. */}
                   <svg
-                    aria-label="United Kingdom"
+                    aria-label="United States"
                     role="img"
-                    viewBox="0 0 60 30"
+                    viewBox="0 0 60 32"
                     className="w-[1.7em] h-[1em] inline-block rounded-[2px] shadow-[0_0_0_1px_rgba(255,255,255,0.1)] shrink-0"
                   >
-                    <rect width="60" height="30" fill="#012169" />
-                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
-                    <path d="M30,0 V30 M0,15 H60" stroke="#fff" strokeWidth="10" />
-                    <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" strokeWidth="5" />
+                    <rect width="60" height="32" fill="#bf0a30" />
+                    {[1, 3, 5, 7, 9, 11].map((row) => (
+                      <rect
+                        key={`stripe-${row}`}
+                        y={row * (32 / 13)}
+                        width="60"
+                        height={32 / 13}
+                        fill="#fff"
+                      />
+                    ))}
+                    <rect width="24" height={(32 / 13) * 7} fill="#002868" />
+                    {Array.from({ length: 5 }).flatMap((_, col) =>
+                      Array.from({ length: 4 }).map((_, row) => (
+                        <circle
+                          key={`star-${col}-${row}`}
+                          cx={3 + col * 4.5}
+                          cy={2 + row * 4}
+                          r={0.9}
+                          fill="#fff"
+                        />
+                      )),
+                    )}
                   </svg>
                   <span className="font-medium text-white">English</span>
-                  <span className="text-zinc-500 text-[11px] tracking-[0.16em] uppercase">Fluent</span>
+                  <span className="text-emerald-400 text-[11px] tracking-[0.16em] uppercase">Fluent</span>
                 </span>
                 <span aria-hidden className="text-zinc-700">·</span>
                 <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
@@ -162,7 +187,7 @@ export function About() {
                     <path d="M22,21 Q30,17 38,21" fill="none" stroke="#fff" strokeWidth="1.2" />
                   </svg>
                   <span className="font-medium text-white">Portuguese</span>
-                  <span className="text-emerald-400 text-[11px] tracking-[0.16em] uppercase">Native</span>
+                  <span className="text-zinc-500 text-[11px] tracking-[0.16em] uppercase">Native</span>
                 </span>
                 <span aria-hidden className="text-zinc-700">·</span>
                 <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
