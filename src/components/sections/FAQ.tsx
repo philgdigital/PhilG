@@ -24,43 +24,43 @@ type FAQ = {
 const FAQS: FAQ[] = [
   {
     num: "Q01",
-    q: "How long is a typical engagement?",
-    a: "From a 2-week paid discovery sprint to 6 months of embedded design leadership. Most enterprise teams start with a 6-week prototype sprint, then continue.",
+    q: "You design AND ship code. How does that actually work?",
+    a: "Two outputs every sprint: Figma source of truth + production React/Tailwind committed to your repo. Same person, same week. No design handoff friction. Engineers don't rebuild what I deliver; they extend it.",
   },
   {
     num: "Q02",
-    q: "Contractor, full-time, or fractional?",
-    a: "All three. Most enterprise engagements are fractional (3 days a week typical) with the option to scale up for crunch periods. I've also led full-time at VMware and Pivotal.",
+    q: "Solo operator. What if my engineering org is 50 people?",
+    a: "I embed inside larger teams. At Pivotal Labs I worked alongside three Fortune 500 engineering organisations; at Cemex I led design embedded with 22 squads across four regions. The constraint isn't team size, it's how design integrates with delivery.",
   },
   {
     num: "Q03",
-    q: "What's the actual deliverable?",
-    a: "Both Figma and production-ready React + Tailwind components in your repo. No 'design handoff' friction. Engineers use what I deliver because it was built to be used.",
+    q: "What's the actual AI tooling you use?",
+    a: "Custom GPTs trained on your brand and design tokens. AI agents for research synthesis. Generative UI for prompt-to-React. An AI-ready design system in code. The full stack is in section 09, The AI Lab.",
   },
   {
     num: "Q04",
-    q: "Can you embed with our existing design team?",
-    a: "Yes. Most engagements have me leading or coaching an existing team, not replacing it. At Kuoni Tumlare I led a 12-person team I helped hire across three continents.",
+    q: "Can you lead my existing design team?",
+    a: "Yes. Most engagements have me leading or coaching the team you already have, not replacing it. At Kuoni Tumlare I hired six designers and led a twelve-person team across Europe, Asia, and India behind one AI-ready design system.",
   },
   {
     num: "Q05",
-    q: "Do you do discovery without committing to a full project?",
-    a: "Yes. A 2-week paid discovery sprint is a common entry point. You leave with user interviews, journey mapping, and a discovery readout your leadership can act on.",
+    q: "Discovery sprint, prototype sprint, or full engagement?",
+    a: "Any of the three. A 2-week paid discovery sprint is the most common entry point. A 6-week prototype sprint follows. 6+ months of embedded design leadership is the deepest. Same operator across all three.",
   },
   {
     num: "Q06",
-    q: "Where are you based and what timezones?",
-    a: "Prague, Czech Republic (CET / CEST). I've worked with teams across Europe, US east + west coast, Asia, and India. Overlap windows make every timezone feasible.",
+    q: "Where are you based? What timezones do you cover?",
+    a: "Prague (CET / CEST). I've worked synchronously with teams across the US (east + west coast), Asia, Europe, and India. Cemex alone spanned Mexico, Egypt, Philippines, and Texas under one design org.",
   },
   {
     num: "Q07",
-    q: "Do you sign NDAs and standard enterprise contracts?",
-    a: "Yes. Standard procurement at Walmart, VMware, Microsoft, SAP, Cemex, Vodafone, Royal Air Force, and Kuoni Tumlare all signed off. NDA, MSA, SOW, and DPA where required.",
+    q: "Enterprise procurement. NDAs, MSAs, vendor onboarding?",
+    a: "All standard. Walmart, VMware, Microsoft, SAP, Cemex, Vodafone, Royal Air Force, and Kuoni Tumlare all signed off. NDA, MSA, SOW, and DPA where required. Vendor onboarding usually takes 1-2 weeks.",
   },
   {
     num: "Q08",
-    q: "What does pricing typically look like?",
-    a: "Project-based or daily rate depending on the engagement model. I share concrete options after a 30-min intro call once I understand your goals and timeline.",
+    q: "What does this cost?",
+    a: "Project-based or daily rate, depending on the engagement model. I share concrete options after a 30-min intro once I understand your scope, timeline, and team setup. No proposal decks for free.",
   },
 ];
 
