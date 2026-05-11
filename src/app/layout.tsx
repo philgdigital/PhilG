@@ -103,17 +103,17 @@ export default function RootLayout({
     >
       <body className="selection:bg-[#0f62fe] selection:text-white">
         <AnimatedGradientBackground />
-        {/* Global readability dim. A soft radial vignette: darkest in the
-            center where text content sits, fading to fully transparent at
-            the corners so the colorful AnimatedGradientBackground orbs
-            stay visible. No visible edges, no flat opacity panel.
-            blur-3xl makes the whole layer breathe softly into the page. */}
+        {/* Soft global readability dim. Light enough that the orbs from
+            AnimatedGradientBackground still come through and give the
+            page color/life, but enough darkening that body text reads
+            with consistent contrast. Radial vignette + heavy blur so
+            there are no visible edges. */}
         <div
           aria-hidden
           className="fixed inset-0 -z-[1] pointer-events-none blur-3xl"
           style={{
             background:
-              "radial-gradient(ellipse 75% 55% at 50% 50%, rgba(6,6,10,0.65) 0%, rgba(6,6,10,0.45) 35%, rgba(6,6,10,0.20) 65%, transparent 100%)",
+              "radial-gradient(ellipse 75% 55% at 50% 50%, rgba(6,6,10,0.40) 0%, rgba(6,6,10,0.22) 40%, rgba(6,6,10,0.08) 70%, transparent 100%)",
           }}
         />
         <ClientEffects />

@@ -72,10 +72,18 @@ export function Work() {
           const total = projects.length;
           const padded = (n: number) => (n < 10 ? `0${n}` : `${n}`);
           const indexLabel = `${padded(index + 1)} / ${padded(total)}`;
+          // Alternating chapter wrapper. Odd-index projects get a soft
+          // darker band; even-index projects sit on the base page bg
+          // (so the AnimatedGradientBackground orbs come through). The
+          // alternation gives a clear 'project changed' shift without
+          // every project becoming a flat dark cell.
+          const isAlternate = index % 2 === 1;
           return (
             <div
               key={p.id}
-              className="relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24 bg-black/45"
+              className={`relative -mx-6 md:-mx-12 lg:-mx-24 px-6 md:px-12 lg:px-24 py-16 md:py-24 ${
+                isAlternate ? "bg-black/35" : ""
+              }`}
             >
               <article
                 id={`work-${p.slug}`}

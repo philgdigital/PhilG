@@ -204,19 +204,17 @@ body {
 /* ─────────────────────────────────────────────
    Editorial section tonal lift.
    Applied via data-tonal="lift" on alternating sections. Creates a
-   clearly darker band most of the section's height with soft fades
-   at top and bottom edges so the visitor *feels* the section change
-   without a hard divider line. Color sits below the Carbon Black
-   base (#0a0a0c), and the 70% opacity peak is strong enough to read
-   as a deliberate background shift, not just a noise gradient.
+   subtly darker band (45% peak) for chapter rhythm. Strong enough
+   to register as 'section changed', soft enough not to flatten the
+   whole page into one tone.
    ───────────────────────────────────────────── */
 [data-tonal="lift"] {
   background:
     linear-gradient(
       180deg,
       rgba(3, 3, 8, 0) 0%,
-      rgba(3, 3, 8, 0.7) 12%,
-      rgba(3, 3, 8, 0.7) 88%,
+      rgba(3, 3, 8, 0.45) 14%,
+      rgba(3, 3, 8, 0.45) 86%,
       rgba(3, 3, 8, 0) 100%
     );
 }
