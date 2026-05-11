@@ -349,7 +349,7 @@ body {
    (src/components/sections/Insights.tsx). Each card image and title
    carries a viewTransitionName paired with the same name on the
    destination page's hero image and h1. The browser snapshots both
-   states and interpolates positions, sizes, and shapes — the small
+   states and interpolates positions, sizes, and shapes. The small
    card "opens" into the full hero.
 
    Browser support: Chrome 111+, Edge 111+, Safari 18+. Firefox falls
