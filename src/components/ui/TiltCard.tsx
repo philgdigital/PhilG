@@ -19,14 +19,22 @@ export function TiltCard({
   maxRotation = 6,
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
+  // Cache the bounding rect on mouseenter instead of reading it on
+  // every mousemove. The card doesn't move while the cursor is inside
+  // it (hover usually pauses scroll). Saves a getBoundingClientRect
+  // call per mousemove, which fires 60-120 times/sec during hover and
+  // each call can force a layout flush if anything is dirty.
+  const rectRef = useRef<DOMRect | null>(null);
 
-  // Direct DOM updates: no React state per mousemove (was 60-120 re-renders/sec).
-  // Rect read per move is cheap (layout is already up-to-date during hover) and
-  // stays correct if the page scrolls while the cursor is over the card.
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (ref.current) rectRef.current = ref.current.getBoundingClientRect();
+    handleMouseMove(e);
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const node = ref.current;
-    if (!node) return;
-    const rect = node.getBoundingClientRect();
+    const rect = rectRef.current;
+    if (!node || !rect) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     const rotateX = -y * maxRotation;
@@ -36,6 +44,7 @@ export function TiltCard({
 
   const handleMouseLeave = () => {
     if (ref.current) ref.current.style.transform = RESET_TRANSFORM;
+    rectRef.current = null;
   };
 
   return (
@@ -43,7 +52,7 @@ export function TiltCard({
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
       className={`transition-transform duration-300 ease-[var(--ease-out)] will-change-transform ${className}`}
       style={{ transform: RESET_TRANSFORM }}
     >

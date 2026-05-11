@@ -58,6 +58,21 @@ export function CustomCursor() {
     };
     window.addEventListener("scroll", onScrollSignal, { passive: true });
 
+    // Track whether the mouse has moved recently. When the cursor is
+    // settled (mouse not moving + ring already at mouse position), the
+    // render loop skips the magnetism DOM reads entirely. rAF keeps
+    // ticking so the loop is alive for the next mouse move, but the
+    // expensive work is gated behind 'something to update'.
+    let mouseIsMoving = false;
+    let mouseIdleTimer = 0;
+    const markMouseMoving = () => {
+      mouseIsMoving = true;
+      window.clearTimeout(mouseIdleTimer);
+      mouseIdleTimer = window.setTimeout(() => {
+        mouseIsMoving = false;
+      }, 300);
+    };
+
     // Magnetic targets are tracked each frame so we don't query the DOM in
     // mousemove (which fires 60-120Hz). They're refreshed on scroll/resize.
     let magneticTargets: HTMLElement[] = [];
@@ -115,6 +130,7 @@ export function CustomCursor() {
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      markMouseMoving();
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
       }
@@ -147,10 +163,22 @@ export function CustomCursor() {
     const RING_LERP = 0.65;
 
     const render = () => {
-      // During scroll, skip the magnetic loop (no DOM reads at all) and
-      // just lerp the ring toward the raw mouse position. Pure transform
-      // writes are compositor-only and don't cost layout time, so the
-      // browser keeps the scroll smooth.
+      // Three render modes:
+      //   1. Settled (cursor static + ring caught up): skip ALL work,
+      //      keep rAF alive cheaply for the next mouse move.
+      //   2. Scrolling: skip magnetism DOM reads, lerp ring toward raw
+      //      mouse position with pure compositor writes.
+      //   3. Active (mouse moving, hover state changing): full magnetism
+      //      pass with DOM reads of magnetic targets.
+      const ringDelta =
+        Math.abs(mouseX - ringX) + Math.abs(mouseY - ringY);
+      const settled = !mouseIsMoving && !isScrolling && ringDelta < 0.5;
+
+      if (settled) {
+        raf = requestAnimationFrame(render);
+        return;
+      }
+
       let targetX: number;
       let targetY: number;
       if (isScrolling) {
@@ -207,6 +235,7 @@ export function CustomCursor() {
     return () => {
       stop();
       window.clearTimeout(scrollIdleTimer);
+      window.clearTimeout(mouseIdleTimer);
       magneticTargets.forEach((t) => {
         t.style.transform = "";
       });

@@ -20,6 +20,9 @@ const translateMap: Record<Direction, string> = {
   none: "translate-y-0 translate-x-0 scale-[0.98]",
 };
 
+/** Animation duration in ms. Matches the duration-[800ms] Tailwind class. */
+const REVEAL_DURATION_MS = 800;
+
 export function Reveal({
   children,
   className = "",
@@ -29,16 +32,24 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  // Tracks whether the entry animation is still running. We keep
+  // will-change on during the animation, then drop it back to "auto"
+  // afterward. Otherwise every revealed element stays promoted to its
+  // own GPU layer forever, eating GPU memory with hundreds of mounted
+  // Reveals across the page.
+  const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
 
-    // If the element is already in the viewport on mount, reveal it immediately.
-    // Avoids waiting for IntersectionObserver's async callback for above-the-fold content.
+    // If the element is already in the viewport on mount, reveal it
+    // immediately. Avoids waiting for IntersectionObserver's async
+    // callback for above-the-fold content.
     const rect = node.getBoundingClientRect();
     if (rect.top < window.innerHeight && rect.bottom > 0) {
       setIsVisible(true);
+      setAnimating(true);
       return;
     }
 
@@ -46,6 +57,7 @@ export function Reveal({
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          setAnimating(true);
           observer.unobserve(node);
         }
       },
@@ -54,6 +66,17 @@ export function Reveal({
     observer.observe(node);
     return () => observer.unobserve(node);
   }, [threshold]);
+
+  // Drop will-change once the entry animation finishes. Frees the GPU
+  // layer so memory isn't pinned for already-static content.
+  useEffect(() => {
+    if (!animating) return;
+    const t = window.setTimeout(
+      () => setAnimating(false),
+      REVEAL_DURATION_MS + delay + 50,
+    );
+    return () => window.clearTimeout(t);
+  }, [animating, delay]);
 
   return (
     <div
@@ -65,7 +88,7 @@ export function Reveal({
       } ${className}`}
       style={{
         transitionDelay: `${delay}ms`,
-        willChange: "opacity, transform, filter",
+        willChange: animating ? "opacity, transform, filter" : "auto",
       }}
     >
       {children}
