@@ -38,17 +38,20 @@ const SECTIONS: Section[] = [
   { id: "about", num: "02", label: "The Architect" },
   { id: "advantage", num: "03", label: "The Enterprise Advantage" },
   { id: "impact", num: "04", label: "Impact" },
+  // Round 9 reorder: Capabilities (was 07) moves up before Client Voice,
+  // Selected Work (was 05) moves down after Client Voice. Section IDs
+  // stay unchanged so deep links still resolve.
+  { id: "expertise", num: "05", label: "Capabilities" },
+  { id: "testimonials", num: "06", label: "Client Voice" },
   {
     id: "work",
-    num: "05",
+    num: "07",
     label: "Selected Work",
     subItems: projects.map((p) => ({
       id: `work-${p.slug}`,
       label: p.title,
     })),
   },
-  { id: "testimonials", num: "06", label: "Client Voice" },
-  { id: "expertise", num: "07", label: "Capabilities" },
   { id: "ai-lab", num: "08", label: "The AI Lab" },
   { id: "process", num: "09", label: "How I Work" },
   { id: "faq", num: "10", label: "Common Questions" },

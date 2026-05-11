@@ -266,6 +266,128 @@ export function InitialLoader() {
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] h-[560px] rounded-full bg-[#0f62fe]/10 blur-[140px]"
       />
 
+      {/* PRAGUE BG MAP.
+          Stylized abstract representation of Phil's home city: a
+          curve for the Vltava river (the river flows roughly N-S
+          through Prague's center, here rotated to a horizontal sweep
+          for the loader composition), short perpendicular line
+          segments for the famous bridges that cross it, and three
+          glowing dots for landmark anchor points (Prague Castle /
+          Charles Bridge / Vyšehrad). The river path is drawn into
+          place via stroke-dashoffset on mount; the bridges and
+          landmark dots fade in sequentially after.
+
+          Sub-pixel low alpha (rgba ~0.16-0.22) so the map is felt
+          rather than seen behind the orbital composition. The whole
+          SVG sits absolutely positioned full-screen behind the
+          composition and dissolves with the loader. */}
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute inset-0 w-full h-full"
+        viewBox="0 0 1600 900"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        {/* Vltava river. Smooth Bezier with two gentle bends. The
+            pathLength="1" attribute lets us use a clean 1.0
+            stroke-dasharray instead of having to measure pixels. */}
+        <path
+          d="M -50 510 C 220 430, 380 470, 560 440 S 880 380, 1080 430 S 1380 510, 1660 480"
+          fill="none"
+          stroke="rgba(15, 98, 254, 0.22)"
+          strokeWidth="1.25"
+          strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray="1"
+          strokeDashoffset="1"
+          className="motion-safe:animate-[loader-draw_2.6s_cubic-bezier(0.33,1,0.68,1)_300ms_forwards]"
+        />
+        {/* Soft second river-bank line for depth. Offset 8px below
+            the main curve, even lower opacity. */}
+        <path
+          d="M -50 526 C 220 446, 380 486, 560 456 S 880 396, 1080 446 S 1380 526, 1660 496"
+          fill="none"
+          stroke="rgba(15, 98, 254, 0.10)"
+          strokeWidth="1"
+          strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray="1"
+          strokeDashoffset="1"
+          className="motion-safe:animate-[loader-draw_2.6s_cubic-bezier(0.33,1,0.68,1)_500ms_forwards]"
+        />
+        {/* Bridges: short perpendicular segments crossing the river
+            at landmark positions. Drawn after the river finishes. */}
+        {[
+          { x: 480, y1: 430, y2: 540 }, // Charles Bridge
+          { x: 760, y1: 400, y2: 480 }, // Mánesův
+          { x: 1040, y1: 410, y2: 500 }, // Železniční
+          { x: 1280, y1: 470, y2: 560 }, // Vyšehrad
+        ].map((b, i) => (
+          <line
+            key={`bridge-${i}`}
+            x1={b.x}
+            y1={b.y1}
+            x2={b.x}
+            y2={b.y2}
+            stroke="rgba(255, 255, 255, 0.15)"
+            strokeWidth="1"
+            strokeLinecap="round"
+            pathLength={1}
+            strokeDasharray="1"
+            strokeDashoffset="1"
+            className="motion-safe:animate-[loader-draw_700ms_cubic-bezier(0.33,1,0.68,1)_forwards]"
+            style={{
+              animationDelay: `${2400 + i * 180}ms`,
+            }}
+          />
+        ))}
+        {/* Landmark dots: three glowing markers along the river.
+            Use SVG filter to give them a soft glow. */}
+        <defs>
+          <filter
+            id="loader-landmark-glow"
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        {[
+          { cx: 480, cy: 482, color: "#0f62fe", delay: 3000 }, // Charles Bridge
+          { cx: 760, cy: 442, color: "#10b981", delay: 3180 }, // Castle
+          { cx: 1280, cy: 514, color: "#0f62fe", delay: 3360 }, // Vyšehrad
+        ].map((d, i) => (
+          <circle
+            key={`landmark-${i}`}
+            cx={d.cx}
+            cy={d.cy}
+            r={3}
+            fill={d.color}
+            opacity={0}
+            filter="url(#loader-landmark-glow)"
+            className="motion-safe:animate-[loader-landmark-in_500ms_cubic-bezier(0.33,1,0.68,1)_forwards]"
+            style={{
+              animationDelay: `${d.delay}ms`,
+              transformOrigin: `${d.cx}px ${d.cy}px`,
+            }}
+          />
+        ))}
+      </svg>
+
+      {/* Mono coordinate label, bottom-left. Editorial nod to where
+          Phil works from. Fades in after the river finishes drawing. */}
+      <span
+        className="absolute bottom-8 left-8 font-mono text-[9px] md:text-[10px] tracking-[0.32em] uppercase text-zinc-600 opacity-0 motion-safe:animate-[loader-landmark-in_600ms_cubic-bezier(0.33,1,0.68,1)_2900ms_forwards]"
+        aria-hidden
+      >
+        50.0755°N · 14.4378°E
+      </span>
+
       <div
         className="relative"
         style={{ width: RING_SIZE, height: RING_SIZE }}

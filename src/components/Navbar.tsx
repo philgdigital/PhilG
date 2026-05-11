@@ -36,8 +36,13 @@ export function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 px-6 md:px-12 lg:px-24 py-8 flex justify-between items-center backdrop-blur-md bg-black/20 border-b border-white/5 transition-all duration-500">
+        {/* Logo + nav links: cursor pulse rings stay (interactivity
+            signal), but the 'Click for More' hint pill is suppressed
+            via data-cursor-no-hint="true" since these are navigation
+            anchors and don't need the pill to advertise themselves. */}
         <a
           href="#"
+          data-cursor-no-hint="true"
           className="font-black text-2xl tracking-tighter text-white hover-target mix-blend-difference"
         >
           PG<span className="text-[#0f62fe]">®</span>
@@ -47,6 +52,7 @@ export function Navbar() {
             <a
               key={link.href}
               href={link.href}
+              data-cursor-no-hint="true"
               className="hover-target hover:text-white transition-colors uppercase"
             >
               {link.label}
@@ -58,6 +64,7 @@ export function Navbar() {
           onClick={() => setIsMenuOpen(true)}
           aria-label="Open menu"
           aria-expanded={isMenuOpen}
+          data-cursor-no-hint="true"
           className="md:hidden text-white hover-target p-2 -mr-2"
         >
           <span className="block w-8 h-0.5 bg-white mb-2" />
@@ -114,6 +121,7 @@ export function Navbar() {
                 <a
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
+                  data-cursor-no-hint="true"
                   className="block text-5xl font-black tracking-tighter text-white uppercase hover:text-[#0f62fe] transition-colors hover-target"
                 >
                   {link.label}

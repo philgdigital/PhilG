@@ -107,7 +107,7 @@ export function Hero() {
                 </span>
               </a>
               <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap">
-                Senior Product Design Leader & Builder · Prague, Czech Republic
+                Senior Product Design Leader & Builder · Prague, CZ
               </p>
             </div>
           </Reveal>

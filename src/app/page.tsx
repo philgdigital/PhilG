@@ -28,9 +28,9 @@ import { AntiPattern } from "@/components/sections/AntiPattern";
  *   03  Advantage (Enterprise Advantage)  promise
  *   --  PullQuote interlude               testimonial
  *   04  ImpactMetrics                     numbers
- *   05  Work                              case studies
- *   06  Testimonials (Client Voice)       social proof
- *   07  Expertise (Capabilities)          breadth
+ *   05  Expertise (Capabilities)          breadth (moved up in round 9)
+ *   06  Testimonials (Client Voice)       social proof (now precedes Work)
+ *   07  Work (Selected Work)              case studies (moved after Voice)
  *   08  AILab                             AI focus
  *   --  Aphorism 2 (Outcomes not optics)  editorial pause
  *   09  Process (How I Work)              engagement model
@@ -39,14 +39,17 @@ import { AntiPattern } from "@/components/sections/AntiPattern";
  *   12  Insights                          thought leadership
  *   13  Footer (Initiate)                 CTA
  *
- * Two Aphorism interstitials added in round 8 (end.game-style Phil-
- * authored aphorisms, NOT testimonials; those rotate in PullQuote).
- * Anti-Pattern section added between FAQ and Insights to name what
- * Phil won't do (frees the buyer from agency overhead fears).
+ * Round 9 reorder: Capabilities -> Client Voice -> Selected Work
+ * (was Selected Work -> Client Voice -> Capabilities). The new flow
+ * builds credibility before showing case studies: "here is what I do"
+ * (Capabilities) -> "here is what clients say" (Voice) -> "here is the
+ * work that backs it up" (Selected Work).
+ *
+ * Section IDs (#work, #testimonials, #expertise) stay unchanged so
+ * existing deep links + the Navbar #work anchor still resolve.
  *
  * Alternating sections receive `data-tonal="lift"` so section boundaries
  * are felt rather than seen. See globals.css `[data-tonal="lift"]`.
- * The lift is applied to: Clients, Advantage, ImpactMetrics, Testimonials.
  */
 export default function Home() {
   // openForm comes from the global FormProvider mounted in layout.tsx.
@@ -83,11 +86,11 @@ export default function Home() {
         <div data-tonal="lift">
           <ImpactMetrics />
         </div>
-        <Work />
+        <Expertise />
         <div data-tonal="lift">
           <Testimonials />
         </div>
-        <Expertise />
+        <Work />
         <AILab />
         <Aphorism lines={["Outcomes, not optics.", "Decks don't ship."]} />
         <div data-tonal="lift">

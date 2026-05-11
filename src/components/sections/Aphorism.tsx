@@ -16,11 +16,18 @@ import { useEffect, useRef, useState } from "react";
  *     below the text, framing the moment as a deliberate editorial
  *     pause without using border edges.
  *   - After the entrance completes, the text sits perfectly still.
- *     No looped shimmer, no mouse-tracking glow, no animated pulse.
  *
  * The section is INTENTIONALLY tall (py-64+ on desktop). Combined with
  * a wide solid dark zone (18-82% solid, alpha 0.86) the aphorism reads
  * as a real cinematic pause between sections, not a small interlude.
+ *
+ * SPACES BUG: inline-block spans containing a single regular space
+ * collapse to zero width because the browser treats their content as
+ * inline-level whitespace that follows the parent's whitespace rules.
+ * The character renderer below MUST emit a non-breaking space (U+00A0)
+ * for space characters so each word break has a guaranteed width.
+ * Without this the per-character reveal renders "Shipped is truth"
+ * as "Shippedistruth".
  */
 
 type AphorismProps = {
@@ -32,6 +39,10 @@ type AphorismProps = {
 
 const STAGGER_MS = 22;
 const CHAR_DURATION_MS = 600;
+// Non-breaking space. Use this for any " " character inside an
+// inline-block span; a regular space collapses to zero width in that
+// layout context.
+const NBSP = " ";
 
 export function Aphorism({ lines, id }: AphorismProps) {
   const ref = useRef<HTMLElement>(null);
@@ -65,8 +76,6 @@ export function Aphorism({ lines, id }: AphorismProps) {
   // continuous wave from the first letter of line 1 to the last
   // letter of line N.
   let cumulativeCharIndex = 0;
-  // Pre-compute the total character count so the closing-hairline
-  // reveal can wait until after the last character lands.
   const totalChars = lines.reduce((sum, l) => sum + Array.from(l).length, 0);
 
   return (
@@ -75,29 +84,18 @@ export function Aphorism({ lines, id }: AphorismProps) {
       ref={ref}
       className="relative z-10 py-64 md:py-80 lg:py-96 px-6 md:px-12 lg:px-24 overflow-hidden"
       style={{
-        // Tall section (py-64+) combined with WIDE solid darkness
-        // (18-82% solid) means the dark band dominates as a real
-        // editorial moment, not a soft tinge. The 0-18% and 82-100%
-        // fade zones are still wide enough that the band's top +
-        // bottom edges are invisible. Alpha bumped to 0.86 so the
-        // band reads as a deliberate dark reading surface, not a
-        // faint shadow.
         background:
           "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.86) 18%, rgba(2,2,5,0.86) 82%, rgba(2,2,5,0) 100%)",
       }}
     >
-      {/* Soft IBM-blue inner halo behind the text. Wide + low alpha
-          so it gives depth to the dark band without introducing color.
-          The aphorism floats above a subtle glow rather than flat
-          black. */}
+      {/* Soft IBM-blue inner halo behind the text. */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110vw] h-[55vh] rounded-full bg-[#0f62fe]/[0.05] blur-[140px]"
       />
 
       <div className="relative z-10 max-w-5xl mx-auto text-center">
-        {/* Thin vertical accent line ABOVE the text. Grows from a
-            point at the top into a full hairline. Quiet, considered. */}
+        {/* Thin vertical accent line ABOVE the text. */}
         <span
           aria-hidden
           className="block mx-auto h-16 md:h-20 w-px bg-gradient-to-b from-transparent via-[#0f62fe]/70 to-transparent mb-12 md:mb-16 origin-top transition-transform duration-[900ms] ease-[var(--ease-out)]"
@@ -118,6 +116,9 @@ export function Aphorism({ lines, id }: AphorismProps) {
               {chars.map((char, i) => {
                 const globalIdx = lineStartIndex + i;
                 const delay = globalIdx * STAGGER_MS;
+                // Spaces become non-breaking so the inline-block span
+                // doesn't collapse to zero width.
+                const display = char === " " ? NBSP : char;
                 return (
                   <span
                     key={i}
@@ -131,7 +132,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
                       transitionDelay: `${delay}ms`,
                     }}
                   >
-                    {char === " " ? " " : char}
+                    {display}
                   </span>
                 );
               })}
@@ -139,10 +140,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
           );
         })}
 
-        {/* Mirror hairline BELOW the text + IBM-blue accent dot. Closes
-            the editorial composition: a top hairline above, the words
-            in the middle, a bottom hairline + signature dot below.
-            Reveals after the last character lands. */}
+        {/* Mirror hairline BELOW the text + IBM-blue accent dot. */}
         <div
           aria-hidden
           className="flex flex-col items-center mt-14 md:mt-20 transition-opacity duration-[900ms] ease-[var(--ease-out)]"
