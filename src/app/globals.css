@@ -719,18 +719,22 @@ main > * + *::before {
     opacity: 0;
     filter: blur(10px);
   }
-  18% {
+  15% {
     transform: scale(0.96) translateY(38px);
     opacity: 0.65;
     filter: blur(2px);
   }
-  35%,
-  65% {
+  /* IN-FOCUS plateau widened from 35-65% to 25-78%. That's 53% of
+     the article's scroll range spent fully sharp + opacity 1, so
+     the visitor has real time on the centered, in-focus frame
+     before the blur-out kicks in. */
+  25%,
+  78% {
     transform: scale(1) translateY(0);
     opacity: 1;
     filter: blur(0);
   }
-  85% {
+  90% {
     transform: scale(1.06) translateY(-60px);
     opacity: 0.5;
     filter: blur(3px);
@@ -746,16 +750,20 @@ main > * + *::before {
     transform: translateY(80px);
     opacity: 0;
   }
-  20% {
+  17% {
     transform: translateY(28px);
     opacity: 0.45;
   }
-  30%,
-  75% {
+  /* IN-FOCUS plateau widened from 30-75% to 25-82%. The right-
+     column copy stays solid white for 57% of the article's scroll
+     range, so visitors have a real reading window before the text
+     starts fading on exit. */
+  25%,
+  82% {
     transform: translateY(0);
     opacity: 1;
   }
-  90% {
+  93% {
     transform: translateY(-22px);
     opacity: 0.5;
   }
