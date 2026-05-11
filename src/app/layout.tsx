@@ -62,8 +62,12 @@ export const metadata: Metadata = {
     "Prague",
     "Design Mentorship",
   ],
-  authors: [{ name: "Phil G." }],
+  authors: [{ name: "Phil G.", url: siteUrl }],
   creator: "Phil G.",
+  publisher: "Phil G.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -72,17 +76,55 @@ export const metadata: Metadata = {
     title: "Phil G. · Senior Product Design Leader & Builder · AI-Native",
     description:
       "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
+    // /opengraph-image.tsx is a Next.js Edge-runtime route that
+    // generates the social card on demand. Listing it explicitly
+    // with width/height/alt lets crawlers serve it directly
+    // without first having to inspect the response.
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Phil G. - Senior Product Design Leader & Builder. Prague-based, AI-native, 17+ years.",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Phil G. · Senior Product Design Leader & Builder · AI-Native",
     description:
       "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
+    images: [
+      {
+        url: "/opengraph-image",
+        alt: "Phil G. - Senior Product Design Leader & Builder.",
+      },
+    ],
+    creator: "@philg",
+  },
+  // Favicons. icon.svg (path-drawn 'P' on IBM-blue square) is the
+  // canonical icon; favicon.ico is the legacy fallback.
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon.svg",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  category: "Design",
 };
 
 export const viewport: Viewport = {

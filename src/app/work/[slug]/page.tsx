@@ -22,16 +22,39 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return { title: "Case study not found" };
+  const url = `/work/${project.slug}`;
   return {
     title: `${project.title} · Case Study`,
     description: project.desc,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
+      type: "article",
       title: `${project.title} · Phil G.`,
       description: project.desc,
-      images: [project.img],
+      url,
+      images: [
+        {
+          url: project.img,
+          alt: `${project.title} - case study by Phil G.`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} · Phil G.`,
+      description: project.desc,
+      images: [{ url: project.img, alt: project.title }],
     },
   };
 }
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000");
 
 export default async function CaseStudy({ params }: RouteProps) {
   const { slug } = await params;
@@ -41,8 +64,48 @@ export default async function CaseStudy({ params }: RouteProps) {
   const idx = projects.findIndex((p) => p.slug === project.slug);
   const next = projects[(idx + 1) % projects.length];
 
+  // Article JSON-LD. Surfaces this case study as structured data
+  // for search engines + LLM crawlers so the title, summary, image,
+  // author (Phil G. as a Person), and canonical URL show up in
+  // assistant answers and rich-result snippets.
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: project.title,
+    description: project.desc,
+    image: [`${siteUrl}${project.img}`],
+    datePublished: `${project.year}-01-01`,
+    author: {
+      "@type": "Person",
+      name: "Phil G.",
+      url: siteUrl,
+      jobTitle: "Senior Product Design Leader & Builder",
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Phil G.",
+      url: siteUrl,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/work/${project.slug}`,
+    },
+    about: project.category,
+    keywords: project.scope.join(", "),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // JSON-LD is intentionally inline-rendered (server-side) so
+        // crawlers see it on first paint without waiting for client
+        // hydration. dangerouslySetInnerHTML is the standard React
+        // pattern for emitting raw script content here; the JSON is
+        // produced from typed project data so there's no injection
+        // surface.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Navbar />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
         {/* Top: index marker + back link */}

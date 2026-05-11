@@ -27,13 +27,32 @@ export async function generateMetadata({
   const { slug } = await params;
   const insight = getInsight(slug);
   if (!insight) return { title: "Insight not found" };
+  const url = `/insights/${insight.slug}`;
   return {
     title: `${insight.title} · Phil G.`,
     description: insight.excerpt,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
+      type: "article",
       title: `${insight.title} · Phil G.`,
       description: insight.excerpt,
-      images: [insight.image],
+      url,
+      publishedTime: insight.date,
+      authors: ["Phil G."],
+      images: [
+        {
+          url: insight.image,
+          alt: `${insight.title} - ${insight.type} by Phil G.`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${insight.title} · Phil G.`,
+      description: insight.excerpt,
+      images: [{ url: insight.image, alt: insight.title }],
     },
   };
 }
@@ -123,6 +142,12 @@ function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
   );
 }
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000");
+
 export default async function InsightPage({ params }: RouteProps) {
   const { slug } = await params;
   const insight = getInsight(slug);
@@ -134,8 +159,46 @@ export default async function InsightPage({ params }: RouteProps) {
     .filter((i) => i.slug !== insight.slug)
     .slice(0, 3);
 
+  // Article JSON-LD. Maps an Insight to schema.org/Article (or
+  // Blog/Article subtype as appropriate) so search engines + LLM
+  // crawlers can pick up the headline, summary, hero image, author
+  // (Phil G. as a Person), publication date, and canonical URL.
+  // The 'articleSection' is the insight type (Essay / Article /
+  // Case Study / Talk / Podcast) so structured-data consumers can
+  // distinguish format at a glance.
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": insight.type === "Podcast" ? "PodcastEpisode" : "Article",
+    headline: insight.title,
+    description: insight.excerpt,
+    image: [`${siteUrl}${insight.image}`],
+    datePublished: insight.date,
+    dateModified: insight.date,
+    author: {
+      "@type": "Person",
+      name: "Phil G.",
+      url: siteUrl,
+      jobTitle: "Senior Product Design Leader & Builder",
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Phil G.",
+      url: siteUrl,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/insights/${insight.slug}`,
+    },
+    articleSection: insight.type,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // Inline server-rendered so crawlers see it on first paint.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Navbar />
       {/*
         TWO-LAYER bg softening so the page's bg orbs feel ambient, never

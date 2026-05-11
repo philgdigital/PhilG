@@ -57,8 +57,103 @@ export default function Home() {
   // (homepage, work case studies, insight articles) share the same form.
   const { openForm } = useFormContext();
 
+  // Homepage JSON-LD bundle. Three @graph nodes:
+  //   - Person (Phil G.) so AI assistants + Google's Knowledge
+  //     Graph can attach a stable entity to the site.
+  //   - WebSite with potentialAction for an inline sitelinks
+  //     searchbox (no-op for now since the site has no /search
+  //     route, but the structured marker is harmless and helps
+  //     crawlers understand the site shape).
+  //   - ProfessionalService describing the engagement offer so
+  //     LLM answers about 'who is Phil G.' can pick up the work
+  //     scope, location, and availability.
+  // Rendered inline so it appears in the SSR'd HTML before any
+  // hydration; LLM + search crawlers see it on first byte.
+  const siteUrl =
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "https://philg.cz";
+  const homepageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": `${siteUrl}/#phil`,
+        name: "Phil G.",
+        url: siteUrl,
+        jobTitle: "Senior Product Design Leader & Builder",
+        description:
+          "AI-native product design leader with 17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare, and the Royal Air Force.",
+        knowsLanguage: [
+          { "@type": "Language", name: "English", alternateName: "en" },
+          { "@type": "Language", name: "Portuguese", alternateName: "pt" },
+          { "@type": "Language", name: "Spanish", alternateName: "es" },
+        ],
+        knowsAbout: [
+          "Product Design",
+          "Design Leadership",
+          "AI-Native Prototyping",
+          "Product Discovery",
+          "Design Systems",
+          "UX Research",
+          "Systems Thinking",
+        ],
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Prague",
+          addressCountry: "CZ",
+        },
+        email: "hello@philg.cz",
+        sameAs: ["https://www.linkedin.com/in/felipeaela/"],
+        hasCredential: [
+          {
+            "@type": "EducationalOccupationalCredential",
+            name: "NN/g Certified UX Master",
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            name: "IDEO Creative Leadership graduate",
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            name: "IBM Enterprise Design Thinking practitioner",
+          },
+        ],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        url: siteUrl,
+        name: "Phil G.",
+        description:
+          "Senior Product Design Leader & Builder. Prague-based, AI-native, 17+ years.",
+        publisher: { "@id": `${siteUrl}/#phil` },
+        inLanguage: "en",
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": `${siteUrl}/#service`,
+        name: "Phil G. - Product Design & AI-Native Acceleration",
+        provider: { "@id": `${siteUrl}/#phil` },
+        areaServed: "Worldwide",
+        description:
+          "Embedded senior product designer + builder. Discovery, AI-native prototyping, design leadership, design systems, production-grade React.",
+        url: siteUrl,
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        // Inline-emitted on SSR so search engines + LLM crawlers
+        // pick up the Person / WebSite / Service triple on first
+        // paint. dangerouslySetInnerHTML is the standard React
+        // pattern; the JSON is fully literal so there's no
+        // injection risk.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageSchema) }}
+      />
       {/* Skip-to-content link. Visible ONLY on KEYBOARD focus (tab
           navigation), never on mouse / click focus. The earlier
           `focus:` modifiers matched any focus state, so clicking

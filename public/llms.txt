@@ -1,0 +1,77 @@
+# Phil G.
+
+> Senior Product Design Leader & Builder, Prague (Czechia). 17+ years
+> building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex,
+> Vodafone, Kuoni Tumlare, and the Royal Air Force. Working English
+> (Fluent), Portuguese (Native), Spanish (Professional). AI-native
+> prototyping, design leadership, product discovery, and
+> production-ready code. Accepting 2026 enterprise engagements.
+
+Phil designs AND builds the product. NN/g Certified UX Master, IDEO
+Creative Leadership graduate, and IBM Enterprise Design Thinking
+practitioner. Embedded with engineering squads, not parked next to
+them. Ships in days, not quarters. Mentored 1,000+ designers now
+leading at Meta, Booking.com, Uber, IBM, and Accenture across 11
+countries.
+
+Contact: hello@philg.cz · https://www.linkedin.com/in/felipeaela/
+
+## Selected Work
+
+- [Kuoni Tumlare](https://philg.cz/work/kuoni-tumlare): Built a
+  twelve-person design org behind a single AI-ready design system
+  shipping against a 100+ engineer organisation.
+- [VMware / Pivotal](https://philg.cz/work/pivotal-vmware): Hands-on
+  enterprise UX leadership inside the Pivotal Labs model.
+- [SAP](https://philg.cz/work/sap): Enterprise-scale design system
+  and product discovery work for SAP.
+- [Cemex](https://philg.cz/work/cemex): Design for a 50+ country
+  industrial operations platform, spanning Mexico, Egypt, the
+  Philippines, and Texas under one design organisation.
+- [Walmart](https://philg.cz/work/walmart): Retail-tech product
+  design at enterprise scale.
+- [Royal Air Force](https://philg.cz/work/royal-air-force): UX work
+  for defence-grade tooling.
+- [OpenSC / WWF](https://philg.cz/work/wwf-opensc): Supply-chain
+  traceability design for WWF's sustainability platform.
+- [Wasps / Vodafone](https://philg.cz/work/wasps-vodafone): Telco
+  product design for Vodafone.
+- [Aela](https://philg.cz/work/aela): Phil's own venture / studio.
+
+## Insights
+
+- [Design is a leadership problem.](https://philg.cz/insights/design-is-a-leadership-problem):
+  Essay on why design fails when treated as a deliverables function.
+- [The AI prototyping stack I actually use.](https://philg.cz/insights/ai-prototyping-stack):
+  Phil's day-to-day AI-native toolchain (Claude Code, Codex,
+  Gemini, Figma, Miro, pen & paper, whiteboard, Jira) and the
+  prompting + design-system patterns that make it ship.
+- [From insight to shipped product, in days.](https://philg.cz/insights/kuoni-design-system):
+  How a single AI-ready design system at Kuoni Tumlare let twelve
+  designers in Prague ship in parallel across a 100-engineer org.
+- [17 years, 11 countries, 1,000 mentees.](https://philg.cz/insights/seventeen-years-mentees):
+  Mentorship retrospective spanning Meta, Booking.com, Uber, IBM,
+  Accenture, and beyond.
+- [Designing for 50+ countries at Cemex.](https://philg.cz/insights/cemex-50-countries-talk):
+  Talk on operating a single design system across 50+ country
+  contexts.
+
+## Topical Areas
+
+- **Product discovery** that turns user research into board-room
+  business outcomes.
+- **AI-native prototyping** that compresses ideation-to-shipped-code
+  from quarters to days.
+- **Design leadership** that builds high-performing teams (hiring,
+  coaching, scaling design orgs).
+- **Design systems** that are tokenised, AI-ready, and survive
+  hand-off to engineering platform teams.
+- **UX research**, **systems thinking**, and **Agile** delivery.
+
+## Optional
+
+- [LinkedIn (felipeaela)](https://www.linkedin.com/in/felipeaela/)
+- [Sitemap](https://philg.cz/sitemap.xml)
+- [Robots policy](https://philg.cz/robots.txt) - AI crawlers
+  (GPTBot, ClaudeBot, PerplexityBot, Google-Extended,
+  Applebot-Extended, etc.) are explicitly permitted.
