@@ -203,17 +203,21 @@ body {
 
 /* ─────────────────────────────────────────────
    Editorial section tonal lift.
-   Applied via data-tonal="lift" on alternating sections so section
-   boundaries are felt rather than seen. No rules, just a subtle
-   gradient from transparent into a slight shadow band and back out.
+   Applied via data-tonal="lift" on alternating sections. Creates a
+   clearly darker band most of the section's height with soft fades
+   at top and bottom edges so the visitor *feels* the section change
+   without a hard divider line. Color sits below the Carbon Black
+   base (#0a0a0c), and the 70% opacity peak is strong enough to read
+   as a deliberate background shift, not just a noise gradient.
    ───────────────────────────────────────────── */
 [data-tonal="lift"] {
   background:
     linear-gradient(
       180deg,
-      rgba(15, 15, 20, 0) 0%,
-      rgba(15, 15, 20, 0.35) 50%,
-      rgba(15, 15, 20, 0) 100%
+      rgba(3, 3, 8, 0) 0%,
+      rgba(3, 3, 8, 0.7) 12%,
+      rgba(3, 3, 8, 0.7) 88%,
+      rgba(3, 3, 8, 0) 100%
     );
 }
 

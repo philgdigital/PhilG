@@ -86,9 +86,13 @@ export default function Home() {
         <Expertise />
         <AILab />
         <Aphorism lines={["Outcomes, not optics.", "Decks don't ship."]} />
-        <Process />
+        <div data-tonal="lift">
+          <Process />
+        </div>
         <FAQ />
-        <AntiPattern />
+        <div data-tonal="lift">
+          <AntiPattern />
+        </div>
         <Insights />
       </main>
       <Footer onOpenForm={() => setIsFormOpen(true)} />
