@@ -103,19 +103,13 @@ export default function RootLayout({
     >
       <body className="selection:bg-[#0f62fe] selection:text-white">
         <AnimatedGradientBackground />
-        {/* Soft global readability dim. Light enough that the orbs from
-            AnimatedGradientBackground still come through and give the
-            page color/life, but enough darkening that body text reads
-            with consistent contrast. Radial vignette + heavy blur so
-            there are no visible edges. */}
-        <div
-          aria-hidden
-          className="fixed inset-0 -z-[1] pointer-events-none blur-3xl"
-          style={{
-            background:
-              "radial-gradient(ellipse 75% 55% at 50% 50%, rgba(6,6,10,0.40) 0%, rgba(6,6,10,0.22) 40%, rgba(6,6,10,0.08) 70%, transparent 100%)",
-          }}
-        />
+        {/* Global readability dim removed. The AnimatedGradientBackground's
+            own base flatten (~10%) + Carbon Black foundation give body
+            text enough contrast on its own, and each section that needs
+            extra calm (Work, Aphorism, data-tonal=lift) applies its own
+            local darkening. The previous radial vignette was double-
+            dimming the Hero center where the giant headline sits,
+            killing color impact. */}
         <ClientEffects />
         <NoiseOverlay />
         {/* FormProvider wraps everything so any page (homepage, work
