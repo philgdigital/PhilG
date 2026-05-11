@@ -192,7 +192,7 @@ export function Hero() {
           </Reveal>
           <Reveal delay={400}>
             <h1 className="headline-line headline-line-shine group text-[13vw] md:text-[10vw] font-bold tracking-tighter leading-[0.85] uppercase shine-text">
-              Accelerated
+              Acceleration
             </h1>
           </Reveal>
         </div>
