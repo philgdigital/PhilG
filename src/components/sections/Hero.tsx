@@ -50,11 +50,12 @@ export function Hero() {
         */}
         <div className="mt-24 md:mt-32 flex flex-col gap-10 max-w-5xl">
           {/* Two-tier body (frog pattern: promise first, context underneath).
-              Tier 1 is the headline-level promise the eye lands on,
-              forced onto two lines via <br /> so the 'I'm Phil G.' lede
-              gets its own breath. Tier 2 is the supporting context. */}
+              Tier 1 is the headline-level promise the eye lands on; the
+              <br /> gives 'I'm Phil G.' its own line. Tier 2 is the
+              supporting context. Both share max-w-3xl so the two blocks
+              read as one column with matching width. */}
           <Reveal delay={700}>
-            <p className="text-2xl md:text-4xl font-light text-zinc-100 leading-snug">
+            <p className="text-2xl md:text-4xl font-light text-zinc-100 leading-snug max-w-3xl">
               <span className="font-serif italic text-white">
                 I&apos;m Phil G.
               </span>
