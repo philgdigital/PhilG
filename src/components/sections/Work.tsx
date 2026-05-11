@@ -31,8 +31,23 @@ export function Work() {
             <article
               key={p.id}
               id={`work-${p.slug}`}
-              className="grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[100vh] scroll-mt-32"
+              className="relative grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 md:min-h-[100vh] scroll-mt-32"
             >
+              {/*
+                Per-project accent-tinted backdrop. Very soft (~5% alpha,
+                hex 0D) so the eye picks up that the project changed
+                without the background competing with the case-study
+                content. Extends horizontally past the section padding
+                so the tint reads as full-bleed; fades at top + bottom
+                so transitions between projects feel seamless.
+              */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -inset-x-6 md:-inset-x-12 lg:-inset-x-24 inset-y-0 -z-10"
+                style={{
+                  background: `linear-gradient(180deg, transparent 0%, ${p.accent}10 18%, ${p.accent}10 82%, transparent 100%)`,
+                }}
+              />
               {/* LEFT: image card pins to viewport center while content scrolls */}
               <div className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:order-1">
                 <Reveal direction="left" className="w-full">
