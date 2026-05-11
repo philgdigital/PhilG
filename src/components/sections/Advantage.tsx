@@ -79,7 +79,7 @@ export function Advantage() {
                     I hire, coach, and lead design teams that ship, not just
                     design. Across continents and time zones. At Kuoni Tumlare
                     I hired six UX designers and led a twelve-person team
-                    across Europe, Asia, and India behind one AI-ready design
+                    in Prague behind one AI-ready design
                     system. Mentored 1,000+ designers now leading at Meta,
                     Booking, Uber, IBM, Accenture.
                   </p>

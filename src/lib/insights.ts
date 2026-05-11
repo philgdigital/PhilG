@@ -143,14 +143,14 @@ export const insights: Insight[] = [
     date: "2026-03-04",
     title: "From insight to shipped product, in days.",
     excerpt:
-      "How a single AI-ready design system at Kuoni Tumlare let twelve designers across three continents ship in parallel.",
+      "How a single AI-ready design system at Kuoni Tumlare let twelve designers in Prague ship in parallel across a 100-engineer org.",
     readTime: "5 min read",
     image: "/images/about.jpg",
     href: "/insights/kuoni-design-system",
     body: [
       {
         type: "p",
-        text: "At Kuoni Tumlare, we shipped a fully tokenized, AI-ready design system that let twelve designers across Europe, Asia, and India ship in parallel without the system breaking. The case study below is the actual sequence we ran.",
+        text: "At Kuoni Tumlare, we shipped a fully tokenized, AI-ready design system that let twelve designers in Prague ship in parallel against a 100-engineer org without the system breaking. The case study below is the actual sequence we ran.",
       },
       { type: "h", text: "The setup" },
       {

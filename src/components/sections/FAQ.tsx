@@ -40,12 +40,12 @@ const FAQS: FAQ[] = [
   {
     num: "Q04",
     q: "Can you lead my existing design team?",
-    a: "Yes. Most engagements have me leading or coaching the team you already have, not replacing it. At Kuoni Tumlare I hired six designers and led a twelve-person team across Europe, Asia, and India behind one AI-ready design system.",
+    a: "Yes. Most engagements have me leading or coaching the team you already have, not replacing it. At Kuoni Tumlare I hired six designers and led a twelve-person team in Prague behind one AI-ready design system.",
   },
   {
     num: "Q05",
     q: "Discovery sprint, prototype sprint, or full engagement?",
-    a: "Any of the three. A 2-week paid discovery sprint is the most common entry point. A 6-week prototype sprint follows. 6+ months of embedded design leadership is the deepest. Same operator across all three.",
+    a: "Any of the three. A 3-week paid discovery sprint is the typical entry. A 6-week prototype sprint follows. Up to 12 months of embedded design leadership is the deepest. Same operator across all three.",
   },
   {
     num: "Q06",

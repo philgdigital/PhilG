@@ -52,11 +52,11 @@ export const projects: Project[] = [
     role: "Senior Design Lead",
     year: "2024",
     img: "/images/about.jpg",
-    desc: "Built a twelve-person design org across three continents behind a single AI-ready design system shipping in parallel.",
+    desc: "Built a twelve-person design org in Prague behind a single AI-ready design system that shipped in parallel against a 100+ engineer organisation.",
     accent: BLUE,
     client: "Kuoni Tumlare",
     duration: "10 months · 2023 to 2024",
-    team: "Design org of 12 across Europe, Asia, and India, embedded with 14 engineering squads",
+    team: "Design org of 12 in Prague, embedded with 14 engineering squads (100+ engineers)",
     scope: [
       "Design Leadership",
       "Hiring & Coaching",
@@ -64,17 +64,17 @@ export const projects: Project[] = [
       "Product Discovery",
     ],
     overview:
-      "Hired six designers, scaled the team to twelve, and shipped a tokenized AI-ready design system that let twelve designers across three continents ship features in parallel without divergence.",
+      "Hired six designers, scaled the team to twelve, and shipped a tokenized AI-ready design system that let twelve designers in Prague ship features in parallel against a 100+ engineer organisation without divergence.",
     challenge:
       "Kuoni Tumlare's design org was four people; engineering was 100+. The bottleneck wasn't engineering. It was the throughput of designed-and-validated specs reaching engineering. The mandate: hire eight designers, scale to twelve, and ship a system the engineers would adopt rather than circumvent.",
     approach:
-      "I led hiring across Europe, Asia, and India, then partnered with the engineering platform team to co-author component contracts in two-week sprints. Tokens (color, type, spacing, motion, elevation) wired to the existing CSS variable system. Layered an AI-native prototyping pipeline on top so the system, not a prompt, was the source of truth.",
+      "I led hiring in Prague, then partnered with the engineering platform team to co-author component contracts in two-week sprints. Tokens (color, type, spacing, motion, elevation) wired to the existing CSS variable system. Layered an AI-native prototyping pipeline on top so the system, not a prompt, was the source of truth.",
     outcome:
       "Six months in, design output was 40% higher per sprint with half the friction engineering had reported before. Customer-facing improvements went from quarterly to monthly. The org stayed at twelve, no growth needed.",
     metrics: [
       { value: "6 → 12", label: "Designers hired and coached" },
       { value: "+40%", label: "Specs shipped per sprint" },
-      { value: "3", label: "Continents on one system" },
+      { value: "100+", label: "Engineers served" },
       { value: "Quarterly → Monthly", label: "Customer ship cadence" },
     ],
   },

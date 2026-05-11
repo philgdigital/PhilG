@@ -84,7 +84,7 @@ export function About() {
               compresses ideation-to-shipped-code from quarters to days, and{" "}
               <span className="text-white">design leadership</span> that builds
               high-performing teams. At Kuoni Tumlare I hired six designers and
-              led a twelve-person team across Europe, Asia, and India behind a
+              led a twelve-person team in Prague behind a
               single AI-ready design system. Along the way I&apos;ve mentored
               1,000+ designers now leading at Meta, Booking.com, Uber, IBM, and
               Accenture across 11 countries.
