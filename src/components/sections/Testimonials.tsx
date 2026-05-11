@@ -14,8 +14,8 @@ type Testimonial = {
  * Curated Client Voice wall. Editorial bento, not a uniform masonry.
  *
  * Two featured quotes (serif italic, larger, col-span-2 on lg) anchor the
- * grid, chosen for highest brand signal: Pavel Petroshenko (Azul VP) +
- * Jon Vieira (Meta Reality Labs). Five regular cards fill the rest with
+ * grid: Isabelle Berner (Ex-Pivotal Labs) opens at top-left, Kevin Olsen
+ * (Mechanical Orchard GM) anchors row 3. Seven regular cards fill with
  * sans body type. Each card carries an open-quote glyph in serif italic,
  * an initials avatar, and mono attribution. Hover lifts + electric-borders.
  *
@@ -27,7 +27,13 @@ const TESTIMONIALS: Testimonial[] = [
   {
     featured: true,
     quote:
-      "Phil stands out as an extraordinarily skilled and professional UI/UX design leader. His expertise is particularly evident in complex, challenging projects.",
+      "Phil was instrumental in helping us develop our design practice. He set a high bar for what quality and effective product design looks like.",
+    name: "Isabelle Berner",
+    role: "AI Product Leader · Ex-Pivotal Labs",
+  },
+  {
+    quote:
+      "Phil stands out as an extraordinarily skilled and professional UI/UX design leader.",
     name: "Pavel Petroshenko",
     role: "VP of Product Management at Azul",
   },
@@ -39,28 +45,22 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "Phil was instrumental in helping us develop our design practice. He set a high bar for what quality and effective product design looks like.",
-    name: "Isabelle Berner",
-    role: "AI Product Leader · Ex-Pivotal Labs",
-  },
-  {
-    quote:
       "Extremely user-focused. Thoughtful about each detail and able to explain his design decisions. A supportive co-worker who takes time to connect.",
     name: "Shani Abada, PhD",
     role: "Executive Director, Conversational AI at JP Morgan Chase",
   },
   {
     quote:
-      "A capable and thoughtful design leader. Phil delivered our first user research-led improvements and led our first multi-disciplinary discovery efforts.",
-    name: "Kevin Olsen",
-    role: "GM EMEA at Mechanical Orchard",
+      "A designer who doesn't worry about design. His main concern is making work that brings results. He's one of those guys you need when you want to make things really happen.",
+    name: "Jon Vieira",
+    role: "Product Design Lead at Meta Reality Labs",
   },
   {
     featured: true,
     quote:
-      "A designer who doesn't worry about design. His main concern is making work that brings results. He's one of those guys you need when you want to make things really happen.",
-    name: "Jon Vieira",
-    role: "Product Design Lead at Meta Reality Labs",
+      "A capable and thoughtful design leader. Phil delivered our first user research-led improvements and led our first multi-disciplinary discovery efforts.",
+    name: "Kevin Olsen",
+    role: "GM EMEA at Mechanical Orchard",
   },
   {
     quote:
