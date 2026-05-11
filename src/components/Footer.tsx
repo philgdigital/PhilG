@@ -111,14 +111,25 @@ export function Footer({ onOpenForm }: FooterProps) {
         </div>
       </div>
 
-      {/* Build credits note. Editorial signature that doubles as a
-          reinforcement of Phil's "code ships, Figma is opinion"
-          stance. The 'Zero to live in 3 days' lead anchors the
-          velocity claim that the rest of the site argues for; the
-          strikethrough on 'Figma' ties the bottom of the page back
-          to the Hero's 'Design' correction. */}
-      <div className="w-full px-6 md:px-12 lg:px-24 mt-12 z-10 flex justify-center">
-        <p className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500 text-center leading-relaxed max-w-3xl">
+      {/* Bottom rail: ONE row, three columns. © PHIL G. on the
+          extreme left, build credits ('Zero to live in 3 days …
+          Figma never opened') anchored to the dead center of the
+          page, AVAILABLE FOR NEW CLIENTS on the extreme right.
+          - The credits paragraph sits in an absolutely-centered
+            child so its position is anchored to the row's center
+            regardless of how wide the left/right columns are. The
+            two side columns flex naturally and never push the
+            credits off-axis.
+          - max-w-2xl on the credits caps its width so very wide
+            viewports don't let it expand into the side elements.
+          - On mobile the row stacks vertically (flex-col) since
+            three editorial elements on one line can't fit; desktop
+            (md+) goes back to the single horizontal row. */}
+      <div className="relative w-full px-6 md:px-12 lg:px-24 mt-12 md:mt-16 z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-0 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase">
+        <span className="md:flex-1 md:text-left text-center">
+          © {YEAR} PHIL G.
+        </span>
+        <p className="md:absolute md:left-1/2 md:-translate-x-1/2 font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500 text-center leading-relaxed max-w-2xl pointer-events-none">
           <span className="text-white">Zero to live in 3 days</span> ·
           Vibe-coded in Claude Code · Git-versioned · Shipped on Vercel ·{" "}
           <span
@@ -132,18 +143,9 @@ export function Footer({ onOpenForm }: FooterProps) {
           </span>{" "}
           never opened
         </p>
-      </div>
-
-      {/* Bottom three-up: build-credits line above is centered, and
-          the copyright + availability badge sit centered below it on
-          their own line, so all three editorial elements share the
-          same horizontal center axis. Previously the © and the badge
-          were split to left/right via justify-between, which clashed
-          with the centered credits line above and read as a layout
-          mismatch. */}
-      <div className="w-full flex flex-col items-center justify-center gap-4 md:gap-5 px-6 md:px-12 lg:px-24 text-zinc-400 font-mono text-[10px] md:text-xs font-medium tracking-[0.22em] uppercase mt-6 md:mt-8 z-10">
-        <span>© {YEAR} PHIL G.</span>
-        <AvailabilityBadge variant="compact" onClick={onOpenForm} />
+        <div className="md:flex-1 flex md:justify-end justify-center">
+          <AvailabilityBadge variant="compact" onClick={onOpenForm} />
+        </div>
       </div>
     </footer>
   );
