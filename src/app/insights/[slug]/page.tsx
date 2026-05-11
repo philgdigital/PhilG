@@ -164,7 +164,7 @@ export default async function InsightPage({ params }: RouteProps) {
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 inset-y-0 w-[min(88vw,1100px)] -z-10 bg-[#06060a]/60 blur-[140px]"
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 inset-y-0 w-[min(88vw,1100px)] -z-10 bg-[#06060a]/80 blur-[140px]"
         />
 
         {/* Top: back link */}
@@ -242,10 +242,27 @@ export default async function InsightPage({ params }: RouteProps) {
           </div>
         </Reveal>
 
-        {/* Article body. Sits inside the page-level halo so prose reads
-            against the soft dark backdrop. No own container; just centered
-            prose at reading width. */}
-        <article className="max-w-3xl mx-auto py-14 md:py-20">
+        {/* Article body. Sits inside its OWN strong dark backdrop so
+            the white prose reads with maximum contrast on top of the
+            page's ambient orbs. Earlier the only dark layer was the
+            page-wide halo at z-[-1], which left the white text
+            sitting against the orb gradients in places; the dedicated
+            backdrop below (rgba(2,2,5,0.88) + 80px blur) plants a
+            solid reading panel directly behind the prose. The
+            -inset-x bleeds the backdrop slightly past the column so
+            the dark band is wider than the text and there's no visible
+            edge against the body. Top/bottom fades soften the handoff
+            to the hero image above and the 'Read next' section below. */}
+        <article className="relative max-w-3xl mx-auto py-14 md:py-20">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-8 md:-inset-x-16 lg:-inset-x-24 inset-y-0 -z-10 rounded-[2rem]"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.88) 8%, rgba(2,2,5,0.92) 50%, rgba(2,2,5,0.88) 92%, rgba(2,2,5,0) 100%)",
+              filter: "blur(40px)",
+            }}
+          />
           {insight.body && <ArticleBody blocks={insight.body} />}
         </article>
 
