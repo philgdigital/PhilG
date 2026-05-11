@@ -131,13 +131,21 @@ export function Work() {
                       data-card="true"
                       data-magnetic="true"
                       onClick={(e) => handleCardClick(e, p.slug)}
-                      // transition-[border-color,box-shadow,opacity]
-                      // (not transition-all) so border-radius is never
-                      // implicitly transitioned. With transition-all
-                      // the GPU was briefly re-rasterizing the rounded
-                      // corner on hover, producing a momentary
-                      // "unrounded corner" flash.
-                      className="work-card-anim group relative block w-full rounded-[2rem] md:rounded-[2.5rem] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] md:aspect-[5/6] transition-[border-color,box-shadow,opacity] duration-700 ease-[var(--ease-out)] hover:border-white/15 shadow-2xl will-change-transform"
+                      // CORNER-FLASH FIX: the card sits inside
+                      // multiple compositing layers (TiltCard 3D
+                      // rotation on hover + animation-timeline driven
+                      // scale/translate from work-card-scroll). When
+                      // those transforms compose, the rounded-clip
+                      // mask from border-radius + overflow:hidden was
+                      // briefly dropping for a frame, exposing a
+                      // square corner. clip-path: inset(0 round Xrem)
+                      // is a GPU-stable rounded clip that survives
+                      // every transform composition. Border-radius
+                      // stays for the border styling itself. The
+                      // transition list is explicit (no transition-
+                      // all) so border-radius isn't implicitly
+                      // animated either.
+                      className="work-card-anim group relative block w-full rounded-[2rem] md:rounded-[2.5rem] [clip-path:inset(0_round_2rem)] md:[clip-path:inset(0_round_2.5rem)] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] md:aspect-[5/6] transition-[border-color,box-shadow,opacity] duration-700 ease-[var(--ease-out)] hover:border-white/15 shadow-2xl will-change-transform"
                       style={
                         {
                           viewTransitionName: `work-card-${p.slug}`,

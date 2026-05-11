@@ -682,55 +682,79 @@ main > * + *::before {
     animation-range: entry 0% exit 100%;
   }
 }
-/* PROJECT-TO-PROJECT HAND-OFF (professional version).
-   Each Work project's card and text animate across the FULL viewport
-   range of its article (entry 0% -> exit 100%) with a measured
-   scale + vertical slide:
-     - 0%   (article entering from below): scale(0.94) translateY(50px)
-                                            opacity 0.35
-     - 30-70% (article centered, sticky engaged): scale(1) translateY(0)
-                                                  opacity 1
-     - 100% (article exiting to the top): scale(0.94) translateY(-50px)
-                                          opacity 0.35
+/* PROJECT-TO-PROJECT HAND-OFF (award-level, asymmetric).
+   Multi-stop asymmetric keyframes so entry feels weighty (the card
+   arrives from below) and exit feels graceful (the card lifts away).
+   The 20/40-60/85 split places the centered-plateau a touch earlier
+   than the geometric center so the visitor lands on a finished frame
+   the moment the article sticky-pins, not after.
 
-   The earlier version had cards rotating +-2deg, scaling to 0.82,
-   and fading to opacity 0 at the edges. That read as "flying /
-   disappearing" rather than a controlled hand-off. Toned down to a
-   deliberate scale + vertical slide that always leaves the card
-   softly visible at the edges of its scroll window (opacity 0.35
-   floor). Reads as a polished presentation transition.
+   CARD (.work-card-anim on the Link):
+     0%   entering : scale(0.92) translateY(70px) opacity 0.4
+     20%  arriving : scale(0.97) translateY(28px) opacity 0.78
+     40-60% sticky : scale(1)    translateY(0)    opacity 1
+     85%  leaving  : scale(0.98) translateY(-22px) opacity 0.78
+     100% gone     : scale(0.95) translateY(-48px) opacity 0.55
 
-   Rotation removed entirely. Combined with rounded corners +
-   overflow:hidden it was causing a brief unrounded-corner flash
-   when the GPU re-rasterized the layer during hover. */
+   TEXT (.work-text-anim on the right column):
+     0%   entering : translateY(70px) opacity 0
+     22%  arriving : translateY(20px) opacity 0.55
+     40-60% sticky : translateY(0)    opacity 1
+     85%  leaving  : translateY(-18px) opacity 0.6
+     100% gone     : translateY(-40px) opacity 0.3
+
+   Asymmetry: entry uses larger translates (70px) + a lower opacity
+   floor than exit (translateY -48px). The eye reads the card as
+   "arriving from below" with weight, then "lifting away" with the
+   next project rising into focus. Rotation deliberately omitted;
+   combined with rounded corners + overflow:hidden it was producing
+   a brief unrounded-corner flash when the GPU re-rasterized the
+   composited layer. The Link itself carries a stable clip-path so
+   the rounded clipping survives every transform composition. */
 @keyframes work-card-scroll {
   0% {
-    transform: scale(0.94) translateY(50px);
-    opacity: 0.35;
+    transform: scale(0.92) translateY(70px);
+    opacity: 0.4;
   }
-  30%,
-  70% {
+  20% {
+    transform: scale(0.97) translateY(28px);
+    opacity: 0.78;
+  }
+  40%,
+  60% {
     transform: scale(1) translateY(0);
     opacity: 1;
   }
+  85% {
+    transform: scale(0.98) translateY(-22px);
+    opacity: 0.78;
+  }
   100% {
-    transform: scale(0.94) translateY(-50px);
-    opacity: 0.35;
+    transform: scale(0.95) translateY(-48px);
+    opacity: 0.55;
   }
 }
 @keyframes work-text-scroll {
   0% {
-    transform: translateY(45px);
-    opacity: 0.25;
+    transform: translateY(70px);
+    opacity: 0;
   }
-  30%,
-  70% {
+  22% {
+    transform: translateY(20px);
+    opacity: 0.55;
+  }
+  40%,
+  60% {
     transform: translateY(0);
     opacity: 1;
   }
+  85% {
+    transform: translateY(-18px);
+    opacity: 0.6;
+  }
   100% {
-    transform: translateY(-45px);
-    opacity: 0.25;
+    transform: translateY(-40px);
+    opacity: 0.3;
   }
 }
 

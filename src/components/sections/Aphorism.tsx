@@ -188,12 +188,16 @@ export function Aphorism({ lines, id }: AphorismProps) {
                 const wordStart = cursor;
                 cursor += wordChars.length;
                 // Words that should render in shades of red instead
-                // of the default white -> IBM blue wave. The check
-                // strips trailing punctuation so "opinion." matches.
+                // of the default white -> IBM blue wave. Two triggers:
+                // (a) the line is the broken-ship line (every word in
+                //     "Decks don't ship." gets red treatment so the
+                //     broken ship reads as a "warning / red flag");
+                // (b) the specific word is "opinion" anywhere on the
+                //     page.
                 const wordLower = token
                   .toLowerCase()
                   .replace(/[^a-z]/g, "");
-                const isRedWord = wordLower === "opinion";
+                const isRedWord = isBrokenLine || wordLower === "opinion";
                 // Per-word stagger for the broken-ship wobble so
                 // adjacent words drift out of phase.
                 const brokenDelay = wordIdxInLine * 1300;
