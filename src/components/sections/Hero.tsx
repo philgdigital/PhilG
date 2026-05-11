@@ -248,9 +248,7 @@ export function Hero() {
         <Reveal delay={900}>
           <div className="mt-10 md:mt-14 flex flex-col gap-5 md:gap-7">
             <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 whitespace-nowrap">
-              Built for Fortune 500 ·{" "}
-              <span className="text-zinc-300">17 years</span> · No recycled
-              decks
+              Trusted by
             </p>
             {/* lg:flex-nowrap forces single line on desktop; on
                 smaller viewports flex-wrap is the default fallback. */}
