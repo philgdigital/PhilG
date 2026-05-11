@@ -260,7 +260,9 @@ export function CustomCursor() {
         aria-hidden
       />
       {/* Pulse wrapper. Mirrors the ring position in JS. Renders two
-          nested rings that scale outward + fade via CSS animation. */}
+          nested rings that scale outward + fade via CSS animation, plus
+          a small 'Click for More' hint pill positioned below-right of
+          the cursor as a clickability signal. */}
       <div
         ref={pulseRef}
         className={`fixed top-0 left-0 pointer-events-none z-[298] transition-opacity duration-300 ${
@@ -293,6 +295,24 @@ export function CustomCursor() {
             border: `1px solid ${pulseColor}`,
           }}
         />
+        {/* 'Click for More' hint pill. Offset below-right of the cursor
+            so it doesn't cover what the visitor is hovering. Slight
+            scale-in on appearance for a tasteful entrance. */}
+        <span
+          className={`absolute font-mono text-[9px] tracking-[0.22em] uppercase whitespace-nowrap text-white px-3 py-1.5 rounded-full backdrop-blur-md bg-black/70 border transition-all duration-300 ease-[var(--ease-out)] ${
+            showPulse
+              ? "opacity-100 translate-x-0 translate-y-0 scale-100"
+              : "opacity-0 translate-x-1 translate-y-1 scale-95"
+          }`}
+          style={{
+            top: `${pulseSize / 2 + 10}px`,
+            left: `${pulseSize / 2 + 10}px`,
+            borderColor: `${pulseColor}80`,
+            boxShadow: `0 4px 16px ${pulseColor}33, 0 0 0 1px ${pulseColor}20`,
+          }}
+        >
+          Click for More
+        </span>
       </div>
     </>
   );
