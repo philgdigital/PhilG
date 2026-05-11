@@ -355,56 +355,55 @@ body {
    Browser support: Chrome 111+, Edge 111+, Safari 18+. Firefox falls
    back to native Next.js navigation (no animation).
    ───────────────────────────────────────────── */
-@keyframes vt-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes vt-fade-out {
+/* Funnel fast-zoom transition. The outgoing page zooms aggressively
+   forward (scale 1.35) + blurs + fades, reading as 'flying through'.
+   The incoming page rushes in from small (scale 0.75) + sharpens from
+   blur, arriving softly. Total ~500-600ms — fast, cinematic.
+   Shared elements (card image + title) morph in parallel over 550ms,
+   so the card visually 'opens' into the hero while the page tunnels. */
+@keyframes vt-funnel-out {
   from {
     opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
   }
   to {
     opacity: 0;
+    transform: scale(1.35);
+    filter: blur(10px);
   }
 }
-@keyframes vt-zoom-in {
+@keyframes vt-funnel-in {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.75);
+    filter: blur(12px);
   }
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-@keyframes vt-zoom-out {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.04);
+    filter: blur(0px);
   }
 }
 ::view-transition-old(root) {
-  animation: vt-zoom-out 450ms cubic-bezier(0.33, 1, 0.68, 1) both;
+  /* Accelerating zoom-in (ease-in curve) reads as 'flying into' the
+     next page. Fast: 300ms. */
+  animation: vt-funnel-out 300ms cubic-bezier(0.55, 0, 1, 0.45) both;
 }
 ::view-transition-new(root) {
-  animation: vt-zoom-in 650ms cubic-bezier(0.33, 1, 0.68, 1) 100ms both;
+  /* Decelerating zoom-out (ease-out curve) reads as 'arriving softly'.
+     Slight delay so the outgoing zoom is felt before the new page
+     starts rushing in. */
+  animation: vt-funnel-in 450ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
 }
 ::view-transition-group(*) {
-  animation-duration: 800ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Shared element morph keeps pace with the page funnel: card image
+     and title grow toward their hero positions in 550ms with a
+     refined ease-out so they land smoothly at the destination. */
+  animation-duration: 550ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 ::view-transition-image-pair(*) {
-  /* Smooth morph between matching elements. The default crossfade is
-     replaced by a longer ease so the card visually grows into the hero
-     instead of cutting. */
   isolation: auto;
 }
 
