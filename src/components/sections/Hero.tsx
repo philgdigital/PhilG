@@ -286,9 +286,15 @@ export function Hero() {
             <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 whitespace-nowrap">
               Trusted by
             </p>
-            {/* lg:flex-nowrap forces single line on desktop; on
-                smaller viewports flex-wrap is the default fallback. */}
-            <ul className="flex flex-wrap lg:flex-nowrap items-center gap-x-5 md:gap-x-7 gap-y-4 md:gap-y-5">
+            {/* Desktop: flex-nowrap + justify-between spreads the
+                ten brand entries edge-to-edge across the trust row's
+                full width, so the first mark sits flush left, the
+                last flush right, and the rest distribute evenly
+                between them. gap-x-0 on lg lets justify-between own
+                the inter-item spacing.
+                Mobile / tablet: flex-wrap with a small gap-x so
+                entries wrap cleanly when there isn't horizontal room. */}
+            <ul className="flex flex-wrap lg:flex-nowrap lg:justify-between items-center gap-x-5 md:gap-x-7 lg:gap-x-0 gap-y-4 md:gap-y-5 w-full">
               {/* WALMART: clean 6-ray sparkle. Three rounded rects
                   rotated 0/60/120 deg around the center, each giving
                   two opposing rays. Reads as a clean asterisk-style
