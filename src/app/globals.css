@@ -389,6 +389,24 @@ html[data-scrolling="true"] main {
     transform: rotate(-360deg);
   }
 }
+/* Cycling service-phase entrance. Each phase (Discovery, AI-Prototyping,
+   Product Design, Shipping) re-keys the span, which mounts with this
+   animation: fade up + slightly enlarged tracking that settles into
+   place. The outgoing span is unmounted by React on the key change,
+   which is fine here because the new span at full opacity occludes
+   the gap before the eye registers it. */
+@keyframes loader-phase-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    letter-spacing: 0.45em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.32em;
+  }
+}
 
 /* ─────────────────────────────────────────────
    Modal entry
