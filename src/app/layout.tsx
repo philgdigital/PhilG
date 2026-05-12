@@ -40,11 +40,11 @@ const isProduction = process.env.VERCEL_ENV === "production";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Phil G. · Senior UX/UI Product Design Leader · AI-Native",
+    default: "Phil G. · UX/Product Design Leader · AI-Native",
     template: "%s · Phil G.",
   },
   description:
-    "Senior Product Design Leader & Builder · 17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code. Prague-based, accepting 2026 enterprise engagements.",
+    "UX/Product Design Leader · 17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code. Prague-based, accepting 2026 enterprise engagements.",
   keywords: [
     "Phil G",
     "Senior UX Designer",
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: "Phil G.",
-    title: "Phil G. · Senior Product Design Leader & Builder · AI-Native",
+    title: "Phil G. · UX/Product Design Leader · AI-Native",
     description:
       "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
     // /opengraph-image.tsx is a Next.js Edge-runtime route that
@@ -94,20 +94,20 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Phil G. - Senior Product Design Leader & Builder. Prague-based, AI-native, 17+ years.",
+        alt: "Phil G. - UX/Product Design Leader. Prague-based, AI-native, 17+ years.",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phil G. · Senior Product Design Leader & Builder · AI-Native",
+    title: "Phil G. · UX/Product Design Leader · AI-Native",
     description:
       "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
     images: [
       {
         url: "/opengraph-image",
-        alt: "Phil G. - Senior Product Design Leader & Builder.",
+        alt: "Phil G. - UX/Product Design Leader.",
       },
     ],
     creator: "@philg",

@@ -81,7 +81,7 @@ export default function Home() {
         "@id": `${siteUrl}/#phil`,
         name: "Phil G.",
         url: siteUrl,
-        jobTitle: "Senior Product Design Leader & Builder",
+        jobTitle: "UX/Product Design Leader",
         description:
           "AI-native product design leader with 17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare, and the Royal Air Force.",
         knowsLanguage: [
@@ -126,7 +126,7 @@ export default function Home() {
         url: siteUrl,
         name: "Phil G.",
         description:
-          "Senior Product Design Leader & Builder. Prague-based, AI-native, 17+ years.",
+          "UX/Product Design Leader. Prague-based, AI-native, 17+ years.",
         publisher: { "@id": `${siteUrl}/#phil` },
         inLanguage: "en",
       },

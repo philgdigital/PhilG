@@ -341,7 +341,7 @@ export function Hero() {
               <span className="font-serif italic text-white">
                 I&apos;m Phil G.
               </span>
-              <br />A Senior Product Design Leader
+              <br />A UX/Product Design Leader
               <br />who{" "}
               <span className="text-white font-medium">
                 designs and builds
@@ -351,15 +351,18 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={780}>
-            {/* Body context as a single flowing paragraph (the earlier
-                forced <br /> after "shipped products." was removed at
-                the user's request). Word-wrap handles where the eye
-                lands at each viewport. */}
+            {/* Body context as two distinct beats:
+                  L1: outcomes / years of experience
+                  L2: how (the three force-multipliers compressed)
+                Hard <br /> after 'shipped products.' so the split
+                is deterministic across viewports rather than left
+                to word-wrap chance. */}
             <p className="text-base md:text-xl font-light text-zinc-400 leading-relaxed max-w-3xl">
               <span className="text-white font-medium">17+ years</span> turning
-              Fortune 500 problems into shipped products. Leading product
-              discovery, crafting AI-ready design systems, and shipping
-              production-grade React prototypes 10× faster.
+              Fortune 500 problems into shipped products.
+              <br />
+              Leading product discovery, crafting AI-ready design systems,
+              and shipping production-grade React prototypes 10× faster.
             </p>
           </Reveal>
 
@@ -385,7 +388,7 @@ export function Hero() {
                   code abbreviation. */}
               <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-zinc-400 whitespace-nowrap inline-flex items-center gap-2">
                 <span>
-                  Senior Product Design Leader & Builder · Prague
+                  UX/Product Design Leader · Prague
                 </span>
                 <svg
                   aria-label="Czechia"

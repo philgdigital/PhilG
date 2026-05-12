@@ -48,8 +48,19 @@ export function About() {
             </h3>
           </Reveal>
 
+          {/* Both About body paragraphs share the SAME typography
+              scale so they read as one editorial voice: text-lg
+              md:text-xl, font-light, leading-relaxed, text-zinc-300.
+              Previously the credentials paragraph was on a larger
+              step (text-xl/2xl) and the seventeen-years paragraph
+              was a step smaller (text-lg/xl) with a dimmer zinc-400
+              tone, which read as two unrelated blocks. Unifying
+              both at the smaller-but-readable body step keeps the
+              long prose comfortable AND lets the highlighted
+              white spans inside each paragraph do the visual lifting
+              instead of the paragraph-level font size. */}
           <Reveal delay={300}>
-            <p className="text-zinc-300 font-light text-xl md:text-2xl leading-relaxed">
+            <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed">
               I&apos;m a{" "}
               <span className="text-white font-medium">
                 Certified UX Master by Nielsen Norman Group (NN/g)
@@ -71,18 +82,18 @@ export function About() {
           </Reveal>
 
           <Reveal delay={400}>
-            <p className="text-zinc-400 font-light text-lg md:text-xl leading-relaxed">
+            <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed">
               <span className="font-serif italic text-white text-2xl md:text-3xl mr-2">
                 Seventeen years.
               </span>
               I&apos;m a{" "}
-              <span className="text-white">product builder</span> who leads
+              <span className="text-white font-medium">product builder</span> who leads
               with design. Three force-multipliers:{" "}
-              <span className="text-white">product discovery</span> that turns
+              <span className="text-white font-medium">product discovery</span> that turns
               user research into board-room business outcomes,{" "}
-              <span className="text-white">AI-native prototyping</span> that
+              <span className="text-white font-medium">AI-native prototyping</span> that
               compresses ideation-to-shipped-code from quarters to days, and{" "}
-              <span className="text-white">design leadership</span> that builds
+              <span className="text-white font-medium">design leadership</span> that builds
               high-performing teams. At Kuoni Tumlare I hired six designers and
               led a twelve-person team in Prague behind a
               single AI-ready design system. Along the way I&apos;ve mentored

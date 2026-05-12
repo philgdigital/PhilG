@@ -777,7 +777,7 @@ export function InitialLoader() {
 
       {/* Bottom-edge mono label. Brand signature. */}
       <span className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-600">
-        Senior Product Design Leader
+        UX/Product Design Leader
       </span>
     </div>
   );

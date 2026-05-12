@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Phil G. · Senior UX/UI Product Design Leader · AI-Native";
+export const alt = "Phil G. · UX/Product Design Leader · AI-Native";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -45,7 +45,7 @@ export default async function OpengraphImage() {
               color: "#71717a",
             }}
           >
-            Senior UX/UI Product Design Leader · Prague · AI-Native
+            UX/Product Design Leader · Prague · AI-Native
           </div>
           <div
             style={{

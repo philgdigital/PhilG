@@ -178,7 +178,7 @@ export default async function InsightPage({ params }: RouteProps) {
       "@type": "Person",
       name: "Phil G.",
       url: siteUrl,
-      jobTitle: "Senior Product Design Leader & Builder",
+      jobTitle: "UX/Product Design Leader",
     },
     publisher: {
       "@type": "Person",
