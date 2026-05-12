@@ -93,10 +93,13 @@ export function About() {
               <span className="text-white font-medium">design leadership</span> that builds
               high-performing teams. At Kuoni Tumlare I hired six designers and
               led a twelve-person team in Prague behind a
-              single AI-ready design system. Along the way I&apos;ve mentored
-              1,050+ designers who&apos;ve led at hundreds of firms, including
-              Meta, Booking.com, Uber, IBM, Accenture, SAP, Thoughtworks,
-              Zalando, and Kuoni Tumlare across 11 countries.
+              single AI-ready design system. Along the way{" "}
+              <span className="text-white font-medium">
+                I&apos;ve mentored 1,050+ designers who&apos;ve led at hundreds
+                of firms
+              </span>
+              , including Meta, Booking.com, Uber, IBM, Accenture, SAP,
+              Thoughtworks, Zalando, and Kuoni Tumlare across 11 countries.
             </p>
           </Reveal>
 
