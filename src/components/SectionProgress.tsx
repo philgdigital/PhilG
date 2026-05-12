@@ -202,21 +202,34 @@ export function SectionProgress() {
               aria-current={isActive ? "true" : undefined}
               className="group flex items-center justify-end gap-3 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-3 will-change-transform"
             >
-              {/* Label gets its own pill backdrop (backdrop-blur-md +
-                  bg-black/45) so the mono text stays readable on
-                  whatever page section sits underneath. The pill is
-                  always rendered but is invisible until the label is
-                  active or hovered (opacity gates both the text and
-                  the backdrop together). */}
-              <span
-                className={`font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap backdrop-blur-md rounded-full px-3 py-1 transition-all duration-500 ease-[var(--ease-out)] ${
-                  isActive
-                    ? "opacity-100 text-white translate-x-0 bg-black/45 ring-1 ring-white/10"
-                    : "opacity-0 -translate-x-2 text-zinc-200 bg-black/40 group-hover:opacity-100 group-hover:translate-x-0 group-hover:ring-1 group-hover:ring-white/10"
-                }`}
-              >
-                <span className="text-[#4589ff] mr-2">{s.num}</span>
-                {s.label}
+              {/* Label with a SOFT readability HALO behind it (not a
+                  rigid pill). The halo is a separate absolutely-
+                  positioned blurred dark ellipse that fades in on
+                  hover/active alongside the label. Keeps the
+                  "floating fluid" feel (text slides in + fades up
+                  to meet the row's hover-translate) instead of
+                  reading as a contained chip; the halo just plants
+                  enough darkness behind the mono text so it stays
+                  legible on bright underlying sections. */}
+              <span className="relative inline-flex items-center">
+                <span
+                  aria-hidden
+                  className={`pointer-events-none absolute -inset-y-1 -inset-x-3 rounded-full bg-black/55 blur-md transition-opacity duration-500 ease-[var(--ease-out)] ${
+                    isActive
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100"
+                  }`}
+                />
+                <span
+                  className={`relative font-mono text-[10px] tracking-[0.22em] uppercase whitespace-nowrap transition-all duration-500 ease-[var(--ease-out)] ${
+                    isActive
+                      ? "opacity-100 text-white translate-x-0"
+                      : "opacity-0 -translate-x-2 text-zinc-200 group-hover:opacity-100 group-hover:translate-x-0"
+                  }`}
+                >
+                  <span className="text-[#4589ff] mr-2">{s.num}</span>
+                  {s.label}
+                </span>
               </span>
               <span
                 aria-hidden
@@ -254,20 +267,30 @@ export function SectionProgress() {
                           : "0ms",
                       }}
                     >
-                      {/* Sub-item label: same pill-backdrop treatment as
-                          the top-level labels, slightly smaller padding so
-                          the indented sub-list reads as a child of the
-                          parent. backdrop-blur-md keeps the label readable
-                          even when the active Work project's image fills
-                          the sticky horizontal track underneath. */}
-                      <span
-                        className={`font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap backdrop-blur-md rounded-full px-2.5 py-1 bg-black/40 ring-1 ring-white/5 transition-all duration-500 ease-[var(--ease-out)] ${
-                          subActive
-                            ? "opacity-100 text-[#4589ff]"
-                            : "opacity-70 group-hover:opacity-100 text-zinc-300"
-                        }`}
-                      >
-                        {sub.label}
+                      {/* Sub-item label: same soft-halo treatment as
+                          the top-level labels. The halo fades in
+                          alongside the label so the fluid feel is
+                          preserved while the text stays readable
+                          even when the active Work project's image
+                          fills the pinned track underneath. */}
+                      <span className="relative inline-flex items-center">
+                        <span
+                          aria-hidden
+                          className={`pointer-events-none absolute -inset-y-1 -inset-x-2.5 rounded-full bg-black/55 blur-md transition-opacity duration-500 ease-[var(--ease-out)] ${
+                            subActive
+                              ? "opacity-100"
+                              : "opacity-0 group-hover:opacity-100"
+                          }`}
+                        />
+                        <span
+                          className={`relative font-mono text-[10px] tracking-[0.18em] uppercase whitespace-nowrap transition-all duration-500 ease-[var(--ease-out)] ${
+                            subActive
+                              ? "opacity-100 text-[#4589ff]"
+                              : "opacity-70 group-hover:opacity-100 text-zinc-300"
+                          }`}
+                        >
+                          {sub.label}
+                        </span>
                       </span>
                       <span
                         aria-hidden
