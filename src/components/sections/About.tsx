@@ -103,8 +103,17 @@ export function About() {
             </p>
           </Reveal>
 
+          {/* Chips wrap as needed; each wrapped row uses
+              justify-between so the leftmost chip sits flush-left
+              and the rightmost flush-right, with the leftover
+              horizontal space distributed across the inter-chip
+              gaps. Result: every row spans the same total width
+              regardless of how many chips wrapped onto it, so the
+              first row (3 wider chips) and the second row (4
+              shorter chips) align as a uniform block. gap-y-4
+              keeps the vertical gutter between rows. */}
           <Reveal delay={500}>
-            <div className="flex flex-wrap gap-4 mt-6">
+            <div className="flex flex-wrap justify-between gap-y-4 mt-6">
               <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
                 Design Leadership
               </span>
