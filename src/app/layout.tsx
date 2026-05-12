@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     template: "%s · Phil G.",
   },
   description:
-    "UX/Product Design Leader · 17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code. Prague-based, accepting 2026 enterprise engagements.",
+    "UX/Product Design Leader · 17+ years building products for Walmart, VMware, Pivotal Labs, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code. Prague-based, accepting 2026 enterprise engagements.",
   keywords: [
     "Phil G",
     "Senior UX Designer",
@@ -66,6 +66,7 @@ export const metadata: Metadata = {
     "Vodafone",
     "Kuoni Tumlare",
     "Royal Air Force",
+    "Pivotal Labs",
     "Pivotal",
     "Azul Intelligence Cloud",
     "Prague",
@@ -84,7 +85,7 @@ export const metadata: Metadata = {
     siteName: "Phil G.",
     title: "Phil G. · UX/Product Design Leader · AI-Native",
     description:
-      "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
+      "17+ years building products for Walmart, VMware, Pivotal Labs, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
     // /opengraph-image.tsx is a Next.js Edge-runtime route that
     // generates the social card on demand. Listing it explicitly
     // with width/height/alt lets crawlers serve it directly
@@ -103,7 +104,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Phil G. · UX/Product Design Leader · AI-Native",
     description:
-      "17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
+      "17+ years building products for Walmart, VMware, Pivotal Labs, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare. Product discovery, AI-native prototyping, design leadership, and production-ready code.",
     images: [
       {
         url: "/opengraph-image",

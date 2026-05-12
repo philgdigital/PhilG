@@ -65,7 +65,7 @@ const FAQS: FAQ[] = [
   {
     num: "Q07",
     q: "Enterprise procurement. NDAs, MSAs, vendor onboarding?",
-    a: "All standard. Walmart, VMware, Microsoft, SAP, Cemex, Vodafone, Royal Air Force, and Kuoni Tumlare all signed off. NDA, MSA, SOW, and DPA where required. Vendor onboarding usually takes 1-2 weeks.",
+    a: "All standard. Walmart, VMware, Pivotal Labs, Microsoft, SAP, Cemex, Vodafone, Royal Air Force, and Kuoni Tumlare all signed off. NDA, MSA, SOW, and DPA where required. Vendor onboarding usually takes 1-2 weeks.",
   },
   {
     num: "Q08",

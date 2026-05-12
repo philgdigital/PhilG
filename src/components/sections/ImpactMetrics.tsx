@@ -20,7 +20,7 @@ const METRICS: Metric[] = [
     value: 17,
     suffix: "+",
     label: "Years",
-    desc: "Building products for Walmart, VMware, Microsoft, SAP, Cemex, Vodafone, WWF, and the Royal Air Force.",
+    desc: "Building products for Walmart, VMware, Pivotal Labs, Microsoft, SAP, Cemex, Vodafone, WWF, and the Royal Air Force.",
   },
   {
     icon: Users,

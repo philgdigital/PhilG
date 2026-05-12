@@ -1,8 +1,8 @@
 # Phil G.
 
 > UX/Product Design Leader, Prague (Czechia). 17+ years
-> building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex,
-> Vodafone, Kuoni Tumlare, and the Royal Air Force. Working English
+> building products for Walmart, VMware, Pivotal Labs, Microsoft, SAP,
+> WWF, Cemex, Vodafone, Kuoni Tumlare, and the Royal Air Force. Working English
 > (Fluent), Portuguese (Native), Spanish (Professional). AI-native
 > prototyping, design leadership, product discovery, and
 > production-ready code. Accepting 2026 enterprise engagements.

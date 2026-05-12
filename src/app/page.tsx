@@ -83,7 +83,7 @@ export default function Home() {
         url: siteUrl,
         jobTitle: "UX/Product Design Leader",
         description:
-          "AI-native product design leader with 17+ years building products for Walmart, VMware, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare, and the Royal Air Force.",
+          "AI-native product design leader with 17+ years building products for Walmart, VMware, Pivotal Labs, Microsoft, SAP, WWF, Cemex, Vodafone, Kuoni Tumlare, and the Royal Air Force.",
         knowsLanguage: [
           { "@type": "Language", name: "English", alternateName: "en" },
           { "@type": "Language", name: "Portuguese", alternateName: "pt" },

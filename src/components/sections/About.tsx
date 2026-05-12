@@ -76,8 +76,8 @@ export function About() {
               practitioner with{" "}
               <span className="text-white font-medium">17+ years</span> driving
               digital transformation for the Fortune 500: Walmart, VMware,
-              Microsoft, SAP, WWF, Royal Air Force, Cemex, Vodafone, Kuoni
-              Tumlare, and beyond.
+              Pivotal Labs, Microsoft, SAP, WWF, Royal Air Force, Cemex,
+              Vodafone, Kuoni Tumlare, and beyond.
             </p>
           </Reveal>
 

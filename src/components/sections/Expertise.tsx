@@ -35,7 +35,7 @@ const CARDS: ExpertiseCard[] = [
     colSpan: "md:col-span-2",
     icon: Code2,
     title: "Production-Grade Code",
-    desc: "Tokenized design systems and production-ready React/Tailwind code, eliminating the traditional 'design handoff' friction. Engineers actually want to use what I deliver. Proven at Walmart, VMware, Cemex, and SAP scale.",
+    desc: "Tokenized design systems and production-ready React/Tailwind code, eliminating the traditional 'design handoff' friction. Engineers actually want to use what I deliver. Proven at Walmart, VMware, Pivotal Labs, Cemex, and SAP scale.",
   },
 ];
 
