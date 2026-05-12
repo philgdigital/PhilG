@@ -103,20 +103,20 @@ export function About() {
             </p>
           </Reveal>
 
-          {/* Chips split across TWO rows by container so the rows
-              can have different alignment rules:
-                Row 1 (3 wider chips): default left-aligned gap-4
+          {/* Chips split across TWO rows by container:
+                Row 1 (3 wider chips): plain flex gap-4, left-aligned.
                   - Design Leadership, Product Discovery,
                     AI-Native Prototyping
-                Row 2 (4 shorter chips): justify-between so it
-                  spans the same total width as row 1 instead of
-                  leaving trailing whitespace on the right
-                  - Design Systems, UX Research, Systems Thinking,
-                    Agile
-              Both containers stretch to 100% width, so row 1 hugs
-              left while row 2 distributes its chips edge-to-edge. */}
+                Row 2 (4 shorter chips): justify-between distributes
+                  the 4 chips across the SAME width as row 1.
+              The outer wrapper uses `w-fit` so its width shrinks
+              to the widest child (= row 1's natural width). Row 2's
+              `justify-between` then distributes its 4 chips within
+              that same shrunk width, ending flush at row 1's right
+              edge instead of pushing AGILE to the section's far
+              edge with a huge gap. */}
           <Reveal delay={500}>
-            <div className="flex flex-col gap-4 mt-6">
+            <div className="flex flex-col gap-4 mt-6 w-fit max-w-full">
               <div className="flex flex-wrap gap-4">
                 <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
                   Design Leadership
