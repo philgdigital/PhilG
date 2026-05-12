@@ -351,17 +351,23 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={780}>
-            {/* Body context as two distinct beats:
+            {/* Body context as three deterministic lines. Two hard
+                <br /> breaks so the wrap never lands on the long
+                hyphenated word 'production-grade' in the middle of
+                a line:
                   L1: outcomes / years of experience
-                  L2: how (the three force-multipliers compressed)
-                Hard <br /> after 'shipped products.' so the split
-                is deterministic across viewports rather than left
-                to word-wrap chance. */}
+                  L2: discovery + design systems
+                  L3: shipping speed claim
+                Without the second break, the third clause wrapped
+                back onto L2 and the 'production-grade' word got
+                split with a soft-hyphen ('production-' on L2,
+                'grade React...' on L3), which read as broken UI. */}
             <p className="text-base md:text-xl font-light text-zinc-400 leading-relaxed max-w-3xl">
               <span className="text-white font-medium">17+ years</span> turning
               Fortune 500 problems into shipped products.
               <br />
               Leading product discovery, crafting AI-ready design systems,
+              <br />
               and shipping production-grade React prototypes 10× faster.
             </p>
           </Reveal>
