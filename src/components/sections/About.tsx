@@ -83,9 +83,6 @@ export function About() {
 
           <Reveal delay={400}>
             <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed">
-              <span className="font-serif italic text-white text-2xl md:text-3xl mr-2">
-                Seventeen years.
-              </span>
               I&apos;m a{" "}
               <span className="text-white font-medium">product builder</span> who leads
               with design. Three force-multipliers:{" "}
