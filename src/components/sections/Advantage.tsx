@@ -80,9 +80,10 @@ export function Advantage() {
                     design. Across continents and time zones. At Kuoni Tumlare
                     I hired six UX designers and led a twelve-person team
                     in Prague behind one AI-ready design
-                    system. Mentored 1,050+ designers who&apos;ve led at Meta,
-                    Booking.com, Uber, IBM, Accenture, SAP, Thoughtworks,
-                    Zalando, and Kuoni Tumlare.
+                    system. Mentored 1,050+ designers who&apos;ve led at
+                    hundreds of firms, including Meta, Booking.com, Uber,
+                    IBM, Accenture, SAP, Thoughtworks, Zalando, and
+                    Kuoni Tumlare.
                   </p>
                 </div>
               </div>
