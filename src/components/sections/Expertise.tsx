@@ -17,7 +17,7 @@ const CARDS: ExpertiseCard[] = [
     colSpan: "md:col-span-2",
     icon: Users,
     title: "Design Leadership",
-    desc: "Hiring, coaching, and leading high-performing design teams. At Kuoni Tumlare I hired six UX designers and led a twelve-person team in Prague. Mentored 1,000+ designers now leading at Meta, Booking, Uber, IBM, and Accenture across 11 countries.",
+    desc: "Hiring, coaching, and leading high-performing design teams. At Kuoni Tumlare I hired six UX designers and led a twelve-person team in Prague. Mentored 1,050+ designers who've led at Meta, Booking.com, Uber, IBM, Accenture, SAP, Thoughtworks, Zalando, and Kuoni Tumlare across 11 countries.",
   },
   {
     colSpan: "md:col-span-1",

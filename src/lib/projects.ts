@@ -337,10 +337,10 @@ export const projects: Project[] = [
     approach:
       "I run Aela on a 70/30 split: 70% of my time in enterprise engagements, 30% on Aela's own work. The Aela work feeds directly into the enterprise toolkit: the AI prototyping stack, the design-system contracts, the discovery workshops, the mentorship cohorts. Each enterprise engagement leaves Aela richer, and Aela's R&D makes the next enterprise engagement faster.",
     outcome:
-      "Aela has been the source of every method I've shipped at scale: the AI-ready design system architecture, the custom-GPT discovery pipeline, the 1,000-mentee cohort programme. It's the engine, not the front-of-stage.",
+      "Aela has been the source of every method I've shipped at scale: the AI-ready design system architecture, the custom-GPT discovery pipeline, the 1,050-mentee cohort programme. It's the engine, not the front-of-stage.",
     metrics: [
       { value: "70 / 30", label: "Enterprise / studio split" },
-      { value: "1,000+", label: "Designers in cohorts" },
+      { value: "1,050+", label: "Designers in cohorts" },
       { value: "11", label: "Countries covered" },
       { value: "Active", label: "Operating today" },
     ],

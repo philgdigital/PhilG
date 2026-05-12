@@ -97,8 +97,9 @@ export function About() {
               high-performing teams. At Kuoni Tumlare I hired six designers and
               led a twelve-person team in Prague behind a
               single AI-ready design system. Along the way I&apos;ve mentored
-              1,000+ designers now leading at Meta, Booking.com, Uber, IBM, and
-              Accenture across 11 countries.
+              1,050+ designers who&apos;ve led at Meta, Booking.com, Uber, IBM,
+              Accenture, SAP, Thoughtworks, Zalando, and Kuoni Tumlare across
+              11 countries.
             </p>
           </Reveal>
 
