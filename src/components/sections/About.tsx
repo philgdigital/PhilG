@@ -246,7 +246,7 @@ export function About() {
                     <rect y="10" width="60" height="20" fill="#F1BF00" />
                   </svg>
                   <span className="font-medium text-white">Spanish</span>
-                  <span className="text-zinc-400 text-[11px] tracking-[0.16em] uppercase">Professional</span>
+                  <span className="text-zinc-400 text-[11px] tracking-[0.16em] uppercase">B2</span>
                 </span>
               </div>
             </div>
