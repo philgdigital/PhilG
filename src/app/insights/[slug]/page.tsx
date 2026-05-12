@@ -11,7 +11,7 @@ import {
 } from "@/lib/insights";
 import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
-import { DiscussProjectButton } from "@/components/DiscussProjectButton";
+import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -387,30 +387,17 @@ export default async function InsightPage({ params }: RouteProps) {
           </Reveal>
 
           <Reveal delay={400}>
-            {/* Closing CTA. Uses DiscussProjectButton (renamed to a more
-                generic shared component) with the "Initiate a project"
-                label so it visually matches the home page's primary CTA
-                style (border-2 IBM blue + bg-blue/10 + hover-fill).
-                Clicking opens the global ProjectFormModal directly
-                instead of jumping to the /#contact anchor.
-
-                The border-t hairline that previously divided this block
-                is replaced with a gradient-fade hairline so the section
-                no longer reads as a "marked" edge. */}
-            <div className="mt-20 md:mt-24 pt-16 relative flex flex-col md:flex-row md:items-end md:justify-between gap-12">
+            {/* Closing CTA. Uses the shared ClosingCallCTA card so the
+                conversion surface here is identical to the Process
+                section on the homepage. The gradient-fade hairline
+                above continues the divider rhythm with the 'Read next'
+                section without reading as a "marked" edge. */}
+            <div className="mt-20 md:mt-24 pt-16 relative">
               <span
                 aria-hidden
                 className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
               />
-              <div>
-                <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400 mb-3 block">
-                  Want to talk?
-                </span>
-                <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight max-w-2xl">
-                  Most projects start with a 30-min call.
-                </h3>
-              </div>
-              <DiscussProjectButton label="Initiate a project" />
+              <ClosingCallCTA />
             </div>
           </Reveal>
         </section>

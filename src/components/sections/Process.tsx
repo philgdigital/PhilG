@@ -5,18 +5,21 @@ import {
   Cpu,
   Sparkles,
   Code2,
-  ArrowUpRight,
   type IconComponent,
 } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
+import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 
 type ProcessProps = {
   /**
    * Opens the ProjectFormModal (same one the Footer's monumental
    * 'Initiate Project' button uses). Wires the Process section's
    * secondary CTA into the site's single conversion surface.
+   * Currently unused since the closing CTA reads from FormContext
+   * directly via ClosingCallCTA, but kept on the prop signature
+   * so consumers don't need to be updated.
    */
-  onOpenForm: () => void;
+  onOpenForm?: () => void;
 };
 
 /**
@@ -164,7 +167,7 @@ function StepContent({
   );
 }
 
-export function Process({ onOpenForm }: ProcessProps) {
+export function Process({}: ProcessProps) {
   return (
     <section
       id="process"
@@ -238,27 +241,13 @@ export function Process({ onOpenForm }: ProcessProps) {
         {/*
           Lifted closing-CTA card. Visually prominent next step that
           opens the same ProjectFormModal as the footer's 'Initiate
-          Project' button. One conversion surface across the site.
+          Project' button. Now extracted into the shared
+          ClosingCallCTA component so the insight detail pages can
+          reuse the exact same surface.
         */}
         <Reveal delay={300}>
-          <div className="mt-12 md:mt-16 glass rounded-3xl p-8 md:p-10 border border-[#0f62fe]/25 hover:border-[#0f62fe]/40 shadow-[0_20px_60px_rgba(15,98,254,0.12)] flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-10 transition-all duration-500">
-            <div className="flex-1">
-              <h4 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-snug mb-2">
-                Want to talk through whether this fits your team?
-              </h4>
-              <p className="text-zinc-400 font-light text-base md:text-lg">
-                Let&apos;s walk through your context on a 30-min call.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onOpenForm}
-              data-magnetic="true"
-              className="shrink-0 group flex items-center gap-3 text-white font-mono font-medium tracking-[0.18em] uppercase text-xs hover-target px-8 py-5 rounded-full border-2 border-[#0f62fe] bg-[#0f62fe]/10 hover:bg-[#0f62fe] hover:shadow-[0_0_30px_rgba(15,98,254,0.5)] transition-all duration-500 ease-[var(--ease-out)] whitespace-nowrap"
-            >
-              <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
-              <span>Book a 30-min intro</span>
-            </button>
+          <div className="mt-12 md:mt-16">
+            <ClosingCallCTA />
           </div>
         </Reveal>
       </div>
