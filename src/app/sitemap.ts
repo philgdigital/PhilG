@@ -24,7 +24,15 @@ const siteUrl =
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000");
 
+/**
+ * Same indexing gate as robots.ts. On previews + locally we return
+ * an empty sitemap so even if a crawler ignores robots.txt and hits
+ * /sitemap.xml directly, there's nothing for it to enumerate.
+ */
+const isProduction = process.env.VERCEL_ENV === "production";
+
 export default function sitemap(): MetadataRoute.Sitemap {
+  if (!isProduction) return [];
   const now = new Date();
 
   const homepage: MetadataRoute.Sitemap[number] = {

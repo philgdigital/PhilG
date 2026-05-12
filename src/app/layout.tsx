@@ -28,6 +28,15 @@ const siteUrl =
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000");
 
+/**
+ * Indexing gate. Mirrors the check in robots.ts + sitemap.ts:
+ * only the genuine Vercel production deployment emits indexable
+ * metadata. Previews + local dev get a hard noindex/nofollow so
+ * search engines and LLM crawlers can't index a *.vercel.app URL
+ * and cause duplicate-content issues at launch.
+ */
+const isProduction = process.env.VERCEL_ENV === "production";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -113,17 +122,34 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/icon.svg",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
+  robots: isProduction
+    ? {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+      }
+    : {
+        // Preview / local: hard noindex. Mirrors the Disallow:/ in
+        // robots.ts. nocache + noimageindex + max-snippet:0 belt-
+        // and-suspender against any crawler that ignores the
+        // primary index:false.
+        index: false,
+        follow: false,
+        nocache: true,
+        googleBot: {
+          index: false,
+          follow: false,
+          noimageindex: true,
+          "max-snippet": 0,
+          "max-image-preview": "none",
+        },
+      },
   category: "Design",
 };
 

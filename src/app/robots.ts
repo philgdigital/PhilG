@@ -27,7 +27,31 @@ const siteUrl =
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000");
 
+/**
+ * Indexing gate. Vercel sets VERCEL_ENV automatically:
+ *   - "production"  -> the deployment tied to the production domain
+ *   - "preview"     -> any *.vercel.app preview deployment
+ *   - undefined     -> local dev / non-Vercel host
+ *
+ * We only emit the permissive crawler policy when this deployment
+ * IS the production one. On previews + locally we hard-block every
+ * crawler with `Disallow: /` so search engines and LLM bots can't
+ * index a *.vercel.app URL and cause duplicate-content / wrong-
+ * canonical headaches when the site finally launches on its real
+ * domain.
+ */
+const isProduction = process.env.VERCEL_ENV === "production";
+
 export default function robots(): MetadataRoute.Robots {
+  if (!isProduction) {
+    // Hard block. No sitemap reference either, so a non-compliant
+    // crawler can't enumerate URLs even if it ignores the disallow.
+    return {
+      rules: [{ userAgent: "*", disallow: "/" }],
+      host: siteUrl,
+    };
+  }
+
   return {
     rules: [
       {
