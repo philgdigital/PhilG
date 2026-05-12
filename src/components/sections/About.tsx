@@ -40,7 +40,7 @@ export function About() {
                     Next.js auto-serves WebP/AVIF at the rendered
                     display size (~40vw on lg, full width below). */}
                 <Image
-                  src="/images/phil-portrait.jpg"
+                  src="/images/imgphil.jpg"
                   alt="Phil G., NN/g Certified UX Master."
                   fill
                   sizes="(min-width: 1024px) 40vw, 100vw"
