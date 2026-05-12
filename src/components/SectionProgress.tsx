@@ -117,9 +117,26 @@ export function SectionProgress() {
       if (node) workSubObserver.observe(node);
     });
 
+    // Active-project broadcast from Work.tsx. The pinned horizontal
+    // track puts every Work article at the same vertical y, so the
+    // IO observer above can't distinguish which is currently in
+    // view; it would just stick on the first one. Work.tsx fires
+    // 'philg:work-active' with { slug } whenever the rAF lerp loop
+    // crosses a project boundary; we map that to the corresponding
+    // sub-item id and override the IO-derived state. Falls back to
+    // IO on mobile / tablet (where the event doesn't fire because
+    // the pin isn't engaged).
+    const onWorkActive = (e: Event) => {
+      const detail = (e as CustomEvent<{ slug: string }>).detail;
+      if (!detail?.slug) return;
+      setActiveWorkSubId(`work-${detail.slug}`);
+    };
+    window.addEventListener("philg:work-active", onWorkActive);
+
     return () => {
       sectionObserver.disconnect();
       workSubObserver.disconnect();
+      window.removeEventListener("philg:work-active", onWorkActive);
     };
   }, []);
 

@@ -303,6 +303,21 @@ export function Work() {
       if (idx !== lastIdx) {
         lastIdx = idx;
         setActiveIdx(idx);
+        // Broadcast the active project slug so SectionProgress can
+        // light up the correct sub-item dot. IntersectionObserver
+        // can't track this on its own because every article inside
+        // the pinned horizontal track shares the same y position
+        // (and therefore IO fires for all of them simultaneously).
+        // A custom event keyed by slug is the simplest cross-
+        // component channel without introducing a global store.
+        const slug = projects[idx]?.slug;
+        if (slug && typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("philg:work-active", {
+              detail: { slug },
+            }),
+          );
+        }
       }
     };
 
