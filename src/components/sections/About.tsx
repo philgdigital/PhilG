@@ -23,12 +23,22 @@ export function About() {
             <TiltCard scale={1.02} maxRotation={5}>
               <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] border border-white/10 group bg-zinc-900/50">
                 <ElectricBorder />
+                {/* Phil's portrait. Source file is a 4:5 portrait
+                    (~1145x1473 native) which matches the container's
+                    aspect-[4/5] perfectly, so object-cover crops zero
+                    pixels. Next.js auto-serves WebP/AVIF at the
+                    rendered display size (~40vw on lg, full width
+                    below). priority + quality 90 because this is
+                    above-the-fold on the homepage and the NN/g
+                    Master badge in the bottom-right of the photo
+                    needs to stay legible. */}
                 <Image
-                  src="/images/about.jpg"
-                  alt="Phil G."
+                  src="/images/phil-portrait.jpg"
+                  alt="Phil G., NN/g Certified UX Master."
                   fill
                   sizes="(min-width: 1024px) 40vw, 100vw"
                   priority
+                  quality={90}
                   className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[1500ms] ease-[var(--ease-out)] transform group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-transparent opacity-80" />
