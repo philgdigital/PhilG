@@ -103,38 +103,45 @@ export function About() {
             </p>
           </Reveal>
 
-          {/* Chips wrap as needed; each wrapped row uses
-              justify-between so the leftmost chip sits flush-left
-              and the rightmost flush-right, with the leftover
-              horizontal space distributed across the inter-chip
-              gaps. Result: every row spans the same total width
-              regardless of how many chips wrapped onto it, so the
-              first row (3 wider chips) and the second row (4
-              shorter chips) align as a uniform block. gap-y-4
-              keeps the vertical gutter between rows. */}
+          {/* Chips split across TWO rows by container so the rows
+              can have different alignment rules:
+                Row 1 (3 wider chips): default left-aligned gap-4
+                  - Design Leadership, Product Discovery,
+                    AI-Native Prototyping
+                Row 2 (4 shorter chips): justify-between so it
+                  spans the same total width as row 1 instead of
+                  leaving trailing whitespace on the right
+                  - Design Systems, UX Research, Systems Thinking,
+                    Agile
+              Both containers stretch to 100% width, so row 1 hugs
+              left while row 2 distributes its chips edge-to-edge. */}
           <Reveal delay={500}>
-            <div className="flex flex-wrap justify-between gap-y-4 mt-6">
-              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
-                Design Leadership
-              </span>
-              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
-                Product Discovery
-              </span>
-              <span className="glass px-6 py-3 rounded-full text-[#4589ff] font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase border-[#0f62fe]/20 shadow-[0_0_15px_rgba(15,98,254,0.15)]">
-                AI-Native Prototyping
-              </span>
-              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
-                Design Systems
-              </span>
-              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
-                UX Research
-              </span>
-              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
-                Systems Thinking
-              </span>
-              <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
-                Agile
-              </span>
+            <div className="flex flex-col gap-4 mt-6">
+              <div className="flex flex-wrap gap-4">
+                <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
+                  Design Leadership
+                </span>
+                <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
+                  Product Discovery
+                </span>
+                <span className="glass px-6 py-3 rounded-full text-[#4589ff] font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase border-[#0f62fe]/20 shadow-[0_0_15px_rgba(15,98,254,0.15)]">
+                  AI-Native Prototyping
+                </span>
+              </div>
+              <div className="flex flex-wrap justify-between gap-y-4">
+                <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
+                  Design Systems
+                </span>
+                <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
+                  UX Research
+                </span>
+                <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
+                  Systems Thinking
+                </span>
+                <span className="glass px-6 py-3 rounded-full text-white font-mono text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase">
+                  Agile
+                </span>
+              </div>
             </div>
           </Reveal>
 
