@@ -32,6 +32,13 @@ export function CustomCursor() {
   // so the cursor doesn't suggest 'click for more' on something that
   // is actually closing/dismissing.
   const [showHint, setShowHint] = useState(false);
+  /**
+   * Hint text shown in the pill. Defaults to "Click for More" but any
+   * hovered element can override it by setting
+   *   data-cursor-hint="Click to download"
+   * on itself (or an ancestor). The closest matching ancestor wins.
+   */
+  const [hintText, setHintText] = useState("Click for More");
   const [isClicked, setIsClicked] = useState(false);
 
   const isFinePointer = useFinePointer();
@@ -45,6 +52,8 @@ export function CustomCursor() {
     let ringY = mouseY;
     let raf = 0;
     let lastHover: "idle" | "link" | "card" = "idle";
+    let lastShowHint = false;
+    let lastHintText = "Click for More";
 
     // Track whether the visitor is actively scrolling. We skip magnetic
     // getBoundingClientRect() reads during scroll because each rect call
@@ -142,7 +151,6 @@ export function CustomCursor() {
       }
     };
 
-    let lastShowHint = false;
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
@@ -165,6 +173,13 @@ export function CustomCursor() {
         '[data-cursor-no-hint="true"]',
       );
       const nextShowHint = next !== "idle" && !negative;
+      // Read per-element hint override. Closest ancestor wins.
+      // Defaults to "Click for More" when no override is set.
+      const hintNode = target.closest(
+        "[data-cursor-hint]",
+      ) as HTMLElement | null;
+      const nextHintText =
+        hintNode?.getAttribute("data-cursor-hint") || "Click for More";
       if (next !== lastHover) {
         lastHover = next;
         setHoverState(next);
@@ -172,6 +187,10 @@ export function CustomCursor() {
       if (nextShowHint !== lastShowHint) {
         lastShowHint = nextShowHint;
         setShowHint(nextShowHint);
+      }
+      if (nextHintText !== lastHintText) {
+        lastHintText = nextHintText;
+        setHintText(nextHintText);
       }
     };
 
@@ -365,7 +384,7 @@ export function CustomCursor() {
             boxShadow: `0 4px 16px ${pulseColor}33, 0 0 0 1px ${pulseColor}20`,
           }}
         >
-          Click for More
+          {hintText}
         </span>
       </div>
     </>

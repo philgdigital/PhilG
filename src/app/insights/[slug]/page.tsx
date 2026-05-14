@@ -154,23 +154,18 @@ const mdxComponents = {
     </li>
   ),
   blockquote: ({ children, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
-    // Editorial pull-quote — mirrors the home PullQuote section
-    // (see src/components/sections/PullQuote.tsx). Block-level
-    // open-quote glyph above + quote text flowing at the column
-    // edge, no borders, no inset padding. The previous design's
-    // pl-16/24 inset and border-y frame were visually compressing
-    // the quote, so the user reported it as "small" even though
-    // the font-size matched. Lifting those constraints lets the
-    // quote breathe at full column width like the home version.
+    // Editorial pull-quote — IDENTICAL to the home PullQuote
+    // section (see src/components/sections/PullQuote.tsx).
+    // Same glyph size, same blockquote size, same spacing.
     <figure className="my-12 md:my-20">
       <span
         aria-hidden
-        className="block font-serif italic font-light text-9xl md:text-[12rem] leading-none text-[#4589ff]/25 mb-2 md:mb-4 select-none"
+        className="block font-serif italic font-light text-8xl md:text-9xl leading-none text-[#4589ff]/25 mb-2 md:mb-4 select-none"
       >
         &ldquo;
       </span>
       <blockquote
-        className="font-serif italic font-light text-4xl md:text-6xl lg:text-7xl tracking-tight leading-[1.1] text-white"
+        className="font-serif italic font-light text-3xl md:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white max-w-5xl"
         {...props}
       >
         {children}
@@ -370,6 +365,7 @@ export default async function InsightPage({ params }: RouteProps) {
                 href={`/pdf/${insight.slug}.pdf`}
                 download={`${insight.slug}.pdf`}
                 data-magnetic="true"
+                data-cursor-hint="Click to download"
                 className="group hover-target inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-[#0f62fe]/50 bg-white/[0.03] hover:bg-[#0f62fe]/10 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-300 hover:text-white transition-all"
               >
                 <svg
