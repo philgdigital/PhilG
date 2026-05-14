@@ -21,8 +21,8 @@ function formatDate(iso: string): string {
   });
 }
 
-export default function AdminDashboard() {
-  const items = listInsights();
+export default async function AdminDashboard() {
+  const items = await listInsights();
 
   return (
     <main className="px-6 md:px-12 lg:px-24 py-10 md:py-16 max-w-6xl mx-auto">

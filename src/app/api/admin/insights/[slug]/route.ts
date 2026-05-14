@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   readInsightBySlug,
   saveInsight,
@@ -18,14 +19,14 @@ type RouteContext = { params: Promise<{ slug: string }> };
 
 export async function GET(_req: NextRequest, ctx: RouteContext) {
   const { slug } = await ctx.params;
-  const item = readInsightBySlug(slug);
+  const item = await readInsightBySlug(slug);
   if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ item });
 }
 
 export async function PUT(req: NextRequest, ctx: RouteContext) {
   const { slug } = await ctx.params;
-  const existing = readInsightBySlug(slug);
+  const existing = await readInsightBySlug(slug);
   if (!existing)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -45,6 +46,16 @@ export async function PUT(req: NextRequest, ctx: RouteContext) {
       fm: parsed.fm,
       body: parsed.body,
     });
+    // Revalidate listing + old slug + new slug (rename case).
+    try {
+      revalidatePath("/insights");
+      revalidatePath(`/insights/${existing.slug}`);
+      if (result.slug !== existing.slug) {
+        revalidatePath(`/insights/${result.slug}`);
+      }
+    } catch {
+      /* non-fatal */
+    }
     return NextResponse.json({ ok: true, ...result });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Save failed";
@@ -54,11 +65,17 @@ export async function PUT(req: NextRequest, ctx: RouteContext) {
 
 export async function DELETE(_req: NextRequest, ctx: RouteContext) {
   const { slug } = await ctx.params;
-  const existing = readInsightBySlug(slug);
+  const existing = await readInsightBySlug(slug);
   if (!existing)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   try {
     await deleteInsight(existing.filename);
+    try {
+      revalidatePath("/insights");
+      revalidatePath(`/insights/${existing.slug}`);
+    } catch {
+      /* non-fatal */
+    }
     return NextResponse.json({ ok: true });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Delete failed";

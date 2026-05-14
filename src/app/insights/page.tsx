@@ -4,7 +4,13 @@ import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsListing } from "@/components/insights/InsightsListing";
-import { getAllInsights } from "@/lib/insights";
+import { getAllInsightsLive } from "@/lib/insights";
+
+// ISR — re-fetch Blob overlay at most once per minute, plus the
+// admin's revalidatePath('/insights') call on every save kicks in
+// immediately. Without this the listing would be 100% static and
+// admin edits wouldn't appear until the next deploy.
+export const revalidate = 60;
 
 /**
  * /insights — the listing route. Page 1 of all insights, with
@@ -75,8 +81,8 @@ function InsightsFallback() {
   );
 }
 
-export default function InsightsIndexPage() {
-  const all = getAllInsights();
+export default async function InsightsIndexPage() {
+  const all = await getAllInsightsLive();
 
   /**
    * Blog JSON-LD. Helps crawlers + LLM agents recognize this page as

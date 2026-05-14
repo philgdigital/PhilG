@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   listInsights,
   saveInsight,
@@ -14,7 +15,7 @@ import { CATEGORIES, type Category } from "@/lib/insights/schema";
  */
 
 export async function GET() {
-  const items = listInsights();
+  const items = await listInsights();
   // Strip body from list responses to keep payloads small.
   return NextResponse.json({
     items: items.map((item) => {
@@ -38,6 +39,16 @@ export async function POST(req: NextRequest) {
   }
   try {
     const result = await saveInsight({ fm: parsed.fm, body: parsed.body });
+    // Invalidate the listing + the new detail page so the public
+    // site reflects the new post within seconds (vs the 60s ISR
+    // fallback). Wrapped in try so any revalidation failure
+    // doesn't bubble back to the admin as a save error.
+    try {
+      revalidatePath("/insights");
+      revalidatePath(`/insights/${result.slug}`);
+    } catch {
+      /* non-fatal */
+    }
     return NextResponse.json({ ok: true, ...result });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Save failed";

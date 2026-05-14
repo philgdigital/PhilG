@@ -7,7 +7,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import {
   getAllInsights,
-  getInsight,
+  getAllInsightsLive,
+  getInsightLive,
   type Category,
 } from "@/lib/insights";
 import { Navbar } from "@/components/Navbar";
@@ -20,15 +21,33 @@ type RouteProps = {
   params: Promise<{ slug: string }>;
 };
 
+/**
+ * generateStaticParams uses the SYNC seed (data.json) since
+ * Next.js calls this synchronously at build time. Any admin-
+ * created posts that exist only in Blob will be served on-demand
+ * with `dynamicParams = true` (the default), getting their first
+ * render at request time and caching for `revalidate` seconds
+ * thereafter.
+ */
 export function generateStaticParams() {
   return getAllInsights().map((i) => ({ slug: i.slug }));
 }
+
+/**
+ * ISR window. After the admin saves a post on production, the
+ * /api/admin route calls revalidatePath('/insights/{slug}') to
+ * invalidate immediately. This `revalidate` value is the FALLBACK
+ * — even without explicit revalidation, the page re-fetches Blob
+ * at most once per minute.
+ */
+export const revalidate = 60;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
 }: RouteProps): Promise<Metadata> {
   const { slug } = await params;
-  const insight = getInsight(slug);
+  const insight = await getInsightLive(slug);
   if (!insight) return { title: "Insight not found" };
   const url = `/insights/${insight.slug}`;
   return {
@@ -203,10 +222,9 @@ const siteUrl =
 
 export default async function InsightPage({ params }: RouteProps) {
   const { slug } = await params;
-  const insight = getInsight(slug);
+  const allInsights = await getAllInsightsLive();
+  const insight = allInsights.find((i) => i.slug === slug);
   if (!insight) notFound();
-
-  const allInsights = getAllInsights();
   const idx = allInsights.findIndex((i) => i.slug === insight.slug);
   const next = allInsights[(idx + 1) % allInsights.length];
   const related = allInsights

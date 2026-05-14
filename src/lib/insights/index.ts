@@ -14,4 +14,6 @@ export {
   getAllInsights,
   getInsight,
   getLatestInsights,
+  getAllInsightsLive,
+  getInsightLive,
 } from "./loader";

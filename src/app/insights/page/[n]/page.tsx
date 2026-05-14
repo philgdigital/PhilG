@@ -5,7 +5,11 @@ import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsListing } from "@/components/insights/InsightsListing";
-import { getAllInsights } from "@/lib/insights";
+import { getAllInsights, getAllInsightsLive } from "@/lib/insights";
+
+// ISR — admin's revalidatePath('/insights/page/N') hits on save.
+export const revalidate = 60;
+export const dynamicParams = true;
 
 /**
  * /insights/page/[n] — paginated views of the unfiltered listing.
@@ -54,7 +58,7 @@ export default async function InsightsPaginatedPage({ params }: RouteProps) {
   const page = parseInt(n, 10);
   if (!Number.isFinite(page) || page < 2) notFound();
 
-  const all = getAllInsights();
+  const all = await getAllInsightsLive();
   const totalPages = Math.ceil(all.length / PAGE_SIZE);
   if (page > totalPages) notFound();
 

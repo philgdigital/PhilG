@@ -13,7 +13,7 @@ type RouteProps = { params: Promise<{ slug: string }> };
 
 export default async function EditInsightPage({ params }: RouteProps) {
   const { slug } = await params;
-  const item = readInsightBySlug(slug);
+  const item = await readInsightBySlug(slug);
   if (!item) notFound();
 
   return (
