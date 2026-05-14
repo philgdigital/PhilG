@@ -633,7 +633,14 @@ const ClosingCtaPage = () => (
   <Page size="A4" style={styles.page}>
     <View style={styles.ctaWrap}>
       <Text style={styles.ctaEyebrow}>BUILT TO SHIP — NOT TO PITCH</Text>
-      <Text style={styles.ctaHeadline}>Hire Phil G. for your next project.</Text>
+      {/* Explicit line break — locks the wrap at the
+          intended editorial cadence:
+            "Hire Phil G. for your"
+            "next project."
+          Natural wrap was orphaning "project." on its own line. */}
+      <Text style={styles.ctaHeadline}>
+        Hire Phil G. for your{"\n"}next project.
+      </Text>
       <Text style={styles.ctaSubline}>
         Embedded senior product designer + builder. Discovery, AI-native
         prototyping, design leadership, design systems, production-grade React.
