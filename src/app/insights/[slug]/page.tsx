@@ -173,9 +173,20 @@ const mdxComponents = {
     <figure
       className="my-10 md:my-16 [&_p]:font-serif [&_p]:italic [&_p]:font-light [&_p]:text-xl [&_p]:md:text-2xl [&_p]:lg:text-3xl [&_p]:tracking-tight [&_p]:leading-[1.3] [&_p]:text-white [&_p]:max-w-4xl [&_p]:mb-0"
     >
+      {/* Opening quote glyph. The serif `"` glyph occupies only the
+          TOP half of its line-box, so `leading-none` (line-height
+          = 1.0) leaves a tall empty zone below the visible glyph
+          and pushes the quote text far away from the icon — they
+          stop reading as one unit. Cropping line-height to 0.5
+          AND pulling the next sibling up with a negative bottom
+          margin closes that gap so the first line of quote text
+          sits right under the glyph's visual baseline. Values are
+          calibrated per breakpoint because the font-size jumps
+          (text-9xl → 10rem → 12rem) widen the empty zone in
+          absolute pixels. */}
       <span
         aria-hidden
-        className="block font-serif italic font-light text-9xl md:text-[10rem] lg:text-[12rem] leading-none text-[#4589ff]/25 mb-1 md:mb-2 select-none"
+        className="block font-serif italic font-light text-9xl md:text-[10rem] lg:text-[12rem] leading-[0.5] text-[#4589ff]/25 -mb-12 md:-mb-16 lg:-mb-20 select-none"
       >
         &ldquo;
       </span>
