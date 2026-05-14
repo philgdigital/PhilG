@@ -281,36 +281,49 @@ export default async function CaseStudy({ params }: RouteProps) {
           </Reveal>
         </section>
 
-        {/* Outcome + metrics */}
-        <section className="grid grid-cols-1 md:grid-cols-12 gap-y-6 gap-x-8 md:gap-x-12 mb-24 border-t border-white/8 pt-16">
-          <Reveal className="md:col-span-2 lg:col-span-3 md:text-right md:sticky md:top-32 self-start">
-            <h3 className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
-              Outcome
-            </h3>
-          </Reveal>
-          <div className="md:col-span-10 lg:col-span-9">
-            <Reveal>
-              <p className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-3xl mb-12">
+        {/*
+          Outcome section. Two distinct rows so the metrics tier can
+          break out of the ladder grid:
+            Row A (ladder): label-left + outcome paragraph-right,
+              same col-span-2/3 + col-span-10/9 pattern as every
+              other section on the page.
+            Row B (FULL WIDTH): the 4-up metrics block lives outside
+              the ladder grid and spans the whole content width so
+              each number gets more breathing room and reads as a
+              standalone summary panel. The earlier nested version
+              squeezed the four metrics into the right column's
+              ~75% width, which crammed the values when their labels
+              were long.
+        */}
+        <section className="mb-24 border-t border-white/8 pt-16">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-y-6 gap-x-8 md:gap-x-12">
+            <Reveal className="md:col-span-2 lg:col-span-3 md:text-right md:sticky md:top-32 self-start">
+              <h3 className="font-mono text-xs font-medium tracking-[0.22em] uppercase text-zinc-400">
+                Outcome
+              </h3>
+            </Reveal>
+            <Reveal className="md:col-span-10 lg:col-span-9">
+              <p className="text-zinc-200 font-light text-xl md:text-2xl leading-relaxed max-w-3xl">
                 {project.outcome}
               </p>
             </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
-              {project.metrics.map((m, i) => (
-                <Reveal key={m.label} delay={i * 100}>
-                  <div
-                    className="flex flex-col gap-3 border-l-2 pl-6 py-2"
-                    style={{ borderColor: project.accent }}
-                  >
-                    <span className="text-3xl md:text-4xl font-mono font-medium tabular-nums text-white tracking-tight">
-                      {m.value}
-                    </span>
-                    <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400">
-                      {m.label}
-                    </span>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
+          </div>
+          <div className="mt-12 md:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+            {project.metrics.map((m, i) => (
+              <Reveal key={m.label} delay={i * 100}>
+                <div
+                  className="flex flex-col gap-3 border-l-2 pl-6 py-2"
+                  style={{ borderColor: project.accent }}
+                >
+                  <span className="text-3xl md:text-4xl font-mono font-medium tabular-nums text-white tracking-tight">
+                    {m.value}
+                  </span>
+                  <span className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-zinc-400">
+                    {m.label}
+                  </span>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </section>
 

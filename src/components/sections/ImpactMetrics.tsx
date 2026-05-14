@@ -24,17 +24,17 @@ const METRICS: Metric[] = [
   },
   {
     icon: Users,
-    value: 1000,
+    value: 1050,
     suffix: "+",
     label: "Mentored",
-    desc: "Designers I've coached now lead at Meta, Booking.com, Uber, IBM, and Accenture across 11 countries.",
+    desc: "Designers I've coached who've led at hundreds of firms, including Meta, Booking.com, Uber, IBM, Accenture, SAP, Thoughtworks, Zalando, and Kuoni Tumlare.",
   },
   {
     icon: Globe,
-    value: 50,
+    value: 100,
     suffix: "+",
     label: "Countries",
-    desc: "Cemex platform reach: 20,000+ enterprise customers served across 50+ markets through one unified design system.",
+    desc: "Cumulative reach of products I've shipped: Cemex (50+ markets), SAP (180+), Kuoni Tumlare (35+), and the rest of the Fortune 500 roster combined.",
   },
 ];
 
