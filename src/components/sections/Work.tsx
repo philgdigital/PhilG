@@ -499,6 +499,27 @@ export function Work() {
           page's vertical rhythm and reads as a gallery the visitor
           is walking through sideways. */}
       <div className="hidden lg:block lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden">
+        {/* EDGE COLOUR GLOW. Four corner radial gradients in IBM
+            blue + emerald fade from the edges of the pinned
+            viewport toward the center, where they go fully
+            transparent so the project card in the middle reads
+            against the clean dark Carbon Black stage. Reads as a
+            framed-by-brand-colour theatre stage during the
+            horizontal scroll. Sits at z-0; the chrome (header, pip,
+            progress bar at z-30) and the horizontal track (z-10
+            below) layer above. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            background: `
+              radial-gradient(ellipse 75% 65% at 0% 0%, rgba(15, 98, 254, 0.28), transparent 62%),
+              radial-gradient(ellipse 75% 65% at 100% 0%, rgba(16, 185, 129, 0.22), transparent 62%),
+              radial-gradient(ellipse 75% 65% at 0% 100%, rgba(16, 185, 129, 0.22), transparent 62%),
+              radial-gradient(ellipse 75% 65% at 100% 100%, rgba(15, 98, 254, 0.28), transparent 62%)
+            `,
+          }}
+        />
         {/* Pinned section header. Sits in the upper-left corner of
             the sticky window with the live project pip on the right.
             pointer-events-none so it doesn't block hover on whatever
@@ -552,7 +573,7 @@ export function Work() {
             project. */}
         <div
           ref={trackRef}
-          className="flex h-full will-change-transform"
+          className="relative z-10 flex h-full will-change-transform"
           style={{
             width: `${N * 100}vw`,
             transform: "translate3d(0, 0, 0)",
