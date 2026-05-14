@@ -34,7 +34,7 @@ const METRICS: Metric[] = [
     value: 180,
     suffix: "+",
     label: "Countries",
-    desc: "Products I designed ship inside Microsoft Teams (180+), SAP enterprise software (180+), Kuoni Tumlare's travel network (100+), Cemex's B2B platform (50+), and the wider Fortune 500 roster.",
+    desc: "Products I designed ship inside SAP enterprise software (180+), Kuoni Tumlare's travel network (100+), Cemex's B2B platform (50+), Microsoft Teams (180+), and the wider Fortune 500 roster.",
   },
 ];
 
