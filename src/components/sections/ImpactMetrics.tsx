@@ -31,10 +31,10 @@ const METRICS: Metric[] = [
   },
   {
     icon: Globe,
-    value: 100,
+    value: 180,
     suffix: "+",
     label: "Countries",
-    desc: "Unique countries reached by products I've designed: Cemex's B2B platform in 50+ markets, WWF/OpenSC supply-chain reach across commodity-source regions, Kuoni Tumlare's travel network, SAP enterprise software, plus the rest of the Fortune 500 roster. De-duplicated union, not a sum of footprints.",
+    desc: "Unique countries reached by products I've designed: Microsoft Teams (180+), SAP enterprise software (180+), Kuoni Tumlare's travel network (100+ destinations), Cemex's B2B platform (50+), plus the rest of the Fortune 500 roster. De-duplicated union, not a sum.",
   },
 ];
 
