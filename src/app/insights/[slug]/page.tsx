@@ -345,7 +345,10 @@ export default async function InsightPage({ params }: RouteProps) {
           </Reveal>
 
           <Reveal delay={200}>
-            <p className="text-2xl md:text-3xl font-light text-zinc-300 leading-snug max-w-3xl">
+            {/* Excerpt spans the full column width (no max-w) so it
+                aligns with the headline above, rather than wrapping
+                short and creating a ragged left-edge column. */}
+            <p className="text-2xl md:text-3xl font-light text-zinc-300 leading-snug">
               {insight.excerpt}
             </p>
           </Reveal>
