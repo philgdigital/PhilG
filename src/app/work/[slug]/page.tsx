@@ -148,8 +148,18 @@ export default async function CaseStudy({ params }: RouteProps) {
           </h1>
         </Reveal>
 
+        {/* Overview paragraph. Matches the visual width of the
+            headline above (which renders at ~1100-1200px wide on
+            lg viewports for typical project titles) so the two
+            blocks read as one composed unit instead of a wide
+            title hovering over a narrow paragraph.
+            line-clamp-3 caps any overview at three lines max; if
+            a project's overview ever overflows that, it gets
+            truncated with an ellipsis. The full content is still
+            available below in the Challenge/Approach sections, so
+            the truncation isn't a content loss. */}
         <Reveal delay={200}>
-          <p className="text-2xl md:text-3xl font-light text-zinc-200 leading-snug max-w-3xl mb-20">
+          <p className="text-2xl md:text-3xl font-light text-zinc-200 leading-snug max-w-6xl mb-20 line-clamp-3">
             {project.overview}
           </p>
         </Reveal>
