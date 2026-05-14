@@ -439,7 +439,7 @@ export default async function InsightPage({ params }: RouteProps) {
             <Link
               href={next.href}
               data-magnetic="true"
-              className="group block hover-target rounded-2xl md:rounded-3xl overflow-hidden border border-white/8 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_60px_-12px_rgba(15,98,254,0.25)] transition-all duration-700 mb-16 md:mb-24 bg-gradient-to-br from-white/[0.02] to-transparent"
+              className="group block hover-target rounded-2xl md:rounded-3xl overflow-hidden border border-white/8 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_60px_-12px_rgba(15,98,254,0.25)] transition-all duration-700 mb-6 md:mb-10 bg-gradient-to-br from-white/[0.02] to-transparent"
             >
               <div className="grid grid-cols-1 md:grid-cols-[44%_56%] items-stretch">
                 {/* IMAGE */}
@@ -519,7 +519,7 @@ export default async function InsightPage({ params }: RouteProps) {
           </Reveal>
 
           <Reveal delay={200}>
-            <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
+            <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 md:pt-8">
               <span
                 aria-hidden
                 className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
