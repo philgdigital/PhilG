@@ -613,9 +613,12 @@ const BodyPage = ({ blocks }: { blocks: Block[] }) => (
   </Page>
 );
 
+// Closing CTA page intentionally has NO top Banner — the page
+// itself IS the hire pitch ("Hire Phil G. for your next product.")
+// so a banner repeating the same invitation reads as noise. The
+// page-number footer stays so the visitor knows it's the end.
 const ClosingCtaPage = () => (
   <Page size="A4" style={styles.page}>
-    <Banner />
     <View style={styles.ctaWrap}>
       <Text style={styles.ctaEyebrow}>BUILT TO SHIP — NOT TO PITCH</Text>
       <Text style={styles.ctaHeadline}>Hire Phil G. for your next product.</Text>
