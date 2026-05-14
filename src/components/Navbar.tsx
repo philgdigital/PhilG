@@ -5,12 +5,27 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { XIcon as X } from "@/components/icons/Icons";
 
-const NAV_LINKS = [
-  { href: "#work", label: "Work" },
-  { href: "#insights", label: "Insights" },
-  { href: "#ai-lab", label: "AI Lab" },
-  { href: "#process", label: "Process" },
-  { href: "#faq", label: "FAQ" },
+/**
+ * Top-level navigation links. The Insights entry is now a real route
+ * (`/insights` — the full archive with filters + search) rather than
+ * an in-page anchor, so the homepage's #insights section becomes a
+ * "latest" snapshot and the full archive lives at its own URL. The
+ * other items remain in-page anchors that resolve on the homepage.
+ *
+ * The `kind` field is read by the link-rendering loop below: anchor
+ * links get the homepage-prefix treatment (so #work resolves from
+ * /work/[slug] too), while route links navigate directly.
+ */
+const NAV_LINKS: Array<{
+  href: string;
+  label: string;
+  kind: "anchor" | "route";
+}> = [
+  { href: "#work", label: "Work", kind: "anchor" },
+  { href: "/insights", label: "Insights", kind: "route" },
+  { href: "#ai-lab", label: "AI Lab", kind: "anchor" },
+  { href: "#process", label: "Process", kind: "anchor" },
+  { href: "#faq", label: "FAQ", kind: "anchor" },
 ];
 
 export function Navbar() {
@@ -105,7 +120,13 @@ export function Navbar() {
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
-              href={pathname === "/" ? link.href : `/${link.href}`}
+              href={
+                link.kind === "route"
+                  ? link.href
+                  : pathname === "/"
+                    ? link.href
+                    : `/${link.href}`
+              }
               data-cursor-no-hint="true"
               className="hover-target px-4 py-2 rounded-full uppercase transition-all duration-300 ease-[var(--ease-out)] hover:text-white hover:bg-white/[0.08]"
             >
@@ -182,7 +203,13 @@ export function Navbar() {
                 style={{ transitionDelay: `${i * 80 + 200}ms` }}
               >
                 <Link
-                  href={pathname === "/" ? link.href : `/${link.href}`}
+                  href={
+                    link.kind === "route"
+                      ? link.href
+                      : pathname === "/"
+                        ? link.href
+                        : `/${link.href}`
+                  }
                   onClick={() => setIsMenuOpen(false)}
                   data-cursor-no-hint="true"
                   className="block text-5xl font-black tracking-tighter text-white uppercase hover:text-[#0f62fe] transition-colors hover-target"

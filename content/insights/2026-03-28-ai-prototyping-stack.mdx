@@ -1,0 +1,26 @@
+---
+title: "The AI prototyping stack I actually use."
+date: 2026-03-28
+category: "AI & Prototyping"
+excerpt: "Custom GPTs, agents, and generative UI: the practical wiring behind shipping a real React prototype in three days, not three quarters."
+readTime: "6 min read"
+---
+
+I get asked at least once a week what AI tools I use to ship faster. The honest answer is short. The unhelpful answer is 'depends on the project'. The useful answer is the specific stack below, which I run on every Fortune 500 engagement.
+
+## The four layers
+
+- Custom GPTs trained on the client's brand voice and design tokens. Writes copy, generates component variants, answers stakeholder questions in the client's actual register.
+- AI agents for research synthesis. Customer interview transcripts go in; structured journey maps and JTBD statements come out, drafted in the client's terminology.
+- Generative UI tooling for rapid prototyping. From prompt to clickable React in minutes, grounded in the client's design tokens, not generic component libraries.
+- AI-aware design system. Component contracts and prop schemas that LLMs can reliably emit. Lets the prototype be production-shaped, not throwaway.
+
+## What it actually feels like
+
+A typical Tuesday on a 12-week sprint: 9 AM I push a discovery synthesis prompt into the research GPT with last week's interviews. By 9:15 I have a draft journey map. I refine for 30 minutes. By 10 I'm prompting the generative UI tooling for three component options, grounded in the client's design tokens. By 11 I have clickable React the engineering team can pull immediately.
+
+That cadence (research to interactive prototype in a morning, every week) was unimaginable five years ago. It's also unimaginable for the people not actually building it. Most of what I see online about AI in design is performative. The stack above is the boring, working version.
+
+> I don't talk about AI. I ship with it. The talking is everyone else's job.
+
+Tools change. The shape of the stack doesn't. Discovery feeds research feeds prototype feeds production. AI compresses each step; the steps remain.

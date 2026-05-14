@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/lib/projects";
-import { insights } from "@/lib/insights";
+import { getAllInsights } from "@/lib/insights";
 
 /**
  * Dynamic sitemap.
@@ -51,6 +51,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const insights = getAllInsights();
+
+  // Individual insight pages
   const insightRoutes: MetadataRoute.Sitemap = insights.map((i) => ({
     url: `${siteUrl}/insights/${i.slug}`,
     lastModified: new Date(i.date),
@@ -58,5 +61,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [homepage, ...workRoutes, ...insightRoutes];
+  // /insights listing root + numbered pagination pages
+  const PAGE_SIZE = 12;
+  const totalPages = Math.max(1, Math.ceil(insights.length / PAGE_SIZE));
+  const listingLastModified = insights[0]
+    ? new Date(insights[0].date)
+    : new Date();
+
+  const listingRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}/insights`,
+      lastModified: listingLastModified,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    ...Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => ({
+      url: `${siteUrl}/insights/page/${i + 2}`,
+      lastModified: listingLastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    })),
+  ];
+
+  return [homepage, ...workRoutes, ...listingRoutes, ...insightRoutes];
 }

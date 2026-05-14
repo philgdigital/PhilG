@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode, HTMLAttributes, OlHTMLAttributes } from "react";
+import { MDXRemote } from "next-mdx-remote/rsc";
 import { ArrowUpLeft, ArrowUpRight } from "@/components/icons/Icons";
 import {
-  insights,
+  getAllInsights,
   getInsight,
-  type ArticleBlock,
-  type InsightType,
+  type Category,
 } from "@/lib/insights";
 import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
@@ -18,7 +19,7 @@ type RouteProps = {
 };
 
 export function generateStaticParams() {
-  return insights.map((i) => ({ slug: i.slug }));
+  return getAllInsights().map((i) => ({ slug: i.slug }));
 }
 
 export async function generateMetadata({
@@ -44,7 +45,7 @@ export async function generateMetadata({
       images: [
         {
           url: insight.image,
-          alt: `${insight.title} - ${insight.type} by Phil G.`,
+          alt: `${insight.title} - ${insight.category} by Phil G.`,
         },
       ],
     },
@@ -57,12 +58,19 @@ export async function generateMetadata({
   };
 }
 
-const TYPE_BADGE: Record<InsightType, string> = {
-  Essay: "text-zinc-300 border-zinc-500/30",
-  Article: "text-[#4589ff] border-[#0f62fe]/30",
-  "Case Study": "text-[#34d399] border-[#10b981]/30",
-  Talk: "text-white border-white/30",
-  Podcast: "text-[#4589ff]/80 border-[#0f62fe]/40",
+/**
+ * Category → badge classes. Six topic-based categories sharing the
+ * IBM-blue / emerald / zinc / white palette. Adding a new category
+ * means: add it to the CATEGORIES tuple in src/lib/insights/schema.ts
+ * and add its row here.
+ */
+const CATEGORY_BADGE: Record<Category, string> = {
+  Leadership: "text-[#4589ff] border-[#0f62fe]/30",
+  "AI & Prototyping": "text-[#34d399] border-[#10b981]/30",
+  "Process & Systems": "text-zinc-300 border-zinc-500/30",
+  "Case Studies": "text-white border-white/30",
+  Psychology: "text-[#4589ff]/80 border-[#0f62fe]/40",
+  "Way of Working": "text-[#34d399]/80 border-[#10b981]/40",
 };
 
 function formatDate(iso: string): string {
@@ -74,70 +82,105 @@ function formatDate(iso: string): string {
   });
 }
 
-function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
+/**
+ * MDX component map. Each markdown element produced by the MDX
+ * compiler is replaced by a styled element here so the rendered
+ * prose visually matches the previous typed-block renderer exactly.
+ *
+ * Reveal wrappers were dropped from the per-block level because
+ * MDX children pass through this map without a stable index, so the
+ * old "staggered delay" can't be reconstructed. The hero image and
+ * headline at the top of the page still have their Reveals, and
+ * each body element still picks up Tailwind transitions on hover /
+ * scroll where applicable. Net UX cost: tiny; the stagger was a
+ * detail only the first few above-the-fold blocks experienced.
+ *
+ * Bullet-list items render the IBM-blue glowing dot as a sibling
+ * span (matching the previous implementation), so the marker has
+ * the same glow + position as before.
+ */
+const mdxComponents = {
+  p: (props: HTMLAttributes<HTMLParagraphElement>) => (
+    <p
+      className="text-zinc-200 font-light text-lg md:text-xl leading-[1.7]"
+      {...props}
+    />
+  ),
+  h2: (props: HTMLAttributes<HTMLHeadingElement>) => (
+    <h2
+      className="text-2xl md:text-3xl font-bold text-white tracking-tight mt-6 md:mt-10"
+      {...props}
+    />
+  ),
+  h3: (props: HTMLAttributes<HTMLHeadingElement>) => (
+    <h3
+      className="text-xl md:text-2xl font-bold text-white tracking-tight mt-4 md:mt-8"
+      {...props}
+    />
+  ),
+  ul: (props: HTMLAttributes<HTMLUListElement>) => (
+    <ul className="flex flex-col gap-4 md:gap-5 list-none" {...props} />
+  ),
+  ol: (props: OlHTMLAttributes<HTMLOListElement>) => (
+    <ol className="flex flex-col gap-4 md:gap-5 list-decimal list-inside text-zinc-200 font-light text-lg md:text-xl leading-[1.65]" {...props} />
+  ),
+  li: ({ children, ...props }: HTMLAttributes<HTMLLIElement>) => (
+    <li
+      className="flex items-baseline gap-4 text-zinc-200 font-light text-lg md:text-xl leading-[1.65]"
+      {...props}
+    >
+      <span
+        aria-hidden
+        className="shrink-0 mt-2 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.5)]"
+      />
+      <span>{children}</span>
+    </li>
+  ),
+  blockquote: ({ children, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
+    <figure className="my-8 md:my-12 py-8 md:py-12 border-y border-white/10 relative">
+      <span
+        aria-hidden
+        className="absolute -top-2 left-0 text-7xl md:text-8xl font-serif italic font-light leading-none text-[#4589ff]/25 select-none"
+      >
+        &ldquo;
+      </span>
+      <blockquote
+        className="font-serif italic font-light text-2xl md:text-3xl lg:text-4xl tracking-tight leading-[1.25] text-white pl-12 md:pl-16"
+        {...props}
+      >
+        {children}
+      </blockquote>
+    </figure>
+  ),
+  a: (props: HTMLAttributes<HTMLAnchorElement> & { href?: string }) => (
+    <a
+      className="text-[#4589ff] underline underline-offset-4 decoration-[#0f62fe]/40 hover:decoration-[#4589ff] transition-colors"
+      {...props}
+    />
+  ),
+  strong: (props: HTMLAttributes<HTMLElement>) => (
+    <strong className="font-bold text-white" {...props} />
+  ),
+  em: (props: HTMLAttributes<HTMLElement>) => (
+    <em className="italic text-zinc-100" {...props} />
+  ),
+  code: (props: HTMLAttributes<HTMLElement>) => (
+    <code
+      className="font-mono text-[0.92em] text-[#34d399] bg-white/[0.04] border border-white/8 rounded px-1.5 py-0.5"
+      {...props}
+    />
+  ),
+};
+
+/**
+ * Article body wrapper. Sets the outer column spacing the old typed-
+ * block renderer carried (flex column + gap-8/gap-10) so paragraph→
+ * heading→paragraph rhythm matches the previous visual.
+ */
+function ArticleBody({ source }: { source: string }) {
   return (
     <div className="flex flex-col gap-8 md:gap-10">
-      {blocks.map((block, i) => {
-        if (block.type === "p") {
-          return (
-            <Reveal key={i} delay={Math.min(i * 30, 300)}>
-              <p className="text-zinc-200 font-light text-lg md:text-xl leading-[1.7]">
-                {block.text}
-              </p>
-            </Reveal>
-          );
-        }
-        if (block.type === "h") {
-          return (
-            <Reveal key={i} delay={Math.min(i * 30, 300)}>
-              <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mt-6 md:mt-10">
-                {block.text}
-              </h2>
-            </Reveal>
-          );
-        }
-        if (block.type === "list") {
-          return (
-            <Reveal key={i} delay={Math.min(i * 30, 300)}>
-              <ul className="flex flex-col gap-4 md:gap-5 list-none">
-                {block.items.map((item, j) => (
-                  <li
-                    key={j}
-                    className="flex items-baseline gap-4 text-zinc-200 font-light text-lg md:text-xl leading-[1.65]"
-                  >
-                    <span
-                      aria-hidden
-                      className="shrink-0 mt-2 w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.5)]"
-                    />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          );
-        }
-        // quote
-        return (
-          <Reveal key={i} delay={Math.min(i * 30, 300)}>
-            <figure className="my-8 md:my-12 py-8 md:py-12 border-y border-white/10 relative">
-              <span
-                aria-hidden
-                className="absolute -top-2 left-0 text-7xl md:text-8xl font-serif italic font-light leading-none text-[#4589ff]/25 select-none"
-              >
-                &ldquo;
-              </span>
-              <blockquote className="font-serif italic font-light text-2xl md:text-3xl lg:text-4xl tracking-tight leading-[1.25] text-white pl-12 md:pl-16">
-                {block.text}
-              </blockquote>
-              {block.attribution && (
-                <figcaption className="mt-6 pl-12 md:pl-16 font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400">
-                  {block.attribution}
-                </figcaption>
-              )}
-            </figure>
-          </Reveal>
-        );
-      })}
+      <MDXRemote source={source} components={mdxComponents as Record<string, (props: HTMLAttributes<HTMLElement>) => ReactNode>} />
     </div>
   );
 }
@@ -153,22 +196,23 @@ export default async function InsightPage({ params }: RouteProps) {
   const insight = getInsight(slug);
   if (!insight) notFound();
 
-  const idx = insights.findIndex((i) => i.slug === insight.slug);
-  const next = insights[(idx + 1) % insights.length];
-  const related = insights
+  const allInsights = getAllInsights();
+  const idx = allInsights.findIndex((i) => i.slug === insight.slug);
+  const next = allInsights[(idx + 1) % allInsights.length];
+  const related = allInsights
     .filter((i) => i.slug !== insight.slug)
     .slice(0, 3);
 
-  // Article JSON-LD. Maps an Insight to schema.org/Article (or
-  // Blog/Article subtype as appropriate) so search engines + LLM
-  // crawlers can pick up the headline, summary, hero image, author
-  // (Phil G. as a Person), publication date, and canonical URL.
-  // The 'articleSection' is the insight type (Essay / Article /
-  // Case Study / Talk / Podcast) so structured-data consumers can
-  // distinguish format at a glance.
+  // Article JSON-LD. Maps an Insight to schema.org/Article so
+  // search engines + LLM crawlers can pick up the headline,
+  // summary, hero image, author (Phil G. as a Person), publication
+  // date, and canonical URL. The 'articleSection' is the topic
+  // category (Leadership / AI & Prototyping / Process & Systems /
+  // Case Studies / Psychology / Way of Working) so structured-data
+  // consumers can distinguish posts by subject at a glance.
   const articleSchema = {
     "@context": "https://schema.org",
-    "@type": insight.type === "Podcast" ? "PodcastEpisode" : "Article",
+    "@type": "Article",
     headline: insight.title,
     description: insight.excerpt,
     image: [`${siteUrl}${insight.image}`],
@@ -189,7 +233,7 @@ export default async function InsightPage({ params }: RouteProps) {
       "@type": "WebPage",
       "@id": `${siteUrl}/insights/${insight.slug}`,
     },
-    articleSection: insight.type,
+    articleSection: insight.category,
   };
 
   return (
@@ -268,7 +312,7 @@ export default async function InsightPage({ params }: RouteProps) {
             <span>All insights</span>
           </Link>
           <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
-            {`0${idx + 1} / 0${insights.length}`}
+            {`0${idx + 1} / 0${allInsights.length}`}
           </span>
         </div>
 
@@ -278,10 +322,10 @@ export default async function InsightPage({ params }: RouteProps) {
             <div className="flex flex-wrap items-center gap-4 mb-10">
               <span
                 className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border ${
-                  TYPE_BADGE[insight.type]
+                  CATEGORY_BADGE[insight.category]
                 }`}
               >
-                {insight.type}
+                {insight.category}
               </span>
               <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
                 {formatDate(insight.date)}
@@ -353,7 +397,7 @@ export default async function InsightPage({ params }: RouteProps) {
               filter: "blur(40px)",
             }}
           />
-          {insight.body && <ArticleBody blocks={insight.body} />}
+          {insight.body && <ArticleBody source={insight.body} />}
         </article>
 
         {/* Closing: next + related. Section divider is a gradient-fade
@@ -397,10 +441,10 @@ export default async function InsightPage({ params }: RouteProps) {
                 >
                   <span
                     className={`inline-flex w-fit items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-2.5 py-1 rounded-full border ${
-                      TYPE_BADGE[r.type]
+                      CATEGORY_BADGE[r.category]
                     }`}
                   >
-                    {r.type}
+                    {r.category}
                   </span>
                   <h4 className="text-base md:text-lg font-medium text-white leading-snug tracking-tight">
                     {r.title}

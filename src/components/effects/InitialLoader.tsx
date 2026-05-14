@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { projects } from "@/lib/projects";
-import { insights } from "@/lib/insights";
+import { getAllInsights } from "@/lib/insights";
 
 /**
  * Initial-paint loader. Editorial / mechanical-watch composition that
@@ -74,7 +74,7 @@ const FADE_MS = 700;
 function getCriticalImages(): string[] {
   const set = new Set<string>();
   projects.forEach((p) => set.add(p.img));
-  insights.forEach((i) => set.add(i.image));
+  getAllInsights().forEach((i) => set.add(i.image));
   return Array.from(set);
 }
 

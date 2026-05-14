@@ -1,13 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
-import { insights, type Insight, type InsightType } from "@/lib/insights";
+import {
+  getLatestInsights,
+  type Insight,
+  type Category,
+} from "@/lib/insights";
 
 type ViewTransitionDocument = Document & {
   startViewTransition?: (callback: () => void | Promise<void>) => unknown;
@@ -43,19 +48,31 @@ function useInsightTransitionClick() {
  * One featured piece sits at the top with a 2-column internal layout
  * (image left, content right at lg). Below, the four most recent pieces
  * sit in a 1/2/4 responsive grid as compact cards. Both card styles
- * share: glass surface, type badge (color-coded by InsightType), date,
+ * share: glass surface, category badge (color-coded by Category), date,
  * title with ArrowUpRight, excerpt, byline + read-time row.
+ *
+ * Posts are loaded from the MDX corpus in /content/insights via the
+ * build-time JSON cache (see src/lib/insights/). Reads the 5 most-
+ * recent posts; if any are flagged `featured: true` in frontmatter the
+ * first match becomes the hero, otherwise the most-recent post fills
+ * the hero slot.
  *
  * Visually distinct from Work (sticky scrollytelling) and Testimonials
  * (avatar bento) so the page reads three different rhythms in a row.
  */
 
-const TYPE_BADGE: Record<InsightType, string> = {
-  Essay: "text-zinc-300 border-zinc-500/30",
-  Article: "text-[#4589ff] border-[#0f62fe]/30",
-  "Case Study": "text-[#34d399] border-[#10b981]/30",
-  Talk: "text-white border-white/30",
-  Podcast: "text-[#4589ff]/80 border-[#0f62fe]/40",
+/**
+ * Category → badge classes. Mirrors the map in
+ * src/app/insights/[slug]/page.tsx — kept in sync by hand. Adding a
+ * new category means updating BOTH places.
+ */
+const CATEGORY_BADGE: Record<Category, string> = {
+  Leadership: "text-[#4589ff] border-[#0f62fe]/30",
+  "AI & Prototyping": "text-[#34d399] border-[#10b981]/30",
+  "Process & Systems": "text-zinc-300 border-zinc-500/30",
+  "Case Studies": "text-white border-white/30",
+  Psychology: "text-[#4589ff]/80 border-[#0f62fe]/40",
+  "Way of Working": "text-[#34d399]/80 border-[#10b981]/40",
 };
 
 function formatDate(iso: string): string {
@@ -67,12 +84,12 @@ function formatDate(iso: string): string {
   });
 }
 
-function TypeBadge({ type }: { type: InsightType }) {
+function CategoryBadge({ category }: { category: Category }) {
   return (
     <span
-      className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border ${TYPE_BADGE[type]}`}
+      className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border ${CATEGORY_BADGE[category]}`}
     >
-      {type}
+      {category}
     </span>
   );
 }
@@ -127,7 +144,7 @@ function FeaturedCard({ insight }: { insight: Insight }) {
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col gap-6 p-8 md:p-10 lg:p-12">
           <div className="flex items-center justify-between gap-4">
-            <TypeBadge type={insight.type} />
+            <CategoryBadge category={insight.category} />
             <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-zinc-400">
               Featured
             </span>
@@ -190,7 +207,7 @@ function RegularCard({ insight }: { insight: Insight }) {
           />
           {/* Type badge over image, top-left */}
           <div className="absolute top-4 left-4 z-10">
-            <TypeBadge type={insight.type} />
+            <CategoryBadge category={insight.category} />
           </div>
         </div>
 
@@ -220,8 +237,11 @@ function RegularCard({ insight }: { insight: Insight }) {
 }
 
 export function Insights() {
-  const featured = insights.find((i) => i.featured) ?? insights[0];
-  const regulars = insights.filter((i) => i.slug !== featured.slug).slice(0, 4);
+  // 5 most-recent posts. First slot = hero (featured if marked,
+  // otherwise the most-recent), next 4 = regular cards.
+  const latest = getLatestInsights(5);
+  const featured = latest.find((i) => i.featured) ?? latest[0];
+  const regulars = latest.filter((i) => i.slug !== featured.slug).slice(0, 4);
 
   return (
     <section
@@ -263,6 +283,25 @@ export function Insights() {
           </Reveal>
         ))}
       </div>
+
+      {/* "Read all insights" CTA pushes visitors to the /insights
+          listing route where the full archive lives with filters +
+          search. Editorial pill in the same style as the FAQ /
+          Process CTAs so the conversion surface reads consistently
+          across the page. */}
+      <Reveal delay={700}>
+        <div className="mt-14 md:mt-20 flex justify-center">
+          <Link
+            href="/insights"
+            data-magnetic="true"
+            data-cursor-no-hint="true"
+            className="group hover-target inline-flex items-center gap-3 px-6 md:px-7 py-3 md:py-3.5 rounded-full border border-white/15 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#0f62fe]/40 transition-all duration-500 font-mono text-[11px] md:text-[12px] tracking-[0.22em] uppercase text-zinc-200 hover:text-white"
+          >
+            <span>Read all insights</span>
+            <ArrowUpRight className="w-4 h-4 text-[#4589ff] transition-transform duration-500 group-hover:rotate-45" />
+          </Link>
+        </div>
+      </Reveal>
     </section>
   );
 }

@@ -41,21 +41,30 @@ Contact: hello@philg.cz · https://www.linkedin.com/in/felipeaela/
 
 ## Insights
 
-- [Design is a leadership problem.](https://philg.cz/insights/design-is-a-leadership-problem):
-  Essay on why design fails when treated as a deliverables function.
-- [The AI prototyping stack I actually use.](https://philg.cz/insights/ai-prototyping-stack):
-  Phil's day-to-day AI-native toolchain (Claude Code, Codex,
-  Gemini, Figma, Miro, pen & paper, whiteboard, Jira) and the
-  prompting + design-system patterns that make it ship.
-- [From insight to shipped product, in days.](https://philg.cz/insights/kuoni-design-system):
-  How a single AI-ready design system at Kuoni Tumlare let twelve
-  designers in Prague ship in parallel across a 100-engineer org.
-- [17 years, 11 countries, 1,000 mentees.](https://philg.cz/insights/seventeen-years-mentees):
-  Mentorship retrospective spanning Meta, Booking.com, Uber, IBM,
-  Accenture, and beyond.
-- [Designing for 50+ countries at Cemex.](https://philg.cz/insights/cemex-50-countries-talk):
-  Talk on operating a single design system across 50+ country
-  contexts.
+Full archive with search and filters lives at
+[/insights](https://philg.cz/insights). Posts are organised under
+six topic categories: **Leadership**, **AI & Prototyping**,
+**Process & Systems**, **Case Studies**, **Psychology**, and
+**Way of Working**.
+
+- [Design is a leadership problem.](https://philg.cz/insights/design-is-a-leadership-problem)
+  — *Leadership*. Why design fails when treated as a deliverables
+  function, and the four moves that get design on the executive
+  dashboard.
+- [The AI prototyping stack I actually use.](https://philg.cz/insights/ai-prototyping-stack)
+  — *AI & Prototyping*. The four-layer AI stack (custom GPTs,
+  research agents, generative UI, AI-aware design system) Phil
+  runs on every Fortune 500 engagement.
+- [From insight to shipped product, in days.](https://philg.cz/insights/kuoni-design-system)
+  — *Case Studies*. How a single AI-ready design system at Kuoni
+  Tumlare let twelve designers in Prague ship in parallel across
+  a 100-engineer org.
+- [17 years, 11 countries, 1,000 mentees.](https://philg.cz/insights/seventeen-years-mentees)
+  — *Way of Working*. What scales when you mentor a thousand
+  designers, and the four traps that don't.
+- [Designing for 50+ countries at Cemex.](https://philg.cz/insights/cemex-50-countries-talk)
+  — *Case Studies*. Enterprise design at scale: regulatory,
+  regional, and operational constraints under one design system.
 
 ## Topical Areas
 
