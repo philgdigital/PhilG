@@ -138,15 +138,15 @@ const mdxComponents = {
     </li>
   ),
   blockquote: ({ children, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
-    <figure className="my-10 md:my-16 py-10 md:py-14 border-y border-white/10 relative">
+    <figure className="my-12 md:my-20 py-12 md:py-16 border-y border-white/10 relative">
       <span
         aria-hidden
-        className="absolute -top-4 left-0 text-8xl md:text-9xl font-serif italic font-light leading-none text-[#4589ff]/25 select-none"
+        className="absolute -top-6 md:-top-8 left-0 text-9xl md:text-[10rem] font-serif italic font-light leading-none text-[#4589ff]/25 select-none"
       >
         &ldquo;
       </span>
       <blockquote
-        className="font-serif italic font-light text-3xl md:text-4xl lg:text-5xl tracking-tight leading-[1.2] text-white pl-14 md:pl-20"
+        className="font-serif italic font-light text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white pl-16 md:pl-24"
         {...props}
       >
         {children}
