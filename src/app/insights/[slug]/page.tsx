@@ -200,34 +200,37 @@ export default async function InsightPage({ params }: RouteProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Navbar />
-      {/* NEAR-SOLID DARK BASE. 0.93 alpha kills the global bg
-          orbs almost entirely (only ~7% of their colour bleeds
-          through), so there's no orb-edge contrast pattern
-          underneath this page anymore. The viewport reads as
-          nearly pure black. */}
+      {/* DARK BASE. Uniform 0.78 alpha — no shape variation at
+          all in this layer, so it can never be the source of a
+          perceived edge. Mutes the global bg orbs underneath by
+          ~78%, leaving a faint ~22% to add subtle movement. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
-        style={{ background: "rgba(0, 0, 0, 0.93)" }}
+        style={{ background: "rgba(0, 0, 0, 0.78)" }}
       />
-      {/* SOFT DIAGONAL COLOUR WASH. A single linear gradient at
-          135deg that fades smoothly from a faint IBM-blue tint in
-          the top-left to a faint emerald tint in the bottom-right
-          across the entire viewport. Alpha is intentionally tiny
-          (0.10 / 0.08) so the colour is whisper-quiet - just a
-          soft warm/cool variation laid over the near-black base,
-          not bright corner spots.
-          A linear gradient has NO corners, NO defined shape, NO
-          radial-falloff stop. Its slope is constant across the
-          whole viewport so there is mathematically no point at
-          which the gradient changes character - which means there
-          can be no visible 'edge mark' anywhere on the page. */}
+      {/* INVERTED VIGNETTE — four corner radial glows.
+          Each radial is an ellipse 160% x 140%, anchored at one
+          corner. The body extends far past the viewport, so the
+          `transparent 100%` stop is way off-screen and never
+          reads as a visible falloff edge. Six-stop fade per
+          radial gives a continuous slope (no banding). Diagonal
+          colour pairing (TL+BR = IBM blue, TR+BL = emerald)
+          produces natural blue-to-emerald cross-fades through
+          the page. Every viewport pixel receives contribution
+          from all four radials, so the centre reading column is
+          never zero-tinted — no "colour-present vs colour-
+          absent" boundary anywhere. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
         style={{
-          background:
-            "linear-gradient(135deg, rgba(15, 98, 254, 0.10) 0%, transparent 45%, transparent 55%, rgba(16, 185, 129, 0.08) 100%)",
+          background: `
+            radial-gradient(ellipse 160% 140% at 0% 0%, rgba(15, 98, 254, 0.55) 0%, rgba(15, 98, 254, 0.40) 15%, rgba(15, 98, 254, 0.25) 30%, rgba(15, 98, 254, 0.15) 45%, rgba(15, 98, 254, 0.07) 65%, rgba(15, 98, 254, 0.02) 85%, transparent 100%),
+            radial-gradient(ellipse 160% 140% at 100% 0%, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.40) 15%, rgba(16, 185, 129, 0.25) 30%, rgba(16, 185, 129, 0.15) 45%, rgba(16, 185, 129, 0.07) 65%, rgba(16, 185, 129, 0.02) 85%, transparent 100%),
+            radial-gradient(ellipse 160% 140% at 0% 100%, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.40) 15%, rgba(16, 185, 129, 0.25) 30%, rgba(16, 185, 129, 0.15) 45%, rgba(16, 185, 129, 0.07) 65%, rgba(16, 185, 129, 0.02) 85%, transparent 100%),
+            radial-gradient(ellipse 160% 140% at 100% 100%, rgba(15, 98, 254, 0.55) 0%, rgba(15, 98, 254, 0.40) 15%, rgba(15, 98, 254, 0.25) 30%, rgba(15, 98, 254, 0.15) 45%, rgba(15, 98, 254, 0.07) 65%, rgba(15, 98, 254, 0.02) 85%, transparent 100%)
+          `,
         }}
       />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
