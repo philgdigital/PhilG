@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# Except the example template — committed so devs know which env
+# vars exist (ADMIN_PASSWORD etc.). Real secrets stay in .env.local.
+!.env.example
 
 # vercel
 .vercel
