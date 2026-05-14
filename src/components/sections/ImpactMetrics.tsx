@@ -31,10 +31,10 @@ const METRICS: Metric[] = [
   },
   {
     icon: Globe,
-    value: 50,
+    value: 100,
     suffix: "+",
     label: "Countries",
-    desc: "Cemex's global B2B platform reaches 50+ markets through one unified design system. Phil shipped the design system; the system shipped wherever Cemex sells.",
+    desc: "Unique countries reached by products I've designed: Cemex's B2B platform in 50+ markets, WWF/OpenSC supply-chain reach across commodity-source regions, Kuoni Tumlare's travel network, SAP enterprise software, plus the rest of the Fortune 500 roster. De-duplicated union, not a sum of footprints.",
   },
 ];
 
