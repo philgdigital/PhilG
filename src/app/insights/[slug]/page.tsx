@@ -138,15 +138,23 @@ const mdxComponents = {
     </li>
   ),
   blockquote: ({ children, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
-    <figure className="my-12 md:my-20 py-12 md:py-16 border-y border-white/10 relative">
+    // Editorial pull-quote — mirrors the home PullQuote section
+    // (see src/components/sections/PullQuote.tsx). Block-level
+    // open-quote glyph above + quote text flowing at the column
+    // edge, no borders, no inset padding. The previous design's
+    // pl-16/24 inset and border-y frame were visually compressing
+    // the quote, so the user reported it as "small" even though
+    // the font-size matched. Lifting those constraints lets the
+    // quote breathe at full column width like the home version.
+    <figure className="my-12 md:my-20">
       <span
         aria-hidden
-        className="absolute -top-6 md:-top-8 left-0 text-9xl md:text-[10rem] font-serif italic font-light leading-none text-[#4589ff]/25 select-none"
+        className="block font-serif italic font-light text-8xl md:text-9xl leading-none text-[#4589ff]/25 mb-2 md:mb-4 select-none"
       >
         &ldquo;
       </span>
       <blockquote
-        className="font-serif italic font-light text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white pl-16 md:pl-24"
+        className="font-serif italic font-light text-3xl md:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white"
         {...props}
       >
         {children}
