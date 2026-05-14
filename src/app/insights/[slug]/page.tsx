@@ -138,15 +138,15 @@ const mdxComponents = {
     </li>
   ),
   blockquote: ({ children, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
-    <figure className="my-8 md:my-12 py-8 md:py-12 border-y border-white/10 relative">
+    <figure className="my-10 md:my-16 py-10 md:py-14 border-y border-white/10 relative">
       <span
         aria-hidden
-        className="absolute -top-2 left-0 text-7xl md:text-8xl font-serif italic font-light leading-none text-[#4589ff]/25 select-none"
+        className="absolute -top-4 left-0 text-8xl md:text-9xl font-serif italic font-light leading-none text-[#4589ff]/25 select-none"
       >
         &ldquo;
       </span>
       <blockquote
-        className="font-serif italic font-light text-2xl md:text-3xl lg:text-4xl tracking-tight leading-[1.25] text-white pl-12 md:pl-16"
+        className="font-serif italic font-light text-3xl md:text-4xl lg:text-5xl tracking-tight leading-[1.2] text-white pl-14 md:pl-20"
         {...props}
       >
         {children}
@@ -553,9 +553,12 @@ export default async function InsightPage({ params }: RouteProps) {
             {/* Closing CTA. Uses the shared ClosingCallCTA card so the
                 conversion surface here is identical to the Process
                 section on the homepage. The gradient-fade hairline
-                above continues the divider rhythm with the 'Read next'
-                section without reading as a "marked" edge. */}
-            <div className="mt-20 md:mt-24 pt-16 relative">
+                above continues the divider rhythm with the related
+                cards above without reading as a "marked" edge.
+                Spacing mirrors the gap between the "Continue reading"
+                card and the related row above (mt-6 md:mt-10 pt-6
+                md:pt-8) so the section's vertical rhythm is uniform. */}
+            <div className="mt-6 md:mt-10 pt-6 md:pt-8 relative">
               <span
                 aria-hidden
                 className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
