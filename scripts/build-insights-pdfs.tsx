@@ -161,7 +161,11 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontFamily: "Helvetica",
     fontSize: 11,
-    paddingTop: 88,
+    // paddingTop dropped 88 → 56: the banner sits in the top
+    // padding zone via absolute positioning; the previous 88pt
+    // left a ~32pt void between the banner and the body content
+    // that read as wasted space.
+    paddingTop: 56,
     paddingBottom: 70,
     paddingHorizontal: 56,
   },
@@ -173,10 +177,13 @@ const styles = StyleSheet.create({
   // closing pages.
   bannerStrip: {
     position: "absolute",
-    top: 36,
+    // Pulled up 36 → 22 to match the tighter paddingTop so the
+    // banner sits ~22pt from the top edge with ~28pt of breathing
+    // room before body content starts.
+    top: 22,
     left: 56,
     right: 56,
-    paddingBottom: 8,
+    paddingBottom: 5,
     borderBottomWidth: 0.5,
     borderBottomColor: COLORS.hairline,
     flexDirection: "row",
