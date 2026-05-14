@@ -432,8 +432,8 @@ export default async function InsightPage({ params }: RouteProps) {
           <div
             className={`relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 ${
               insight.video || insight.audio
-                ? "mb-12 md:mb-16"
-                : "mb-20 md:mb-32"
+                ? "mb-8 md:mb-12"
+                : "mb-10 md:mb-14"
             } shadow-2xl max-w-6xl mx-auto`}
             style={{ viewTransitionName: `insight-card-${insight.slug}` }}
           >
@@ -477,7 +477,7 @@ export default async function InsightPage({ params }: RouteProps) {
             the dark band is wider than the text and there's no visible
             edge against the body. Top/bottom fades soften the handoff
             to the hero image above and the 'Read next' section below. */}
-        <article className="relative max-w-3xl mx-auto py-14 md:py-20">
+        <article className="relative max-w-3xl mx-auto pt-6 md:pt-10 pb-14 md:pb-20">
           <div
             aria-hidden
             className="pointer-events-none absolute -inset-x-8 md:-inset-x-16 lg:-inset-x-24 inset-y-0 -z-10 rounded-[2rem]"
