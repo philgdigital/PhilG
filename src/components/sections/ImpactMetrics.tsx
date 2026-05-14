@@ -34,7 +34,7 @@ const METRICS: Metric[] = [
     value: 100,
     suffix: "+",
     label: "Countries",
-    desc: "Cumulative reach of products I've shipped: Cemex (50+ markets), SAP (180+), Kuoni Tumlare (35+), and the rest of the Fortune 500 roster combined.",
+    desc: "Unique countries where products I've designed are in production - across Cemex's global B2B platform, SAP enterprise software, Kuoni Tumlare's travel network, and the rest of the Fortune 500 roster.",
   },
 ];
 
