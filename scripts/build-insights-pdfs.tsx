@@ -633,14 +633,18 @@ const ClosingCtaPage = () => (
   <Page size="A4" style={styles.page}>
     <View style={styles.ctaWrap}>
       <Text style={styles.ctaEyebrow}>BUILT TO SHIP — NOT TO PITCH</Text>
-      {/* Explicit line break — locks the wrap at the
-          intended editorial cadence:
+      {/* Explicit two-Text break so the headline reads:
             "Hire Phil G. for your"
             "next project."
-          Natural wrap was orphaning "project." on its own line. */}
-      <Text style={styles.ctaHeadline}>
-        Hire Phil G. for your{"\n"}next project.
-      </Text>
+          A single Text with embedded "\n" was getting normalised
+          by react-pdf's whitespace handling, so the wrap fell back
+          to its natural break ("for your next" / "project.").
+          Splitting into two Text elements is the only reliable way
+          to force the editorial cadence. */}
+      <View>
+        <Text style={styles.ctaHeadline}>Hire Phil G. for your</Text>
+        <Text style={styles.ctaHeadline}>next project.</Text>
+      </View>
       <Text style={styles.ctaSubline}>
         Embedded senior product designer + builder. Discovery, AI-native
         prototyping, design leadership, design systems, production-grade React.
