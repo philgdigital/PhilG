@@ -200,46 +200,59 @@ export default async function InsightPage({ params }: RouteProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Navbar />
-      {/* BRAND-COLOUR BASE.
-          A soft diagonal blend from IBM blue (top-left) to
-          emerald (bottom-right) covering the whole viewport at
-          0.55 alpha. This is the colour we want REVEALED at the
-          edges — it sits underneath the dark vignette below and
-          is only visible where the vignette has faded away.
-          Uniform diagonal: no shape, no corners, no falloff, so
-          this layer alone cannot create any perceived edge. */}
+      {/* ATMOSPHERIC BASE — single off-screen light source.
+          Carbon Black (#0a0a0c) field with TWO directional light
+          sources whose CENTRES sit outside the viewport, so what
+          the page shows is only the trailing fade of a much
+          larger glow. Asymmetric on purpose — feels like indirect
+          window light entering a dark room, not a symmetric
+          spotlight.
+
+          - IBM blue light source: anchored at (-5%, -25%), i.e.
+            slightly above-left of the visible area. The viewport
+            picks up only the lower-right hemisphere of this
+            radial — brightest near the upper-left corner of the
+            page, fading rightward and downward through 6 stops.
+          - Emerald counterweight: anchored at (108%, 112%), past
+            the bottom-right. Quieter (~half the alpha of the
+            blue) so it reads as a supporting accent, not a
+            second equal subject. Diagonal opposition with the
+            blue creates a cinematic directional composition.
+
+          Layered as a single multi-image background on a solid
+          carbon-black canvas, so the global AnimatedGradient
+          orbs underneath at z-[-2] are fully painted over — the
+          insight page owns its own atmosphere. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
         style={{
-          background:
-            "linear-gradient(135deg, rgba(15, 98, 254, 0.55) 0%, rgba(16, 185, 129, 0.55) 100%)",
+          backgroundColor: "#0a0a0c",
+          backgroundImage: `
+            radial-gradient(ellipse 95% 80% at -5% -25%, rgba(15, 98, 254, 0.45) 0%, rgba(15, 98, 254, 0.28) 18%, rgba(15, 98, 254, 0.16) 35%, rgba(15, 98, 254, 0.08) 55%, rgba(15, 98, 254, 0.03) 78%, transparent 100%),
+            radial-gradient(ellipse 70% 60% at 108% 112%, rgba(16, 185, 129, 0.22) 0%, rgba(16, 185, 129, 0.12) 30%, rgba(16, 185, 129, 0.05) 60%, rgba(16, 185, 129, 0.02) 82%, transparent 100%)
+          `,
         }}
       />
-      {/* HEAVY CENTRED DARK VIGNETTE.
-          ONE centred radial-gradient — not four corner radials.
-          Aspect-matched ellipse (120% 120%) so the radial reads
-          as round relative to the viewport, not stretched.
-          Nine stops from 0.96 alpha at the centre to fully
-          transparent at 100%. The dark plateau spans 0-22% of
-          the gradient and stays effectively opaque (0.95-0.96)
-          across the entire reading column at the page centre —
-          this is the "expanded black" the user asked for.
-          From 22-100% the alpha falls continuously through nine
-          stops, so the slope changes are tiny and no banding or
-          boundary is perceived. The transparent 100% stop sits
-          OUTSIDE the viewport (because ellipse 120% extends
-          past the viewport corners) — so the eye never sees a
-          "colour stops here" line. What it sees is a smooth
-          fade from heavy black at the centre to faint dark at
-          the corners, revealing more brand colour the further
-          you look from the centre. */}
+      {/* FILM GRAIN — fractal noise overlay.
+          200x200 SVG tile baked with feTurbulence (high
+          frequency, 2 octaves, stitched) and clamped to a
+          luminance-only matrix so the noise is monochrome.
+          Tiled across the viewport at opacity 0.06 with
+          mix-blend-mode: overlay so it adds depth in midtones
+          without darkening shadows or blowing out highlights.
+          This is the texture detail that separates "designed
+          page" from "default Tailwind dark canvas". */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
         style={{
-          background:
-            "radial-gradient(ellipse 120% 120% at 50% 50%, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.95) 22%, rgba(0, 0, 0, 0.90) 33%, rgba(0, 0, 0, 0.78) 44%, rgba(0, 0, 0, 0.58) 55%, rgba(0, 0, 0, 0.35) 66%, rgba(0, 0, 0, 0.18) 77%, rgba(0, 0, 0, 0.06) 88%, transparent 100%)",
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>\")",
+          backgroundSize: "200px 200px",
+          backgroundRepeat: "repeat",
+          opacity: 0.06,
+          mixBlendMode: "overlay",
         }}
       />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
