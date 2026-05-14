@@ -5,13 +5,9 @@ import { useSyncExternalStore } from "react";
 import { ArrowUpLeft } from "@/components/icons/Icons";
 import {
   readInsightsBackRef,
+  SSR_DEFAULT,
   type InsightsBackRef,
 } from "@/lib/insights-back-ref";
-
-const SSR_DEFAULT: InsightsBackRef = {
-  href: "/insights",
-  label: "All insights",
-};
 
 /**
  * Empty subscribe callback. sessionStorage is read once at mount;
@@ -23,13 +19,12 @@ const SSR_DEFAULT: InsightsBackRef = {
 const subscribe = () => () => {};
 
 /**
- * useSyncExternalStore reads from an external (non-React) data
- * source — here, sessionStorage — without triggering the
- * "setState in useEffect" lint rule that the simpler
- * useEffect+useState pattern hits. It also handles the SSR/CSR
- * snapshot contract cleanly: the server snapshot returns the
- * safe default ("All insights" → /insights), and the client
- * snapshot reads the actual stored referrer on first paint.
+ * Server snapshot: returns the same SSR_DEFAULT module-level
+ * constant every call. Pairing this with readInsightsBackRef's
+ * stable-snapshot cache gives useSyncExternalStore identity-stable
+ * values across renders, avoiding the infinite-render-loop bug
+ * that broke client-side navigation before commit b3f4d2c was
+ * patched.
  */
 function getServerSnapshot(): InsightsBackRef {
   return SSR_DEFAULT;

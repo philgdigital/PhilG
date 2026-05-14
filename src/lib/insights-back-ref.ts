@@ -49,6 +49,25 @@ export type InsightsBackRef = {
  */
 export const HOME_REF = "HOME";
 
+/**
+ * Safe default reference. Used during SSR and whenever the visitor
+ * lands on a detail page without a stored referrer (direct URL,
+ * search result, share link, fresh tab).
+ *
+ * Declared as a module-level constant so the SAME object reference
+ * is returned every time the default branch is taken — critical for
+ * the useSyncExternalStore contract (see below).
+ */
+export const SSR_DEFAULT: InsightsBackRef = Object.freeze({
+  href: "/insights",
+  label: "All insights",
+});
+
+const HOME_BACK_REF: InsightsBackRef = Object.freeze({
+  href: "/#insights",
+  label: "Back to home",
+});
+
 export function setInsightsBackRef(value: string): void {
   if (typeof window === "undefined") return;
   try {
@@ -61,15 +80,44 @@ export function setInsightsBackRef(value: string): void {
 }
 
 /**
+ * Snapshot cache. The readInsightsBackRef() function is consumed by
+ * React's useSyncExternalStore, which uses Object.is to detect "did
+ * the value change between renders". If we returned a freshly-built
+ * object on every call, even with identical content, Object.is(prev,
+ * new) would always be false and React would re-render in an
+ * infinite loop (the bug that caused the post-navigation white
+ * "page couldn't load" error before this fix).
+ *
+ * The cache returns the SAME reference until the underlying
+ * sessionStorage value actually changes. The key is the raw
+ * sessionStorage string (or null); the value is the resolved
+ * InsightsBackRef object. `cachedKey === undefined` is the
+ * "never read yet" sentinel (distinct from `null`, which means
+ * "read and was absent").
+ */
+let cachedKey: string | null | undefined = undefined;
+let cachedSnapshot: InsightsBackRef = SSR_DEFAULT;
+
+function resolveRef(stored: string | null): InsightsBackRef {
+  if (!stored) return SSR_DEFAULT;
+  if (stored === HOME_REF) return HOME_BACK_REF;
+  // Same-origin path (with optional search string). Defensive:
+  // ensure it starts with "/".
+  if (stored.startsWith("/")) {
+    return { href: stored, label: "All insights" };
+  }
+  return SSR_DEFAULT;
+}
+
+/**
  * Read the stored referrer and interpret it into a {href, label}
- * pair. Returns the default ("All insights" → /insights) when no
- * referrer is stored (direct landing, cleared session, etc.).
+ * pair. Returns the same object reference across calls until the
+ * underlying sessionStorage value changes — stable-snapshot
+ * contract required by useSyncExternalStore.
  */
 export function readInsightsBackRef(): InsightsBackRef {
   if (typeof window === "undefined") {
-    // SSR pass — render the safe default. The client-side hydration
-    // will swap to the correct ref on mount.
-    return { href: "/insights", label: "All insights" };
+    return SSR_DEFAULT;
   }
   let stored: string | null = null;
   try {
@@ -77,16 +125,10 @@ export function readInsightsBackRef(): InsightsBackRef {
   } catch {
     stored = null;
   }
-  if (!stored) {
-    return { href: "/insights", label: "All insights" };
+  if (stored === cachedKey) {
+    return cachedSnapshot;
   }
-  if (stored === HOME_REF) {
-    return { href: "/#insights", label: "Back to home" };
-  }
-  // Any other value is treated as a same-origin path (with optional
-  // search string). Defensive: ensure it starts with "/".
-  if (stored.startsWith("/")) {
-    return { href: stored, label: "All insights" };
-  }
-  return { href: "/insights", label: "All insights" };
+  cachedKey = stored;
+  cachedSnapshot = resolveRef(stored);
+  return cachedSnapshot;
 }
