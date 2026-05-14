@@ -293,6 +293,16 @@ function getStyles(theme: Theme) {
     objectFit: "cover",
     borderRadius: 8,
   },
+  // Print variant: keeps the hero's vertical footprint as empty
+  // space so the title block lands at the SAME Y as in the digital
+  // variant. Without this the title would jump up to where the
+  // brand row sits and the cover would lose its "cover" feel.
+  // Height matches `coverHero` exactly (the ribbon below the image
+  // overlaps via marginTop:-3 so it adds no net height).
+  coverHeroSpacer: {
+    width: "100%",
+    height: 304,
+  },
   // Two flat blocks stacked horizontally fake an IBM-blue →
   // emerald gradient strip; react-pdf has no CSS gradient.
   coverHeroRibbon: {
@@ -611,7 +621,7 @@ const CoverPage = ({
           </Text>
         </View>
 
-        {showHero && (
+        {showHero ? (
           <View>
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image src={coverImagePath} style={styles.coverHero} />
@@ -623,6 +633,13 @@ const CoverPage = ({
               <View style={styles.coverHeroRibbonEmerald} />
             </View>
           </View>
+        ) : (
+          // Print variant: hero image is intentionally omitted but
+          // we reserve its vertical footprint so the title block
+          // sits at the SAME Y as in the digital cover. Makes the
+          // print cover read as a typographic spread (a real
+          // cover) instead of "header crammed against the title".
+          <View style={styles.coverHeroSpacer} />
         )}
 
         {/* Title block */}
