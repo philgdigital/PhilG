@@ -200,21 +200,24 @@ export default async function InsightPage({ params }: RouteProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Navbar />
-      {/* CENTER-DARK SOFT VIGNETTE. One single radial that's darker
-          at the centre (where the article reading column sits) and
-          fades smoothly to transparent at the edges. Replaces BOTH
-          the previous edge-darkening vignette AND the rectangular
-          1100px-wide column halo that was previously rendered
-          inside <main> - that rectangle was the visible 'edge mark'
-          the user flagged. A single soft radial has no defined
-          shape, so there's no rectangle, no box, no visible
-          boundary - just a smooth dark pool fading outward. */}
+      {/* DARK BASE LAYER. A mostly-uniform dark wash across the
+          entire viewport with just a very subtle extra darkening
+          at the centre. No defined ellipse, no radial shape edge
+          visible - because the dark is everywhere at roughly the
+          same level, there IS no edge for the eye to catch.
+          The brand glow layered on top (z-0) is what creates the
+          colour-at-edges / dark-at-centre composition; this layer
+          just guarantees the underlying darkness is uniform so
+          the brand glow can fade in/out smoothly without
+          competing with a radial-shaped pool of darkness. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
         style={{
-          background:
-            "radial-gradient(ellipse 55% 75% at center, rgba(2, 2, 5, 0.7) 0%, rgba(2, 2, 5, 0.45) 30%, rgba(2, 2, 5, 0.22) 55%, transparent 88%)",
+          background: `
+            radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 75%),
+            rgba(0, 0, 0, 0.55)
+          `,
         }}
       />
       {/* BRAND-COLOUR EDGE GLOW. Fixed-position. Four large corner
