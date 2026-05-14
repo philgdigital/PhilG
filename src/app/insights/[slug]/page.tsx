@@ -14,6 +14,7 @@ import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsBackLink } from "@/components/insights/InsightsBackLink";
+import { ArticleMedia } from "@/components/insights/players/ArticleMedia";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -366,10 +367,17 @@ export default async function InsightPage({ params }: RouteProps) {
               date + read-time row above carries the editorial metadata. */}
         </header>
 
-        {/* Hero image */}
+        {/* Hero image. Bottom margin is reduced when companion media
+            (video / audio) follows below, since ArticleMedia renders
+            its own breathing space. When there's no companion media,
+            the original mb-20/32 gap to the article body is restored. */}
         <Reveal delay={400}>
           <div
-            className="relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 mb-20 md:mb-32 shadow-2xl max-w-6xl mx-auto"
+            className={`relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 ${
+              insight.video || insight.audio
+                ? "mb-12 md:mb-16"
+                : "mb-20 md:mb-32"
+            } shadow-2xl max-w-6xl mx-auto`}
             style={{ viewTransitionName: `insight-card-${insight.slug}` }}
           >
             <Image
@@ -384,6 +392,22 @@ export default async function InsightPage({ params }: RouteProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c]/60 via-transparent to-transparent" />
           </div>
         </Reveal>
+
+        {/* COMPANION MEDIA — optional. Renders the YouTube video
+            embed (custom-skinned, no YouTube branding) and/or the
+            audio narration player (inline + minimised sticky pill
+            that fades in on scroll). When neither field is set in
+            frontmatter, the whole block renders nothing and the
+            article body follows directly after the hero image. */}
+        {(insight.video || insight.audio) && (
+          <Reveal delay={500}>
+            <ArticleMedia
+              title={insight.title}
+              video={insight.video}
+              audio={insight.audio}
+            />
+          </Reveal>
+        )}
 
         {/* Article body. Sits inside its OWN strong dark backdrop so
             the white prose reads with maximum contrast on top of the

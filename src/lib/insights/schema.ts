@@ -48,6 +48,21 @@ export const FrontmatterSchema = z.object({
   readTime: z.string().min(1),
   image: z.string().optional().default("/images/about.jpg"),
   featured: z.boolean().optional().default(false),
+  /**
+   * Optional companion video for the article. Must be a YouTube URL
+   * (youtube.com/watch?v=… or youtu.be/…). The player renders the
+   * embed but strips YouTube chrome via a custom skin — see
+   * src/components/insights/VideoPlayer.tsx.
+   */
+  video: z.string().url().optional(),
+  /**
+   * Optional MP3 audio companion (Phil's narration of the article).
+   * Path under /public (typically /audio/{slug}.mp3) or an external
+   * absolute URL. The audio player mounts inline at the top of the
+   * article body AND in a minimised sticky pill that appears once
+   * the inline player scrolls off-screen.
+   */
+  audio: z.string().optional(),
 });
 
 export type Frontmatter = z.infer<typeof FrontmatterSchema>;

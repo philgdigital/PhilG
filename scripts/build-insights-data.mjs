@@ -85,6 +85,20 @@ function validate(file, fm) {
   if (fm.featured !== undefined && typeof fm.featured !== "boolean") {
     fail(file, "frontmatter.featured, if provided, must be a boolean");
   }
+  // Optional video URL — must be a string and look like a URL.
+  // Loose validation here; the player component handles parsing
+  // YouTube IDs out of various URL shapes (youtu.be vs youtube.com).
+  if (fm.video !== undefined) {
+    if (typeof fm.video !== "string" || !/^https?:\/\//.test(fm.video)) {
+      fail(file, "frontmatter.video, if provided, must be an absolute URL");
+    }
+  }
+  // Optional audio path/URL — string only. Validated loosely; the
+  // player will accept either a relative path under /public or an
+  // absolute URL.
+  if (fm.audio !== undefined && typeof fm.audio !== "string") {
+    fail(file, "frontmatter.audio, if provided, must be a string path or URL");
+  }
 }
 
 function slugFromFilename(file) {
@@ -124,6 +138,10 @@ function main() {
       readTime: fm.readTime,
       image: typeof fm.image === "string" ? fm.image : "/images/about.jpg",
       featured: fm.featured === true,
+      // Optional companion media. Undefined when not provided — the
+      // detail page checks for presence before rendering the players.
+      ...(typeof fm.video === "string" ? { video: fm.video } : {}),
+      ...(typeof fm.audio === "string" ? { audio: fm.audio } : {}),
       slug,
       body: content.trim(),
       href: `/insights/${slug}`,
