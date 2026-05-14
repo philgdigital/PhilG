@@ -131,14 +131,18 @@ export function PdfDownloadModal({ slug, title }: Props) {
           to that subtree, so the modal renders BEHIND sibling
           stacking contexts (the page hero, the navbar). Rendering
           at document.body level is the only fix that stays robust
-          even if more transformed ancestors get added later. */}
+          even if more transformed ancestors get added later.
+          z-[200] matches the canonical modal layer used by
+          ProjectFormModal — the CustomCursor at z-[298-300] is
+          deliberately layered above modals so its tracking ring
+          + hint pill stay visible while the modal is open. */}
       {open &&
         createPortal(
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="pdf-download-title"
-            className="fixed inset-0 z-[2147483647] flex items-center justify-center p-4 sm:p-6 backdrop-blur-2xl transition-opacity duration-300"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 backdrop-blur-2xl transition-opacity duration-300"
           >
             {/* Backdrop — full-bleed click target that dismisses.
                 Opacity bumped from /70 → /95 so article content
