@@ -298,16 +298,14 @@ export function Insights() {
       </div>
 
       {/* CTA inviting visitors to the full /insights archive.
-          Three-row editorial composition:
-            1. Eyebrow with a live "5 of N" count so visitors see
-               how much more is in the archive beyond what the
-               section showed.
+          Two-row composition:
+            1. Eyebrow with a live "N of M shown · X more in the
+               archive" count — only rendered when there are more
+               posts beyond the 5 the section displays.
             2. Primary pill button with IBM-blue accent border +
                glow on hover. Sized larger than a utility link so
                it reads as the natural conversion surface for the
-               section.
-            3. Subline restating the value: search + filters +
-               every piece. */}
+               section. */}
       <Reveal delay={700}>
         <div className="mt-16 md:mt-24 flex flex-col items-center gap-4">
           {remainder > 0 && (
@@ -324,9 +322,6 @@ export function Insights() {
             <span>Browse the full archive</span>
             <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-[#4589ff] transition-transform duration-500 group-hover:rotate-45 group-hover:text-white" />
           </Link>
-          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-zinc-500 text-center max-w-md">
-            Search, filter by category, browse every piece I&apos;ve written.
-          </span>
         </div>
       </Reveal>
     </section>
