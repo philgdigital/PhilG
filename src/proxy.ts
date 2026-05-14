@@ -1,27 +1,26 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Admin middleware. Two jobs:
+ * Admin proxy. Gates /admin/* and /api/admin/* on the
+ * philg_admin=ok cookie (set by POST /api/admin/login after a
+ * successful password check).
  *
- * 1. PRODUCTION GATE — the /admin UI + /api/admin/* routes are
- *    LOCAL-ONLY by design. The filesystem on Vercel is read-only
- *    at runtime, so a deployed admin couldn't write MDX files
- *    anyway. We hard-block these paths in any non-development
- *    environment with a 404, hiding the surface from the public
- *    web entirely.
+ * The admin works in BOTH local dev and production:
+ *   - DEV: MDX writes go to the local filesystem under
+ *     /content/insights and /public/audio.
+ *   - PRODUCTION: MDX writes commit through the GitHub API to the
+ *     philgdigital/PhilG repo. Audio uploads land in Vercel Blob.
+ *     Vercel auto-rebuilds on the commit, so saved posts go live
+ *     within ~60 s.
  *
- * 2. AUTH — for the local dev environment, every /admin/* request
- *    (except the login page) and every /api/admin/* request
- *    (except /api/admin/login itself) requires the
- *    `philg_admin=ok` httpOnly cookie that's set by a successful
- *    POST to /api/admin/login. Missing/invalid cookie redirects
- *    to /admin/login (for page navigations) or returns 401 (for
- *    API calls).
- *
- * The cookie is a static sentinel value rather than a JWT or
- * session token because the threat model is "Phil on his own
- * laptop". A leaked cookie wouldn't matter — production blocks
- * the route entirely.
+ * Threat model: a leaked cookie can't reveal anything sensitive
+ * (the cookie value is a static sentinel), but it COULD let an
+ * attacker push commits via the GitHub token. Mitigations:
+ *   - Strong ADMIN_PASSWORD env var.
+ *   - HttpOnly + sameSite=strict cookie.
+ *   - 12 h session expiry.
+ *   - Production deployments should set ADMIN_PASSWORD to a long
+ *     random string and rotate periodically.
  */
 
 const ADMIN_PATH = "/admin";
@@ -38,14 +37,6 @@ export function proxy(req: NextRequest) {
   const isAdminApi = pathname.startsWith(`${ADMIN_API}/`) || pathname === ADMIN_API;
   if (!isAdminUi && !isAdminApi) {
     return NextResponse.next();
-  }
-
-  // PRODUCTION GATE. NODE_ENV is set by Next.js itself; on Vercel
-  // production builds this is "production". Local `npm run dev` is
-  // "development". Local `npm start` after a `npm run build` is
-  // "production" too — that's intentional. Admin only works in dev.
-  if (process.env.NODE_ENV === "production") {
-    return new NextResponse("Not Found", { status: 404 });
   }
 
   // AUTH. Skip the auth check for the login page + login API

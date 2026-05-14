@@ -1,23 +1,56 @@
+import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { CATEGORIES, type Category } from "@/lib/insights/schema";
 
+// @vercel/blob is imported dynamically inside saveAudioFile /
+// deleteAudioBlob so the import only runs when those code paths
+// actually execute. A top-level static import was tripping
+// Turbopack's page-data collection step.
+
 /**
- * Admin-side filesystem helpers for managing /content/insights/*.mdx.
- * Server-only — the entire admin surface is gated to local dev by
- * middleware, but be paranoid: anything calling these MUST come
- * from a Route Handler that has already passed the auth+gate.
+ * Admin-side content helpers for managing /content/insights/*.mdx.
+ *
+ * Two execution modes:
+ *
+ *   DEV MODE — the local `npm run dev` workflow. Reads + writes hit
+ *   the actual local filesystem under /content/insights and
+ *   /public/audio. Saves are instant; data.json is regenerated
+ *   inline so the dev preview reflects the change on next request.
+ *
+ *   PRODUCTION MODE — running on Vercel. Reads still hit the
+ *   filesystem (the deployed code includes the MDX files baked at
+ *   build time), but WRITES go through the GitHub API to commit
+ *   to philgdigital/PhilG. Vercel's GitHub webhook then triggers
+ *   a rebuild and the new/edited post goes live within ~60 s.
+ *   Audio uploads land in Vercel Blob and the public URL is
+ *   stamped into the frontmatter's `audio:` field.
+ *
+ * Mode is selected by env vars: if GITHUB_TOKEN + GITHUB_REPO are
+ * set, the production path is used. Otherwise, filesystem.
  *
  * Conventions:
  *   - Filename format is YYYY-MM-DD-{slug}.mdx
  *   - Slug derivation strips the date prefix; collisions on slug
  *     are detected on save.
- *   - After any write, runs build:insights so data.json + PDFs
- *     stay in sync. This is synchronous-ish (spawns a child
- *     process) but it's local dev — a few seconds of latency on
- *     save is acceptable.
  */
+
+const GH_TOKEN = process.env.GITHUB_TOKEN;
+// e.g. "philgdigital/PhilG"
+const GH_REPO = process.env.GITHUB_REPO;
+const GH_BRANCH = process.env.GITHUB_BRANCH ?? "main";
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
+
+/** True when we should commit via GitHub instead of writing locally. */
+function shouldUseGitHub(): boolean {
+  return !!(GH_TOKEN && GH_REPO);
+}
+
+/** True when we should upload to Vercel Blob instead of /public/audio. */
+function shouldUseBlob(): boolean {
+  return !!BLOB_TOKEN;
+}
 
 export const CONTENT_DIR = path.join(process.cwd(), "content", "insights");
 export const AUDIO_DIR = path.join(process.cwd(), "public", "audio");
@@ -160,56 +193,178 @@ function validateFrontmatter(fm: AdminFrontmatter): void {
   }
 }
 
+// -----------------------------------------------------------------
+// GitHub API helpers — used when GITHUB_TOKEN + GITHUB_REPO are set.
+// Just enough wrapper around the REST contents API to read SHAs,
+// commit files, and delete them. No external dep — plain fetch.
+// -----------------------------------------------------------------
+
+const GH_API = "https://api.github.com";
+
+function ghHeaders(): HeadersInit {
+  return {
+    Authorization: `Bearer ${GH_TOKEN}`,
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+}
+
+/** Returns { sha } when the file exists, null when it doesn't (404). */
+async function ghGetFileSha(repoPath: string): Promise<string | null> {
+  const url = `${GH_API}/repos/${GH_REPO}/contents/${encodeURIComponent(repoPath).replace(/%2F/g, "/")}?ref=${encodeURIComponent(GH_BRANCH)}`;
+  const res = await fetch(url, { headers: ghHeaders(), cache: "no-store" });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`GitHub GET ${repoPath} failed: ${res.status} ${await res.text()}`);
+  }
+  const body = (await res.json()) as { sha?: string };
+  return body.sha ?? null;
+}
+
+/** Create or update a file via the contents API. */
+async function ghPutFile(
+  repoPath: string,
+  contentB64: string,
+  message: string,
+  sha?: string,
+): Promise<void> {
+  const url = `${GH_API}/repos/${GH_REPO}/contents/${encodeURIComponent(repoPath).replace(/%2F/g, "/")}`;
+  const body: Record<string, unknown> = {
+    message,
+    content: contentB64,
+    branch: GH_BRANCH,
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: { ...ghHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    throw new Error(`GitHub PUT ${repoPath} failed: ${res.status} ${await res.text()}`);
+  }
+}
+
+/** Delete a file via the contents API. */
+async function ghDeleteFile(
+  repoPath: string,
+  sha: string,
+  message: string,
+): Promise<void> {
+  const url = `${GH_API}/repos/${GH_REPO}/contents/${encodeURIComponent(repoPath).replace(/%2F/g, "/")}`;
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: { ...ghHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ message, sha, branch: GH_BRANCH }),
+  });
+  if (!res.ok) {
+    throw new Error(`GitHub DELETE ${repoPath} failed: ${res.status} ${await res.text()}`);
+  }
+}
+
+function b64(input: string): string {
+  return Buffer.from(input, "utf8").toString("base64");
+}
+
+// -----------------------------------------------------------------
+// PUBLIC SURFACE — saveInsight, deleteInsight, saveAudioFile
+// Each detects the mode (filesystem vs GitHub / Vercel Blob) and
+// dispatches accordingly.
+// -----------------------------------------------------------------
+
 /**
- * Write (create or update) a post. If `oldFilename` is supplied
- * AND it differs from the new computed filename, the old file is
- * deleted (rename = delete+create). On create, errors out if a
- * file with the target filename already exists.
+ * Write (create or update) a post. Returns the resulting filename
+ * + slug. In production this commits via the GitHub API; in dev
+ * it writes to the local filesystem and regenerates data.json.
  */
-export function saveInsight(opts: {
+export async function saveInsight(opts: {
   oldFilename?: string;
   fm: AdminFrontmatter;
   body: string;
-}): { filename: string; slug: string } {
+}): Promise<{ filename: string; slug: string }> {
   validateFrontmatter(opts.fm);
   const slug = toSlug(opts.fm.title);
   if (!slug) throw new Error("title yields an empty slug");
   const newFilename = filenameFor(opts.fm.date, slug);
-  const newPath = path.join(CONTENT_DIR, newFilename);
+  const renaming = !!(opts.oldFilename && opts.oldFilename !== newFilename);
+  const mdx = toMdx(opts.fm, opts.body);
 
-  fs.mkdirSync(CONTENT_DIR, { recursive: true });
+  if (shouldUseGitHub()) {
+    // PRODUCTION — commit through GitHub API. Vercel webhooks
+    // rebuild the deployment after the commit lands.
+    const newRepoPath = `content/insights/${newFilename}`;
+    const existingSha = opts.oldFilename
+      ? await ghGetFileSha(`content/insights/${opts.oldFilename}`)
+      : null;
 
-  const renaming =
-    opts.oldFilename && opts.oldFilename !== newFilename;
-  if (!opts.oldFilename) {
-    // CREATE
-    if (fs.existsSync(newPath)) {
-      throw new Error(
-        `Filename ${newFilename} already exists. Pick a different title or date.`,
-      );
+    if (!opts.oldFilename) {
+      // CREATE — error if the target already exists.
+      const collide = await ghGetFileSha(newRepoPath);
+      if (collide) {
+        throw new Error(
+          `Filename ${newFilename} already exists. Pick a different title or date.`,
+        );
+      }
+      await ghPutFile(newRepoPath, b64(mdx), `admin: create ${slug}`);
+    } else if (renaming) {
+      // RENAME — write new, then delete old.
+      const collide = await ghGetFileSha(newRepoPath);
+      if (collide) {
+        throw new Error(
+          `Filename ${newFilename} already exists. Pick a different title or date.`,
+        );
+      }
+      await ghPutFile(newRepoPath, b64(mdx), `admin: rename ${opts.oldFilename} → ${newFilename}`);
+      if (existingSha) {
+        await ghDeleteFile(
+          `content/insights/${opts.oldFilename}`,
+          existingSha,
+          `admin: remove old ${opts.oldFilename} after rename`,
+        );
+      }
+    } else {
+      // UPDATE in place — needs the existing SHA.
+      if (!existingSha) {
+        throw new Error(
+          `Existing file ${opts.oldFilename} not found in repo — cannot update.`,
+        );
+      }
+      await ghPutFile(newRepoPath, b64(mdx), `admin: update ${slug}`, existingSha);
     }
-  } else if (renaming) {
-    // RENAME
-    if (fs.existsSync(newPath)) {
-      throw new Error(
-        `Filename ${newFilename} already exists. Pick a different title or date.`,
-      );
-    }
+    return { filename: newFilename, slug };
   }
 
-  fs.writeFileSync(newPath, toMdx(opts.fm, opts.body));
-
-  // Clean up the old file if we renamed
+  // DEV — local filesystem.
+  const newPath = path.join(CONTENT_DIR, newFilename);
+  fs.mkdirSync(CONTENT_DIR, { recursive: true });
+  if (!opts.oldFilename) {
+    if (fs.existsSync(newPath)) {
+      throw new Error(
+        `Filename ${newFilename} already exists. Pick a different title or date.`,
+      );
+    }
+  } else if (renaming && fs.existsSync(newPath)) {
+    throw new Error(
+      `Filename ${newFilename} already exists. Pick a different title or date.`,
+    );
+  }
+  fs.writeFileSync(newPath, mdx);
   if (renaming) {
     const oldPath = path.join(CONTENT_DIR, opts.oldFilename!);
     if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
   }
-
   regenerateBuildArtifacts();
   return { filename: newFilename, slug };
 }
 
-export function deleteInsight(filename: string): void {
+export async function deleteInsight(filename: string): Promise<void> {
+  if (shouldUseGitHub()) {
+    const repoPath = `content/insights/${filename}`;
+    const sha = await ghGetFileSha(repoPath);
+    if (!sha) return; // already gone
+    await ghDeleteFile(repoPath, sha, `admin: delete ${filename}`);
+    return;
+  }
   const p = path.join(CONTENT_DIR, filename);
   if (!fs.existsSync(p)) return;
   fs.unlinkSync(p);
@@ -217,14 +372,49 @@ export function deleteInsight(filename: string): void {
 }
 
 /**
- * Save an uploaded audio file to /public/audio/{slug}.mp3.
- * Caller passes a Buffer + the post's slug.
+ * Save an uploaded audio file. In production, the file goes to
+ * Vercel Blob and the returned URL is a public CDN link (which
+ * is what gets stamped into the post's `audio:` frontmatter). In
+ * dev, it lands under /public/audio/{slug}.mp3.
+ *
+ * Phil can later replace the audio by uploading again with the
+ * same slug — the old blob is not auto-deleted (orphan cleanup
+ * would be a separate pass; cost is negligible at this volume).
  */
-export function saveAudioFile(slug: string, buf: Buffer): string {
+export async function saveAudioFile(
+  slug: string,
+  buf: Buffer,
+  contentType: string = "audio/mpeg",
+): Promise<string> {
+  if (shouldUseBlob()) {
+    // Dynamic import — see top-of-file note. Returns the public
+    // CDN URL we stamp into frontmatter.
+    const { put: blobPut } = await import("@vercel/blob");
+    const blobPath = `audio/${slug}.mp3`;
+    const result = await blobPut(blobPath, buf, {
+      access: "public",
+      contentType,
+      addRandomSuffix: false,
+      allowOverwrite: true,
+    });
+    return result.url;
+  }
   fs.mkdirSync(AUDIO_DIR, { recursive: true });
   const filename = `${slug}.mp3`;
   fs.writeFileSync(path.join(AUDIO_DIR, filename), buf);
   return `/audio/${filename}`;
+}
+
+/** Best-effort blob cleanup. Currently unused but exported so a
+ * future "remove audio" UI can call it. */
+export async function deleteAudioBlob(url: string): Promise<void> {
+  if (!shouldUseBlob() || !url.startsWith("http")) return;
+  try {
+    const { del: blobDel } = await import("@vercel/blob");
+    await blobDel(url);
+  } catch {
+    // Non-fatal: blob may already be gone or token may lack delete.
+  }
 }
 
 /**

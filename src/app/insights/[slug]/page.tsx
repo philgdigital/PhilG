@@ -150,12 +150,12 @@ const mdxComponents = {
     <figure className="my-12 md:my-20">
       <span
         aria-hidden
-        className="block font-serif italic font-light text-8xl md:text-9xl leading-none text-[#4589ff]/25 mb-2 md:mb-4 select-none"
+        className="block font-serif italic font-light text-9xl md:text-[12rem] leading-none text-[#4589ff]/25 mb-2 md:mb-4 select-none"
       >
         &ldquo;
       </span>
       <blockquote
-        className="font-serif italic font-light text-3xl md:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white"
+        className="font-serif italic font-light text-4xl md:text-6xl lg:text-7xl tracking-tight leading-[1.1] text-white"
         {...props}
       >
         {children}

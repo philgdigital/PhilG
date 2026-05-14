@@ -54,6 +54,11 @@ export async function POST(req: NextRequest) {
 
   const arrayBuf = await file.arrayBuffer();
   const buf = Buffer.from(arrayBuf);
-  const publicUrl = saveAudioFile(slug, buf);
-  return NextResponse.json({ ok: true, url: publicUrl });
+  try {
+    const publicUrl = await saveAudioFile(slug, buf, file.type || "audio/mpeg");
+    return NextResponse.json({ ok: true, url: publicUrl });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Upload failed";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
 }

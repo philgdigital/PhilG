@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest, ctx: RouteContext) {
     return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
   try {
-    const result = saveInsight({
+    const result = await saveInsight({
       oldFilename: existing.filename,
       fm: parsed.fm,
       body: parsed.body,
@@ -57,8 +57,13 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext) {
   const existing = readInsightBySlug(slug);
   if (!existing)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
-  deleteInsight(existing.filename);
-  return NextResponse.json({ ok: true });
+  try {
+    await deleteInsight(existing.filename);
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Delete failed";
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
 }
 
 function parsePayload(

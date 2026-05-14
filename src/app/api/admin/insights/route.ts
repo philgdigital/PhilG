@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
   try {
-    const result = saveInsight({ fm: parsed.fm, body: parsed.body });
+    const result = await saveInsight({ fm: parsed.fm, body: parsed.body });
     return NextResponse.json({ ok: true, ...result });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Save failed";
