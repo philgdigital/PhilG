@@ -132,20 +132,24 @@ function parseMarkdown(source: string): Block[] {
 // ---------------------------------------------------------------
 
 /**
- * Light theme. The PDF is the print/share artifact — the website
- * stays dark. Printer-friendly: black ink on white, IBM-blue
- * accents survive greyscale prints as a darker mid-grey.
+ * Dark editorial theme — matches the website. The "white" colour
+ * key is used by titles and headings; it really means "the
+ * brightest text on this theme".
+ *
+ * Tried a light variant for printability; user rejected. Keeping
+ * the dark feel; people who want to print can use their PDF
+ * reader's invert-colours or "fit to page (greyscale)" options.
  */
 const COLORS = {
-  bg: "#ffffff",
-  text: "#0a0a0c",
-  textMuted: "#52525b",
-  textVeryMuted: "#a1a1aa",
-  white: "#0a0a0c", // ex-display "white" reads as editorial black
+  bg: "#0a0a0c",
+  text: "#e7e7ea",
+  textMuted: "#a1a1aa",
+  textVeryMuted: "#6f6f76",
+  white: "#ffffff",
   blue: "#0f62fe",
-  blueSoft: "#0f62fe",
+  blueSoft: "#4589ff",
   emerald: "#10b981",
-  hairline: "#e4e4e7",
+  hairline: "#27272a",
   accent: "#0f62fe",
 };
 
@@ -232,11 +236,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  // ~45% of an A4 portrait minus padding ≈ 340pt tall. Width
-  // fills the page minus the 56pt horizontal padding.
+  // ~43% of an A4 portrait minus padding ≈ 304pt tall (5% smaller
+  // than the original 320pt — user feedback). Width fills the
+  // page minus the 56pt horizontal padding.
   coverHero: {
     width: "100%",
-    height: 320,
+    height: 304,
     objectFit: "cover",
     borderRadius: 8,
   },
