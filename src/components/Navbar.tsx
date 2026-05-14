@@ -92,16 +92,25 @@ export function Navbar() {
             className="inline-block w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_6px_rgba(15,98,254,0.85)] ml-0.5 -mb-0.5 transition-all duration-500 ease-[var(--ease-out)] group-hover:scale-[1.45] group-hover:shadow-[0_0_14px_rgba(15,98,254,1)]"
           />
         </Link>
+        {/* Desktop nav. Each link is a hash anchor (#work, #insights,
+            etc.) on the homepage. When the visitor is on a subpage
+            (/work/[slug] or /insights/[slug]), the hash alone won't
+            resolve - there's no <section id="work"> on a case study
+            page - so we prefix the homepage route ('/') to the href
+            and use next/link's client-side navigation. The browser
+            then routes back to / and scrolls to the section, which
+            is what every link in the menu should do regardless of
+            current page. */}
         <div className="hidden md:flex items-center gap-1 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
-              href={link.href}
+              href={pathname === "/" ? link.href : `/${link.href}`}
               data-cursor-no-hint="true"
               className="hover-target px-4 py-2 rounded-full uppercase transition-all duration-300 ease-[var(--ease-out)] hover:text-white hover:bg-white/[0.08]"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
         <button
@@ -172,14 +181,14 @@ export function Navbar() {
                 }`}
                 style={{ transitionDelay: `${i * 80 + 200}ms` }}
               >
-                <a
-                  href={link.href}
+                <Link
+                  href={pathname === "/" ? link.href : `/${link.href}`}
                   onClick={() => setIsMenuOpen(false)}
                   data-cursor-no-hint="true"
                   className="block text-5xl font-black tracking-tighter text-white uppercase hover:text-[#0f62fe] transition-colors hover-target"
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
