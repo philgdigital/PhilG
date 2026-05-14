@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CATEGORIES, type Insight, type Category } from "@/lib/insights";
 import { InsightCard } from "./InsightCard";
 import { InsightFilters } from "./InsightFilters";
@@ -48,7 +48,6 @@ export function InsightsListing({
   basePath?: string;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const q = searchParams.get("q") ?? "";

@@ -9,6 +9,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 import {
+  getAllInsights,
   getLatestInsights,
   type Insight,
   type Category,
@@ -243,6 +244,12 @@ export function Insights() {
   const featured = latest.find((i) => i.featured) ?? latest[0];
   const regulars = latest.filter((i) => i.slug !== featured.slug).slice(0, 4);
 
+  // Total post count is used by the CTA copy to communicate how
+  // many more pieces live in the archive beyond the 5 latest on
+  // this section (e.g. "5 latest · 17 more in the archive").
+  const totalCount = getAllInsights().length;
+  const remainder = Math.max(0, totalCount - latest.length);
+
   return (
     <section
       id="insights"
@@ -284,22 +291,36 @@ export function Insights() {
         ))}
       </div>
 
-      {/* "Read all insights" CTA pushes visitors to the /insights
-          listing route where the full archive lives with filters +
-          search. Editorial pill in the same style as the FAQ /
-          Process CTAs so the conversion surface reads consistently
-          across the page. */}
+      {/* CTA inviting visitors to the full /insights archive.
+          Three-row editorial composition:
+            1. Eyebrow with a live "5 of N" count so visitors see
+               how much more is in the archive beyond what the
+               section showed.
+            2. Primary pill button with IBM-blue accent border +
+               glow on hover. Sized larger than a utility link so
+               it reads as the natural conversion surface for the
+               section.
+            3. Subline restating the value: search + filters +
+               every piece. */}
       <Reveal delay={700}>
-        <div className="mt-14 md:mt-20 flex justify-center">
+        <div className="mt-16 md:mt-24 flex flex-col items-center gap-4">
+          {remainder > 0 && (
+            <span className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500">
+              {latest.length} of {totalCount} shown · {remainder} more in the archive
+            </span>
+          )}
           <Link
             href="/insights"
             data-magnetic="true"
             data-cursor-no-hint="true"
-            className="group hover-target inline-flex items-center gap-3 px-6 md:px-7 py-3 md:py-3.5 rounded-full border border-white/15 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#0f62fe]/40 transition-all duration-500 font-mono text-[11px] md:text-[12px] tracking-[0.22em] uppercase text-zinc-200 hover:text-white"
+            className="group hover-target inline-flex items-center gap-3 md:gap-4 px-7 md:px-9 py-4 md:py-5 rounded-full border-2 border-[#0f62fe]/40 bg-[#0f62fe]/[0.06] hover:bg-[#0f62fe]/[0.15] hover:border-[#0f62fe]/80 hover:shadow-[0_10px_40px_rgba(15,98,254,0.25)] transition-all duration-500 text-base md:text-lg font-medium text-white"
           >
-            <span>Read all insights</span>
-            <ArrowUpRight className="w-4 h-4 text-[#4589ff] transition-transform duration-500 group-hover:rotate-45" />
+            <span>Browse the full archive</span>
+            <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-[#4589ff] transition-transform duration-500 group-hover:rotate-45 group-hover:text-white" />
           </Link>
+          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-zinc-500 text-center max-w-md">
+            Search, filter by category, browse every piece I&apos;ve written.
+          </span>
         </div>
       </Reveal>
     </section>
