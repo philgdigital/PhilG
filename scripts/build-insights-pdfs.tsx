@@ -132,28 +132,69 @@ function parseMarkdown(source: string): Block[] {
 // ---------------------------------------------------------------
 
 /**
- * Dark editorial theme — matches the website. The "white" colour
- * key is used by titles and headings; it really means "the
- * brightest text on this theme".
+ * TWO themes shipped per article — visitor picks at download time
+ * via the PdfDownloadModal on the detail page.
  *
- * Tried a light variant for printability; user rejected. Keeping
- * the dark feel; people who want to print can use their PDF
- * reader's invert-colours or "fit to page (greyscale)" options.
+ *   "digital" — Dark editorial palette matching the website.
+ *               Hero image on the cover. The screen reader.
+ *   "print"   — Light palette (white bg, dark ink) friendly to
+ *               paper + greyscale printers. No hero image on
+ *               the cover. Same typography hierarchy.
+ *
+ * The "white" colour key is used by titles + headings; it
+ * really means "the brightest text on this theme", which is
+ * white on dark and editorial black on light.
  */
-const COLORS = {
-  bg: "#0a0a0c",
-  text: "#e7e7ea",
-  textMuted: "#a1a1aa",
-  textVeryMuted: "#6f6f76",
-  white: "#ffffff",
-  blue: "#0f62fe",
-  blueSoft: "#4589ff",
-  emerald: "#10b981",
-  hairline: "#27272a",
-  accent: "#0f62fe",
+type Theme = "digital" | "print";
+
+type Palette = {
+  bg: string;
+  text: string;
+  textMuted: string;
+  textVeryMuted: string;
+  white: string;
+  blue: string;
+  blueSoft: string;
+  emerald: string;
+  hairline: string;
+  accent: string;
 };
 
-const styles = StyleSheet.create({
+function getColors(theme: Theme): Palette {
+  if (theme === "print") {
+    // Light palette. Values match commit b194e86 (the previous
+    // light experiment) — reused verbatim so the typography
+    // hierarchy reads the same just inverted.
+    return {
+      bg: "#ffffff",
+      text: "#0a0a0c",
+      textMuted: "#52525b",
+      textVeryMuted: "#a1a1aa",
+      white: "#0a0a0c", // "brightest text" = editorial black on light
+      blue: "#0f62fe",
+      blueSoft: "#0f62fe",
+      emerald: "#10b981",
+      hairline: "#e4e4e7",
+      accent: "#0f62fe",
+    };
+  }
+  return {
+    bg: "#0a0a0c",
+    text: "#e7e7ea",
+    textMuted: "#a1a1aa",
+    textVeryMuted: "#6f6f76",
+    white: "#ffffff",
+    blue: "#0f62fe",
+    blueSoft: "#4589ff",
+    emerald: "#10b981",
+    hairline: "#27272a",
+    accent: "#0f62fe",
+  };
+}
+
+function getStyles(theme: Theme) {
+  const COLORS = getColors(theme);
+  return StyleSheet.create({
   // PAGE — full-bleed dark background. Outer padding gives content
   // ~56pt safe area on each side.
   page: {
@@ -468,11 +509,17 @@ const styles = StyleSheet.create({
     fontSize: 8,
     letterSpacing: 1.5,
   },
-});
+  });
+}
 
 // ---------------------------------------------------------------
 // Components
 // ---------------------------------------------------------------
+
+// Each component receives the resolved StyleSheet via `styles`
+// prop so its visual identity flips with the parent's theme. The
+// styles object is computed once per Document in InsightDocument.
+type Styles = ReturnType<typeof getStyles>;
 
 /**
  * Top-of-page editorial chrome. Subtle (no fill, hairline rule)
@@ -481,7 +528,7 @@ const styles = StyleSheet.create({
  * Right side: email + LinkedIn — clickable in PDF readers that
  * honour <Link>. Hairline at the bottom separates from body.
  */
-const Banner = () => (
+const Banner = ({ styles }: { styles: Styles }) => (
   <View style={styles.bannerStrip} fixed>
     <View style={styles.bannerLeft}>
       <Text style={styles.bannerLabel}>HIRE</Text>
@@ -503,7 +550,7 @@ const Banner = () => (
   </View>
 );
 
-const PageFooter = () => (
+const PageFooter = ({ styles }: { styles: Styles }) => (
   <View style={styles.pageFooter} fixed>
     <Text>PHIL G. · UX/PRODUCT DESIGN LEADER</Text>
     <Text
@@ -536,8 +583,20 @@ function resolveCoverImage(image: string): string {
   return path.join(cwd, "public", "images", "about.jpg");
 }
 
-const CoverPage = ({ insight }: { insight: Insight }) => {
+const CoverPage = ({
+  insight,
+  styles,
+  theme,
+}: {
+  insight: Insight;
+  styles: Styles;
+  theme: Theme;
+}) => {
   const coverImagePath = resolveCoverImage(insight.image);
+  // The print variant intentionally drops the hero image + brand-
+  // wash ribbon — keeps ink coverage low on paper and lets the
+  // cover read as a clean typographic spread.
+  const showHero = theme === "digital";
   return (
     <Page size="A4" style={styles.page}>
       <View style={styles.coverWrap}>
@@ -552,17 +611,19 @@ const CoverPage = ({ insight }: { insight: Insight }) => {
           </Text>
         </View>
 
-        {/* HERO IMAGE — wide banner, ~45% of page height. */}
-        <View>
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          <Image src={coverImagePath} style={styles.coverHero} />
-          {/* Brand-wash ribbon: IBM-blue → emerald, faked with two
-              flat blocks since react-pdf doesn't do CSS gradient. */}
-          <View style={styles.coverHeroRibbon}>
-            <View style={styles.coverHeroRibbonBlue} />
-            <View style={styles.coverHeroRibbonEmerald} />
+        {showHero && (
+          <View>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            <Image src={coverImagePath} style={styles.coverHero} />
+            {/* Brand-wash ribbon: IBM-blue → emerald, faked with
+                two flat blocks since react-pdf doesn't do CSS
+                gradient. */}
+            <View style={styles.coverHeroRibbon}>
+              <View style={styles.coverHeroRibbonBlue} />
+              <View style={styles.coverHeroRibbonEmerald} />
+            </View>
           </View>
-        </View>
+        )}
 
         {/* Title block */}
         <View style={styles.coverCenter}>
@@ -582,9 +643,15 @@ const CoverPage = ({ insight }: { insight: Insight }) => {
   );
 };
 
-const BodyPage = ({ blocks }: { blocks: Block[] }) => (
+const BodyPage = ({
+  blocks,
+  styles,
+}: {
+  blocks: Block[];
+  styles: Styles;
+}) => (
   <Page size="A4" style={styles.page}>
-    <Banner />
+    <Banner styles={styles} />
     {blocks.map((block, i) => {
       if (block.type === "h2") {
         return (
@@ -621,7 +688,7 @@ const BodyPage = ({ blocks }: { blocks: Block[] }) => (
       }
       return null;
     })}
-    <PageFooter />
+    <PageFooter styles={styles} />
   </Page>
 );
 
@@ -629,7 +696,7 @@ const BodyPage = ({ blocks }: { blocks: Block[] }) => (
 // itself IS the hire pitch ("Hire Phil G. for your next product.")
 // so a banner repeating the same invitation reads as noise. The
 // page-number footer stays so the visitor knows it's the end.
-const ClosingCtaPage = () => (
+const ClosingCtaPage = ({ styles }: { styles: Styles }) => (
   <Page size="A4" style={styles.page}>
     <View style={styles.ctaWrap}>
       <Text style={styles.ctaEyebrow}>BUILT TO SHIP — NOT TO PITCH</Text>
@@ -687,24 +754,37 @@ const ClosingCtaPage = () => (
         <Text style={styles.ctaCredPill}>1,050+ MENTEES</Text>
       </View>
     </View>
-    <PageFooter />
+    <PageFooter styles={styles} />
   </Page>
 );
 
-const InsightDocument = ({ insight, blocks }: { insight: Insight; blocks: Block[] }) => (
-  <Document
-    author="Phil G."
-    title={insight.title}
-    subject={insight.excerpt}
-    keywords={insight.category}
-    creator="philg.cz"
-    producer="philg.cz"
-  >
-    <CoverPage insight={insight} />
-    <BodyPage blocks={blocks} />
-    <ClosingCtaPage />
-  </Document>
-);
+const InsightDocument = ({
+  insight,
+  blocks,
+  theme,
+}: {
+  insight: Insight;
+  blocks: Block[];
+  theme: Theme;
+}) => {
+  // Compute the StyleSheet ONCE per Document so every child page
+  // shares the same instance. Theme decides palette + cover image.
+  const styles = getStyles(theme);
+  return (
+    <Document
+      author="Phil G."
+      title={insight.title}
+      subject={insight.excerpt}
+      keywords={insight.category}
+      creator="philg.cz"
+      producer="philg.cz"
+    >
+      <CoverPage insight={insight} styles={styles} theme={theme} />
+      <BodyPage blocks={blocks} styles={styles} />
+      <ClosingCtaPage styles={styles} />
+    </Document>
+  );
+};
 
 // ---------------------------------------------------------------
 // Main — read data.json, render one PDF per insight.
@@ -725,33 +805,42 @@ async function main() {
   const insights: Insight[] = JSON.parse(fs.readFileSync(dataPath, "utf8"));
   fs.mkdirSync(outDir, { recursive: true });
 
+  // Two variants per article: dark "digital" + light "print".
+  // Visitor picks at download time via the PdfDownloadModal on
+  // the detail page. Both files live under /public/pdf/:
+  //   {slug}-digital.pdf
+  //   {slug}-print.pdf
   for (const insight of insights) {
     const blocks = parseMarkdown(insight.body);
-    const doc = <InsightDocument insight={insight} blocks={blocks} />;
-    const buffer = await pdf(doc).toBuffer();
-    // toBuffer returns a Node Readable stream in some versions of
-    // @react-pdf/renderer; normalize to a Buffer.
-    const out = path.join(outDir, `${insight.slug}.pdf`);
-    if (Buffer.isBuffer(buffer)) {
-      fs.writeFileSync(out, buffer);
-    } else {
-      // Stream-style: drain to file.
-      const chunks: Buffer[] = [];
-      await new Promise<void>((resolve, reject) => {
-        (buffer as unknown as NodeJS.ReadableStream)
-          .on("data", (chunk: Buffer | string) => {
-            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-          })
-          .on("end", () => {
-            fs.writeFileSync(out, Buffer.concat(chunks));
-            resolve();
-          })
-          .on("error", reject);
-      });
+    for (const theme of ["digital", "print"] as const) {
+      const doc = (
+        <InsightDocument insight={insight} blocks={blocks} theme={theme} />
+      );
+      const buffer = await pdf(doc).toBuffer();
+      const out = path.join(outDir, `${insight.slug}-${theme}.pdf`);
+      if (Buffer.isBuffer(buffer)) {
+        fs.writeFileSync(out, buffer);
+      } else {
+        // Stream-style: drain to file.
+        const chunks: Buffer[] = [];
+        await new Promise<void>((resolve, reject) => {
+          (buffer as unknown as NodeJS.ReadableStream)
+            .on("data", (chunk: Buffer | string) => {
+              chunks.push(
+                Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk),
+              );
+            })
+            .on("end", () => {
+              fs.writeFileSync(out, Buffer.concat(chunks));
+              resolve();
+            })
+            .on("error", reject);
+        });
+      }
+      console.log(
+        `[build-insights-pdfs] wrote ${path.relative(root, out)} (${blocks.length} blocks)`,
+      );
     }
-    console.log(
-      `[build-insights-pdfs] wrote ${path.relative(root, out)} (${blocks.length} blocks)`,
-    );
   }
 }
 

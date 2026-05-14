@@ -12,6 +12,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsBackLink } from "@/components/insights/InsightsBackLink";
 import { ArticleMedia } from "@/components/insights/players/ArticleMedia";
+import { PdfDownloadModal } from "@/components/insights/PdfDownloadModal";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -369,35 +370,16 @@ export default async function InsightPage({ params }: RouteProps) {
                   {insight.readTime}
                 </span>
               </div>
-              {/* Download-as-PDF link. The PDF is generated at build
-                  time (scripts/build-insights-pdfs.tsx) and lives at
-                  /pdf/{slug}.pdf. The `download` attribute hints to
-                  the browser that the user wants to save it rather
-                  than navigate to it. Magnetic cursor + brand-blue
-                  accent on hover so it reads as a deliberate action. */}
-              <a
-                href={`/pdf/${insight.slug}.pdf`}
-                download={`${insight.slug}.pdf`}
-                data-magnetic="true"
-                data-cursor-hint="Click to download"
-                className="group hover-target inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-[#0f62fe]/50 bg-white/[0.03] hover:bg-[#0f62fe]/10 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-300 hover:text-white transition-all"
-              >
-                <svg
-                  aria-hidden
-                  viewBox="0 0 24 24"
-                  className="w-3.5 h-3.5 text-[#4589ff] transition-transform duration-500 group-hover:translate-y-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                <span>Download PDF</span>
-              </a>
+              {/* Download-as-PDF affordance. Clicking the pill opens
+                  a modal that lets the visitor pick between the
+                  digital and print-ready PDF variants. Both files
+                  are pre-built at the prebuild step (see
+                  scripts/build-insights-pdfs.tsx) and live at
+                  /pdf/{slug}-{digital|print}.pdf. */}
+              <PdfDownloadModal
+                slug={insight.slug}
+                title={insight.title}
+              />
             </div>
           </Reveal>
 
