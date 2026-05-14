@@ -200,47 +200,34 @@ export default async function InsightPage({ params }: RouteProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Navbar />
-      {/* HEAVY DARK WASH. Bumped to 0.85 alpha so the global
-          AnimatedGradientBackground orbs underneath (which were
-          creating the visible 'edge' the user kept flagging - they
-          have hard-ish blurred edges at corners that lit up the
-          periphery in a defined-shape pattern) are MUTED almost
-          to invisibility. Only ~15% of the orb intensity bleeds
-          through. The whole viewport is now nearly black; that's
-          the "black expanded" ask satisfied. Flat uniform alpha
-          across the page means this layer itself cannot create
-          a shape boundary - the only visible gradient is whatever
-          we layer on top. */}
+      {/* NEAR-SOLID DARK BASE. 0.93 alpha kills the global bg
+          orbs almost entirely (only ~7% of their colour bleeds
+          through), so there's no orb-edge contrast pattern
+          underneath this page anymore. The viewport reads as
+          nearly pure black. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
-        style={{ background: "rgba(0, 0, 0, 0.85)" }}
+        style={{ background: "rgba(0, 0, 0, 0.93)" }}
       />
-      {/* BRAND-COLOUR EDGE GLOW. Sits on top of the heavy dark
-          wash, so it has clean dark canvas to paint on (no orb
-          contrast underneath). Four corner radials with massive
-          ellipses (200% x 170% - extends well past the viewport
-          on every axis) and a 7-stop ultra-gradual falloff. The
-          falloff alphas are stepped so finely that the gradient
-          reads as one continuous smooth ramp from corner to
-          opposite corner, never as discrete bands. At 90% radius
-          (just past the viewport edge for these large ellipses)
-          alpha is still 0.02 - never zero on-viewport - so there's
-          literally no point inside the visible page where colour
-          becomes 'absent', only continuously decreasing intensity.
-          With 4 such radials overlapping, every pixel carries a
-          smooth mix of blue + emerald that's brightest at the
-          corners and fades to a faint trace at the centre. */}
+      {/* SOFT DIAGONAL COLOUR WASH. A single linear gradient at
+          135deg that fades smoothly from a faint IBM-blue tint in
+          the top-left to a faint emerald tint in the bottom-right
+          across the entire viewport. Alpha is intentionally tiny
+          (0.10 / 0.08) so the colour is whisper-quiet - just a
+          soft warm/cool variation laid over the near-black base,
+          not bright corner spots.
+          A linear gradient has NO corners, NO defined shape, NO
+          radial-falloff stop. Its slope is constant across the
+          whole viewport so there is mathematically no point at
+          which the gradient changes character - which means there
+          can be no visible 'edge mark' anywhere on the page. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
         style={{
-          background: `
-            radial-gradient(ellipse 200% 170% at 0% 0%, rgba(15, 98, 254, 0.6) 0%, rgba(15, 98, 254, 0.42) 15%, rgba(15, 98, 254, 0.28) 30%, rgba(15, 98, 254, 0.18) 45%, rgba(15, 98, 254, 0.10) 60%, rgba(15, 98, 254, 0.05) 75%, rgba(15, 98, 254, 0.02) 90%, transparent 100%),
-            radial-gradient(ellipse 200% 170% at 100% 0%, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.38) 15%, rgba(16, 185, 129, 0.25) 30%, rgba(16, 185, 129, 0.16) 45%, rgba(16, 185, 129, 0.09) 60%, rgba(16, 185, 129, 0.04) 75%, rgba(16, 185, 129, 0.02) 90%, transparent 100%),
-            radial-gradient(ellipse 200% 170% at 0% 100%, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.38) 15%, rgba(16, 185, 129, 0.25) 30%, rgba(16, 185, 129, 0.16) 45%, rgba(16, 185, 129, 0.09) 60%, rgba(16, 185, 129, 0.04) 75%, rgba(16, 185, 129, 0.02) 90%, transparent 100%),
-            radial-gradient(ellipse 200% 170% at 100% 100%, rgba(15, 98, 254, 0.6) 0%, rgba(15, 98, 254, 0.42) 15%, rgba(15, 98, 254, 0.28) 30%, rgba(15, 98, 254, 0.18) 45%, rgba(15, 98, 254, 0.10) 60%, rgba(15, 98, 254, 0.05) 75%, rgba(15, 98, 254, 0.02) 90%, transparent 100%)
-          `,
+          background:
+            "linear-gradient(135deg, rgba(15, 98, 254, 0.10) 0%, transparent 45%, transparent 55%, rgba(16, 185, 129, 0.08) 100%)",
         }}
       />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
