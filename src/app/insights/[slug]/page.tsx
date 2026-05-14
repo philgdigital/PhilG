@@ -170,16 +170,16 @@ const mdxComponents = {
     // Each `[&_p]:` rule generates `.figure p { ... }` which wins
     // over the standalone class on the <p>.
     <figure
-      className="my-12 md:my-20 [&_p]:font-serif [&_p]:italic [&_p]:font-light [&_p]:text-3xl [&_p]:md:text-5xl [&_p]:lg:text-6xl [&_p]:tracking-tight [&_p]:leading-[1.15] [&_p]:text-white [&_p]:max-w-5xl [&_p]:mb-0"
+      className="my-10 md:my-16 [&_p]:font-serif [&_p]:italic [&_p]:font-light [&_p]:text-xl [&_p]:md:text-2xl [&_p]:lg:text-3xl [&_p]:tracking-tight [&_p]:leading-[1.3] [&_p]:text-white [&_p]:max-w-4xl [&_p]:mb-0"
     >
       <span
         aria-hidden
-        className="block font-serif italic font-light text-8xl md:text-9xl leading-none text-[#4589ff]/25 mb-2 md:mb-4 select-none"
+        className="block font-serif italic font-light text-6xl md:text-7xl leading-none text-[#4589ff]/25 mb-1 md:mb-2 select-none"
       >
         &ldquo;
       </span>
       <blockquote
-        className="font-serif italic font-light text-3xl md:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white max-w-5xl"
+        className="font-serif italic font-light text-xl md:text-2xl lg:text-3xl tracking-tight leading-[1.3] text-white max-w-4xl"
         {...props}
       >
         {children}
