@@ -156,31 +156,60 @@ const styles = StyleSheet.create({
     paddingHorizontal: 56,
   },
 
-  // BANNER on top of every body page. Slim IBM-blue strip with
-  // hire-Phil CTA. Skipped on cover + closing pages.
+  // BANNER on top of every body page. Subtle integrated strip —
+  // no fill, no shouty colour. Reads as editorial chrome rather
+  // than a sales bar. Hairline rule along the bottom separates
+  // it from the article body underneath. Skipped on cover +
+  // closing pages.
   bannerStrip: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 36,
-    backgroundColor: COLORS.blue,
+    top: 36,
+    left: 56,
+    right: 56,
+    paddingBottom: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLORS.hairline,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 56,
   },
-  bannerText: {
-    color: COLORS.white,
-    fontFamily: "Helvetica-Bold",
-    fontSize: 9,
-    letterSpacing: 2,
+  bannerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
   },
-  bannerCta: {
-    color: COLORS.white,
+  bannerLabel: {
+    color: COLORS.textVeryMuted,
     fontFamily: "Helvetica-Bold",
-    fontSize: 9,
-    letterSpacing: 2,
+    fontSize: 7,
+    letterSpacing: 2.5,
+  },
+  bannerDot: {
+    width: 3,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: COLORS.blueSoft,
+  },
+  bannerName: {
+    color: COLORS.text,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    letterSpacing: 1.5,
+  },
+  bannerContacts: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  bannerContactLink: {
+    color: COLORS.blueSoft,
+    fontSize: 8,
+    letterSpacing: 0.2,
+    textDecoration: "none",
+  },
+  bannerSep: {
+    color: COLORS.textVeryMuted,
+    fontSize: 8,
   },
 
   // COVER PAGE
@@ -398,13 +427,32 @@ const styles = StyleSheet.create({
 // Components
 // ---------------------------------------------------------------
 
-const BANNER_TEXT = "HIRE PHIL G. FOR YOUR NEXT PRODUCT";
-const BANNER_CTA = "PHILG.CZ →";
-
+/**
+ * Top-of-page editorial chrome. Subtle (no fill, hairline rule)
+ * so it reads as part of the design rather than a sales banner.
+ * Left side: small IBM-blue dot + "PHIL G." wordmark.
+ * Right side: email + LinkedIn — clickable in PDF readers that
+ * honour <Link>. Hairline at the bottom separates from body.
+ */
 const Banner = () => (
   <View style={styles.bannerStrip} fixed>
-    <Text style={styles.bannerText}>{BANNER_TEXT}</Text>
-    <Text style={styles.bannerCta}>{BANNER_CTA}</Text>
+    <View style={styles.bannerLeft}>
+      <Text style={styles.bannerLabel}>HIRE</Text>
+      <View style={styles.bannerDot} />
+      <Text style={styles.bannerName}>PHIL G.</Text>
+    </View>
+    <View style={styles.bannerContacts}>
+      <Link src="mailto:hello@philg.cz" style={styles.bannerContactLink}>
+        hello@philg.cz
+      </Link>
+      <Text style={styles.bannerSep}>·</Text>
+      <Link
+        src="https://www.linkedin.com/in/felipeaela/"
+        style={styles.bannerContactLink}
+      >
+        linkedin.com/in/felipeaela
+      </Link>
+    </View>
   </View>
 );
 
