@@ -174,7 +174,7 @@ const mdxComponents = {
     >
       <span
         aria-hidden
-        className="block font-serif italic font-light text-6xl md:text-7xl leading-none text-[#4589ff]/25 mb-1 md:mb-2 select-none"
+        className="block font-serif italic font-light text-9xl md:text-[10rem] lg:text-[12rem] leading-none text-[#4589ff]/25 mb-1 md:mb-2 select-none"
       >
         &ldquo;
       </span>
