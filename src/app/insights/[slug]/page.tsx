@@ -200,43 +200,42 @@ export default async function InsightPage({ params }: RouteProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Navbar />
-      {/* DARK BASE LAYER. A mostly-uniform dark wash across the
-          entire viewport with just a very subtle extra darkening
-          at the centre. No defined ellipse, no radial shape edge
-          visible - because the dark is everywhere at roughly the
-          same level, there IS no edge for the eye to catch.
-          The brand glow layered on top (z-0) is what creates the
-          colour-at-edges / dark-at-centre composition; this layer
-          just guarantees the underlying darkness is uniform so
-          the brand glow can fade in/out smoothly without
-          competing with a radial-shaped pool of darkness. */}
+      {/* FULLY UNIFORM DARK WASH. No radial, no shape variation -
+          a single flat alpha across the whole viewport. Because
+          there is zero opacity-delta in this layer, it cannot be
+          the source of any perceived edge. Bumped from 0.55 to
+          0.65 alpha so the "black expanded" feeling is real: the
+          whole page reads as darker overall, not just the centre. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
-        style={{
-          background: `
-            radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 75%),
-            rgba(0, 0, 0, 0.55)
-          `,
-        }}
+        style={{ background: "rgba(0, 0, 0, 0.65)" }}
       />
-      {/* BRAND-COLOUR EDGE GLOW. Fixed-position. Four large corner
-          radial gradients in IBM blue + emerald with a 4-stop
-          falloff (0.50 -> 0.25 -> 0.10 -> transparent) for buttery-
-          smooth transition into the centre-dark pool above. The
-          two layers (dark pool + brand glow) together create the
-          framed stage effect: brand colour rich at the corners,
-          smoothly dimming inward to the dark reading zone, no
-          visible boundaries anywhere. */}
+      {/* BRAND-COLOUR EDGE GLOW. Four corner radials in IBM blue
+          + emerald, tuned for INVISIBLE falloff:
+            - Ellipse size 160% x 140% (was 110% x 95%): the
+              gradient body extends well past the viewport, so the
+              transparent stop sits OFF-SCREEN. No visible
+              "no-colour zone" anywhere on the viewport.
+            - 6-stop ramp per radial (was 4): every step is small
+              enough that the gradient reads as a continuous wash
+              rather than four discrete bands.
+            - At the diagonal-opposite corner of each radial, the
+              alpha is still ~0.02 (not zero), so even the dimmest
+              spot on the viewport carries a faint trace of brand
+              colour. Combined with the other three radials, every
+              pixel ends up with SOME brand tint - which means
+              there's no boundary between "coloured zone" and
+              "no-colour zone" because no such boundary exists. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
         style={{
           background: `
-            radial-gradient(ellipse 110% 95% at 0% 0%, rgba(15, 98, 254, 0.5) 0%, rgba(15, 98, 254, 0.25) 25%, rgba(15, 98, 254, 0.1) 50%, transparent 80%),
-            radial-gradient(ellipse 110% 95% at 100% 0%, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0.22) 25%, rgba(16, 185, 129, 0.08) 50%, transparent 80%),
-            radial-gradient(ellipse 110% 95% at 0% 100%, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0.22) 25%, rgba(16, 185, 129, 0.08) 50%, transparent 80%),
-            radial-gradient(ellipse 110% 95% at 100% 100%, rgba(15, 98, 254, 0.5) 0%, rgba(15, 98, 254, 0.25) 25%, rgba(15, 98, 254, 0.1) 50%, transparent 80%)
+            radial-gradient(ellipse 160% 140% at 0% 0%, rgba(15, 98, 254, 0.55) 0%, rgba(15, 98, 254, 0.40) 15%, rgba(15, 98, 254, 0.25) 30%, rgba(15, 98, 254, 0.15) 45%, rgba(15, 98, 254, 0.07) 65%, rgba(15, 98, 254, 0.02) 85%, transparent 100%),
+            radial-gradient(ellipse 160% 140% at 100% 0%, rgba(16, 185, 129, 0.50) 0%, rgba(16, 185, 129, 0.35) 15%, rgba(16, 185, 129, 0.22) 30%, rgba(16, 185, 129, 0.13) 45%, rgba(16, 185, 129, 0.06) 65%, rgba(16, 185, 129, 0.02) 85%, transparent 100%),
+            radial-gradient(ellipse 160% 140% at 0% 100%, rgba(16, 185, 129, 0.50) 0%, rgba(16, 185, 129, 0.35) 15%, rgba(16, 185, 129, 0.22) 30%, rgba(16, 185, 129, 0.13) 45%, rgba(16, 185, 129, 0.06) 65%, rgba(16, 185, 129, 0.02) 85%, transparent 100%),
+            radial-gradient(ellipse 160% 140% at 100% 100%, rgba(15, 98, 254, 0.55) 0%, rgba(15, 98, 254, 0.40) 15%, rgba(15, 98, 254, 0.25) 30%, rgba(15, 98, 254, 0.15) 45%, rgba(15, 98, 254, 0.07) 65%, rgba(15, 98, 254, 0.02) 85%, transparent 100%)
           `,
         }}
       />
