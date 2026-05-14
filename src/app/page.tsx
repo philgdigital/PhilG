@@ -102,7 +102,7 @@ export default function Home() {
           addressLocality: "Prague",
           addressCountry: "CZ",
         },
-        email: "hello@philg.cz",
+        email: "hi@philg.cz",
         sameAs: ["https://www.linkedin.com/in/felipeaela/"],
         hasCredential: [
           {

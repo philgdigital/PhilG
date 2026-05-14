@@ -546,8 +546,8 @@ const Banner = ({ styles }: { styles: Styles }) => (
       <Text style={styles.bannerName}>PHIL G.</Text>
     </View>
     <View style={styles.bannerContacts}>
-      <Link src="mailto:hello@philg.cz" style={styles.bannerContactLink}>
-        hello@philg.cz
+      <Link src="mailto:hi@philg.cz" style={styles.bannerContactLink}>
+        hi@philg.cz
       </Link>
       <Text style={styles.bannerSep}>·</Text>
       <Link
@@ -738,8 +738,8 @@ const ClosingCtaPage = ({ styles }: { styles: Styles }) => (
       <View style={styles.ctaContactBlock}>
         <View style={styles.ctaContactRow}>
           <Text style={styles.ctaContactLabel}>EMAIL</Text>
-          <Link src="mailto:hello@philg.cz" style={styles.ctaContactLink}>
-            hello@philg.cz
+          <Link src="mailto:hi@philg.cz" style={styles.ctaContactLink}>
+            hi@philg.cz
           </Link>
         </View>
         <View style={styles.ctaContactRow}>

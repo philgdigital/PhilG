@@ -103,7 +103,7 @@ export function Footer({ onOpenForm }: FooterProps) {
               Designing Digital Products since 2009
             </p>
             <p className="font-mono text-[10px] md:text-[11px] font-medium tracking-[0.28em] uppercase text-zinc-400">
-              Based in Prague, Czechia · hello@philg.cz
+              Based in Prague, Czechia · hi@philg.cz
             </p>
           </div>
         </Reveal>
@@ -123,7 +123,7 @@ export function Footer({ onOpenForm }: FooterProps) {
       </div>
 
       {/* Bottom rail: ONE row, three columns. © PHIL G. on the
-          extreme left, build credits ('Zero to live in 3 days …
+          extreme left, build credits ('Zero to live in 7 days …
           Figma never opened') anchored to the dead center of the
           page, AVAILABLE FOR NEW CLIENTS on the extreme right.
           - The credits paragraph sits in an absolutely-centered
@@ -146,7 +146,7 @@ export function Footer({ onOpenForm }: FooterProps) {
             Hard <br /> forces the split regardless of viewport
             so the cadence reads as two distinct beats. */}
         <p className="md:absolute md:left-1/2 md:-translate-x-1/2 font-mono text-[10px] md:text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-400 text-center leading-relaxed max-w-2xl pointer-events-none">
-          <span className="text-white">Zero to live in 3 days</span> ·
+          <span className="text-white">Zero to live in 7 days</span> ·
           Vibe-coded in Claude Code · Git-versioned
           <br />
           Shipped on Vercel ·{" "}

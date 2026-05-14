@@ -197,12 +197,12 @@ export function CustomCursor() {
     const onMouseDown = () => setIsClicked(true);
     const onMouseUp = () => setIsClicked(false);
 
-    // Lerp factor controls how snappy the cursor ring catches up to the
-    // mouse position. Was 0.22 (visibly trails the mouse by ~50ms);
-    // bumped to 0.65 so the ring follows essentially in real time
-    // (~30ms catch-up) while keeping just enough smoothing to read as
-    // natural and avoid sub-pixel jitter.
-    const RING_LERP = 0.65;
+    // Ring follows the mouse at 1:1 — no smoothing, no catch-up
+    // delay. Was lerped at 0.65 (~30ms) plus a 300ms CSS transition
+    // on transform, which together read as a visibly trailing
+    // ring. The user wants the cursor to move at mouse speed, so
+    // both the lerp AND the CSS transform transition are gone.
+    const RING_LERP = 1;
 
     const render = () => {
       // Three render modes:
@@ -221,16 +221,16 @@ export function CustomCursor() {
         return;
       }
 
-      let targetX: number;
-      let targetY: number;
-      if (isScrolling) {
-        targetX = mouseX;
-        targetY = mouseY;
-      } else {
-        const { pullX, pullY } = applyMagnetism(mouseX, mouseY);
-        targetX = mouseX + pullX;
-        targetY = mouseY + pullY;
+      // Run magnetism so the BUTTONS still lean toward the cursor
+      // (the rewarding bit), but the cursor ring itself stays
+      // pinned to the actual mouse position — no pull, no drift.
+      // Was: `targetX = mouseX + pullX`. The pull on the ring
+      // read as the cursor drifting / lagging near buttons.
+      if (!isScrolling) {
+        applyMagnetism(mouseX, mouseY);
       }
+      const targetX = mouseX;
+      const targetY = mouseY;
       ringX += (targetX - ringX) * RING_LERP;
       ringY += (targetY - ringY) * RING_LERP;
       if (ringRef.current) {
@@ -318,16 +318,21 @@ export function CustomCursor() {
   // re-appear or no cursor at all.
   return (
     <>
+      {/* `transform` is intentionally NOT in the transition list on
+          either element — it's driven by JS rAF / mousemove and any
+          CSS transition on it just adds visible trailing lag. The
+          transitions stay on width/height/margin/colors so the
+          hover-state size and color change still animate cleanly. */}
       <div
         ref={dotRef}
-        className={`fixed top-0 left-0 w-1 h-1 -ml-0.5 -mt-0.5 bg-white rounded-full pointer-events-none z-[300] mix-blend-difference transition-transform duration-100 ${
+        className={`fixed top-0 left-0 w-1 h-1 -ml-0.5 -mt-0.5 bg-white rounded-full pointer-events-none z-[300] mix-blend-difference ${
           isClicked ? "scale-50" : "scale-100"
         }`}
         aria-hidden
       />
       <div
         ref={ringRef}
-        className={`fixed top-0 left-0 pointer-events-none z-[299] rounded-full transition-[width,height,margin,border-color,background-color,transform] duration-300 ease-out ${ringSize} ${ringStyle} ${ringScale}`}
+        className={`fixed top-0 left-0 pointer-events-none z-[299] rounded-full transition-[width,height,margin,border-color,background-color] duration-300 ease-out ${ringSize} ${ringStyle} ${ringScale}`}
         aria-hidden
       />
       {/* Pulse wrapper. Mirrors the ring position in JS. Renders two
