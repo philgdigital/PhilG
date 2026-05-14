@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CATEGORIES, type Category } from "@/lib/insights";
 import { BrandSelect } from "@/components/ui/BrandSelect";
 
@@ -61,14 +62,42 @@ export function InsightFilters({
 }) {
   const hasFilter = !!(q || category || year || month);
 
+  // The input is locally buffered so every keystroke renders
+  // instantly — we don't want each character to go round-trip
+  // through router.replace() before the input visibly updates
+  // (that's why typing felt laggy / "need 5 letters before
+  // anything happens"). The URL sync happens on a short debounce
+  // so the filter only fires once the user pauses, not on every
+  // keypress.
+  const [searchInput, setSearchInput] = useState(q);
+
+  // External URL change (e.g. Clear filters, browser back) →
+  // pull the new value into the local input. This stays in sync
+  // unless the user is actively typing — the equality guard
+  // prevents the debounce effect below from cancelling itself.
+  useEffect(() => {
+    setSearchInput(q);
+  }, [q]);
+
+  // Local input change → push to URL after a short pause. 150ms
+  // is long enough to coalesce a fast typist's burst but short
+  // enough that the filter feels responsive (perceived as
+  // "instant" since 100–200ms is below the noticeable-lag
+  // threshold).
+  useEffect(() => {
+    if (searchInput === q) return;
+    const t = window.setTimeout(() => onChangeQ(searchInput), 150);
+    return () => window.clearTimeout(t);
+  }, [searchInput, q, onChangeQ]);
+
   return (
     <div className="flex flex-col gap-4 md:gap-5">
       {/* Search input */}
       <div className="relative">
         <input
           type="search"
-          value={q}
-          onChange={(e) => onChangeQ(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search insights…"
           aria-label="Search insights"
           className="w-full bg-white/[0.04] hover:bg-white/[0.06] focus:bg-white/[0.08] border border-white/8 focus:border-[#0f62fe]/50 rounded-full px-5 py-3 md:py-3.5 text-base md:text-lg font-light text-white placeholder:text-zinc-500 outline-none transition-colors"

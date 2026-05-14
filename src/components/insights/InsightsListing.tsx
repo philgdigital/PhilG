@@ -30,11 +30,15 @@ const PAGE_SIZE = 12;
  * but a `?page=N` query param overrides it whenever filters are
  * active — that's how a single component handles both schemes.
  *
- * Search is plain substring match across title + excerpt + body
- * (lowercased on both sides). With ~5 posts this is sub-millisecond.
- * At 1,000+ posts we'd swap in MiniSearch (`minisearch` is already
- * installed) — the substitution is contained to the `filtered`
- * useMemo below and would not change the surrounding UI.
+ * Search tokenises the query on whitespace and AND-matches every
+ * token against (title + category + excerpt). Body is intentionally
+ * excluded — at a small corpus size body matches dominated and made
+ * the filter feel imprecise ("design leader" wouldn't match
+ * 'Design is a leadership problem' under whole-phrase substring,
+ * but every common word matched everywhere via body). Tokens are
+ * lower-cased on both sides. Sub-millisecond for thousands of
+ * posts; if/when the corpus needs full-text search we'd swap in
+ * MiniSearch (already installed) right here.
  */
 
 export function InsightsListing({
@@ -89,13 +93,19 @@ export function InsightsListing({
       list = list.filter((i) => i.date.startsWith(`${year}-${month}`));
     }
     if (q) {
-      const needle = q.toLowerCase();
-      list = list.filter(
-        (i) =>
-          i.title.toLowerCase().includes(needle) ||
-          i.excerpt.toLowerCase().includes(needle) ||
-          i.body.toLowerCase().includes(needle),
-      );
+      // Split the query into whitespace-separated tokens, AND-match
+      // every token against (title + category + excerpt). This is
+      // far more forgiving than whole-phrase substring:
+      //   "design leader" → matches "Design is a leadership problem"
+      //   "ai stack"     → matches "The AI prototyping stack"
+      // Empty tokens (from double spaces) are dropped.
+      const tokens = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (tokens.length > 0) {
+        list = list.filter((i) => {
+          const haystack = `${i.title} ${i.category} ${i.excerpt}`.toLowerCase();
+          return tokens.every((t) => haystack.includes(t));
+        });
+      }
     }
     return list;
   }, [allInsights, category, year, month, q]);
@@ -136,13 +146,10 @@ export function InsightsListing({
     router.replace(basePath, { scroll: false });
   }, [router, basePath]);
 
-  // Reflect search to URL after the user pauses typing (light debounce
-  // implemented via a timeout that's reset on every change). The
-  // controlled <input> uses the URL value via q, so we need a local
-  // value buffer to avoid lag — but for simplicity at small scale we
-  // skip the buffer and just update on each keystroke. With 5 posts
-  // this is instant. If perceptible lag appears at 1k+ posts, add a
-  // useRef-based debounce around setFilter("q", v).
+  // The search input is locally buffered inside InsightFilters and
+  // calls onChangeQ on a 150ms debounce — so every onChangeQ → URL
+  // update here is already throttled. No additional debounce needed
+  // at this layer.
 
   // Query-string used for pagination href construction. When we have
   // filters, pagination URLs include the filter state. Strip `page`
