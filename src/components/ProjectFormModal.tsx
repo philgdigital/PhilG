@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { XIcon as X, Sparkles } from "@/components/icons/Icons";
+import { BrandSelect } from "@/components/ui/BrandSelect";
 
 type ProjectFormModalProps = {
   isOpen: boolean;
@@ -11,6 +12,11 @@ type ProjectFormModalProps = {
 export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
+  // Budget is a controlled BrandSelect — the modal had a native
+  // <select> with `defaultValue="50-100"` before; we mirror that
+  // initial value here so the existing wire-up keeps working when
+  // the submit handler eventually reads the form.
+  const [budget, setBudget] = useState("50-100");
 
   useEffect(() => {
     if (!isOpen) return;
@@ -143,21 +149,22 @@ export function ProjectFormModal({ isOpen, onClose }: ProjectFormModalProps) {
             >
               Budget Scope
             </label>
-            <select
+            <BrandSelect
               id="form-budget"
-              defaultValue="50-100"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-neutral-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f62fe] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c] focus:border-[#4589ff] focus:bg-white/10 transition-all hover-target appearance-none"
-            >
-              <option value="50-100" className="bg-[#0a0a0c]">
-                $50k – $100k (MVP Acceleration)
-              </option>
-              <option value="100-250" className="bg-[#0a0a0c]">
-                $100k – $250k (System Architecture)
-              </option>
-              <option value="250+" className="bg-[#0a0a0c]">
-                $250k+ (Enterprise Overhaul)
-              </option>
-            </select>
+              name="budget"
+              variant="field"
+              label="Budget Scope"
+              value={budget}
+              onChange={setBudget}
+              options={[
+                { value: "50-100", label: "$50k – $100k (MVP Acceleration)" },
+                {
+                  value: "100-250",
+                  label: "$100k – $250k (System Architecture)",
+                },
+                { value: "250+", label: "$250k+ (Enterprise Overhaul)" },
+              ]}
+            />
           </div>
 
           <div className="flex flex-col gap-2">

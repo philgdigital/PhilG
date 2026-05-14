@@ -13,6 +13,8 @@ import { z } from "zod";
 export const CATEGORIES = [
   "Leadership",
   "AI & Prototyping",
+  "AI Exploration",
+  "Digital Business",
   "Process & Systems",
   "Case Studies",
   "Psychology",

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CATEGORIES, type Category } from "@/lib/insights/schema";
 import { adminFetch, getToken } from "@/lib/admin/client-auth";
+import { BrandSelect } from "@/components/ui/BrandSelect";
 
 /**
  * Insight editor form. Reused for both "new" and "edit" modes:
@@ -191,17 +192,13 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
         </Field>
 
         <Field label="Category">
-          <select
+          <BrandSelect
+            variant="field"
+            label="Category"
             value={category}
-            onChange={(e) => setCategory(e.target.value as Category)}
-            className={inputCls}
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c} className="bg-[#0a0a0c]">
-                {c}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => setCategory(v as Category)}
+            options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+          />
         </Field>
 
         <Field label={`Excerpt (${excerpt.length}/280)`} full>
