@@ -406,21 +406,114 @@ export default async function InsightPage({ params }: RouteProps) {
             aria-hidden
             className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
           />
+          {/* "Continue reading" section header. Hairline trails off
+              to the right so the eyebrow reads as a magazine-style
+              chapter divider rather than a plain label. */}
           <Reveal>
-            <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400 mb-4 block">
-              Read next
-            </span>
+            <div className="flex items-center gap-4 mb-8 md:mb-10">
+              <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-zinc-500">
+                Continue reading
+              </span>
+              <span
+                aria-hidden
+                className="h-px flex-1 bg-gradient-to-r from-white/15 via-white/5 to-transparent"
+              />
+            </div>
           </Reveal>
+
+          {/* Editorial recommendation card. Big horizontal composition:
+              hero image (44%) + content column (56%). The image picks
+              up the same brand-wash treatment as the in-article hero
+              + the home Insights cards so the rhythm is consistent
+              across the site. The content column carries an eyebrow
+              with the category badge, a strong headline that turns
+              IBM-blue on hover, a 2-line excerpt preview, and a
+              footer meta row separated by a hairline. The whole card
+              is one Link with a glass border that lights up to
+              IBM-blue + a soft blue glow on hover — same magnetic
+              hover language as the home cards.
+              At md+ the layout is asymmetric (image left, content
+              right); at mobile it stacks. */}
           <Reveal delay={80}>
             <Link
               href={next.href}
               data-magnetic="true"
-              className="group inline-flex items-baseline gap-4 hover-target mb-16 md:mb-20"
+              className="group block hover-target rounded-2xl md:rounded-3xl overflow-hidden border border-white/8 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_60px_-12px_rgba(15,98,254,0.25)] transition-all duration-700 mb-16 md:mb-24 bg-gradient-to-br from-white/[0.02] to-transparent"
             >
-              <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
-                {next.title}
-              </h3>
-              <ArrowUpRight className="w-6 h-6 md:w-8 md:h-8 text-zinc-400 group-hover:text-white group-hover:rotate-45 transition-all duration-500 shrink-0" />
+              <div className="grid grid-cols-1 md:grid-cols-[44%_56%] items-stretch">
+                {/* IMAGE */}
+                <div className="relative aspect-[5/3] md:aspect-auto md:min-h-[320px] overflow-hidden">
+                  <Image
+                    src={next.image}
+                    alt={next.title}
+                    fill
+                    sizes="(min-width: 768px) 45vw, 100vw"
+                    className="object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-[1500ms] ease-[var(--ease-out)]"
+                  />
+                  {/* Brand wash — same recipe as the in-article hero
+                      so the recommendation reads as part of the same
+                      editorial fabric. */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 mix-blend-multiply opacity-60 group-hover:opacity-30 bg-gradient-to-tr from-[#0f62fe]/30 via-transparent to-[#10b981]/15 transition-opacity duration-700"
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c]/70 via-transparent to-transparent"
+                  />
+                  {/* Editorial corner index — "02 / 05" style — sits
+                      bottom-left of the image. Communicates position
+                      in the corpus without needing copy. */}
+                  <span className="absolute bottom-4 left-4 z-10 font-mono text-[10px] tracking-[0.22em] uppercase text-white/70 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
+                    {`0${((idx + 1) % allInsights.length) + 1} / 0${allInsights.length}`}
+                  </span>
+                </div>
+
+                {/* CONTENT */}
+                <div className="relative flex flex-col justify-between gap-8 p-8 md:p-10 lg:p-12">
+                  {/* Top eyebrow row: "READ NEXT · [category badge]" */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500">
+                      Read next
+                    </span>
+                    <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-600" />
+                    <span
+                      className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border ${
+                        CATEGORY_BADGE[next.category]
+                      }`}
+                    >
+                      {next.category}
+                    </span>
+                  </div>
+
+                  {/* Middle: title + excerpt */}
+                  <div className="flex flex-col gap-5">
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.05] group-hover:text-[#4589ff] transition-colors duration-500">
+                      <span className="inline-flex items-baseline gap-3 flex-wrap">
+                        <span>{next.title}</span>
+                        <ArrowUpRight className="w-7 h-7 md:w-9 md:h-9 text-[#4589ff] shrink-0 transition-transform duration-500 group-hover:rotate-45" />
+                      </span>
+                    </h3>
+                    <p className="text-base md:text-lg font-light text-zinc-400 leading-relaxed line-clamp-2 group-hover:text-zinc-200 transition-colors max-w-xl">
+                      {next.excerpt}
+                    </p>
+                  </div>
+
+                  {/* Bottom meta + "Continue" affordance, separated by
+                      a hairline rule that matches the article-internal
+                      rhythm. */}
+                  <div className="flex items-center justify-between gap-4 pt-6 border-t border-white/8">
+                    <div className="flex items-center gap-3 font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-zinc-400">
+                      <span>{formatDate(next.date)}</span>
+                      <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-600" />
+                      <span>{next.readTime}</span>
+                    </div>
+                    <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#4589ff] group-hover:text-white transition-colors">
+                      Continue →
+                    </span>
+                  </div>
+                </div>
+              </div>
             </Link>
           </Reveal>
 
