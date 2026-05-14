@@ -14,6 +14,7 @@ import {
   type Insight,
   type Category,
 } from "@/lib/insights";
+import { setInsightsBackRef, HOME_REF } from "@/lib/insights-back-ref";
 
 type ViewTransitionDocument = Document & {
   startViewTransition?: (callback: () => void | Promise<void>) => unknown;
@@ -31,6 +32,11 @@ function useInsightTransitionClick() {
   const router = useRouter();
   return useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      // Record where the visitor came from so the insight detail
+      // page's back-link points back to the homepage. The HOME_REF
+      // sentinel translates to "/#insights" on the read side.
+      setInsightsBackRef(HOME_REF);
+
       const doc = document as ViewTransitionDocument;
       if (typeof doc.startViewTransition !== "function") return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;

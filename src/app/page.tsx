@@ -1,7 +1,6 @@
 "use client";
 
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { SectionProgress } from "@/components/SectionProgress";
 import { useFormContext } from "@/lib/form-context";
 import { Hero } from "@/components/sections/Hero";
@@ -205,7 +204,9 @@ export default function Home() {
         </div>
         <Insights />
       </main>
-      <Footer onOpenForm={openForm} />
+      {/* Footer is mounted globally in src/app/layout.tsx via
+          <FooterMount />, so it appears on every route — not just
+          here. Don't duplicate it on this page. */}
     </>
   );
 }

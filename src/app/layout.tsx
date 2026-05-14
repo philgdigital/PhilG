@@ -6,6 +6,7 @@ import { NoiseOverlay } from "@/components/effects/NoiseOverlay";
 import { ClientEffects } from "@/components/effects/ClientEffects";
 import { InitialLoader } from "@/components/effects/InitialLoader";
 import { FormProvider } from "@/lib/form-context";
+import { FooterMount } from "@/components/FooterMount";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({
@@ -194,11 +195,15 @@ export default function RootLayout({
         <ClientEffects />
         <NoiseOverlay />
         {/* FormProvider wraps everything so any page (homepage, work
-            case studies, insight articles) can open the same
-            ProjectFormModal via useFormContext(). The modal itself is
-            mounted inside the provider. */}
+            case studies, insight articles, insights archive) can open
+            the same ProjectFormModal via useFormContext(). The modal
+            itself is mounted inside the provider. FooterMount sits
+            INSIDE the provider so it can consume the openForm
+            callback for its CTA. Mounting the footer here (rather
+            than per-page) means it appears on every route. */}
         <FormProvider>
           <div className="relative w-full h-full">{children}</div>
+          <FooterMount />
         </FormProvider>
         <Analytics />
       </body>

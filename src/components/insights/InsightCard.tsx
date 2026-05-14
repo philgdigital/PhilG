@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ElectricBorder } from "@/components/ui/ElectricBorder";
 import { type Insight, type Category } from "@/lib/insights";
+import { setInsightsBackRef } from "@/lib/insights-back-ref";
 
 /**
  * Shared InsightCard. The compact card variant from the home Insights
@@ -44,22 +45,35 @@ function formatDate(iso: string): string {
 
 export function InsightCard({ insight }: { insight: Insight }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   /**
    * Wrap navigation in document.startViewTransition() when supported.
    * The card image + title share viewTransitionName values with the
    * /insights/[slug] page's hero, so the browser cross-fades them.
    * Cmd/Ctrl/Shift/Alt-click escape hatches stay on the native href.
+   *
+   * Before navigating, store the current listing URL (path + filters
+   * + page) in sessionStorage. The detail page reads this on mount
+   * to render a back-link that lands the visitor on the exact page
+   * they came from — including their current filter state and
+   * pagination position. Without this they'd lose their place after
+   * reading an article.
    */
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
+      const qs = searchParams.toString();
+      const ref = qs ? `${pathname}?${qs}` : pathname;
+      setInsightsBackRef(ref);
+
       const doc = document as ViewTransitionDocument;
       if (typeof doc.startViewTransition !== "function") return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
       doc.startViewTransition(() => router.push(insight.href));
     },
-    [router, insight.href],
+    [router, insight.href, pathname, searchParams],
   );
 
   return (

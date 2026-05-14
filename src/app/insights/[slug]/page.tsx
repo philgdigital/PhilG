@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode, HTMLAttributes, OlHTMLAttributes } from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { ArrowUpLeft, ArrowUpRight } from "@/components/icons/Icons";
+import { ArrowUpRight } from "@/components/icons/Icons";
 import {
   getAllInsights,
   getInsight,
@@ -13,6 +13,7 @@ import {
 import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
+import { InsightsBackLink } from "@/components/insights/InsightsBackLink";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -301,16 +302,13 @@ export default async function InsightPage({ params }: RouteProps) {
       />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
 
-        {/* Top: back link */}
+        {/* Top: back link. Referrer-aware — points to wherever the
+            visitor came from (homepage Insights section vs the
+            /insights archive root vs a specific paginated/filtered
+            view) by reading sessionStorage set at click time. See
+            src/lib/insights-back-ref.ts. */}
         <div className="flex items-center justify-between mb-16 max-w-5xl mx-auto">
-          <Link
-            href="/#insights"
-            data-magnetic="true"
-            className="group inline-flex items-center gap-2 hover-target font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400 hover:text-white transition-colors"
-          >
-            <ArrowUpLeft className="w-4 h-4 -rotate-45 transition-transform duration-500 group-hover:-translate-x-1" />
-            <span>All insights</span>
-          </Link>
+          <InsightsBackLink />
           <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
             {`0${idx + 1} / 0${allInsights.length}`}
           </span>
