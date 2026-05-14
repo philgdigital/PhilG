@@ -4,7 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsListing } from "@/components/insights/InsightsListing";
-import { getAllInsightsLive } from "@/lib/insights";
+import { getAllInsightsLive } from "@/lib/insights/loader-server";
 
 // ISR — re-fetch Blob overlay at most once per minute, plus the
 // admin's revalidatePath('/insights') call on every save kicks in

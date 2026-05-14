@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CATEGORIES, type Category } from "@/lib/insights/schema";
+import { adminFetch, getToken } from "@/lib/admin/client-auth";
 
 /**
  * Insight editor form. Reused for both "new" and "edit" modes:
@@ -84,7 +85,7 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
           ? "/api/admin/insights"
           : `/api/admin/insights/${oldSlug}`;
       const method = mode === "new" ? "POST" : "PUT";
-      const res = await fetch(url, {
+      const res = await adminFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -121,9 +122,11 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
       const form = new FormData();
       form.append("file", file);
       form.append("slug", slug);
+      const token = getToken();
       const res = await fetch("/api/admin/upload-audio", {
         method: "POST",
         body: form,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -146,7 +149,7 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
     setError(null);
     setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/insights/${oldSlug}`, {
+      const res = await adminFetch(`/api/admin/insights/${oldSlug}`, {
         method: "DELETE",
       });
       if (!res.ok) {

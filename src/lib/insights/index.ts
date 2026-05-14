@@ -3,6 +3,12 @@
  * the app imports from `@/lib/insights` — never from `./schema` or
  * `./loader` directly — so this barrel is the single rename point if
  * the internal file layout changes.
+ *
+ * The async server-only variants (getAllInsightsLive,
+ * getInsightLive) are NOT re-exported here on purpose. Server
+ * pages import them directly from `@/lib/insights/loader-server`
+ * so Turbopack can't accidentally trace those imports into client
+ * bundles.
  */
 export {
   CATEGORIES,
@@ -14,6 +20,4 @@ export {
   getAllInsights,
   getInsight,
   getLatestInsights,
-  getAllInsightsLive,
-  getInsightLive,
 } from "./loader";

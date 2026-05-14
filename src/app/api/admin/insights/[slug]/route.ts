@@ -6,18 +6,22 @@ import {
   deleteInsight,
   type AdminFrontmatter,
 } from "@/lib/admin/insights-fs";
+import { requireAuth } from "@/lib/admin/auth";
 import { CATEGORIES, type Category } from "@/lib/insights/schema";
 
 /**
- * GET    /api/admin/insights/[slug]  — read one post (with body)
- * PUT    /api/admin/insights/[slug]  — update (renames file if
- *                                      title/date changed)
- * DELETE /api/admin/insights/[slug]  — remove the .mdx file
+ * GET    /api/admin/insights/[slug] — read one post (with body)
+ * PUT    /api/admin/insights/[slug] — update
+ * DELETE /api/admin/insights/[slug] — remove
+ *
+ * All require `Authorization: Bearer <token>`.
  */
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
-export async function GET(_req: NextRequest, ctx: RouteContext) {
+export async function GET(req: NextRequest, ctx: RouteContext) {
+  const unauth = requireAuth(req);
+  if (unauth) return unauth;
   const { slug } = await ctx.params;
   const item = await readInsightBySlug(slug);
   if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -25,11 +29,12 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
 }
 
 export async function PUT(req: NextRequest, ctx: RouteContext) {
+  const unauth = requireAuth(req);
+  if (unauth) return unauth;
   const { slug } = await ctx.params;
   const existing = await readInsightBySlug(slug);
   if (!existing)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
-
   let raw: unknown;
   try {
     raw = await req.json();
@@ -42,11 +47,10 @@ export async function PUT(req: NextRequest, ctx: RouteContext) {
   }
   try {
     const result = await saveInsight({
-      oldFilename: existing.filename,
+      oldSlug: existing.slug,
       fm: parsed.fm,
       body: parsed.body,
     });
-    // Revalidate listing + old slug + new slug (rename case).
     try {
       revalidatePath("/insights");
       revalidatePath(`/insights/${existing.slug}`);
@@ -63,13 +67,15 @@ export async function PUT(req: NextRequest, ctx: RouteContext) {
   }
 }
 
-export async function DELETE(_req: NextRequest, ctx: RouteContext) {
+export async function DELETE(req: NextRequest, ctx: RouteContext) {
+  const unauth = requireAuth(req);
+  if (unauth) return unauth;
   const { slug } = await ctx.params;
   const existing = await readInsightBySlug(slug);
   if (!existing)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   try {
-    await deleteInsight(existing.filename);
+    await deleteInsight(existing.slug);
     try {
       revalidatePath("/insights");
       revalidatePath(`/insights/${existing.slug}`);
@@ -85,9 +91,7 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext) {
 
 function parsePayload(
   raw: unknown,
-):
-  | { fm: AdminFrontmatter; body: string }
-  | { error: string } {
+): { fm: AdminFrontmatter; body: string } | { error: string } {
   if (typeof raw !== "object" || raw === null) return { error: "Body must be an object" };
   const obj = raw as Record<string, unknown>;
   if (typeof obj.fm !== "object" || obj.fm === null) {
@@ -112,10 +116,13 @@ function parsePayload(
     category: category as Category,
     excerpt: String(fmRaw.excerpt ?? ""),
     readTime: String(fmRaw.readTime ?? ""),
-    image: typeof fmRaw.image === "string" && fmRaw.image ? fmRaw.image : undefined,
+    image:
+      typeof fmRaw.image === "string" && fmRaw.image ? fmRaw.image : undefined,
     featured: fmRaw.featured === true,
-    video: typeof fmRaw.video === "string" && fmRaw.video ? fmRaw.video : undefined,
-    audio: typeof fmRaw.audio === "string" && fmRaw.audio ? fmRaw.audio : undefined,
+    video:
+      typeof fmRaw.video === "string" && fmRaw.video ? fmRaw.video : undefined,
+    audio:
+      typeof fmRaw.audio === "string" && fmRaw.audio ? fmRaw.audio : undefined,
   };
   return { fm, body: obj.body as string };
 }

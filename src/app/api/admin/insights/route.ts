@@ -5,28 +5,28 @@ import {
   saveInsight,
   type AdminFrontmatter,
 } from "@/lib/admin/insights-fs";
+import { requireAuth } from "@/lib/admin/auth";
 import { CATEGORIES, type Category } from "@/lib/insights/schema";
 
 /**
- * GET  /api/admin/insights         — list every post (newest first)
- * POST /api/admin/insights         — create a new post
+ * GET  /api/admin/insights — list all insights (with body)
+ * POST /api/admin/insights — create a new post
  *
- * Body for POST: { fm: AdminFrontmatter, body: string }
+ * Both require `Authorization: Bearer <token>` where token =
+ * the value returned from POST /api/admin/login (= the admin
+ * password).
  */
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const unauth = requireAuth(req);
+  if (unauth) return unauth;
   const items = await listInsights();
-  // Strip body from list responses to keep payloads small.
-  return NextResponse.json({
-    items: items.map((item) => {
-      const { body: _omit, ...rest } = item;
-      void _omit;
-      return rest;
-    }),
-  });
+  return NextResponse.json({ items });
 }
 
 export async function POST(req: NextRequest) {
+  const unauth = requireAuth(req);
+  if (unauth) return unauth;
   let body: unknown;
   try {
     body = await req.json();
@@ -39,10 +39,6 @@ export async function POST(req: NextRequest) {
   }
   try {
     const result = await saveInsight({ fm: parsed.fm, body: parsed.body });
-    // Invalidate the listing + the new detail page so the public
-    // site reflects the new post within seconds (vs the 60s ISR
-    // fallback). Wrapped in try so any revalidation failure
-    // doesn't bubble back to the admin as a save error.
     try {
       revalidatePath("/insights");
       revalidatePath(`/insights/${result.slug}`);
@@ -56,15 +52,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/**
- * Validate + narrow the incoming payload to { fm, body }.
- * Returns { error } when the shape is wrong.
- */
 function parsePayload(
   raw: unknown,
-):
-  | { fm: AdminFrontmatter; body: string }
-  | { error: string } {
+): { fm: AdminFrontmatter; body: string } | { error: string } {
   if (typeof raw !== "object" || raw === null) return { error: "Body must be an object" };
   const obj = raw as Record<string, unknown>;
   if (typeof obj.fm !== "object" || obj.fm === null) {
@@ -89,10 +79,13 @@ function parsePayload(
     category: category as Category,
     excerpt: String(fmRaw.excerpt ?? ""),
     readTime: String(fmRaw.readTime ?? ""),
-    image: typeof fmRaw.image === "string" && fmRaw.image ? fmRaw.image : undefined,
+    image:
+      typeof fmRaw.image === "string" && fmRaw.image ? fmRaw.image : undefined,
     featured: fmRaw.featured === true,
-    video: typeof fmRaw.video === "string" && fmRaw.video ? fmRaw.video : undefined,
-    audio: typeof fmRaw.audio === "string" && fmRaw.audio ? fmRaw.audio : undefined,
+    video:
+      typeof fmRaw.video === "string" && fmRaw.video ? fmRaw.video : undefined,
+    audio:
+      typeof fmRaw.audio === "string" && fmRaw.audio ? fmRaw.audio : undefined,
   };
   return { fm, body: obj.body as string };
 }

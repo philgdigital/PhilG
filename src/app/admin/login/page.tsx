@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { setToken } from "@/lib/admin/client-auth";
 
 /**
- * Single-password admin login. POSTs to /api/admin/login. On
- * success, redirects to the `?from=` path (if present and looks
- * like a same-origin admin path) or /admin.
+ * Single-password admin login. POSTs to /api/admin/login; on
+ * success stores the returned token in localStorage and redirects
+ * to /admin.
  */
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -26,15 +26,14 @@ export default function AdminLoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        setError(body.error ?? "Login failed");
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body?.token) {
+        setError(body?.error ?? `Login failed (${res.status})`);
         setSubmitting(false);
         return;
       }
-      const from = searchParams.get("from");
-      const safe = from && from.startsWith("/admin") ? from : "/admin";
-      router.replace(safe);
+      setToken(body.token);
+      router.replace("/admin");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Network error");
       setSubmitting(false);
@@ -81,9 +80,6 @@ export default function AdminLoginPage() {
         >
           {submitting ? "Signing in…" : "Sign in"}
         </button>
-        <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-zinc-600 text-center">
-          Local admin · npm run dev only
-        </p>
       </form>
     </main>
   );

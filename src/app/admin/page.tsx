@@ -1,14 +1,16 @@
+"use client";
+
 import Link from "next/link";
-import { listInsights } from "@/lib/admin/insights-fs";
+import { useEffect, useState } from "react";
+import { AdminAuthGate } from "@/components/admin/AdminAuthGate";
 import { LogoutButton } from "@/components/admin/LogoutButton";
+import { adminFetch } from "@/lib/admin/client-auth";
+import type { Insight } from "@/lib/insights/schema";
 
 /**
- * Admin dashboard — list every insight, with quick links to edit
- * each one and a "+ New insight" button. Sorted newest first
- * (the listInsights helper handles that).
- *
- * Server Component: reads the filesystem directly. The middleware
- * already gated this route to dev + authenticated.
+ * Admin dashboard — lists every insight in a table with edit
+ * links. Client component: fetches via /api/admin/insights with
+ * the bearer token from localStorage.
  */
 
 function formatDate(iso: string): string {
@@ -21,8 +23,38 @@ function formatDate(iso: string): string {
   });
 }
 
-export default async function AdminDashboard() {
-  const items = await listInsights();
+export default function AdminDashboardPage() {
+  return (
+    <AdminAuthGate>
+      <AdminDashboard />
+    </AdminAuthGate>
+  );
+}
+
+function AdminDashboard() {
+  const [items, setItems] = useState<Insight[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await adminFetch("/api/admin/insights");
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          if (!cancelled) setError(body?.error ?? `Load failed (${res.status})`);
+          return;
+        }
+        const body = await res.json();
+        if (!cancelled) setItems((body.items ?? []) as Insight[]);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Network error");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <main className="px-6 md:px-12 lg:px-24 py-10 md:py-16 max-w-6xl mx-auto">
@@ -52,6 +84,12 @@ export default async function AdminDashboard() {
         </div>
       </header>
 
+      {error && (
+        <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-red-400 mb-6">
+          {error}
+        </p>
+      )}
+
       <div className="overflow-hidden rounded-2xl border border-white/8">
         <table className="w-full text-sm">
           <thead className="bg-white/[0.02]">
@@ -64,7 +102,14 @@ export default async function AdminDashboard() {
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 && (
+            {items === null && (
+              <tr>
+                <td colSpan={5} className="px-5 py-8 text-center text-zinc-500">
+                  Loading…
+                </td>
+              </tr>
+            )}
+            {items !== null && items.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-5 py-8 text-center text-zinc-500">
                   No insights yet.{" "}
@@ -77,9 +122,9 @@ export default async function AdminDashboard() {
                 </td>
               </tr>
             )}
-            {items.map((item) => (
+            {items?.map((item) => (
               <tr
-                key={item.filename}
+                key={item.slug}
                 className="border-t border-white/5 hover:bg-white/[0.02] transition-colors"
               >
                 <td className="px-5 py-3 font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400 whitespace-nowrap">

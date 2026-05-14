@@ -5,7 +5,8 @@ import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsListing } from "@/components/insights/InsightsListing";
-import { getAllInsights, getAllInsightsLive } from "@/lib/insights";
+import { getAllInsights } from "@/lib/insights";
+import { getAllInsightsLive } from "@/lib/insights/loader-server";
 
 // ISR — admin's revalidatePath('/insights/page/N') hits on save.
 export const revalidate = 60;

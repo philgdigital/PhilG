@@ -5,12 +5,8 @@ import Link from "next/link";
 import type { ReactNode, HTMLAttributes, OlHTMLAttributes } from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { ArrowUpRight } from "@/components/icons/Icons";
-import {
-  getAllInsights,
-  getAllInsightsLive,
-  getInsightLive,
-  type Category,
-} from "@/lib/insights";
+import { getAllInsights, type Category } from "@/lib/insights";
+import { getAllInsightsLive, getInsightLive } from "@/lib/insights/loader-server";
 import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
