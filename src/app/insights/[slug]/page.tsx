@@ -326,21 +326,54 @@ export default async function InsightPage({ params }: RouteProps) {
         {/* Header block */}
         <header className="max-w-5xl mx-auto mb-16 md:mb-20">
           <Reveal>
-            <div className="flex flex-wrap items-center gap-4 mb-10">
-              <span
-                className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border ${
-                  CATEGORY_BADGE[insight.category]
-                }`}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
+              <div className="flex flex-wrap items-center gap-4">
+                <span
+                  className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border ${
+                    CATEGORY_BADGE[insight.category]
+                  }`}
+                >
+                  {insight.category}
+                </span>
+                <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
+                  {formatDate(insight.date)}
+                </span>
+                <span
+                  aria-hidden
+                  className="w-1 h-1 rounded-full bg-zinc-700"
+                />
+                <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
+                  {insight.readTime}
+                </span>
+              </div>
+              {/* Download-as-PDF link. The PDF is generated at build
+                  time (scripts/build-insights-pdfs.tsx) and lives at
+                  /pdf/{slug}.pdf. The `download` attribute hints to
+                  the browser that the user wants to save it rather
+                  than navigate to it. Magnetic cursor + brand-blue
+                  accent on hover so it reads as a deliberate action. */}
+              <a
+                href={`/pdf/${insight.slug}.pdf`}
+                download={`${insight.slug}.pdf`}
+                data-magnetic="true"
+                className="group hover-target inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-[#0f62fe]/50 bg-white/[0.03] hover:bg-[#0f62fe]/10 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-300 hover:text-white transition-all"
               >
-                {insight.category}
-              </span>
-              <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
-                {formatDate(insight.date)}
-              </span>
-              <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-700" />
-              <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
-                {insight.readTime}
-              </span>
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  className="w-3.5 h-3.5 text-[#4589ff] transition-transform duration-500 group-hover:translate-y-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Download PDF</span>
+              </a>
             </div>
           </Reveal>
 

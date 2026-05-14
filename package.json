@@ -3,14 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-insights-data.mjs",
+    "build:insights-data": "node scripts/build-insights-data.mjs",
+    "build:insights-pdfs": "tsx scripts/build-insights-pdfs.tsx",
+    "build:insights": "npm run build:insights-data && npm run build:insights-pdfs",
+    "predev": "npm run build:insights",
     "dev": "next dev",
-    "prebuild": "node scripts/build-insights-data.mjs",
+    "prebuild": "npm run build:insights",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.5.1",
     "@vercel/analytics": "^2.0.1",
     "gray-matter": "^4.0.3",
     "minisearch": "^7.2.0",

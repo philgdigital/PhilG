@@ -1,0 +1,622 @@
+/**
+ * Insights PDF build step.
+ *
+ * Walks /content/insights/*.mdx (via the parsed data.json the
+ * prebuild step already produced), renders each post to a styled
+ * PDF using @react-pdf/renderer, and writes the result to
+ * /public/pdf/{slug}.pdf.
+ *
+ * Runs in the prebuild chain after build-insights-data.mjs so the
+ * data.json is fresh. The detail page's "Download PDF" button
+ * links directly to /pdf/{slug}.pdf — a static asset, no runtime
+ * cost.
+ *
+ * Why .tsx? @react-pdf/renderer uses React.createElement under the
+ * hood, so writing it as JSX makes the layout legible. The script
+ * is executed via `tsx` (which transpiles TS+JSX on the fly) — see
+ * package.json scripts.
+ *
+ * Design:
+ *   Page 1   — Cover: brand mark + category + title + excerpt +
+ *              meta. The dramatic opener.
+ *   Pages 2+ — Body: typography mirroring the website, every page
+ *              carries a slim top banner inviting the reader to
+ *              hire Phil for a project.
+ *   Last     — Closing CTA spread: full-page hire pitch with
+ *              contact + credentials.
+ *
+ * The PDF is portrait A4 with 56px outer margins. Body type is
+ * Helvetica (PDF default; IBM Plex isn't bundled because shipping
+ * a font file would add ~250kb per PDF and the design reads
+ * cleanly in Helvetica's neutral grotesque).
+ */
+
+import fs from "node:fs";
+import path from "node:path";
+import React from "react";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  Link,
+  StyleSheet,
+  pdf,
+  Font,
+} from "@react-pdf/renderer";
+
+// ---------------------------------------------------------------
+// Types — mirror the runtime Insight shape (kept inline to avoid
+// pulling in @/lib/insights/schema.ts which is TS-only and would
+// require an additional config to run from this script).
+// ---------------------------------------------------------------
+
+type Insight = {
+  slug: string;
+  title: string;
+  date: string;
+  category: string;
+  excerpt: string;
+  readTime: string;
+  image: string;
+  featured: boolean;
+  body: string;
+  href: string;
+};
+
+type Block =
+  | { type: "h2"; text: string }
+  | { type: "p"; text: string }
+  | { type: "quote"; text: string }
+  | { type: "list"; items: string[] };
+
+// ---------------------------------------------------------------
+// Tiny markdown parser. The insight bodies only use:
+//   - ## headings
+//   - paragraphs separated by blank lines
+//   - > blockquotes (possibly multiline)
+//   - - bullet lists
+// Inline markdown (bold/italic/links/code) is collapsed to plain
+// text for PDF — keeps the parser short and the design clean.
+// ---------------------------------------------------------------
+
+function stripInline(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // [label](url) → label
+    .replace(/\*\*([^*]+)\*\*/g, "$1") // **bold**
+    .replace(/\*([^*]+)\*/g, "$1") // *italic*
+    .replace(/`([^`]+)`/g, "$1"); // `code`
+}
+
+function parseMarkdown(source: string): Block[] {
+  const lines = source.split("\n");
+  const blocks: Block[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i].trim();
+    if (line.startsWith("## ")) {
+      blocks.push({ type: "h2", text: stripInline(line.slice(3)) });
+      i++;
+    } else if (line.startsWith("> ")) {
+      const quoteLines: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith("> ")) {
+        quoteLines.push(stripInline(lines[i].trim().slice(2)));
+        i++;
+      }
+      blocks.push({ type: "quote", text: quoteLines.join(" ") });
+    } else if (line.startsWith("- ")) {
+      const items: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith("- ")) {
+        items.push(stripInline(lines[i].trim().slice(2)));
+        i++;
+      }
+      blocks.push({ type: "list", items });
+    } else if (line === "") {
+      i++;
+    } else {
+      const paraLines: string[] = [];
+      while (i < lines.length && lines[i].trim() !== "") {
+        paraLines.push(stripInline(lines[i].trim()));
+        i++;
+      }
+      blocks.push({ type: "p", text: paraLines.join(" ") });
+    }
+  }
+  return blocks;
+}
+
+// ---------------------------------------------------------------
+// Style sheet. PDF "rems" are dimensionless points (1pt = 1/72 inch).
+// A4 portrait = 595 x 842 pt.
+// ---------------------------------------------------------------
+
+const COLORS = {
+  bg: "#0a0a0c",
+  text: "#e7e7ea",
+  textMuted: "#a1a1aa",
+  textVeryMuted: "#6f6f76",
+  white: "#ffffff",
+  blue: "#0f62fe",
+  blueSoft: "#4589ff",
+  emerald: "#10b981",
+  hairline: "#27272a",
+  accent: "#0f62fe",
+};
+
+const styles = StyleSheet.create({
+  // PAGE — full-bleed dark background. Outer padding gives content
+  // ~56pt safe area on each side.
+  page: {
+    backgroundColor: COLORS.bg,
+    color: COLORS.text,
+    fontFamily: "Helvetica",
+    fontSize: 11,
+    paddingTop: 88,
+    paddingBottom: 70,
+    paddingHorizontal: 56,
+  },
+
+  // BANNER on top of every body page. Slim IBM-blue strip with
+  // hire-Phil CTA. Skipped on cover + closing pages.
+  bannerStrip: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 36,
+    backgroundColor: COLORS.blue,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 56,
+  },
+  bannerText: {
+    color: COLORS.white,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9,
+    letterSpacing: 2,
+  },
+  bannerCta: {
+    color: COLORS.white,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9,
+    letterSpacing: 2,
+  },
+
+  // COVER PAGE
+  coverWrap: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  coverTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  brandWord: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 14,
+    color: COLORS.white,
+    letterSpacing: -0.3,
+  },
+  brandDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: COLORS.blue,
+    marginLeft: 3,
+    marginTop: 8,
+  },
+  brandRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  categoryPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: COLORS.blue,
+    color: COLORS.blueSoft,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    letterSpacing: 2,
+  },
+  coverCenter: {
+    flexDirection: "column",
+    gap: 18,
+  },
+  coverEyebrow: {
+    color: COLORS.textVeryMuted,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    letterSpacing: 3,
+  },
+  coverTitle: {
+    color: COLORS.white,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 42,
+    letterSpacing: -1.2,
+    lineHeight: 1.05,
+  },
+  coverExcerpt: {
+    color: COLORS.textMuted,
+    fontFamily: "Helvetica",
+    fontSize: 14,
+    lineHeight: 1.45,
+    marginTop: 8,
+  },
+  coverMeta: {
+    color: COLORS.textVeryMuted,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    letterSpacing: 2.5,
+  },
+  coverAccentBar: {
+    height: 4,
+    width: 60,
+    backgroundColor: COLORS.blue,
+    marginTop: 18,
+  },
+
+  // BODY TYPOGRAPHY
+  bodyH2: {
+    color: COLORS.white,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 18,
+    letterSpacing: -0.4,
+    marginTop: 24,
+    marginBottom: 10,
+  },
+  bodyP: {
+    color: COLORS.text,
+    fontSize: 11,
+    lineHeight: 1.65,
+    marginBottom: 12,
+  },
+  bodyQuoteWrap: {
+    marginTop: 18,
+    marginBottom: 18,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 18,
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.blue,
+  },
+  bodyQuote: {
+    color: COLORS.white,
+    fontFamily: "Helvetica-Oblique",
+    fontSize: 14,
+    lineHeight: 1.4,
+  },
+  bodyListItemRow: {
+    flexDirection: "row",
+    marginBottom: 8,
+  },
+  bodyListBullet: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: COLORS.blue,
+    marginTop: 7,
+    marginRight: 10,
+  },
+  bodyListText: {
+    flex: 1,
+    color: COLORS.text,
+    fontSize: 11,
+    lineHeight: 1.55,
+  },
+
+  // PAGE FOOTER on body pages
+  pageFooter: {
+    position: "absolute",
+    bottom: 32,
+    left: 56,
+    right: 56,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    color: COLORS.textVeryMuted,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 7,
+    letterSpacing: 2,
+  },
+
+  // CLOSING CTA PAGE
+  ctaWrap: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    gap: 22,
+  },
+  ctaEyebrow: {
+    color: COLORS.blueSoft,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9,
+    letterSpacing: 3,
+  },
+  ctaHeadline: {
+    color: COLORS.white,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 44,
+    letterSpacing: -1.5,
+    lineHeight: 1.05,
+  },
+  ctaSubline: {
+    color: COLORS.textMuted,
+    fontSize: 14,
+    lineHeight: 1.5,
+    marginTop: 4,
+    maxWidth: 380,
+  },
+  ctaContactBlock: {
+    marginTop: 12,
+    gap: 6,
+  },
+  ctaContactRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  ctaContactLabel: {
+    color: COLORS.textVeryMuted,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    letterSpacing: 2,
+    width: 70,
+  },
+  ctaContactValue: {
+    color: COLORS.white,
+    fontSize: 11,
+  },
+  ctaContactLink: {
+    color: COLORS.blueSoft,
+    fontSize: 11,
+    textDecoration: "none",
+  },
+  ctaCredsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 16,
+  },
+  ctaCredPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    borderWidth: 0.5,
+    borderColor: COLORS.hairline,
+    color: COLORS.textMuted,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    letterSpacing: 1.5,
+  },
+});
+
+// ---------------------------------------------------------------
+// Components
+// ---------------------------------------------------------------
+
+const BANNER_TEXT = "HIRE PHIL G. FOR YOUR NEXT PRODUCT";
+const BANNER_CTA = "PHILG.CZ →";
+
+const Banner = () => (
+  <View style={styles.bannerStrip} fixed>
+    <Text style={styles.bannerText}>{BANNER_TEXT}</Text>
+    <Text style={styles.bannerCta}>{BANNER_CTA}</Text>
+  </View>
+);
+
+const PageFooter = () => (
+  <View style={styles.pageFooter} fixed>
+    <Text>PHIL G. · UX/PRODUCT DESIGN LEADER</Text>
+    <Text
+      render={({ pageNumber, totalPages }: { pageNumber: number; totalPages: number }) =>
+        `${String(pageNumber).padStart(2, "0")} / ${String(totalPages).padStart(2, "0")}`
+      }
+    />
+  </View>
+);
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+const CoverPage = ({ insight }: { insight: Insight }) => (
+  <Page size="A4" style={styles.page}>
+    <View style={styles.coverWrap}>
+      <View style={styles.coverTopRow}>
+        <View style={styles.brandRow}>
+          <Text style={styles.brandWord}>PHIL G</Text>
+          <View style={styles.brandDot} />
+        </View>
+        <Text style={styles.categoryPill}>{insight.category.toUpperCase()}</Text>
+      </View>
+
+      <View style={styles.coverCenter}>
+        <Text style={styles.coverEyebrow}>INSIGHT</Text>
+        <Text style={styles.coverTitle}>{insight.title}</Text>
+        <Text style={styles.coverExcerpt}>{insight.excerpt}</Text>
+        <View style={styles.coverAccentBar} />
+      </View>
+
+      <Text style={styles.coverMeta}>
+        {formatDate(insight.date).toUpperCase()} · {insight.readTime.toUpperCase()}
+      </Text>
+    </View>
+  </Page>
+);
+
+const BodyPage = ({ blocks }: { blocks: Block[] }) => (
+  <Page size="A4" style={styles.page}>
+    <Banner />
+    {blocks.map((block, i) => {
+      if (block.type === "h2") {
+        return (
+          <Text key={i} style={styles.bodyH2} wrap={false}>
+            {block.text}
+          </Text>
+        );
+      }
+      if (block.type === "p") {
+        return (
+          <Text key={i} style={styles.bodyP}>
+            {block.text}
+          </Text>
+        );
+      }
+      if (block.type === "quote") {
+        return (
+          <View key={i} style={styles.bodyQuoteWrap} wrap={false}>
+            <Text style={styles.bodyQuote}>{block.text}</Text>
+          </View>
+        );
+      }
+      if (block.type === "list") {
+        return (
+          <View key={i} wrap>
+            {block.items.map((item, j) => (
+              <View key={j} style={styles.bodyListItemRow}>
+                <View style={styles.bodyListBullet} />
+                <Text style={styles.bodyListText}>{item}</Text>
+              </View>
+            ))}
+          </View>
+        );
+      }
+      return null;
+    })}
+    <PageFooter />
+  </Page>
+);
+
+const ClosingCtaPage = () => (
+  <Page size="A4" style={styles.page}>
+    <Banner />
+    <View style={styles.ctaWrap}>
+      <Text style={styles.ctaEyebrow}>BUILT TO SHIP — NOT TO PITCH</Text>
+      <Text style={styles.ctaHeadline}>Hire Phil G. for your next product.</Text>
+      <Text style={styles.ctaSubline}>
+        Embedded senior product designer + builder. Discovery, AI-native
+        prototyping, design leadership, design systems, production-grade React.
+        Prague-based, available for 2026 enterprise engagements.
+      </Text>
+
+      <View style={styles.ctaContactBlock}>
+        <View style={styles.ctaContactRow}>
+          <Text style={styles.ctaContactLabel}>EMAIL</Text>
+          <Link src="mailto:hello@philg.cz" style={styles.ctaContactLink}>
+            hello@philg.cz
+          </Link>
+        </View>
+        <View style={styles.ctaContactRow}>
+          <Text style={styles.ctaContactLabel}>LINKEDIN</Text>
+          <Link
+            src="https://www.linkedin.com/in/felipeaela/"
+            style={styles.ctaContactLink}
+          >
+            linkedin.com/in/felipeaela
+          </Link>
+        </View>
+        <View style={styles.ctaContactRow}>
+          <Text style={styles.ctaContactLabel}>WEB</Text>
+          <Link src="https://philg.cz" style={styles.ctaContactLink}>
+            philg.cz
+          </Link>
+        </View>
+        <View style={styles.ctaContactRow}>
+          <Text style={styles.ctaContactLabel}>BASED IN</Text>
+          <Text style={styles.ctaContactValue}>Prague, Czechia</Text>
+        </View>
+      </View>
+
+      <View style={styles.ctaCredsRow}>
+        <Text style={styles.ctaCredPill}>17+ YEARS</Text>
+        <Text style={styles.ctaCredPill}>NN/g UX MASTER</Text>
+        <Text style={styles.ctaCredPill}>IDEO CREATIVE LEADERSHIP</Text>
+        <Text style={styles.ctaCredPill}>IBM DESIGN THINKING</Text>
+        <Text style={styles.ctaCredPill}>1,050+ MENTEES</Text>
+      </View>
+    </View>
+    <PageFooter />
+  </Page>
+);
+
+const InsightDocument = ({ insight, blocks }: { insight: Insight; blocks: Block[] }) => (
+  <Document
+    author="Phil G."
+    title={insight.title}
+    subject={insight.excerpt}
+    keywords={insight.category}
+    creator="philg.cz"
+    producer="philg.cz"
+  >
+    <CoverPage insight={insight} />
+    <BodyPage blocks={blocks} />
+    <ClosingCtaPage />
+  </Document>
+);
+
+// ---------------------------------------------------------------
+// Main — read data.json, render one PDF per insight.
+// ---------------------------------------------------------------
+
+async function main() {
+  const root = process.cwd();
+  const dataPath = path.join(root, "src", "lib", "insights", "data.json");
+  const outDir = path.join(root, "public", "pdf");
+
+  if (!fs.existsSync(dataPath)) {
+    console.warn(
+      "[build-insights-pdfs] data.json not found — run prebuild step first. Skipping.",
+    );
+    return;
+  }
+
+  const insights: Insight[] = JSON.parse(fs.readFileSync(dataPath, "utf8"));
+  fs.mkdirSync(outDir, { recursive: true });
+
+  for (const insight of insights) {
+    const blocks = parseMarkdown(insight.body);
+    const doc = <InsightDocument insight={insight} blocks={blocks} />;
+    const buffer = await pdf(doc).toBuffer();
+    // toBuffer returns a Node Readable stream in some versions of
+    // @react-pdf/renderer; normalize to a Buffer.
+    const out = path.join(outDir, `${insight.slug}.pdf`);
+    if (Buffer.isBuffer(buffer)) {
+      fs.writeFileSync(out, buffer);
+    } else {
+      // Stream-style: drain to file.
+      const chunks: Buffer[] = [];
+      await new Promise<void>((resolve, reject) => {
+        (buffer as unknown as NodeJS.ReadableStream)
+          .on("data", (chunk: Buffer | string) => {
+            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+          })
+          .on("end", () => {
+            fs.writeFileSync(out, Buffer.concat(chunks));
+            resolve();
+          })
+          .on("error", reject);
+      });
+    }
+    console.log(
+      `[build-insights-pdfs] wrote ${path.relative(root, out)} (${blocks.length} blocks)`,
+    );
+  }
+}
+
+main().catch((err) => {
+  console.error("[build-insights-pdfs] failed:", err);
+  process.exit(1);
+});
+
+// react-pdf requires Font.register to be safe on Helvetica which is
+// the default — explicit no-op so TypeScript treats Font as used.
+void Font;
