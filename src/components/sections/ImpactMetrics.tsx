@@ -19,8 +19,8 @@ const METRICS: Metric[] = [
     icon: Award,
     value: 17,
     suffix: "+",
-    label: "Years",
-    desc: "Building products for Walmart, VMware, Pivotal Labs, Microsoft, SAP, Cemex, Vodafone, WWF, and the Royal Air Force.",
+    label: "Years of Experience",
+    desc: "Embedded with Walmart, VMware, Pivotal Labs, Microsoft, SAP, Cemex, Vodafone, WWF, and the Royal Air Force. Shipped products, not slides.",
   },
   {
     icon: Users,
