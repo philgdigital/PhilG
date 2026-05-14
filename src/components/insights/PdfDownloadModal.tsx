@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { XIcon as X } from "@/components/icons/Icons";
 
 /**
@@ -123,84 +124,96 @@ export function PdfDownloadModal({ slug, title }: Props) {
         <span>Download PDF</span>
       </button>
 
-      {open && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="pdf-download-title"
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 backdrop-blur-md transition-opacity duration-300"
-        >
-          {/* Backdrop — full-bleed click target that dismisses */}
-          <button
-            type="button"
-            aria-label="Close dialog"
-            data-cursor-no-hint="true"
-            className="absolute inset-0 bg-[#0a0a0c]/70 hover-target cursor-default"
-            onClick={() => setOpen(false)}
-          />
-
-          {/* Panel */}
+      {/* Portal the modal to <body> so it escapes every parent
+          stacking context. Article body uses <Reveal> wrappers that
+          set `transform: translate(...)` which silently creates a
+          new stacking context — any `z-[200]` inside it is scoped
+          to that subtree, so the modal renders BEHIND sibling
+          stacking contexts (the page hero, the navbar). Rendering
+          at document.body level is the only fix that stays robust
+          even if more transformed ancestors get added later. */}
+      {open &&
+        createPortal(
           <div
-            ref={dialogRef}
-            className="relative w-full max-w-2xl bg-[#0a0a0c] border border-white/10 rounded-[2rem] p-8 md:p-12 shadow-[0_0_80px_rgba(15,98,254,0.25)] animate-modal overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pdf-download-title"
+            className="fixed inset-0 z-[2147483647] flex items-center justify-center p-4 sm:p-6 backdrop-blur-2xl transition-opacity duration-300"
           >
-            {/* Top IBM-blue hairline accent — same flourish as
-                ProjectFormModal */}
-            <div
-              aria-hidden
-              className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0f62fe] to-transparent"
-            />
-
-            {/* Close (X) — top-right */}
+            {/* Backdrop — full-bleed click target that dismisses.
+                Opacity bumped from /70 → /95 so article content
+                doesn't bleed through visibly. */}
             <button
               type="button"
-              onClick={() => setOpen(false)}
               aria-label="Close dialog"
               data-cursor-no-hint="true"
-              className="absolute top-6 right-6 text-neutral-500 hover:text-white transition-colors hover-target"
-            >
-              <X className="w-8 h-8" />
-            </button>
+              className="absolute inset-0 bg-[#0a0a0c]/95 hover-target cursor-default"
+              onClick={() => setOpen(false)}
+            />
 
-            {/* Eyebrow */}
-            <div className="flex items-center gap-3 mb-3">
-              <span
+            {/* Panel */}
+            <div
+              ref={dialogRef}
+              className="relative w-full max-w-2xl bg-[#0a0a0c] border border-white/10 rounded-[2rem] p-8 md:p-12 shadow-[0_0_80px_rgba(15,98,254,0.25)] animate-modal overflow-hidden"
+            >
+              {/* Top IBM-blue hairline accent — same flourish as
+                  ProjectFormModal */}
+              <div
                 aria-hidden
-                className="w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.7)]"
+                className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0f62fe] to-transparent"
               />
-              <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-zinc-400">
-                Download as PDF
-              </span>
-            </div>
 
-            <h2
-              id="pdf-download-title"
-              className="text-2xl md:text-4xl font-black tracking-tighter text-white leading-[1.1] mb-3 pr-12"
-            >
-              {title}
-            </h2>
-            <p className="text-zinc-400 font-light text-base md:text-lg leading-relaxed max-w-xl mb-8 md:mb-10">
-              Pick the version that fits your reading mode. Screen-friendly
-              digital, or a clean print-ready format with no heavy ink.
-            </p>
+              {/* Close (X) — top-right */}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close dialog"
+                data-cursor-no-hint="true"
+                className="absolute top-6 right-6 text-neutral-500 hover:text-white transition-colors hover-target"
+              >
+                <X className="w-8 h-8" />
+              </button>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-              <OptionCard
-                tone="digital"
-                title="Digital version"
-                blurb="Dark editorial, hero image, brand-wash accents. Best for reading on screen."
-                onClick={() => triggerDownload("digital")}
-              />
-              <OptionCard
-                tone="print"
-                title="Print-ready"
-                blurb="Light theme, no hero image. Friendly to paper and greyscale printers."
-                onClick={() => triggerDownload("print")}
-              />
+              {/* Eyebrow */}
+              <div className="flex items-center gap-3 mb-3">
+                <span
+                  aria-hidden
+                  className="w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.7)]"
+                />
+                <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-zinc-400">
+                  Download as PDF
+                </span>
+              </div>
+
+              <h2
+                id="pdf-download-title"
+                className="text-2xl md:text-4xl font-black tracking-tighter text-white leading-[1.1] mb-3 pr-12"
+              >
+                {title}
+              </h2>
+              <p className="text-zinc-400 font-light text-base md:text-lg leading-relaxed max-w-xl mb-8 md:mb-10">
+                Pick the version that fits your reading mode. Screen-friendly
+                digital, or a clean print-ready format with no heavy ink.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                <OptionCard
+                  tone="digital"
+                  title="Digital version"
+                  blurb="Dark editorial, hero image, brand-wash accents. Best for reading on screen."
+                  onClick={() => triggerDownload("digital")}
+                />
+                <OptionCard
+                  tone="print"
+                  title="Print-ready"
+                  blurb="Light theme, no hero image. Friendly to paper and greyscale printers."
+                  onClick={() => triggerDownload("print")}
+                />
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
