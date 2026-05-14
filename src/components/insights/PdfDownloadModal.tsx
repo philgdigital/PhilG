@@ -204,13 +204,13 @@ export function PdfDownloadModal({ slug, title }: Props) {
                 <OptionCard
                   tone="digital"
                   title="Digital version"
-                  blurb="Dark editorial, hero image, brand-wash accents. Best for reading on screen."
+                  blurb="Best for reading on screen."
                   onClick={() => triggerDownload("digital")}
                 />
                 <OptionCard
                   tone="print"
                   title="Print-ready"
-                  blurb="Light theme, no hero image. Friendly to paper and greyscale printers."
+                  blurb="Friendly to printing on paper."
                   onClick={() => triggerDownload("print")}
                 />
               </div>
