@@ -170,28 +170,26 @@ const mdxComponents = {
     // overriding the body-text classes by descendant specificity.
     // Each `[&_p]:` rule generates `.figure p { ... }` which wins
     // over the standalone class on the <p>.
+    // Layout: icon is taken OUT of normal flow via absolute
+    // positioning. The figure reserves vertical space for the
+    // visible glyph with `pt-*` and the blockquote starts flush
+    // against the bottom of that padding zone — so the gap between
+    // icon and text is a single fixed value per breakpoint that
+    // can't be pushed apart by browser-default `<p>` or
+    // `<blockquote>` margins or by line-height air below the glyph.
+    // The serif `"` glyph visually fills ~50-60% of its font-size,
+    // so pt-* values are calibrated to match that visible height.
     <figure
-      className="my-10 md:my-16 [&_p]:font-serif [&_p]:italic [&_p]:font-light [&_p]:text-xl [&_p]:md:text-2xl [&_p]:lg:text-3xl [&_p]:tracking-tight [&_p]:leading-[1.3] [&_p]:text-white [&_p]:max-w-4xl [&_p]:mb-0"
+      className="relative my-10 md:my-16 pt-16 md:pt-20 lg:pt-24 [&_p]:font-serif [&_p]:italic [&_p]:font-light [&_p]:text-xl [&_p]:md:text-2xl [&_p]:lg:text-3xl [&_p]:tracking-tight [&_p]:leading-[1.3] [&_p]:text-white [&_p]:max-w-4xl [&_p]:m-0"
     >
-      {/* Opening quote glyph. The serif `"` glyph occupies only the
-          TOP half of its line-box, so `leading-none` (line-height
-          = 1.0) leaves a tall empty zone below the visible glyph
-          and pushes the quote text far away from the icon — they
-          stop reading as one unit. Cropping line-height to 0.5
-          AND pulling the next sibling up with a negative bottom
-          margin closes that gap so the first line of quote text
-          sits right under the glyph's visual baseline. Values are
-          calibrated per breakpoint because the font-size jumps
-          (text-9xl → 10rem → 12rem) widen the empty zone in
-          absolute pixels. */}
       <span
         aria-hidden
-        className="block font-serif italic font-light text-9xl md:text-[10rem] lg:text-[12rem] leading-[0.5] text-[#4589ff]/25 -mb-12 md:-mb-16 lg:-mb-20 select-none"
+        className="pointer-events-none absolute top-0 left-0 font-serif italic font-light text-9xl md:text-[10rem] lg:text-[12rem] leading-none text-[#4589ff]/25 select-none"
       >
         &ldquo;
       </span>
       <blockquote
-        className="font-serif italic font-light text-xl md:text-2xl lg:text-3xl tracking-tight leading-[1.3] text-white max-w-4xl"
+        className="font-serif italic font-light text-xl md:text-2xl lg:text-3xl tracking-tight leading-[1.3] text-white max-w-4xl m-0"
         {...props}
       >
         {children}
