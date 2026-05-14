@@ -1,11 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Phil G favicon. IBM-blue rounded square + bold geometric "P"
-       inside, white. Path-based (no font dependency) so it renders
-       identically on every browser. At 16x16 tab sizes the P stays
-       legible because the bowl is wide and the strokes are thick. -->
-  <rect width="32" height="32" rx="7" fill="#0f62fe" />
-  <path
-    d="M 9 6 L 9 26 L 13 26 L 13 19 L 18 19 A 6.5 6.5 0 0 0 18 6 Z M 13 10 L 18 10 A 2.5 2.5 0 0 1 18 15 L 13 15 Z"
-    fill="white"
+  <!--
+    Phil G abstract favicon. Distills the site's signature visual
+    motifs into a 32x32 mark that reads from a browser tab:
+      - Carbon Black (#0a0a0c) rounded-square foundation, same as
+        the site's bg base.
+      - Hairline outer orbital ring in IBM blue at low alpha, a
+        direct reference to the InitialLoader's orbital ring
+        composition.
+      - Inner gradient sphere from IBM blue (#0f62fe) at the
+        center to emerald (#10b981) at the edge, echoing the
+        Hero's "Acceleration" headline gradient sweep.
+      - Small bright accent dot orbiting in the upper-right, the
+        same magnetic-blue dot pattern used by the Navbar logo
+        period and the InitialLoader's outer orbiter.
+
+    No glyphs, no letters: the mark reads as a stylised orbital
+    sphere, abstract but unmistakably tied to the brand's existing
+    visual language. Path-only so it renders identically across
+    every browser at every density.
+  -->
+  <defs>
+    <radialGradient id="philg-sphere" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#7faaff" />
+      <stop offset="45%" stop-color="#0f62fe" />
+      <stop offset="100%" stop-color="#10b981" />
+    </radialGradient>
+  </defs>
+
+  <!-- Carbon Black foundation. -->
+  <rect width="32" height="32" rx="7" fill="#0a0a0c" />
+
+  <!-- Hairline orbital ring. -->
+  <circle
+    cx="16"
+    cy="16"
+    r="13"
+    fill="none"
+    stroke="#0f62fe"
+    stroke-width="0.6"
+    stroke-opacity="0.55"
   />
+
+  <!-- Gradient sphere: blue highlight, IBM-blue body, emerald shadow. -->
+  <circle cx="16" cy="16" r="8" fill="url(#philg-sphere)" />
+
+  <!-- Orbital accent dot, upper-right, IBM blue with a soft glow. -->
+  <circle cx="25" cy="7" r="2.2" fill="#0f62fe" />
+  <circle cx="25" cy="7" r="2.2" fill="#4589ff" opacity="0.35" />
 </svg>
