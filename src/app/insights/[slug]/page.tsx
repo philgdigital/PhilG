@@ -216,34 +216,41 @@ export default async function InsightPage({ params }: RouteProps) {
            more gently into the surrounding bg and doesn't introduce its
            own edge.
       */}
+      {/* SOFTENED dark vignette. Tones down the original 55%-82%
+          dark ramp so it doesn't compete with the brand-colour
+          glow layered on top. Now: 35% dark at the 55% radius,
+          65% dark at the very edge - just enough to dim the page
+          bg orbs in the periphery without creating a hard dark
+          band that the brand glow has to fight through. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
         style={{
           background:
-            "radial-gradient(ellipse 75% 55% at center, transparent 0%, rgba(10,10,12,0.55) 65%, rgba(10,10,12,0.82) 100%)",
+            "radial-gradient(ellipse 85% 70% at center, transparent 0%, rgba(10,10,12,0.35) 55%, rgba(10,10,12,0.65) 100%)",
         }}
       />
-      {/* BRAND-COLOUR EDGE GLOW. Fixed-position so it stays at the
-          edges of the viewport as the visitor scrolls the article.
-          Four corner radial gradients in IBM blue + emerald that
-          fade to transparent toward the centre, where the article
-          reading column sits. The existing dark vignette above
-          (z-[-1]) keeps the page bg orbs from competing at the
-          periphery; this layer (z-0) sits on top of that and adds
-          the brand colour back at the corners only, so the net
-          visual is 'brand-tinted dark frame around a clean dark
-          text stage'. The text itself is further darkened by the
-          centred article-column halo inside <main> below. */}
+      {/* BRAND-COLOUR EDGE GLOW. Fixed-position. Four large corner
+          radial gradients in IBM blue + emerald that fade to
+          transparent toward the centre. Tuned for:
+            - Brightness at the corners: 0.50 / 0.45 alpha at 0%
+              (was 0.28 / 0.22 - too subtle for the user).
+            - Smoothness of the fade: 4-stop ramp per radial
+              (0.50 -> 0.25 -> 0.10 -> transparent) instead of the
+              previous abrupt 2-stop, so there's no visible 'edge
+              mark' where the colour meets the dark backdrop.
+            - Generous ellipse size (110% x 95% of the viewport)
+              so the gradient body extends well past the visible
+              edge and the falloff happens over a large area. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
         style={{
           background: `
-            radial-gradient(ellipse 70% 60% at 0% 0%, rgba(15, 98, 254, 0.28), transparent 62%),
-            radial-gradient(ellipse 70% 60% at 100% 0%, rgba(16, 185, 129, 0.22), transparent 62%),
-            radial-gradient(ellipse 70% 60% at 0% 100%, rgba(16, 185, 129, 0.22), transparent 62%),
-            radial-gradient(ellipse 70% 60% at 100% 100%, rgba(15, 98, 254, 0.28), transparent 62%)
+            radial-gradient(ellipse 110% 95% at 0% 0%, rgba(15, 98, 254, 0.5) 0%, rgba(15, 98, 254, 0.25) 25%, rgba(15, 98, 254, 0.1) 50%, transparent 80%),
+            radial-gradient(ellipse 110% 95% at 100% 0%, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0.22) 25%, rgba(16, 185, 129, 0.08) 50%, transparent 80%),
+            radial-gradient(ellipse 110% 95% at 0% 100%, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0.22) 25%, rgba(16, 185, 129, 0.08) 50%, transparent 80%),
+            radial-gradient(ellipse 110% 95% at 100% 100%, rgba(15, 98, 254, 0.5) 0%, rgba(15, 98, 254, 0.25) 25%, rgba(15, 98, 254, 0.1) 50%, transparent 80%)
           `,
         }}
       />
