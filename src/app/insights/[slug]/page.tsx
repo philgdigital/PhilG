@@ -398,14 +398,11 @@ export default async function InsightPage({ params }: RouteProps) {
           {insight.body && <ArticleBody source={insight.body} />}
         </article>
 
-        {/* Closing: next + related. Section divider is a gradient-fade
-            hairline (transparent -> white/12 -> transparent) so the top
-            edge isn't a hard horizontal line cutting across the page. */}
+        {/* Closing: next + related. The "Continue reading" eyebrow
+            below carries its own trailing hairline rule, so this
+            section no longer needs its own top-edge divider — the
+            hairline IS the section break. */}
         <section className="relative pt-16 mt-24 md:mt-32 max-w-5xl mx-auto">
-          <span
-            aria-hidden
-            className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
-          />
           {/* "Continue reading" section header. Hairline trails off
               to the right so the eyebrow reads as a magazine-style
               chapter divider rather than a plain label. */}
