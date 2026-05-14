@@ -155,9 +155,23 @@ const mdxComponents = {
   ),
   blockquote: ({ children, ...props }: HTMLAttributes<HTMLQuoteElement>) => (
     // Editorial pull-quote — IDENTICAL to the home PullQuote
-    // section (see src/components/sections/PullQuote.tsx).
-    // Same glyph size, same blockquote size, same spacing.
-    <figure className="my-12 md:my-20">
+    // section (src/components/sections/PullQuote.tsx).
+    //
+    // CRITICAL: MDX wraps blockquote content in <p>, which our
+    // `p` map styles with body-text classes (text-lg/text-xl).
+    // Without overriding those on this specific <p>, the inner
+    // element's font-size beats the outer blockquote's font-size
+    // and the quote renders at body size. That's the "still
+    // small" bug.
+    //
+    // Fix: Tailwind descendant variants on the figure target the
+    // inner <p> and stamp it with the quote typography directly,
+    // overriding the body-text classes by descendant specificity.
+    // Each `[&_p]:` rule generates `.figure p { ... }` which wins
+    // over the standalone class on the <p>.
+    <figure
+      className="my-12 md:my-20 [&_p]:font-serif [&_p]:italic [&_p]:font-light [&_p]:text-3xl [&_p]:md:text-5xl [&_p]:lg:text-6xl [&_p]:tracking-tight [&_p]:leading-[1.15] [&_p]:text-white [&_p]:max-w-5xl [&_p]:mb-0"
+    >
       <span
         aria-hidden
         className="block font-serif italic font-light text-8xl md:text-9xl leading-none text-[#4589ff]/25 mb-2 md:mb-4 select-none"
