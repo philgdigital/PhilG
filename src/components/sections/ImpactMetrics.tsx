@@ -34,7 +34,7 @@ const METRICS: Metric[] = [
     value: 180,
     suffix: "+",
     label: "Countries",
-    desc: "Unique countries reached by products I've designed: Microsoft Teams (180+), SAP enterprise software (180+), Kuoni Tumlare's travel network (100+ destinations), Cemex's B2B platform (50+), plus the rest of the Fortune 500 roster.",
+    desc: "Microsoft Teams (180+), SAP (180+), Kuoni Tumlare (100+), Cemex (50+), and the rest of the Fortune 500 roster.",
   },
 ];
 
