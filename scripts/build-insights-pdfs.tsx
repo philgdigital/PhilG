@@ -40,6 +40,7 @@ import {
   Text,
   View,
   Link,
+  Image,
   StyleSheet,
   pdf,
   Font,
@@ -130,16 +131,21 @@ function parseMarkdown(source: string): Block[] {
 // A4 portrait = 595 x 842 pt.
 // ---------------------------------------------------------------
 
+/**
+ * Light theme. The PDF is the print/share artifact — the website
+ * stays dark. Printer-friendly: black ink on white, IBM-blue
+ * accents survive greyscale prints as a darker mid-grey.
+ */
 const COLORS = {
-  bg: "#0a0a0c",
-  text: "#e7e7ea",
-  textMuted: "#a1a1aa",
-  textVeryMuted: "#6f6f76",
-  white: "#ffffff",
+  bg: "#ffffff",
+  text: "#0a0a0c",
+  textMuted: "#52525b",
+  textVeryMuted: "#a1a1aa",
+  white: "#0a0a0c", // ex-display "white" reads as editorial black
   blue: "#0f62fe",
-  blueSoft: "#4589ff",
+  blueSoft: "#0f62fe",
   emerald: "#10b981",
-  hairline: "#27272a",
+  hairline: "#e4e4e7",
   accent: "#0f62fe",
 };
 
@@ -213,15 +219,44 @@ const styles = StyleSheet.create({
   },
 
   // COVER PAGE
+  // Layout (top to bottom):
+  //   brand row  → hero image (~45% of page height) → brand-wash
+  //   ribbon → eyebrow → title → excerpt → accent bar → meta
   coverWrap: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-between",
+    gap: 24,
   },
   coverTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
+  },
+  // ~45% of an A4 portrait minus padding ≈ 340pt tall. Width
+  // fills the page minus the 56pt horizontal padding.
+  coverHero: {
+    width: "100%",
+    height: 320,
+    objectFit: "cover",
+    borderRadius: 8,
+  },
+  // Two flat blocks stacked horizontally fake an IBM-blue →
+  // emerald gradient strip; react-pdf has no CSS gradient.
+  coverHeroRibbon: {
+    flexDirection: "row",
+    height: 3,
+    marginTop: -3,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    overflow: "hidden",
+  },
+  coverHeroRibbonBlue: {
+    flexGrow: 1,
+    backgroundColor: COLORS.blue,
+  },
+  coverHeroRibbonEmerald: {
+    flexGrow: 1,
+    backgroundColor: COLORS.emerald,
   },
   brandWord: {
     fontFamily: "Helvetica-Bold",
@@ -305,16 +340,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   bodyQuoteWrap: {
-    marginTop: 18,
-    marginBottom: 18,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 18,
+    marginTop: 20,
+    marginBottom: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
     borderLeftWidth: 3,
     borderLeftColor: COLORS.blue,
   },
   bodyQuote: {
-    color: COLORS.white,
+    color: COLORS.text,
     fontFamily: "Helvetica-Oblique",
     fontSize: 14,
     lineHeight: 1.4,
@@ -476,30 +511,64 @@ function formatDate(iso: string): string {
   });
 }
 
-const CoverPage = ({ insight }: { insight: Insight }) => (
-  <Page size="A4" style={styles.page}>
-    <View style={styles.coverWrap}>
-      <View style={styles.coverTopRow}>
-        <View style={styles.brandRow}>
-          <Text style={styles.brandWord}>PHIL G</Text>
-          <View style={styles.brandDot} />
+/**
+ * Resolve a frontmatter image path (e.g. "/images/about.jpg") to
+ * an absolute filesystem path that react-pdf's <Image> can load.
+ * Falls back to the default about.jpg when the file is missing
+ * so a busted frontmatter never crashes the build.
+ */
+function resolveCoverImage(image: string): string {
+  const cwd = process.cwd();
+  const direct = path.join(cwd, "public", image.replace(/^\/+/, ""));
+  if (fs.existsSync(direct)) return direct;
+  return path.join(cwd, "public", "images", "about.jpg");
+}
+
+const CoverPage = ({ insight }: { insight: Insight }) => {
+  const coverImagePath = resolveCoverImage(insight.image);
+  return (
+    <Page size="A4" style={styles.page}>
+      <View style={styles.coverWrap}>
+        {/* Top row: brand wordmark left, category pill right */}
+        <View style={styles.coverTopRow}>
+          <View style={styles.brandRow}>
+            <Text style={styles.brandWord}>PHIL G</Text>
+            <View style={styles.brandDot} />
+          </View>
+          <Text style={styles.categoryPill}>
+            {insight.category.toUpperCase()}
+          </Text>
         </View>
-        <Text style={styles.categoryPill}>{insight.category.toUpperCase()}</Text>
-      </View>
 
-      <View style={styles.coverCenter}>
-        <Text style={styles.coverEyebrow}>INSIGHT</Text>
-        <Text style={styles.coverTitle}>{insight.title}</Text>
-        <Text style={styles.coverExcerpt}>{insight.excerpt}</Text>
-        <View style={styles.coverAccentBar} />
-      </View>
+        {/* HERO IMAGE — wide banner, ~45% of page height. */}
+        <View>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+          <Image src={coverImagePath} style={styles.coverHero} />
+          {/* Brand-wash ribbon: IBM-blue → emerald, faked with two
+              flat blocks since react-pdf doesn't do CSS gradient. */}
+          <View style={styles.coverHeroRibbon}>
+            <View style={styles.coverHeroRibbonBlue} />
+            <View style={styles.coverHeroRibbonEmerald} />
+          </View>
+        </View>
 
-      <Text style={styles.coverMeta}>
-        {formatDate(insight.date).toUpperCase()} · {insight.readTime.toUpperCase()}
-      </Text>
-    </View>
-  </Page>
-);
+        {/* Title block */}
+        <View style={styles.coverCenter}>
+          <Text style={styles.coverEyebrow}>INSIGHT</Text>
+          <Text style={styles.coverTitle}>{insight.title}</Text>
+          <Text style={styles.coverExcerpt}>{insight.excerpt}</Text>
+          <View style={styles.coverAccentBar} />
+        </View>
+
+        {/* Meta — date · read time, mono, muted */}
+        <Text style={styles.coverMeta}>
+          {formatDate(insight.date).toUpperCase()} ·{" "}
+          {insight.readTime.toUpperCase()}
+        </Text>
+      </View>
+    </Page>
+  );
+};
 
 const BodyPage = ({ blocks }: { blocks: Block[] }) => (
   <Page size="A4" style={styles.page}>
