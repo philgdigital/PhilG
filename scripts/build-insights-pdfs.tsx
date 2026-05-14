@@ -633,7 +633,7 @@ const ClosingCtaPage = () => (
   <Page size="A4" style={styles.page}>
     <View style={styles.ctaWrap}>
       <Text style={styles.ctaEyebrow}>BUILT TO SHIP — NOT TO PITCH</Text>
-      <Text style={styles.ctaHeadline}>Hire Phil G. for your next product.</Text>
+      <Text style={styles.ctaHeadline}>Hire Phil G. for your next project.</Text>
       <Text style={styles.ctaSubline}>
         Embedded senior product designer + builder. Discovery, AI-native
         prototyping, design leadership, design systems, production-grade React.

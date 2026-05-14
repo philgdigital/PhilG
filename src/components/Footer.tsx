@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { LinkedinIcon } from "@/components/icons/BrandIcons";
@@ -12,6 +13,11 @@ type FooterProps = {
 };
 
 export function Footer({ onOpenForm }: FooterProps) {
+  // The "12 ·" prefix is the homepage section-order number. It
+  // belongs on `/` only — on subpages (work, insights, etc.) the
+  // footer is global chrome, not section #12 of a numbered flow.
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
   return (
     <footer
       id="contact"
@@ -26,7 +32,10 @@ export function Footer({ onOpenForm }: FooterProps) {
           <div className="flex items-center justify-center gap-4 mb-8">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-              <span className="text-zinc-400">12 ·</span> Initiate
+              {isHomepage && (
+                <span className="text-zinc-400">12 · </span>
+              )}
+              Initiate
             </h2>
           </div>
         </Reveal>
