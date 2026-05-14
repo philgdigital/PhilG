@@ -200,48 +200,31 @@ export default async function InsightPage({ params }: RouteProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Navbar />
-      {/*
-        TWO-LAYER bg softening so the page's bg orbs feel ambient, never
-        "marked" with hard edges:
-
-        1. Full-bleed RADIAL VIGNETTE fixed to the viewport: transparent
-           at center, darkening to ~55% / ~78% at the edges. Sits at
-           z-[-1] (above the AnimatedGradientBackground orbs at z-[-2],
-           below the main content). This dims the orb extremes uniformly
-           so the orbs' outer edges don't read as visible color stops.
-
-        2. Centered ARTICLE-COLUMN HALO: a softer, narrower dark column
-           directly behind the reading width. Larger blur (140px) and
-           lower alpha (0.6) than the previous /80 version so it feathers
-           more gently into the surrounding bg and doesn't introduce its
-           own edge.
-      */}
-      {/* SOFTENED dark vignette. Tones down the original 55%-82%
-          dark ramp so it doesn't compete with the brand-colour
-          glow layered on top. Now: 35% dark at the 55% radius,
-          65% dark at the very edge - just enough to dim the page
-          bg orbs in the periphery without creating a hard dark
-          band that the brand glow has to fight through. */}
+      {/* CENTER-DARK SOFT VIGNETTE. One single radial that's darker
+          at the centre (where the article reading column sits) and
+          fades smoothly to transparent at the edges. Replaces BOTH
+          the previous edge-darkening vignette AND the rectangular
+          1100px-wide column halo that was previously rendered
+          inside <main> - that rectangle was the visible 'edge mark'
+          the user flagged. A single soft radial has no defined
+          shape, so there's no rectangle, no box, no visible
+          boundary - just a smooth dark pool fading outward. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
         style={{
           background:
-            "radial-gradient(ellipse 85% 70% at center, transparent 0%, rgba(10,10,12,0.35) 55%, rgba(10,10,12,0.65) 100%)",
+            "radial-gradient(ellipse 55% 75% at center, rgba(2, 2, 5, 0.7) 0%, rgba(2, 2, 5, 0.45) 30%, rgba(2, 2, 5, 0.22) 55%, transparent 88%)",
         }}
       />
       {/* BRAND-COLOUR EDGE GLOW. Fixed-position. Four large corner
-          radial gradients in IBM blue + emerald that fade to
-          transparent toward the centre. Tuned for:
-            - Brightness at the corners: 0.50 / 0.45 alpha at 0%
-              (was 0.28 / 0.22 - too subtle for the user).
-            - Smoothness of the fade: 4-stop ramp per radial
-              (0.50 -> 0.25 -> 0.10 -> transparent) instead of the
-              previous abrupt 2-stop, so there's no visible 'edge
-              mark' where the colour meets the dark backdrop.
-            - Generous ellipse size (110% x 95% of the viewport)
-              so the gradient body extends well past the visible
-              edge and the falloff happens over a large area. */}
+          radial gradients in IBM blue + emerald with a 4-stop
+          falloff (0.50 -> 0.25 -> 0.10 -> transparent) for buttery-
+          smooth transition into the centre-dark pool above. The
+          two layers (dark pool + brand glow) together create the
+          framed stage effect: brand colour rich at the corners,
+          smoothly dimming inward to the dark reading zone, no
+          visible boundaries anywhere. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
@@ -255,10 +238,6 @@ export default async function InsightPage({ params }: RouteProps) {
         }}
       />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 inset-y-0 w-[min(88vw,1100px)] -z-10 bg-[#06060a]/80 blur-[140px]"
-        />
 
         {/* Top: back link */}
         <div className="flex items-center justify-between mb-16 max-w-5xl mx-auto">
