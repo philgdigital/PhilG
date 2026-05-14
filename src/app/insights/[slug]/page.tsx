@@ -224,6 +224,29 @@ export default async function InsightPage({ params }: RouteProps) {
             "radial-gradient(ellipse 75% 55% at center, transparent 0%, rgba(10,10,12,0.55) 65%, rgba(10,10,12,0.82) 100%)",
         }}
       />
+      {/* BRAND-COLOUR EDGE GLOW. Fixed-position so it stays at the
+          edges of the viewport as the visitor scrolls the article.
+          Four corner radial gradients in IBM blue + emerald that
+          fade to transparent toward the centre, where the article
+          reading column sits. The existing dark vignette above
+          (z-[-1]) keeps the page bg orbs from competing at the
+          periphery; this layer (z-0) sits on top of that and adds
+          the brand colour back at the corners only, so the net
+          visual is 'brand-tinted dark frame around a clean dark
+          text stage'. The text itself is further darkened by the
+          centred article-column halo inside <main> below. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background: `
+            radial-gradient(ellipse 70% 60% at 0% 0%, rgba(15, 98, 254, 0.28), transparent 62%),
+            radial-gradient(ellipse 70% 60% at 100% 0%, rgba(16, 185, 129, 0.22), transparent 62%),
+            radial-gradient(ellipse 70% 60% at 0% 100%, rgba(16, 185, 129, 0.22), transparent 62%),
+            radial-gradient(ellipse 70% 60% at 100% 100%, rgba(15, 98, 254, 0.28), transparent 62%)
+          `,
+        }}
+      />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
         <div
           aria-hidden
