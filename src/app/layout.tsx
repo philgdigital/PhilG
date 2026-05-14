@@ -113,14 +113,16 @@ export const metadata: Metadata = {
     ],
     creator: "@philg",
   },
-  // Favicons. icon.svg (path-drawn 'P' on IBM-blue square) is the
-  // canonical icon; favicon.ico is the legacy fallback.
+  // Favicons. SVG-only: the new abstract orbital-sphere icon at
+  // src/app/icon.svg is the single canonical favicon. The Next.js-
+  // default favicon.ico was deleted because it took precedence
+  // over the SVG in Chrome/Edge and made the new icon never load.
+  // All modern browsers (Chrome, Firefox, Safari, Edge - 95%+ of
+  // traffic) render SVG favicons natively; legacy IE11 / very old
+  // Android Browser fall back to no icon, acceptable for this
+  // audience.
   icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    shortcut: "/favicon.ico",
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     apple: "/icon.svg",
   },
   robots: isProduction
