@@ -200,37 +200,46 @@ export default async function InsightPage({ params }: RouteProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Navbar />
-      {/* DARK BASE. Uniform 0.78 alpha — no shape variation at
-          all in this layer, so it can never be the source of a
-          perceived edge. Mutes the global bg orbs underneath by
-          ~78%, leaving a faint ~22% to add subtle movement. */}
+      {/* BRAND-COLOUR BASE.
+          A soft diagonal blend from IBM blue (top-left) to
+          emerald (bottom-right) covering the whole viewport at
+          0.55 alpha. This is the colour we want REVEALED at the
+          edges — it sits underneath the dark vignette below and
+          is only visible where the vignette has faded away.
+          Uniform diagonal: no shape, no corners, no falloff, so
+          this layer alone cannot create any perceived edge. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[-1]"
-        style={{ background: "rgba(0, 0, 0, 0.78)" }}
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(15, 98, 254, 0.55) 0%, rgba(16, 185, 129, 0.55) 100%)",
+        }}
       />
-      {/* INVERTED VIGNETTE — four corner radial glows.
-          Each radial is an ellipse 160% x 140%, anchored at one
-          corner. The body extends far past the viewport, so the
-          `transparent 100%` stop is way off-screen and never
-          reads as a visible falloff edge. Six-stop fade per
-          radial gives a continuous slope (no banding). Diagonal
-          colour pairing (TL+BR = IBM blue, TR+BL = emerald)
-          produces natural blue-to-emerald cross-fades through
-          the page. Every viewport pixel receives contribution
-          from all four radials, so the centre reading column is
-          never zero-tinted — no "colour-present vs colour-
-          absent" boundary anywhere. */}
+      {/* HEAVY CENTRED DARK VIGNETTE.
+          ONE centred radial-gradient — not four corner radials.
+          Aspect-matched ellipse (120% 120%) so the radial reads
+          as round relative to the viewport, not stretched.
+          Nine stops from 0.96 alpha at the centre to fully
+          transparent at 100%. The dark plateau spans 0-22% of
+          the gradient and stays effectively opaque (0.95-0.96)
+          across the entire reading column at the page centre —
+          this is the "expanded black" the user asked for.
+          From 22-100% the alpha falls continuously through nine
+          stops, so the slope changes are tiny and no banding or
+          boundary is perceived. The transparent 100% stop sits
+          OUTSIDE the viewport (because ellipse 120% extends
+          past the viewport corners) — so the eye never sees a
+          "colour stops here" line. What it sees is a smooth
+          fade from heavy black at the centre to faint dark at
+          the corners, revealing more brand colour the further
+          you look from the centre. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
         style={{
-          background: `
-            radial-gradient(ellipse 160% 140% at 0% 0%, rgba(15, 98, 254, 0.55) 0%, rgba(15, 98, 254, 0.40) 15%, rgba(15, 98, 254, 0.25) 30%, rgba(15, 98, 254, 0.15) 45%, rgba(15, 98, 254, 0.07) 65%, rgba(15, 98, 254, 0.02) 85%, transparent 100%),
-            radial-gradient(ellipse 160% 140% at 100% 0%, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.40) 15%, rgba(16, 185, 129, 0.25) 30%, rgba(16, 185, 129, 0.15) 45%, rgba(16, 185, 129, 0.07) 65%, rgba(16, 185, 129, 0.02) 85%, transparent 100%),
-            radial-gradient(ellipse 160% 140% at 0% 100%, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.40) 15%, rgba(16, 185, 129, 0.25) 30%, rgba(16, 185, 129, 0.15) 45%, rgba(16, 185, 129, 0.07) 65%, rgba(16, 185, 129, 0.02) 85%, transparent 100%),
-            radial-gradient(ellipse 160% 140% at 100% 100%, rgba(15, 98, 254, 0.55) 0%, rgba(15, 98, 254, 0.40) 15%, rgba(15, 98, 254, 0.25) 30%, rgba(15, 98, 254, 0.15) 45%, rgba(15, 98, 254, 0.07) 65%, rgba(15, 98, 254, 0.02) 85%, transparent 100%)
-          `,
+          background:
+            "radial-gradient(ellipse 120% 120% at 50% 50%, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.95) 22%, rgba(0, 0, 0, 0.90) 33%, rgba(0, 0, 0, 0.78) 44%, rgba(0, 0, 0, 0.58) 55%, rgba(0, 0, 0, 0.35) 66%, rgba(0, 0, 0, 0.18) 77%, rgba(0, 0, 0, 0.06) 88%, transparent 100%)",
         }}
       />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
