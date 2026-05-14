@@ -185,7 +185,7 @@ function ProjectComposition({
             data-magnetic="true"
             className="group w-fit mt-4 flex items-center gap-3 hover-target font-mono text-xs font-medium tracking-[0.22em] uppercase text-white px-6 py-4 rounded-full border border-white/15 hover:border-white/40 hover:bg-white/5 transition-all duration-500 ease-[var(--ease-out)] will-change-transform"
           >
-            <span>Read case study</span>
+            <span>More details</span>
             <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover:rotate-45" />
           </Link>
         </MaybeReveal>
