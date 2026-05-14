@@ -401,8 +401,12 @@ export default async function InsightPage({ params }: RouteProps) {
         {/* Closing: next + related. The "Continue reading" eyebrow
             below carries its own trailing hairline rule, so this
             section no longer needs its own top-edge divider — the
-            hairline IS the section break. */}
-        <section className="relative pt-16 mt-24 md:mt-32 max-w-5xl mx-auto">
+            hairline IS the section break.
+            Tight top spacing here (pt-6 md:pt-10, no mt) so the
+            handoff from the last article paragraph to the next-up
+            recommendation reads as a continuous editorial beat,
+            not a large gap between unrelated blocks. */}
+        <section className="relative pt-6 md:pt-10 max-w-5xl mx-auto">
           {/* "Continue reading" section header. Hairline trails off
               to the right so the eyebrow reads as a magazine-style
               chapter divider rather than a plain label. */}
