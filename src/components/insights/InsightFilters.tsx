@@ -92,20 +92,21 @@ export function InsightFilters({
 
   return (
     <div className="flex flex-col gap-4 md:gap-5">
-      {/* Search input */}
-      <div className="relative">
-        <input
-          type="search"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder="Search insights…"
-          aria-label="Search insights"
-          className="w-full bg-white/[0.04] hover:bg-white/[0.06] focus:bg-white/[0.08] border border-white/8 focus:border-[#0f62fe]/50 rounded-full px-5 py-3 md:py-3.5 text-base md:text-lg font-light text-white placeholder:text-zinc-500 outline-none transition-colors"
-        />
-      </div>
-
-      {/* Dropdown row */}
-      <div className="flex flex-wrap items-center gap-3 md:gap-4">
+      {/* Filter row — search input + dropdowns + clear button live on
+          ONE line at md+. The search input takes the remaining flex
+          space (md:flex-1) so it expands to fill whatever's left
+          after the three pill selects. Stacks vertically on mobile. */}
+      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+        <div className="relative md:flex-1">
+          <input
+            type="search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search insights…"
+            aria-label="Search insights"
+            className="w-full bg-white/[0.04] hover:bg-white/[0.06] focus:bg-white/[0.08] border border-white/8 focus:border-[#0f62fe]/50 rounded-full px-5 py-2.5 md:py-3 text-base md:text-base font-light text-white placeholder:text-zinc-500 outline-none transition-colors"
+          />
+        </div>
         <BrandSelect
           variant="pill"
           label="Category"

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { XIcon as X } from "@/components/icons/Icons";
+import { LinkedinIcon } from "@/components/icons/BrandIcons";
 import { useFormContext } from "@/lib/form-context";
 
 /**
@@ -27,7 +28,15 @@ import { useFormContext } from "@/lib/form-context";
 type NavLink =
   | { kind: "route"; href: string; label: string }
   | { kind: "anchor"; href: string; label: string }
-  | { kind: "external"; href: string; label: string }
+  | {
+      kind: "external";
+      href: string;
+      label: string;
+      /** When set, render an icon instead of the text label (label
+       *  stays as the accessible name via aria-label). Currently
+       *  only `linkedin` is wired in. */
+      icon?: "linkedin";
+    }
   | { kind: "action"; action: "openForm"; label: string }
   | { kind: "disabled"; label: string };
 
@@ -42,6 +51,7 @@ const NAV_LINKS: NavLink[] = [
     kind: "external",
     href: "https://www.linkedin.com/in/felipeaela/",
     label: "LinkedIn",
+    icon: "linkedin",
   },
 ];
 
@@ -217,9 +227,14 @@ export function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor-no-hint="true"
+                  aria-label={link.label}
                   className={itemClass(false)}
                 >
-                  {link.label}
+                  {link.icon === "linkedin" ? (
+                    <LinkedinIcon className="w-3.5 h-3.5" />
+                  ) : (
+                    link.label
+                  )}
                 </a>
               );
             }
@@ -363,9 +378,18 @@ export function Navbar() {
                       rel="noopener noreferrer"
                       onClick={() => setIsMenuOpen(false)}
                       data-cursor-no-hint="true"
-                      className={linkCls(false)}
+                      aria-label={link.label}
+                      className={
+                        link.icon === "linkedin"
+                          ? "inline-flex hover-target hover:text-[#0f62fe] transition-colors text-white"
+                          : linkCls(false)
+                      }
                     >
-                      {link.label}
+                      {link.icon === "linkedin" ? (
+                        <LinkedinIcon className="w-12 h-12" />
+                      ) : (
+                        link.label
+                      )}
                     </a>
                   </li>
                 );
