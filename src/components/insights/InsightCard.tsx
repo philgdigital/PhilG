@@ -107,10 +107,15 @@ export function InsightCard({ insight }: { insight: Insight }) {
             aria-hidden
             className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c]/80 via-transparent to-transparent"
           />
-          {/* Category badge over the image, top-left */}
+          {/* Category badge over the image, top-left. Strong Carbon
+              Black fill (was `bg-black/40` — too transparent over
+              light cover images, the category text washed out).
+              Matches the same bg/blur used by the homepage
+              CategoryBadge in Insights.tsx so every card-style badge
+              reads identically. */}
           <div className="absolute top-4 left-4 z-10">
             <span
-              className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border bg-black/40 backdrop-blur-sm ${
+              className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border bg-[#0a0a0c]/85 backdrop-blur-sm ${
                 CATEGORY_BADGE[insight.category]
               }`}
             >

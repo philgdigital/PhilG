@@ -95,7 +95,14 @@ function formatDate(iso: string): string {
 function CategoryBadge({ category }: { category: Category }) {
   return (
     <span
-      className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border ${CATEGORY_BADGE[category]}`}
+      // `bg-[#0a0a0c]/85 backdrop-blur-sm` — the badge sits over the
+      // card's cover image, which can be very light (white-grey
+      // editorial photography). Without a strong dark fill the
+      // category text (light blue / light emerald / etc.) washed out
+      // and read as illegible. Carbon Black at 85% opacity + blur
+      // keeps it readable on every cover while still feeling like a
+      // floating chip rather than a hard-edged plate.
+      className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border bg-[#0a0a0c]/85 backdrop-blur-sm ${CATEGORY_BADGE[category]}`}
     >
       {category}
     </span>
