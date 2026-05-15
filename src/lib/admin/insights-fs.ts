@@ -1,6 +1,6 @@
 import "server-only";
 import { CATEGORIES, type Category, type Insight } from "@/lib/insights/schema";
-import { readInsights, writeInsights } from "./store";
+import { readInsights, writeInsights, mapBlobError } from "./store";
 
 /**
  * Admin-side helpers for managing insights.
@@ -152,13 +152,17 @@ export async function saveAudioFile(
 ): Promise<string> {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const { put } = await import("@vercel/blob");
-    const result = await put(`audio/${slug}.mp3`, buf, {
-      access: "public",
-      contentType,
-      addRandomSuffix: false,
-      allowOverwrite: true,
-    });
-    return result.url;
+    try {
+      const result = await put(`audio/${slug}.mp3`, buf, {
+        access: "public",
+        contentType,
+        addRandomSuffix: false,
+        allowOverwrite: true,
+      });
+      return result.url;
+    } catch (e) {
+      throw mapBlobError(e);
+    }
   }
   // DEV — write to /public/audio.
   const fs = await import("node:fs/promises");
@@ -196,13 +200,17 @@ export async function saveImageFile(
   const ext = extFromMime(contentType);
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const { put } = await import("@vercel/blob");
-    const result = await put(`images/${slug}.${ext}`, buf, {
-      access: "public",
-      contentType,
-      addRandomSuffix: false,
-      allowOverwrite: true,
-    });
-    return result.url;
+    try {
+      const result = await put(`images/${slug}.${ext}`, buf, {
+        access: "public",
+        contentType,
+        addRandomSuffix: false,
+        allowOverwrite: true,
+      });
+      return result.url;
+    } catch (e) {
+      throw mapBlobError(e);
+    }
   }
   // DEV — write to /public/images.
   const fs = await import("node:fs/promises");

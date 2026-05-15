@@ -77,15 +77,44 @@ async function readFromBlob(): Promise<Insight[] | null> {
   return data as Insight[];
 }
 
+/**
+ * Translate a Vercel Blob SDK error into a clearer message when it
+ * matches a known mode-mismatch pattern. The bare SDK error is
+ * accurate but reads as opaque to the operator clicking Save in
+ * the admin form ("Cannot use public access on a private store" —
+ * the operator has no idea where to fix that). Re-throws untouched
+ * for any error we don't have a clearer phrasing for.
+ *
+ * Mirrors the "Vercel Blob is not configured" guard in
+ * writeInsights (further below) — same shape, same error-surface
+ * pattern.
+ */
+export function mapBlobError(e: unknown): Error {
+  const msg = e instanceof Error ? e.message : String(e);
+  if (/private store|public access/i.test(msg)) {
+    return new Error(
+      "Vercel Blob store must be Public. Delete `philg-blob` in " +
+        "the Vercel dashboard (Storage → philg-blob → Delete) and " +
+        "recreate it with Public access. The old private store " +
+        "rejects every public-access write our code makes.",
+    );
+  }
+  return e instanceof Error ? e : new Error(msg);
+}
+
 async function writeToBlob(items: Insight[]): Promise<void> {
   const { put, del } = await import("@vercel/blob");
   const priorVersions = await listBlobVersions();
-  await put(BLOB_PATH, JSON.stringify(items, null, 2) + "\n", {
-    access: "public",
-    addRandomSuffix: true,
-    contentType: "application/json",
-    cacheControlMaxAge: 0,
-  });
+  try {
+    await put(BLOB_PATH, JSON.stringify(items, null, 2) + "\n", {
+      access: "public",
+      addRandomSuffix: true,
+      contentType: "application/json",
+      cacheControlMaxAge: 0,
+    });
+  } catch (e) {
+    throw mapBlobError(e);
+  }
   if (priorVersions.length > 0) {
     try {
       await del(priorVersions.map((v) => v.url));
