@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
@@ -252,20 +252,44 @@ function RegularCard({ insight }: { insight: Insight }) {
 }
 
 export function Insights() {
-  // 5 most-recent posts. First slot = hero (always the most-recent
-  // since getLatestInsights returns newest-first), next 4 = regular
-  // cards. We used to honour an explicit `featured: true` frontmatter
-  // flag, but it added friction in the admin (one more thing to
-  // remember) without enough payoff — "most recent" already matches
-  // the editorial intent of "what I wrote last".
-  const latest = getLatestInsights(5);
+  // SSR-friendly initial state: render the build-time seed
+  // (getLatestInsights / getAllInsights) so the homepage paints
+  // immediately with reasonable content and SEO crawlers see real
+  // cards. On mount we replace this with LIVE data from Blob via
+  // /api/insights/latest — that's how admin uploads (new cover
+  // images, new posts, edits) reach the homepage cards without
+  // waiting for a deploy. The homepage page.tsx is "use client" so
+  // it can't `await` getAllInsightsLive directly; the public API
+  // route is the bridge.
+  //
+  // First slot = hero (newest-first), next 4 = regular cards. No
+  // "featured" flag — most-recent always wins.
+  const [latest, setLatest] = useState<Insight[]>(() => getLatestInsights(5));
+  const [totalCount, setTotalCount] = useState<number>(
+    () => getAllInsights().length,
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/insights/latest")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        if (Array.isArray(data.latest)) setLatest(data.latest as Insight[]);
+        if (typeof data.totalCount === "number") setTotalCount(data.totalCount);
+      })
+      .catch(() => {
+        // Network blip — fall back silently to the seed. The seed
+        // is always present and renderable, so a failed fetch never
+        // breaks the section, it just shows slightly older data.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const featured = latest[0];
   const regulars = latest.slice(1, 5);
-
-  // Total post count is used by the CTA copy to communicate how
-  // many more pieces live in the archive beyond the 5 latest on
-  // this section (e.g. "5 latest · 17 more in the archive").
-  const totalCount = getAllInsights().length;
   const remainder = Math.max(0, totalCount - latest.length);
 
   return (
