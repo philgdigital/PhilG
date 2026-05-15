@@ -56,6 +56,9 @@ declare namespace YT {
     mute(): void;
     unMute(): void;
     isMuted(): boolean;
+    setPlaybackRate(suggestedRate: number): void;
+    getPlaybackRate(): number;
+    getAvailablePlaybackRates(): number[];
     getCurrentTime(): number;
     getDuration(): number;
     getPlayerState(): PlayerState;

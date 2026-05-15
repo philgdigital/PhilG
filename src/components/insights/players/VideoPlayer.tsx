@@ -122,6 +122,13 @@ function fmtTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+/**
+ * Cycle of playback rates exposed via the bottom-bar speed pill.
+ * Mirrors AudioPlayer's PLAYBACK_RATES so the two media players
+ * share one mental model for the visitor.
+ */
+const PLAYBACK_RATES = [1, 1.25, 1.5, 2, 0.75] as const;
+
 export function VideoPlayer({ url, title }: Props) {
   const videoId = extractVideoId(url);
   const [active, setActive] = useState(false); // has the visitor clicked play yet?
@@ -129,7 +136,12 @@ export function VideoPlayer({ url, title }: Props) {
   const [muted, setMuted] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [rateIdx, setRateIdx] = useState(0);
 
+  /** Wrapper that owns fullscreen — putting fullscreen on the
+   *  wrapper (instead of the iframe) keeps our custom controls bar
+   *  inside the fullscreen viewport. */
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const playerRef = useRef<YT.Player | null>(null);
 
@@ -222,14 +234,22 @@ export function VideoPlayer({ url, title }: Props) {
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
+    const wrap = wrapperRef.current;
+    if (!wrap) return;
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});
     } else {
-      iframe.requestFullscreen().catch(() => {});
+      wrap.requestFullscreen().catch(() => {});
     }
   }, []);
+
+  const cycleRate = useCallback(() => {
+    const p = playerRef.current;
+    if (!p) return;
+    const next = (rateIdx + 1) % PLAYBACK_RATES.length;
+    p.setPlaybackRate(PLAYBACK_RATES[next]);
+    setRateIdx(next);
+  }, [rateIdx]);
 
   // Origin must mirror window.location.origin for YT enablejsapi.
   const origin =
@@ -257,7 +277,10 @@ export function VideoPlayer({ url, title }: Props) {
   const progress = duration > 0 ? current / duration : 0;
 
   return (
-    <div className="relative w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden border border-white/8 shadow-[0_20px_60px_-12px_rgba(0,0,0,0.6)] bg-black group">
+    <div
+      ref={wrapperRef}
+      className="relative w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden border border-white/8 shadow-[0_20px_60px_-12px_rgba(0,0,0,0.6)] bg-black group"
+    >
       {/* Brand-wash gradient corner washes ride over the iframe/poster
           so the player visually belongs to the rest of the page. They
           fade out once the video is playing so the imagery isn't
@@ -341,6 +364,24 @@ export function VideoPlayer({ url, title }: Props) {
             allowFullScreen
           />
 
+          {/* Click-shield. Sits above the iframe so:
+              (a) the custom magnetic cursor keeps tracking — without
+                  this overlay the iframe captures pointer events and
+                  the parent window's `mousemove` listener (which the
+                  CustomCursor relies on) stops firing.
+              (b) clicks anywhere on the video area toggle play/pause
+                  — replaces YouTube's native tap-to-toggle which is
+                  gone with controls=0.
+              Sits behind the controls bar (z-10 vs z-20) so the
+              bottom-bar buttons keep their own click semantics. */}
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={playing ? "Pause video" : "Play video"}
+            data-cursor-no-hint="true"
+            className="absolute inset-0 z-10 w-full h-full bg-transparent cursor-default"
+          />
+
           {/* Custom controls bar. Sits flush at the bottom of the
               player frame. Always visible while the video is loaded;
               no auto-hide because editorial readers want predictable
@@ -375,6 +416,20 @@ export function VideoPlayer({ url, title }: Props) {
               className="shrink-0 hover-target w-9 h-9 rounded-full border border-white/10 hover:border-[#0f62fe]/50 bg-white/[0.03] hover:bg-[#0f62fe]/10 text-zinc-300 hover:text-white flex items-center justify-center transition-colors"
             >
               <SpeakerIcon muted={muted} />
+            </button>
+
+            {/* Playback-speed cycle pill. Same UX as the AudioPlayer
+                — click to cycle through 1x → 1.25x → 1.5x → 2x →
+                0.75x → back to 1x. The current rate is displayed
+                so the control reads as a value, not just an icon. */}
+            <button
+              type="button"
+              onClick={cycleRate}
+              aria-label={`Playback speed ${PLAYBACK_RATES[rateIdx]}x — click to change`}
+              data-cursor-no-hint="true"
+              className="shrink-0 hover-target px-2.5 md:px-3 py-1.5 rounded-full border border-white/10 hover:border-[#0f62fe]/50 bg-white/[0.03] hover:bg-[#0f62fe]/10 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-300 hover:text-white transition-colors"
+            >
+              {PLAYBACK_RATES[rateIdx]}x
             </button>
 
             <button

@@ -466,43 +466,58 @@ export default async function InsightPage({ params }: RouteProps) {
               date + read-time row above carries the editorial metadata. */}
         </header>
 
-        {/* Hero image. Bottom margin is reduced when companion media
-            (video / audio) follows below, since ArticleMedia renders
-            its own breathing space. When there's no companion media,
-            the original mb-20/32 gap to the article body is restored. */}
+        {/* Hero slot. When the insight has a video, the video player
+            REPLACES the cover image entirely — readers expect the
+            top-of-article media to be what they came to watch, and
+            having both stacked reads as redundant. The cover image
+            stays in use for: card thumbnails (InsightCard) and OG
+            share previews (generateMetadata). When there's no video,
+            we render the cover image as before. Bottom margin tracks
+            whether AUDIO follows below (since audio still mounts via
+            ArticleMedia and adds its own breathing space).
+            generateStaticParams below stays intact. */}
         <Reveal delay={400}>
-          <div
-            className={`relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 ${
-              insight.video || insight.audio
-                ? "mb-8 md:mb-12"
-                : "mb-10 md:mb-14"
-            } shadow-2xl max-w-6xl mx-auto`}
-            style={{ viewTransitionName: `insight-card-${insight.slug}` }}
-          >
-            <Image
-              src={insight.image}
-              alt={insight.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 mix-blend-multiply opacity-50 bg-gradient-to-tr from-[#0f62fe]/30 via-transparent to-[#10b981]/15" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c]/60 via-transparent to-transparent" />
-          </div>
+          {insight.video ? (
+            <div
+              className={`max-w-6xl mx-auto ${
+                insight.audio ? "mb-8 md:mb-12" : "mb-10 md:mb-14"
+              }`}
+              style={{ viewTransitionName: `insight-card-${insight.slug}` }}
+            >
+              <VideoPlayer url={insight.video} title={insight.title} />
+            </div>
+          ) : (
+            <div
+              className={`relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 ${
+                insight.audio ? "mb-8 md:mb-12" : "mb-10 md:mb-14"
+              } shadow-2xl max-w-6xl mx-auto`}
+              style={{ viewTransitionName: `insight-card-${insight.slug}` }}
+            >
+              <Image
+                src={insight.image}
+                alt={insight.title}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 mix-blend-multiply opacity-50 bg-gradient-to-tr from-[#0f62fe]/30 via-transparent to-[#10b981]/15" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c]/60 via-transparent to-transparent" />
+            </div>
+          )}
         </Reveal>
 
-        {/* COMPANION MEDIA — optional. Renders the YouTube video
-            embed (custom-skinned, no YouTube branding) and/or the
-            audio narration player (inline + minimised sticky pill
-            that fades in on scroll). When neither field is set in
-            frontmatter, the whole block renders nothing and the
-            article body follows directly after the hero image. */}
-        {(insight.video || insight.audio) && (
+        {/* COMPANION AUDIO — optional. The audio narration mounts
+            inline + as a sticky pill that fades in on scroll. The
+            video (when present) lives in the hero slot above, NOT
+            here — ArticleMedia would render it again if we passed
+            it. We only pass `audio` so this block stays a pure
+            audio surface; ArticleMedia is effectively the audio
+            companion now. */}
+        {insight.audio && (
           <Reveal delay={500}>
             <ArticleMedia
               title={insight.title}
-              video={insight.video}
               audio={insight.audio}
             />
           </Reveal>
