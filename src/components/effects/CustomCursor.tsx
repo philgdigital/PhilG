@@ -124,6 +124,19 @@ export function CustomCursor() {
           continue;
         }
 
+        // Cursor is OVER the element — release the inline-style
+        // transform so CSS `:hover` rules (e.g. the SectionProgress
+        // side menu's `hover:-translate-x-3` fluid pull) can take
+        // over. Otherwise the inline-style transform here wins by
+        // specificity and silently cancels every hover-driven
+        // movement on a magnetic element. Approach phase below is
+        // unchanged: the magnetic pull still applies as the cursor
+        // is approaching but hasn't entered the element's rect.
+        if (edgeDist === 0) {
+          target.style.transform = "";
+          continue;
+        }
+
         const t = 1 - edgeDist / MAGNETIC_RANGE; // 0 at edge of range, 1 at element
         const strength = t * t * MAGNETIC_STRENGTH; // ease-in
         target.style.transform = `translate3d(${dx * strength}px, ${dy * strength}px, 0)`;
