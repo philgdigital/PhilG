@@ -8,8 +8,11 @@ import { InsightsListing } from "@/components/insights/InsightsListing";
 import { getAllInsights } from "@/lib/insights";
 import { getAllInsightsLive } from "@/lib/insights/loader-server";
 
-// ISR — admin's revalidatePath('/insights/page/N') hits on save.
-export const revalidate = 60;
+// No HTML cache — re-render on every request. Matches the same
+// choice on /insights and /insights/[slug] (see those files for
+// the full rationale: Vercel CDN was serving stale HTML for
+// minutes after admin saves even with revalidatePath called).
+export const revalidate = 0;
 export const dynamicParams = true;
 
 /**

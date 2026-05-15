@@ -34,13 +34,24 @@ export function generateStaticParams() {
 }
 
 /**
- * ISR window. After the admin saves a post on production, the
- * /api/admin route calls revalidatePath('/insights/{slug}') to
- * invalidate immediately. This `revalidate` value is the FALLBACK
- * — even without explicit revalidation, the page re-fetches Blob
- * at most once per minute.
+ * No HTML cache — re-render on every request. The admin-edited
+ * Insight is the source of truth and lives in Vercel Blob; we
+ * already fetch it with `cache: 'no-store'` in the loader, so the
+ * data path is always-fresh. ISR (revalidate=60) used to layer a
+ * CDN cache on top of that, which meant Vercel served stale HTML
+ * for up to a minute after each save even though revalidatePath
+ * was called — observed live with `x-vercel-cache: STALE` +
+ * monotonically increasing `age` for 2 minutes after a save.
+ *
+ * revalidate=0 = "always stale" = every request re-renders from
+ * the lambda. Cost is negligible at portfolio traffic; the win
+ * is that admin saves become visible on the next refresh.
+ *
+ * generateStaticParams below stays — Next still uses it for the
+ * sitemap and to enumerate which slugs exist at build time. The
+ * prerendered HTML is immediately expired on first request.
  */
-export const revalidate = 60;
+export const revalidate = 0;
 export const dynamicParams = true;
 
 export async function generateMetadata({

@@ -6,11 +6,13 @@ import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsListing } from "@/components/insights/InsightsListing";
 import { getAllInsightsLive } from "@/lib/insights/loader-server";
 
-// ISR — re-fetch Blob overlay at most once per minute, plus the
-// admin's revalidatePath('/insights') call on every save kicks in
-// immediately. Without this the listing would be 100% static and
-// admin edits wouldn't appear until the next deploy.
-export const revalidate = 60;
+// No HTML cache — re-render on every request. See the same
+// comment in src/app/insights/[slug]/page.tsx for the full
+// rationale. Vercel's CDN was serving stale HTML for 1-2 minutes
+// after every admin save even with revalidatePath called, so we
+// drop ISR entirely and let the lambda render fresh each time.
+// The Blob read is already `cache: 'no-store'` and runs ~50ms.
+export const revalidate = 0;
 
 /**
  * /insights — the listing route. Page 1 of all insights, with
