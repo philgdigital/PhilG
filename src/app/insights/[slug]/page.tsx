@@ -401,7 +401,7 @@ export default async function InsightPage({ params }: RouteProps) {
             /insights archive root vs a specific paginated/filtered
             view) by reading sessionStorage set at click time. See
             src/lib/insights-back-ref.ts. */}
-        <div className="flex items-center justify-between mb-16 max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-16 max-w-6xl mx-auto">
           <InsightsBackLink />
           <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
             {`0${idx + 1} / 0${allInsights.length}`}
@@ -409,7 +409,7 @@ export default async function InsightPage({ params }: RouteProps) {
         </div>
 
         {/* Header block */}
-        <header className="max-w-5xl mx-auto mb-16 md:mb-20">
+        <header className="max-w-6xl mx-auto mb-16 md:mb-20">
           <Reveal>
             <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
               <div className="flex flex-wrap items-center gap-4">
@@ -556,7 +556,7 @@ export default async function InsightPage({ params }: RouteProps) {
             handoff from the last article paragraph to the next-up
             recommendation reads as a continuous editorial beat,
             not a large gap between unrelated blocks. */}
-        <section className="relative pt-6 md:pt-10 max-w-5xl mx-auto">
+        <section className="relative pt-6 md:pt-10 max-w-6xl mx-auto">
           {/* "Continue reading" section header. Hairline trails off
               to the right so the eyebrow reads as a magazine-style
               chapter divider rather than a plain label. */}
