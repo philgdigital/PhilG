@@ -108,6 +108,10 @@ export default async function CaseStudy({ params }: RouteProps) {
       />
       <Navbar />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
+        {/* Canonical content grid: max-w-[1400px] mx-auto matches
+            the Hero + every home section so the case-study rail
+            sits on the same vertical line as the rest of the page. */}
+        <div className="max-w-[1400px] mx-auto">
         {/* Top: index marker + back link */}
         <div className="flex items-center justify-between mb-16">
           <Link
@@ -364,6 +368,7 @@ export default async function CaseStudy({ params }: RouteProps) {
             </Reveal>
           </div>
         </section>
+        </div>
       </main>
     </>
   );

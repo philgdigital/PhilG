@@ -515,7 +515,7 @@ export function Work() {
           z-30) so nothing leaks through. */}
       {!enabled && (
         <div
-          className="hidden lg:flex absolute inset-0 z-40 items-center justify-center px-12 lg:px-24"
+          className="hidden lg:flex absolute inset-0 z-40 items-center justify-center px-6 md:px-12 lg:px-24"
           style={{
             background:
               "radial-gradient(ellipse 80% 60% at 0% 0%, rgba(15,98,254,0.30), transparent 60%), radial-gradient(ellipse 80% 60% at 100% 100%, rgba(16,185,129,0.22), transparent 60%), linear-gradient(180deg, rgba(2,2,5,0.96) 0%, rgba(2,2,5,0.96) 100%)",

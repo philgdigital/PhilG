@@ -7,7 +7,10 @@ import { ElectricBorder } from "@/components/ui/ElectricBorder";
 
 export function About() {
   return (
-    <section id="about" className="py-24 px-6 md:px-12 lg:px-24 max-w-[1400px] mx-auto relative z-10">
+    <section id="about" className="py-24 px-6 md:px-12 lg:px-24 relative z-10">
+      {/* Canonical content grid: see src/app/page.tsx. Padding sits
+          on the section; this inner wrapper ONLY holds the cap. */}
+      <div className="max-w-[1400px] mx-auto">
       <Reveal>
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
@@ -117,6 +120,32 @@ export function About() {
               </span>
               , including Meta, Booking.com, Uber, IBM, Accenture, SAP,
               Thoughtworks, Zalando, and Kuoni Tumlare across 11 countries.
+            </p>
+          </Reveal>
+
+          {/* Third paragraph — the AI-as-daily-craft pitch. Reframes
+              the previous para's "AI-native prototyping" line as
+              a working method, not a buzzword: research happens,
+              UI ships in Figma, prototypes stand up in real code.
+              The closing line ("close the gap between insight and
+              experience") is the editorial pay-off. */}
+          <Reveal delay={500}>
+            <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed">
+              I treat AI as a{" "}
+              <span className="text-white font-medium">force multiplier</span>,
+              not a novelty — wired into my daily craft. I run user research,
+              ship polished UI in Figma, and stand up{" "}
+              <span className="text-white font-medium">
+                functional prototypes with AI-assisted code generation
+              </span>{" "}
+              to test ideas{" "}
+              <span className="text-white font-medium">before a sprint begins</span>.
+              I move fast, explore broadly, and use every tool at my disposal
+              to{" "}
+              <span className="text-white font-medium">
+                close the gap between insight and experience
+              </span>
+              .
             </p>
           </Reveal>
 
@@ -252,6 +281,7 @@ export function About() {
             </div>
           </Reveal>
         </div>
+      </div>
       </div>
     </section>
   );

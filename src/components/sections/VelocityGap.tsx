@@ -167,7 +167,7 @@ export function VelocityGap() {
       {/* Reading-friendly grid width (1180px max), tighter than the
           rest of the homepage so the headline + body land as one
           deliberate block. */}
-      <div className="relative z-10 max-w-[1180px] mx-auto text-center">
+      <div className="relative z-10 max-w-[1400px] mx-auto text-center">
         <Reveal>
           <span className="eyebrow-scroll font-mono text-[11px] md:text-xs font-medium tracking-[0.32em] uppercase text-zinc-400">
             <span className="text-[#4589ff] mr-3">·</span>

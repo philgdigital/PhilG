@@ -20,6 +20,27 @@ import { AntiPattern } from "@/components/sections/AntiPattern";
 import { VelocityGap } from "@/components/sections/VelocityGap";
 
 /**
+ * Canonical content grid (USE THIS EVERYWHERE a section or page
+ * renders editorial content — picking a different pattern breaks
+ * width consistency between blocks):
+ *
+ *   <section ... className="py-32 px-6 md:px-12 lg:px-24 ...">
+ *     <div className="max-w-[1400px] mx-auto">
+ *       ...content...
+ *     </div>
+ *   </section>
+ *
+ * The padding sits on the section. The inner wrapper holds ONLY
+ * the 1400px cap + mx-auto. Do not move the padding inside the
+ * wrapper — that would shrink the content area by another (px*2)
+ * on wide viewports and visually misalign with sections that
+ * follow this pattern.
+ *
+ * Every home section, the /insights listing, the /insights/[slug]
+ * article, and the /work/[slug] case study all use this pattern.
+ * Footer + admin pages intentionally use narrower widths
+ * (centered footer; admin forms).
+ *
  * Homepage section order (conversion arc):
  *   --  Hero (with embedded trust row of brand wordmarks)
  *   --  VelocityGap (THE SHIPPING GAP IS WIDENING + 8 tools)

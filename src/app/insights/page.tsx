@@ -120,7 +120,7 @@ export default async function InsightsIndexPage() {
       />
       <Navbar />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32 min-h-screen">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1400px] mx-auto">
           {/* Header */}
           <header className="mb-16 md:mb-20">
             <Reveal>

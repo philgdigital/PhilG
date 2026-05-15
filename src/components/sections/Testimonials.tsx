@@ -97,8 +97,10 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="py-32 px-6 md:px-12 lg:px-24 max-w-[1400px] mx-auto relative z-10"
+      className="py-32 px-6 md:px-12 lg:px-24 relative z-10"
     >
+      {/* Canonical content grid: see src/app/page.tsx. */}
+      <div className="max-w-[1400px] mx-auto">
       <Reveal>
         <div className="flex items-center gap-4 mb-12">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
@@ -188,6 +190,7 @@ export function Testimonials() {
             </Reveal>
           );
         })}
+      </div>
       </div>
     </section>
   );

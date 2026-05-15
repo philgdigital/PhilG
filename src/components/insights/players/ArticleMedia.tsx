@@ -60,7 +60,7 @@ export function ArticleMedia({ title, video, audio }: Props) {
   if (!video && !audio) return null;
 
   return (
-    <div className="max-w-[1400px] mx-auto mb-12 md:mb-16 flex flex-col gap-8 md:gap-10">
+    <div className="mb-12 md:mb-16 flex flex-col gap-8 md:gap-10">
       {video && <VideoPlayer url={video} title={title} />}
       {audio && (
         <>

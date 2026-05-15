@@ -395,13 +395,20 @@ export default async function InsightPage({ params }: RouteProps) {
         }}
       />
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32">
+        {/* Canonical content grid: max-w-[1400px] mx-auto + the
+            outer responsive padding above. Single wrapper so every
+            subsection inherits the same width — earlier we repeated
+            the cap on each subsection, which works visually but
+            drifts the moment a new child div is added without its
+            own cap. */}
+        <div className="max-w-[1400px] mx-auto">
 
         {/* Top: back link. Referrer-aware — points to wherever the
             visitor came from (homepage Insights section vs the
             /insights archive root vs a specific paginated/filtered
             view) by reading sessionStorage set at click time. See
             src/lib/insights-back-ref.ts. */}
-        <div className="flex items-center justify-between mb-16 max-w-[1400px] mx-auto">
+        <div className="flex items-center justify-between mb-16">
           <InsightsBackLink />
           <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
             {`0${idx + 1} / 0${allInsights.length}`}
@@ -409,7 +416,7 @@ export default async function InsightPage({ params }: RouteProps) {
         </div>
 
         {/* Header block */}
-        <header className="max-w-[1400px] mx-auto mb-16 md:mb-20">
+        <header className="mb-16 md:mb-20">
           <Reveal>
             <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
               <div className="flex flex-wrap items-center gap-4">
@@ -480,9 +487,9 @@ export default async function InsightPage({ params }: RouteProps) {
         <Reveal delay={400}>
           {insight.video ? (
             <div
-              className={`max-w-[1400px] mx-auto ${
+              className={
                 insight.audio ? "mb-8 md:mb-12" : "mb-10 md:mb-14"
-              }`}
+              }
               style={{ viewTransitionName: `insight-card-${insight.slug}` }}
             >
               <VideoPlayer url={insight.video} title={insight.title} />
@@ -491,7 +498,7 @@ export default async function InsightPage({ params }: RouteProps) {
             <div
               className={`relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 ${
                 insight.audio ? "mb-8 md:mb-12" : "mb-10 md:mb-14"
-              } shadow-2xl max-w-[1400px] mx-auto`}
+              } shadow-2xl`}
               style={{ viewTransitionName: `insight-card-${insight.slug}` }}
             >
               <Image
@@ -556,7 +563,7 @@ export default async function InsightPage({ params }: RouteProps) {
             handoff from the last article paragraph to the next-up
             recommendation reads as a continuous editorial beat,
             not a large gap between unrelated blocks. */}
-        <section className="relative pt-6 md:pt-10 max-w-[1400px] mx-auto">
+        <section className="relative pt-6 md:pt-10">
           {/* "Continue reading" section header. Hairline trails off
               to the right so the eyebrow reads as a magazine-style
               chapter divider rather than a plain label. */}
@@ -717,6 +724,7 @@ export default async function InsightPage({ params }: RouteProps) {
             </div>
           </Reveal>
         </section>
+        </div>
       </main>
     </>
   );

@@ -185,22 +185,34 @@ export function SectionProgress() {
         const showSubItems = hasSubItems && isActive;
         return (
           <div key={s.id} className="flex flex-col items-end gap-2">
-            {/* Floating fluid hover:
-                - Whole row pulls LEFT (-translate-x-3) like the cursor is
-                  magnetically pulling it forward.
-                - Label slides in from -8px → 0 + fades on hover.
-                - Dot grows to 2× + glows in IBM blue.
-                - data-magnetic="true" lets CustomCursor add the magnetic
-                  pull to the cursor ring itself.
-                - data-cursor-no-hint suppresses the 'Click for more' pill
-                  (the dot + label already signal the link). */}
+            {/* ⚠️  DO NOT REMOVE THE FLUID HOVER LANGUAGE BELOW.
+                Every motion class on this <a> + its children is part
+                of one coordinated effect:
+                  - Whole row pulls LEFT (-translate-x-3) on hover
+                    like the cursor is magnetically pulling it forward.
+                  - Label slides in from -8px → 0 + fades on hover.
+                  - Dot grows to 2× + glows in IBM blue.
+                  - data-magnetic="true" lets CustomCursor add the
+                    magnetic pull to the cursor ring itself.
+                  - data-cursor-no-hint suppresses the 'Click for more'
+                    pill (the dot + label already signal the link).
+                If you're cleaning up classes here, keep
+                `hover:-translate-x-3`, `group-hover:opacity-100
+                group-hover:translate-x-0` on the label span, and the
+                `group-hover:bg-[#4589ff] group-hover:scale-[1.8]
+                group-hover:shadow-...` on the dot span. Removing any
+                of them silently kills the fluid effect.
+
+                gap-4 (16px) here gives ≥2px clear of the inner pill
+                backdrop's -inset-x-3.5 (14px) extension, so the pill
+                never visually kisses the dot on hover/active. */}
             <a
               href={`#${s.id}`}
               data-magnetic="true"
               data-cursor-no-hint="true"
               aria-label={`${s.num} · ${s.label}`}
               aria-current={isActive ? "true" : undefined}
-              className="group flex items-center justify-end gap-3 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-3 will-change-transform"
+              className="group flex items-center justify-end gap-4 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-3 will-change-transform"
             >
               {/* Label with a SOFT readability BACKDROP behind it.
                   Two stacked layers (legibility + glow):
@@ -265,6 +277,10 @@ export function SectionProgress() {
                 {s.subItems!.map((sub, i) => {
                   const subActive = activeWorkSubId === sub.id;
                   return (
+                    // ⚠️  Same DO-NOT-REMOVE rule as the parent row —
+                    // every hover class on this <a> + its children is
+                    // load-bearing. gap-3 keeps the inner pill
+                    // backdrop's -inset-x-3 from touching the dot.
                     <a
                       key={sub.id}
                       href={`#${sub.id}`}
@@ -272,7 +288,7 @@ export function SectionProgress() {
                       data-cursor-no-hint="true"
                       aria-label={sub.label}
                       aria-current={subActive ? "true" : undefined}
-                      className="group flex items-center justify-end gap-2.5 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-2 will-change-transform"
+                      className="group flex items-center justify-end gap-3 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-2 will-change-transform"
                       style={{
                         transitionDelay: showSubItems
                           ? `${i * 60 + 100}ms`
