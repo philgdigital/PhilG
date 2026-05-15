@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode, HTMLAttributes, OlHTMLAttributes } from "react";
+import type { HTMLAttributes, OlHTMLAttributes } from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import type { MDXComponents } from "mdx/types";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { getAllInsights, type Category } from "@/lib/insights";
 import { getAllInsightsLive, getInsightLive } from "@/lib/insights/loader-server";
@@ -121,7 +122,7 @@ function formatDate(iso: string): string {
  * span (matching the previous implementation), so the marker has
  * the same glow + position as before.
  */
-const mdxComponents = {
+const mdxComponents: MDXComponents = {
   p: (props: HTMLAttributes<HTMLParagraphElement>) => (
     <p
       className="text-zinc-200 font-light text-lg md:text-xl leading-[1.7]"
@@ -263,7 +264,7 @@ const mdxComponents = {
 function ArticleBody({ source }: { source: string }) {
   return (
     <div className="flex flex-col gap-8 md:gap-10">
-      <MDXRemote source={source} components={mdxComponents as Record<string, (props: HTMLAttributes<HTMLElement>) => ReactNode>} />
+      <MDXRemote source={source} components={mdxComponents} />
     </div>
   );
 }
