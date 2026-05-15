@@ -228,12 +228,35 @@ export function BodyEditor({
 
   const insertYouTube = () => {
     const url = window.prompt(
-      "Paste the YouTube URL (youtube.com/watch?v=… or youtu.be/…):",
+      "Paste the YouTube URL (youtu.be/…, youtube.com/watch?v=…, /shorts/…, etc.):",
     );
     if (!url) return;
     const trimmed = url.trim();
-    if (!/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(trimmed)) {
-      onError("That doesn't look like a YouTube URL");
+    // Permissive validation — anything that parses as a URL on a
+    // *.youtube.com or youtu.be host is accepted. Previous regex
+    // only allowed `https://(www.)?youtube.com|youtu.be` exactly,
+    // silently rejecting `m.youtube.com`, `music.youtube.com`,
+    // `youtube-nocookie.com`, and any URL with non-standard scheme
+    // or extra whitespace. The runtime VideoPlayer already handles
+    // /shorts/ + /embed/ + ?v=… via its own extractor, so the
+    // editor side only needs to confirm the host family.
+    let ok = false;
+    try {
+      const u = new URL(trimmed);
+      const host = u.hostname.toLowerCase();
+      ok =
+        host === "youtu.be" ||
+        host.endsWith(".youtube.com") ||
+        host === "youtube.com" ||
+        host.endsWith(".youtube-nocookie.com") ||
+        host === "youtube-nocookie.com";
+    } catch {
+      // not a parseable URL — fall through and reject below
+    }
+    if (!ok) {
+      onError(
+        `Doesn't look like a YouTube URL: ${trimmed.slice(0, 80)}${trimmed.length > 80 ? "…" : ""}`,
+      );
       return;
     }
     replaceSelection(`\n\n<YouTube url="${trimmed}" />\n\n`);
