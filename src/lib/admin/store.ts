@@ -176,9 +176,12 @@ async function readSeedSnapshot(): Promise<Insight[]> {
 export async function readInsights(): Promise<Insight[]> {
   if (shouldUseBlob()) {
     const fromBlob = await readFromBlob();
-    if (fromBlob !== null) return fromBlob;
-    // Empty Blob — return the seed so the public site renders the
-    // initial content. First admin write persists the merged result.
+    // Treat BOTH null (no blob version yet) AND [] (every entry
+    // deleted via admin) as "empty store" and fall back to the
+    // build-time seed. Earlier this only checked `!== null`, so a
+    // blob holding `[]` rendered zero insights on the public site
+    // — a bug we hit when an admin delete swept the store clean.
+    if (fromBlob !== null && fromBlob.length > 0) return fromBlob;
     return readSeedSnapshot();
   }
   try {

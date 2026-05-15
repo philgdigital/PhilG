@@ -98,7 +98,7 @@ export function InsightCard({ insight }: { insight: Insight }) {
             alt={insight.title}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-            className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-[1200ms] ease-[var(--ease-out)]"
+            className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700 ease-[var(--ease-out)]"
           />
           <div
             aria-hidden

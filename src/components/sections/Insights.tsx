@@ -143,7 +143,7 @@ function FeaturedCard({ insight }: { insight: Insight }) {
             alt={insight.title}
             fill
             sizes="(min-width: 1024px) 58vw, 100vw"
-            className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-[1500ms] ease-[var(--ease-out)]"
+            className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700 ease-[var(--ease-out)]"
           />
           {/* Editorial wash gradient: blue → emerald, soft */}
           <div
@@ -211,7 +211,7 @@ function RegularCard({ insight }: { insight: Insight }) {
             alt={insight.title}
             fill
             sizes="(min-width: 1024px) 22vw, (min-width: 768px) 45vw, 100vw"
-            className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-[1200ms] ease-[var(--ease-out)]"
+            className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700 ease-[var(--ease-out)]"
           />
           <div
             aria-hidden

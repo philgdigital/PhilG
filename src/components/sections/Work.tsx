@@ -99,7 +99,7 @@ function ProjectComposition({
                 alt={p.title}
                 speed={0.1}
                 priority={index < 2}
-                className="opacity-65 group-hover:opacity-100 transition-all duration-[1500ms] ease-[var(--ease-out)] z-0"
+                className="opacity-65 group-hover:opacity-100 transition-all duration-700 ease-[var(--ease-out)] z-0"
               />
               <div
                 className="absolute inset-0 opacity-70 mix-blend-multiply transition-opacity duration-700 z-0"

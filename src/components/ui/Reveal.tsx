@@ -43,10 +43,31 @@ export function Reveal({
   // own GPU layer forever, eating GPU memory with hundreds of mounted
   // Reveals across the page.
   const [animating, setAnimating] = useState(false);
+  // Honour OS-level reduced-motion preference. When the user has
+  // `prefers-reduced-motion: reduce` set, skip the entry animation
+  // entirely — content snaps in instead. WCAG 2.3.3 + simple
+  // courtesy for vestibular-sensitive visitors.
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+
+    // Reduced motion: skip the animation, show content immediately.
+    if (reducedMotion) {
+      setIsVisible(true);
+      setAnimating(false);
+      return;
+    }
 
     // If the element is already in the viewport on mount, reveal it
     // immediately. Avoids waiting for IntersectionObserver's async
@@ -77,8 +98,8 @@ export function Reveal({
       { threshold: 0, rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(node);
-    return () => observer.unobserve(node);
-  }, [threshold]);
+    return () => observer.disconnect();
+  }, [threshold, reducedMotion]);
 
   // Drop will-change once the entry animation finishes. Frees the GPU
   // layer so memory isn't pinned for already-static content.

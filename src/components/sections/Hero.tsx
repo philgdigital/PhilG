@@ -341,7 +341,7 @@ export function Hero() {
               <br /> gives 'I'm Phil G.' its own line. Tier 2 is the
               supporting context. Both share max-w-3xl so the two blocks
               read as one column with matching width. */}
-          <Reveal delay={700}>
+          <Reveal delay={400}>
             <p className="text-2xl md:text-4xl font-light text-zinc-100 leading-snug max-w-3xl">
               <span className="font-serif italic text-white">
                 I&apos;m Phil G.
@@ -355,7 +355,7 @@ export function Hero() {
             </p>
           </Reveal>
 
-          <Reveal delay={780}>
+          <Reveal delay={460}>
             {/* Body context as three deterministic lines. Two hard
                 <br /> breaks so the wrap never lands on the long
                 hyphenated word 'production-grade' in the middle of
@@ -377,7 +377,7 @@ export function Hero() {
             </p>
           </Reveal>
 
-          <Reveal delay={800}>
+          <Reveal delay={520}>
             {/* CTA + meta on a single row, anchored to the LEFT (justify-start
                 via flex default). flex-wrap is a safety net for very narrow
                 viewports; on desktop they always sit inline. */}
@@ -429,7 +429,7 @@ export function Hero() {
             small geometric accent mark (none reproduce a trademarked
             logo file). All brand marks default to 75% opacity;
             hover lifts to 100% + 1.04x scale. */}
-        <Reveal delay={900}>
+        <Reveal delay={600}>
           <div className="mt-10 md:mt-14 flex flex-col gap-5 md:gap-7">
             <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-400 whitespace-nowrap">
               Trusted by

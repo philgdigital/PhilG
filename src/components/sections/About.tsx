@@ -49,7 +49,7 @@ export function About() {
                   sizes="(min-width: 1024px) 40vw, 100vw"
                   priority
                   quality={90}
-                  className="object-cover object-bottom grayscale-[0.4] opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[1500ms] ease-[var(--ease-out)] transform group-hover:scale-105"
+                  className="object-cover object-bottom grayscale-[0.4] opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-[var(--ease-out)] transform group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-transparent opacity-80" />
               </div>
