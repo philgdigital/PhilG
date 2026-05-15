@@ -32,12 +32,12 @@ type NavLink =
   | { kind: "disabled"; label: string };
 
 const NAV_LINKS: NavLink[] = [
-  { kind: "route", href: "/", label: "Overview" },
+  { kind: "route", href: "/", label: "Details" },
   { kind: "anchor", href: "#testimonials", label: "Testimonials" },
   { kind: "route", href: "/insights", label: "Insights" },
-  { kind: "disabled", label: "Case Studies" },
+  { kind: "disabled", label: "Portfolio" },
   { kind: "disabled", label: "CV" },
-  { kind: "action", action: "openForm", label: "Book a Call" },
+  { kind: "action", action: "openForm", label: "Hire Me" },
   {
     kind: "external",
     href: "https://www.linkedin.com/in/felipeaela/",
@@ -61,13 +61,41 @@ export function Navbar() {
     pathname === "/" ? hash : `/${hash}`;
 
   /**
-   * Shared className for every clickable nav item — desktop pill
-   * variant. Disabled items use a separate className below.
+   * Is this route-kind link currently "active" (i.e. the visitor is
+   * already on it)? Exact match for `/` so it doesn't light up on
+   * every subpage; prefix match for any deeper route so
+   * /insights, /insights/page/2, /insights/some-slug all keep the
+   * Insights link active. Anchor/external/action/disabled never
+   * activate.
    */
-  const itemClass =
-    "hover-target px-4 py-2 rounded-full uppercase transition-all duration-300 ease-[var(--ease-out)] hover:text-white hover:bg-white/[0.08]";
+  const isRouteActive = (href: string): boolean => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  /**
+   * Shared className builder for every clickable nav item — desktop
+   * pill variant. Active links use the same hover-state visuals
+   * (filled subtle bg, text-white) PLUS an IBM-blue accent dot
+   * before the label so "you are here" reads at a glance.
+   */
+  const itemClass = (active: boolean) =>
+    `hover-target px-4 py-2 rounded-full uppercase transition-all duration-300 ease-[var(--ease-out)] hover:text-white hover:bg-white/[0.08] ${
+      active ? "text-white bg-white/[0.08]" : ""
+    }`;
   const disabledClass =
     "px-4 py-2 rounded-full uppercase text-zinc-600 cursor-not-allowed select-none";
+
+  /**
+   * Tiny IBM-blue dot rendered before the label when the link is
+   * active. Same brand-mark accent the logo uses, scaled down.
+   */
+  const ActiveDot = () => (
+    <span
+      aria-hidden
+      className="inline-block w-1 h-1 rounded-full bg-[#0f62fe] shadow-[0_0_6px_rgba(15,98,254,0.7)] mr-2 align-middle"
+    />
+  );
 
   /**
    * Logo click handler. On the homepage, smooth-scrolls to the top.
@@ -175,7 +203,7 @@ export function Navbar() {
                   type="button"
                   onClick={openForm}
                   data-cursor-no-hint="true"
-                  className={itemClass}
+                  className={itemClass(false)}
                 >
                   {link.label}
                 </button>
@@ -189,13 +217,14 @@ export function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor-no-hint="true"
-                  className={itemClass}
+                  className={itemClass(false)}
                 >
                   {link.label}
                 </a>
               );
             }
             // route + anchor → next/link
+            const active = k === "route" && isRouteActive(link.href);
             return (
               <Link
                 key={link.href}
@@ -203,8 +232,10 @@ export function Navbar() {
                   k === "route" ? link.href : resolveAnchorHref(link.href)
                 }
                 data-cursor-no-hint="true"
-                className={itemClass}
+                aria-current={active ? "page" : undefined}
+                className={itemClass(active)}
               >
+                {active && <ActiveDot />}
                 {link.label}
               </Link>
             );
@@ -274,8 +305,12 @@ export function Navbar() {
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-8"
               }`;
-              const linkCls =
-                "block text-5xl font-black tracking-tighter text-white uppercase hover:text-[#0f62fe] transition-colors hover-target";
+              const linkCls = (active: boolean) =>
+                `block text-5xl font-black tracking-tighter uppercase transition-colors hover-target ${
+                  active
+                    ? "text-[#4589ff]"
+                    : "text-white hover:text-[#0f62fe]"
+                }`;
               const disabledLinkCls =
                 "block text-5xl font-black tracking-tighter text-zinc-700 uppercase cursor-not-allowed select-none";
               const delay = { transitionDelay: `${i * 80 + 200}ms` };
@@ -312,7 +347,7 @@ export function Navbar() {
                         openForm();
                       }}
                       data-cursor-no-hint="true"
-                      className={`${linkCls} text-left`}
+                      className={`${linkCls(false)} text-left`}
                     >
                       {link.label}
                     </button>
@@ -328,13 +363,14 @@ export function Navbar() {
                       rel="noopener noreferrer"
                       onClick={() => setIsMenuOpen(false)}
                       data-cursor-no-hint="true"
-                      className={linkCls}
+                      className={linkCls(false)}
                     >
                       {link.label}
                     </a>
                   </li>
                 );
               }
+              const active = k === "route" && isRouteActive(link.href);
               return (
                 <li key={link.href} className={liCls} style={delay}>
                   <Link
@@ -345,7 +381,8 @@ export function Navbar() {
                     }
                     onClick={() => setIsMenuOpen(false)}
                     data-cursor-no-hint="true"
-                    className={linkCls}
+                    aria-current={active ? "page" : undefined}
+                    className={linkCls(active)}
                   >
                     {link.label}
                   </Link>

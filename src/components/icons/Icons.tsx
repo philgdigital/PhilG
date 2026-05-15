@@ -79,13 +79,24 @@ export const Sparkles: IconComponent = (p) => (
   </Svg>
 );
 
+// Workflow / "Discover" icon: three boxes stepping diagonally
+// (top-left → middle → bottom-right) wired by two short L-shaped
+// connectors. The previous version's second connector was malformed
+// (`v0a3 3 0 0 1 3 3v0` — two zero-length segments plus a bare arc),
+// so the bottom half rendered as a stray curve instead of mirroring
+// the top half. Rewritten with symmetric L-paths that each enter
+// the next box on its center-edge with a small rounded corner.
 export const Workflow: IconComponent = (p) => (
   <Svg {...p}>
     <rect x="3" y="3" width="6" height="6" rx="1" />
-    <rect x="15" y="15" width="6" height="6" rx="1" />
     <rect x="9" y="9" width="6" height="6" rx="1" />
-    <path d="M6 9v3a3 3 0 0 0 3 3" />
-    <path d="M15 12v0a3 3 0 0 1 3 3v0" />
+    <rect x="15" y="15" width="6" height="6" rx="1" />
+    {/* top-left box bottom-center (6,9) → down → rounded corner →
+        right → middle box left-center (9,12) */}
+    <path d="M6 9v2a1 1 0 0 0 1 1h2" />
+    {/* middle box right-center (15,12) → right → rounded corner →
+        down → bottom-right box top-center (18,15) */}
+    <path d="M15 12h2a1 1 0 0 1 1 1v2" />
   </Svg>
 );
 
