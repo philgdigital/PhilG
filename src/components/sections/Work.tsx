@@ -263,101 +263,81 @@ export function Work() {
     });
   }, []);
 
-  /**
-   * Auto-disable: once the visitor has scrolled past the section's
-   * bottom (i.e. they finished the gallery and continued reading),
-   * collapse it back to one viewport so the gate re-arms for the
-   * next visit. The page's total height drops by (N-1)*vh in that
-   * moment, so we counter-scroll by the same amount to keep the
-   * visitor at the same content position below the section.
-   *
-   * Only active on desktop + when currently enabled.
-   */
-  useEffect(() => {
-    if (!isDesktop || !enabled) return;
-    const onScroll = () => {
-      const w = wrapperRef.current;
-      if (!w) return;
-      const rect = w.getBoundingClientRect();
-      if (rect.bottom < -50) {
-        const collapsedDelta = (projects.length - 1) * window.innerHeight;
-        setEnabled(false);
-        // Hold the visitor at the same content under their viewport
-        // by counter-scrolling. Without this, the page would suddenly
-        // appear to jump UP because the next sections rush in to fill
-        // the height the Work block just released.
-        window.scrollBy({ top: -collapsedDelta, behavior: "auto" });
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [isDesktop, enabled]);
-
-  // SMOOTHED SCROLL -> HORIZONTAL TRACK (desktop only).
+  // DIRECT SCROLL -> HORIZONTAL TRACK (desktop only).
   //
-  // Previous implementation: setProgress(raw) on every rAF, which
-  // re-rendered the whole component each frame AND mapped raw
-  // scroll position directly to translateX. Two visible bugs from
-  // that:
-  //   (a) On macOS / trackpad momentum scroll, scroll events fire in
-  //       bursts with quiet periods between them. The transform
-  //       jumped on each burst and froze between, reading as stutter.
-  //   (b) React re-rendered the entire ProjectComposition tree on
-  //       every frame, including 9 cards w/ TiltCard + Image. On
-  //       slower hardware that bottlenecked at the React reconciler.
+  // The section is N×100vh tall when enabled. A continuous rAF loop
+  // reads `wrapper.getBoundingClientRect().top` each frame, derives
+  // scroll progress p ∈ [0, 1] for the pinned region, and writes
+  // the horizontal track's translateX 1:1 with that progress. The
+  // progress bar's scaleX is updated the same way.
   //
-  // New approach:
-  //   - Scroll events update a target progress (raw, clamped to
-  //     [0, 1]) stored in a ref.
-  //   - A continuous rAF loop lerps current toward target with an
-  //     exponential approach (~95% in 180ms). The lerp irons out
-  //     scroll bursts so the transform is fluid even when the input
-  //     is stuttery.
-  //   - The transform is written DIRECTLY to the track element's
-  //     style via the trackRef. No React state involved per frame.
-  //   - The progress bar's scaleX is updated the same way via
-  //     progressBarRef.
-  //   - React state (activeIdx) is only updated when the rounded
-  //     active project changes (e.g., progress crosses 0.5/(N-1) -
-  //     0.5 ratio). That triggers the pip + inert flip but happens
-  //     at most ~9 times per full scroll, not 60 times per second.
+  // Why rAF + bounding-rect (and NOT scroll-event-driven lerp):
+  //   - Browsers already smooth scroll position natively (trackpad
+  //     inertia, smooth-scroll, scrollTo({behavior:'smooth'})). The
+  //     instantaneous rect.top is the smoothed value. Reading it
+  //     each frame is exactly the right input — adding a lerp on
+  //     top introduces latency without making the motion smoother.
+  //   - macOS trackpad scroll EVENTS are bursty (paused frames
+  //     between bursts), but the scroll POSITION is continuous.
+  //     rAF runs at the display refresh rate regardless of the
+  //     event burst pattern, so the track follows position exactly.
+  //   - DOM writes go straight to refs (no React state per frame).
+  //     The only React state that updates is `activeIdx`, and that
+  //     only flips at project boundaries (≤ N times per full scroll).
+  //
+  // Off-screen skip: when the section is more than half a viewport
+  // away above or 1.5 viewports below, the tick early-returns
+  // without measuring or writing. Keeps the cost near-zero when the
+  // visitor isn't looking at the section but the loop is still armed.
+  //
+  // No auto-disable: the section stays enabled once the visitor
+  // opts in. Auto-collapsing on scroll-past created a one-frame
+  // flicker (counter-scroll happened before React committed the
+  // height change, briefly snapping the track to a wrong project
+  // before settling). Easier UX too — if the visitor scrolls back
+  // up, the gallery is still there, no confusing gate re-prompt.
   useEffect(() => {
-    // No-op when disabled — the section is only 1×vh so there's no
-    // pin scroll runway, and the projects underneath are covered by
-    // the gate overlay. Skip the rAF loop + scroll listener until
-    // the visitor opts in (effect re-runs when `enabled` flips).
     if (!isDesktop || !enabled) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
     const N = projects.length;
     const transitions = Math.max(1, N - 1);
-    let target = 0;
-    let current = 0;
-    let lastFrameTime = 0;
     let alive = true;
     let lastIdx = -1;
+    let lastP = -1;
 
-    const measureTarget = () => {
+    const tick = () => {
+      if (!alive) return;
+
       const rect = wrapper.getBoundingClientRect();
       const vh = window.innerHeight;
-      const pinDuration = transitions * vh;
-      if (pinDuration <= 0) {
-        target = 0;
+
+      // Far off-screen: skip the DOM write but stay armed.
+      if (rect.bottom < -vh * 0.5 || rect.top > vh * 1.5) {
+        requestAnimationFrame(tick);
         return;
       }
-      const raw = -rect.top / pinDuration;
-      target = Math.max(0, Math.min(1, raw));
-    };
 
-    const applyToDOM = (p: number) => {
-      const tx = -p * transitions * 100;
-      if (trackRef.current) {
-        trackRef.current.style.transform = `translate3d(${tx}vw, 0, 0)`;
+      const pinDuration = transitions * vh;
+      const p =
+        pinDuration > 0
+          ? Math.max(0, Math.min(1, -rect.top / pinDuration))
+          : 0;
+
+      // Only write to DOM when progress actually moved. Tiny
+      // epsilon so float imprecision doesn't trigger no-op writes.
+      if (Math.abs(p - lastP) > 0.00005) {
+        lastP = p;
+        const tx = -p * transitions * 100;
+        if (trackRef.current) {
+          trackRef.current.style.transform = `translate3d(${tx}vw, 0, 0)`;
+        }
+        if (progressBarRef.current) {
+          progressBarRef.current.style.transform = `scaleX(${p})`;
+        }
       }
-      if (progressBarRef.current) {
-        progressBarRef.current.style.transform = `scaleX(${p})`;
-      }
+
       const idx = Math.round(p * transitions);
       if (idx !== lastIdx) {
         lastIdx = idx;
@@ -378,47 +358,14 @@ export function Work() {
           );
         }
       }
-    };
 
-    const tick = (now: number) => {
-      if (!alive) return;
-      const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.1) : 0;
-      lastFrameTime = now;
-      // Exponential approach. k = 18 -> ~95% caught up in ~180ms,
-      // ~99% in ~280ms. Fast enough to feel direct, slow enough to
-      // sand off scroll bursts.
-      const k = 18;
-      const alpha = 1 - Math.exp(-k * dt);
-      const diff = target - current;
-      if (Math.abs(diff) < 0.0002) {
-        current = target;
-      } else {
-        current += diff * alpha;
-      }
-      applyToDOM(current);
       requestAnimationFrame(tick);
     };
 
-    const onScroll = () => {
-      measureTarget();
-    };
-
-    // Initial measure + render so the track is positioned correctly
-    // on first paint (e.g. if the visitor lands mid-page via a
-    // deep link).
-    measureTarget();
-    current = target;
-    applyToDOM(current);
-    lastFrameTime = performance.now();
     requestAnimationFrame(tick);
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", measureTarget);
 
     return () => {
       alive = false;
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", measureTarget);
     };
   }, [isDesktop, enabled]);
 
@@ -575,50 +522,59 @@ export function Work() {
           }}
         >
           {/* 2-column editorial spread.
-              Left: eyebrow + huge headline + body + CTA + skip line.
+              Left: eyebrow + headline + body + CTA framing the
+              section as a case-study gallery for Phil's projects.
               Right: a 4-row "stat tower" pulling the numerical proof
               out of the body paragraph and giving it its own lane.
-              Container caps at max-w-6xl to match the rest of the
-              page grid (AILab, FAQ, AntiPattern, Insights). */}
-          <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* LEFT COLUMN — editorial brief + CTA. */}
-            <div className="lg:col-span-7 flex flex-col items-start text-left gap-6 md:gap-7">
+              Container caps at max-w-[1400px] to match the Hero
+              and every other home section. */}
+          <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* LEFT COLUMN — editorial brief + primary CTA. */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left gap-6 md:gap-8">
               <div className="flex items-center gap-3">
                 <span
                   aria-hidden
                   className="w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.7)]"
                 />
                 <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-zinc-400">
-                  06 · Selected Work
+                  06 · Selected Work · Case Studies
                 </span>
               </div>
               <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.02]">
-                Adoption from 28% to 71%.
+                Nine projects.
                 <br />
-                In six months. At enterprise scale.
+                Nine real outcomes.
               </h2>
               <p className="text-base md:text-lg font-light text-zinc-300 leading-relaxed max-w-xl">
-                That&apos;s{" "}
-                <span className="text-white font-medium">one</span> of nine
-                shipped launches inside. Each shows the constraint, the call
-                I made, and the number that moved on the dashboard.
+                Each case study unpacks the brief, the constraint, the call
+                I made, and the metric that moved on the dashboard — from
+                Cemex&apos;s adoption climbing{" "}
+                <span className="text-white font-medium">28 → 71%</span> in
+                six months, to design systems shipping to 20,000 enterprise
+                users across 50 countries.
                 <br />
                 <span className="text-zinc-400">
-                  No mockups, no theory. Only work that shipped and survived
-                  contact with the org.
+                  No mockups, no theory. Only shipped work.
                 </span>
               </p>
+              {/* Primary CTA — matches the Hero "Explore the Work"
+                  size language (px-8 py-5, text-sm mono uppercase
+                  with 0.18em tracking) but stays IBM-blue filled
+                  because this is the section's primary action and
+                  the gate moment deserves a confident colour signal,
+                  not just an outline. Adds an animated arrow that
+                  slides on hover for direct-response affordance. */}
               <button
                 type="button"
                 onClick={onEnable}
                 data-magnetic="true"
                 data-cursor-hint="Open the gallery"
-                className="hover-target group mt-2 inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#0f62fe] hover:bg-[#4589ff] shadow-[0_10px_40px_rgba(15,98,254,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_15px_60px_rgba(15,98,254,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] text-white font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase font-medium transition-all duration-500"
+                className="hover-target group mt-2 inline-flex items-center gap-4 px-8 py-5 rounded-full bg-[#0f62fe] hover:bg-[#4589ff] text-white font-mono font-medium tracking-[0.18em] uppercase text-sm whitespace-nowrap shadow-[0_10px_40px_rgba(15,98,254,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_18px_60px_rgba(15,98,254,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-500 ease-[var(--ease-out)]"
               >
-                Open the nine
+                <span>Explore the case studies</span>
                 <svg
                   viewBox="0 0 24 24"
-                  className="w-3.5 h-3.5 transition-transform duration-500 group-hover:translate-x-1"
+                  className="w-4 h-4 transition-transform duration-500 ease-[var(--ease-out)] group-hover:translate-x-1.5"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -629,9 +585,6 @@ export function Work() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </button>
-              <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500">
-                Not hiring right now? Scroll to skip.
-              </span>
             </div>
 
             {/* RIGHT COLUMN — stat tower.

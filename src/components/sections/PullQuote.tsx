@@ -91,7 +91,7 @@ export function PullQuote() {
         className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-[900px] h-[400px] bg-[#0f62fe]/[0.05] blur-[140px] rounded-full"
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto">
+      <div className="relative z-10 max-w-[1400px] mx-auto">
         <Reveal>
           {/* Open-quote glyph in serif italic, washed out so it reads as
               decoration rather than text. Hangs above the quote like a

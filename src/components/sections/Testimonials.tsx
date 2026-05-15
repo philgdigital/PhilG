@@ -97,7 +97,7 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="py-32 px-6 md:px-12 lg:px-24 relative z-10"
+      className="py-32 px-6 md:px-12 lg:px-24 max-w-[1400px] mx-auto relative z-10"
     >
       <Reveal>
         <div className="flex items-center gap-4 mb-12">

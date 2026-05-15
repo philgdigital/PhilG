@@ -401,7 +401,7 @@ export default async function InsightPage({ params }: RouteProps) {
             /insights archive root vs a specific paginated/filtered
             view) by reading sessionStorage set at click time. See
             src/lib/insights-back-ref.ts. */}
-        <div className="flex items-center justify-between mb-16 max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-16 max-w-[1400px] mx-auto">
           <InsightsBackLink />
           <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-zinc-400">
             {`0${idx + 1} / 0${allInsights.length}`}
@@ -409,7 +409,7 @@ export default async function InsightPage({ params }: RouteProps) {
         </div>
 
         {/* Header block */}
-        <header className="max-w-6xl mx-auto mb-16 md:mb-20">
+        <header className="max-w-[1400px] mx-auto mb-16 md:mb-20">
           <Reveal>
             <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
               <div className="flex flex-wrap items-center gap-4">
@@ -480,7 +480,7 @@ export default async function InsightPage({ params }: RouteProps) {
         <Reveal delay={400}>
           {insight.video ? (
             <div
-              className={`max-w-6xl mx-auto ${
+              className={`max-w-[1400px] mx-auto ${
                 insight.audio ? "mb-8 md:mb-12" : "mb-10 md:mb-14"
               }`}
               style={{ viewTransitionName: `insight-card-${insight.slug}` }}
@@ -491,7 +491,7 @@ export default async function InsightPage({ params }: RouteProps) {
             <div
               className={`relative w-full aspect-[16/8] md:aspect-[16/7] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/8 ${
                 insight.audio ? "mb-8 md:mb-12" : "mb-10 md:mb-14"
-              } shadow-2xl max-w-6xl mx-auto`}
+              } shadow-2xl max-w-[1400px] mx-auto`}
               style={{ viewTransitionName: `insight-card-${insight.slug}` }}
             >
               <Image
@@ -556,7 +556,7 @@ export default async function InsightPage({ params }: RouteProps) {
             handoff from the last article paragraph to the next-up
             recommendation reads as a continuous editorial beat,
             not a large gap between unrelated blocks. */}
-        <section className="relative pt-6 md:pt-10 max-w-6xl mx-auto">
+        <section className="relative pt-6 md:pt-10 max-w-[1400px] mx-auto">
           {/* "Continue reading" section header. Hairline trails off
               to the right so the eyebrow reads as a magazine-style
               chapter divider rather than a plain label. */}

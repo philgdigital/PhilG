@@ -133,7 +133,7 @@ export function Aphorism({ lines, id }: AphorismProps) {
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110vw] h-[55vh] rounded-full bg-[#0f62fe]/[0.05] blur-[140px]"
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto text-center">
+      <div className="relative z-10 max-w-[1400px] mx-auto text-center">
         {/* Thin vertical accent line ABOVE the text. After the entry
             scaleY animation completes, a continuous slow shimmer
             cycles its inner gradient brightness so the line stays

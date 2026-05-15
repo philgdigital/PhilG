@@ -77,7 +77,7 @@ export function AILab() {
         }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto">
+      <div className="relative z-10 max-w-[1400px] mx-auto">
         <Reveal>
           <div className="flex items-center gap-4 mb-10">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
