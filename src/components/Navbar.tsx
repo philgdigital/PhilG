@@ -4,34 +4,70 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { XIcon as X } from "@/components/icons/Icons";
+import { useFormContext } from "@/lib/form-context";
 
 /**
- * Top-level navigation links. The Insights entry is now a real route
- * (`/insights` — the full archive with filters + search) rather than
- * an in-page anchor, so the homepage's #insights section becomes a
- * "latest" snapshot and the full archive lives at its own URL. The
- * other items remain in-page anchors that resolve on the homepage.
+ * Top-level navigation links. Five flavours, discriminated by `kind`:
  *
- * The `kind` field is read by the link-rendering loop below: anchor
- * links get the homepage-prefix treatment (so #work resolves from
- * /work/[slug] too), while route links navigate directly.
+ *   - "route"    — internal Next.js route, navigated via <Link>.
+ *   - "anchor"   — homepage section anchor. From a subpage we
+ *                  prefix '/' so the hash resolves on the homepage
+ *                  rather than crashing on /work/[slug]/#testimonials.
+ *   - "external" — opens in a new tab via plain <a target=_blank>.
+ *   - "action"   — runs a side-effect (currently only `openForm`,
+ *                  the global ProjectFormModal trigger from
+ *                  FormProvider). Rendered as a <button>.
+ *   - "disabled" — placeholder for routes that aren't ready yet.
+ *                  Rendered as a muted span with cursor-not-allowed
+ *                  + a "soon" title attr; not focusable.
+ *
+ * Order = visual order in both the desktop pill and the mobile
+ * drawer. Adding / removing entries only touches this array.
  */
-const NAV_LINKS: Array<{
-  href: string;
-  label: string;
-  kind: "anchor" | "route";
-}> = [
-  { href: "#work", label: "Work", kind: "anchor" },
-  { href: "/insights", label: "Insights", kind: "route" },
-  { href: "#ai-lab", label: "AI Lab", kind: "anchor" },
-  { href: "#process", label: "Process", kind: "anchor" },
-  { href: "#faq", label: "FAQ", kind: "anchor" },
+type NavLink =
+  | { kind: "route"; href: string; label: string }
+  | { kind: "anchor"; href: string; label: string }
+  | { kind: "external"; href: string; label: string }
+  | { kind: "action"; action: "openForm"; label: string }
+  | { kind: "disabled"; label: string };
+
+const NAV_LINKS: NavLink[] = [
+  { kind: "route", href: "/", label: "Overview" },
+  { kind: "anchor", href: "#testimonials", label: "Testimonials" },
+  { kind: "route", href: "/insights", label: "Insights" },
+  { kind: "disabled", label: "Case Studies" },
+  { kind: "disabled", label: "CV" },
+  { kind: "action", action: "openForm", label: "Book a Call" },
+  {
+    kind: "external",
+    href: "https://www.linkedin.com/in/felipeaela/",
+    label: "LinkedIn",
+  },
 ];
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { openForm } = useFormContext();
+
+  /**
+   * Resolve an anchor href against the current pathname. On the
+   * homepage `#testimonials` works as-is; on a subpage the browser
+   * has no `<section id="testimonials">` to jump to, so we prefix
+   * the homepage route ('/') and Next routes there first.
+   */
+  const resolveAnchorHref = (hash: string): string =>
+    pathname === "/" ? hash : `/${hash}`;
+
+  /**
+   * Shared className for every clickable nav item — desktop pill
+   * variant. Disabled items use a separate className below.
+   */
+  const itemClass =
+    "hover-target px-4 py-2 rounded-full uppercase transition-all duration-300 ease-[var(--ease-out)] hover:text-white hover:bg-white/[0.08]";
+  const disabledClass =
+    "px-4 py-2 rounded-full uppercase text-zinc-600 cursor-not-allowed select-none";
 
   /**
    * Logo click handler. On the homepage, smooth-scrolls to the top.
@@ -117,22 +153,62 @@ export function Navbar() {
             is what every link in the menu should do regardless of
             current page. */}
         <div className="hidden md:flex items-center gap-1 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={
-                link.kind === "route"
-                  ? link.href
-                  : pathname === "/"
-                    ? link.href
-                    : `/${link.href}`
-              }
-              data-cursor-no-hint="true"
-              className="hover-target px-4 py-2 rounded-full uppercase transition-all duration-300 ease-[var(--ease-out)] hover:text-white hover:bg-white/[0.08]"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link, i) => {
+            const k = link.kind;
+            if (k === "disabled") {
+              return (
+                <span
+                  key={`disabled-${i}`}
+                  title="Coming soon"
+                  aria-disabled="true"
+                  data-cursor-no-hint="true"
+                  className={disabledClass}
+                >
+                  {link.label}
+                </span>
+              );
+            }
+            if (k === "action") {
+              return (
+                <button
+                  key={`action-${link.action}`}
+                  type="button"
+                  onClick={openForm}
+                  data-cursor-no-hint="true"
+                  className={itemClass}
+                >
+                  {link.label}
+                </button>
+              );
+            }
+            if (k === "external") {
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor-no-hint="true"
+                  className={itemClass}
+                >
+                  {link.label}
+                </a>
+              );
+            }
+            // route + anchor → next/link
+            return (
+              <Link
+                key={link.href}
+                href={
+                  k === "route" ? link.href : resolveAnchorHref(link.href)
+                }
+                data-cursor-no-hint="true"
+                className={itemClass}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
         <button
           type="button"
@@ -192,32 +268,90 @@ export function Navbar() {
             </button>
           </div>
           <ul className="flex flex-col gap-8">
-            {NAV_LINKS.map((link, i) => (
-              <li
-                key={link.href}
-                className={`transition-all duration-700 ease-[var(--ease-out)] ${
-                  isMenuOpen
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
-                }`}
-                style={{ transitionDelay: `${i * 80 + 200}ms` }}
-              >
-                <Link
-                  href={
-                    link.kind === "route"
-                      ? link.href
-                      : pathname === "/"
+            {NAV_LINKS.map((link, i) => {
+              const liCls = `transition-all duration-700 ease-[var(--ease-out)] ${
+                isMenuOpen
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
+              }`;
+              const linkCls =
+                "block text-5xl font-black tracking-tighter text-white uppercase hover:text-[#0f62fe] transition-colors hover-target";
+              const disabledLinkCls =
+                "block text-5xl font-black tracking-tighter text-zinc-700 uppercase cursor-not-allowed select-none";
+              const delay = { transitionDelay: `${i * 80 + 200}ms` };
+              const k = link.kind;
+              if (k === "disabled") {
+                return (
+                  <li
+                    key={`disabled-${i}`}
+                    className={liCls}
+                    style={delay}
+                  >
+                    <span
+                      title="Coming soon"
+                      aria-disabled="true"
+                      data-cursor-no-hint="true"
+                      className={disabledLinkCls}
+                    >
+                      {link.label}
+                    </span>
+                  </li>
+                );
+              }
+              if (k === "action") {
+                return (
+                  <li
+                    key={`action-${link.action}`}
+                    className={liCls}
+                    style={delay}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        openForm();
+                      }}
+                      data-cursor-no-hint="true"
+                      className={`${linkCls} text-left`}
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                );
+              }
+              if (k === "external") {
+                return (
+                  <li key={link.href} className={liCls} style={delay}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsMenuOpen(false)}
+                      data-cursor-no-hint="true"
+                      className={linkCls}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                );
+              }
+              return (
+                <li key={link.href} className={liCls} style={delay}>
+                  <Link
+                    href={
+                      k === "route"
                         ? link.href
-                        : `/${link.href}`
-                  }
-                  onClick={() => setIsMenuOpen(false)}
-                  data-cursor-no-hint="true"
-                  className="block text-5xl font-black tracking-tighter text-white uppercase hover:text-[#0f62fe] transition-colors hover-target"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+                        : resolveAnchorHref(link.href)
+                    }
+                    onClick={() => setIsMenuOpen(false)}
+                    data-cursor-no-hint="true"
+                    className={linkCls}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
