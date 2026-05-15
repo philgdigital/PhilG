@@ -114,6 +114,29 @@ function parseMarkdown(source: string): Block[] {
       blocks.push({ type: "list", items });
     } else if (line === "") {
       i++;
+    } else if (line.startsWith("<")) {
+      // MDX/JSX tag block (e.g. <Carousel images={[…]} /> or
+      // <YouTube url="…" />). Web-only — silently skip in the PDF
+      // since react-pdf can't render React components and we don't
+      // want raw JSX printed as paragraph text. Consume every
+      // subsequent line until the tag self-closes or its blank
+      // line terminator (whichever comes first) so multi-line JSX
+      // expressions don't leak their inner braces into the next
+      // paragraph block.
+      while (
+        i < lines.length &&
+        lines[i].trim() !== "" &&
+        !lines[i].trim().endsWith("/>") &&
+        !lines[i].trim().endsWith(">")
+      ) {
+        i++;
+      }
+      i++; // consume the closing line
+    } else if (/^!\[[^\]]*\]\([^)]+\)\s*$/.test(line)) {
+      // Standalone markdown image (`![alt](url)` on its own line).
+      // The PDF has its own cover image and ink-budget targets, so
+      // body images are intentionally web-only. Skip cleanly.
+      i++;
     } else {
       const paraLines: string[] = [];
       while (i < lines.length && lines[i].trim() !== "") {
@@ -581,12 +604,22 @@ function formatDate(iso: string): string {
 }
 
 /**
- * Resolve a frontmatter image path (e.g. "/images/about.jpg") to
- * an absolute filesystem path that react-pdf's <Image> can load.
- * Falls back to the default about.jpg when the file is missing
- * so a busted frontmatter never crashes the build.
+ * Resolve a frontmatter image to something react-pdf's <Image> can
+ * load. Three input shapes:
+ *
+ *   - Absolute URL (https://...) — return as-is. react-pdf fetches
+ *     network URLs server-side, so a Vercel Blob URL works directly.
+ *     This path is hit whenever a hero image was uploaded via the
+ *     admin (POST /api/admin/upload-image), which lands in Blob.
+ *   - Local path under /public — resolve to absolute filesystem path
+ *     so react-pdf reads the file from disk during the build. This
+ *     is the path for any pre-seeded image still living under
+ *     /public/images/.
+ *   - Missing file or empty input — fall back to about.jpg so a
+ *     busted frontmatter never crashes the build.
  */
 function resolveCoverImage(image: string): string {
+  if (/^https?:\/\//i.test(image)) return image;
   const cwd = process.cwd();
   const direct = path.join(cwd, "public", image.replace(/^\/+/, ""));
   if (fs.existsSync(direct)) return direct;
@@ -827,37 +860,60 @@ async function main() {
   // the detail page. Both files live under /public/pdf/:
   //   {slug}-digital.pdf
   //   {slug}-print.pdf
+  //
+  // Per-PDF render is wrapped in try/catch so a failure on ONE
+  // file doesn't kill the whole prebuild chain (which also runs
+  // data.json and is required for `npm run dev`). Previously
+  // generated PDFs already on disk keep working as static assets.
+  // A known issue with @react-pdf/renderer 4.5.1 + React 19 can
+  // surface as `ps is not a function` from the reconciler —
+  // logging keeps that visible without taking the rest of the
+  // app down.
+  let failures = 0;
   for (const insight of insights) {
     const blocks = parseMarkdown(insight.body);
     for (const theme of ["digital", "print"] as const) {
-      const doc = (
-        <InsightDocument insight={insight} blocks={blocks} theme={theme} />
-      );
-      const buffer = await pdf(doc).toBuffer();
       const out = path.join(outDir, `${insight.slug}-${theme}.pdf`);
-      if (Buffer.isBuffer(buffer)) {
-        fs.writeFileSync(out, buffer);
-      } else {
-        // Stream-style: drain to file.
-        const chunks: Buffer[] = [];
-        await new Promise<void>((resolve, reject) => {
-          (buffer as unknown as NodeJS.ReadableStream)
-            .on("data", (chunk: Buffer | string) => {
-              chunks.push(
-                Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk),
-              );
-            })
-            .on("end", () => {
-              fs.writeFileSync(out, Buffer.concat(chunks));
-              resolve();
-            })
-            .on("error", reject);
-        });
+      try {
+        const doc = (
+          <InsightDocument insight={insight} blocks={blocks} theme={theme} />
+        );
+        const buffer = await pdf(doc).toBuffer();
+        if (Buffer.isBuffer(buffer)) {
+          fs.writeFileSync(out, buffer);
+        } else {
+          // Stream-style: drain to file.
+          const chunks: Buffer[] = [];
+          await new Promise<void>((resolve, reject) => {
+            (buffer as unknown as NodeJS.ReadableStream)
+              .on("data", (chunk: Buffer | string) => {
+                chunks.push(
+                  Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk),
+                );
+              })
+              .on("end", () => {
+                fs.writeFileSync(out, Buffer.concat(chunks));
+                resolve();
+              })
+              .on("error", reject);
+          });
+        }
+        console.log(
+          `[build-insights-pdfs] wrote ${path.relative(root, out)} (${blocks.length} blocks)`,
+        );
+      } catch (err) {
+        failures++;
+        const msg = err instanceof Error ? err.message : String(err);
+        console.warn(
+          `[build-insights-pdfs] SKIP ${path.relative(root, out)} — ${msg}`,
+        );
       }
-      console.log(
-        `[build-insights-pdfs] wrote ${path.relative(root, out)} (${blocks.length} blocks)`,
-      );
     }
+  }
+  if (failures > 0) {
+    console.warn(
+      `[build-insights-pdfs] ${failures} PDF(s) failed to render. Existing files on disk still serve.`,
+    );
   }
 }
 

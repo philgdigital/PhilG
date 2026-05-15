@@ -6,7 +6,7 @@
     "build:insights-data": "node scripts/build-insights-data.mjs",
     "build:insights-pdfs": "tsx scripts/build-insights-pdfs.tsx",
     "build:insights": "npm run build:insights-data && npm run build:insights-pdfs",
-    "predev": "npm run build:insights",
+    "predev": "npm run build:insights-data",
     "dev": "next dev",
     "prebuild": "npm run build:insights",
     "build": "next build",

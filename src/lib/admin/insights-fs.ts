@@ -169,3 +169,47 @@ export async function saveAudioFile(
   await fs.writeFile(path.join(dir, `${slug}.mp3`), buf);
   return `/audio/${slug}.mp3`;
 }
+
+/**
+ * Map a MIME type to a file extension. Anything unrecognised falls
+ * back to `jpg` so the file still gets a sensible name and the
+ * browser content-sniffs the actual format on retrieval.
+ */
+function extFromMime(mime: string): "jpg" | "png" | "webp" | "gif" {
+  if (mime === "image/png") return "png";
+  if (mime === "image/webp") return "webp";
+  if (mime === "image/gif") return "gif";
+  return "jpg"; // image/jpeg, image/jpg, anything else
+}
+
+/**
+ * Upload cover image to Vercel Blob (or /public/images in dev).
+ * Returns the public URL to stamp into the insight's `image:`
+ * field. Mirror of saveAudioFile — same Blob-vs-filesystem branch,
+ * same overwrite semantics. The file extension reflects the real
+ * format (jpg/png/webp/gif) so the served Content-Type matches.
+ */
+export async function saveImageFile(
+  slug: string,
+  buf: Buffer,
+  contentType: string = "image/jpeg",
+): Promise<string> {
+  const ext = extFromMime(contentType);
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const { put } = await import("@vercel/blob");
+    const result = await put(`images/${slug}.${ext}`, buf, {
+      access: "public",
+      contentType,
+      addRandomSuffix: false,
+      allowOverwrite: true,
+    });
+    return result.url;
+  }
+  // DEV — write to /public/images.
+  const fs = await import("node:fs/promises");
+  const path = await import("node:path");
+  const dir = path.join(process.cwd(), "public", "images");
+  await fs.mkdir(dir, { recursive: true });
+  await fs.writeFile(path.join(dir, `${slug}.${ext}`), buf);
+  return `/images/${slug}.${ext}`;
+}

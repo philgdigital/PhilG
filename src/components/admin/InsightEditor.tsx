@@ -5,6 +5,7 @@ import { useState } from "react";
 import { CATEGORIES, type Category } from "@/lib/insights/schema";
 import { adminFetch, getToken } from "@/lib/admin/client-auth";
 import { BrandSelect } from "@/components/ui/BrandSelect";
+import { BodyEditor } from "@/components/admin/BodyEditor";
 
 /**
  * Insight editor form. Reused for both "new" and "edit" modes:
@@ -59,8 +60,29 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
 
   const [saving, setSaving] = useState(false);
   const [uploadingAudio, setUploadingAudio] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // The image + audio upload handlers both need to name the file
+  // after the post's slug. New posts have no slug yet, so derive
+  // one from the current title; edits use the persisted oldSlug.
+  // Throws inline on the form via setError if the title's empty.
+  const deriveUploadSlug = (): string | null => {
+    const slug =
+      mode === "edit" && oldSlug
+        ? oldSlug
+        : title
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+    if (!slug) {
+      setError("Set the title before uploading");
+      return null;
+    }
+    return slug;
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,19 +129,10 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
 
   const onUploadAudio = async (file: File) => {
     setError(null);
+    const slug = deriveUploadSlug();
+    if (!slug) return;
     setUploadingAudio(true);
     try {
-      // We need a slug to name the audio file. If the post is new,
-      // derive it from the title; for edits, use the existing slug.
-      const slug =
-        mode === "edit" && oldSlug
-          ? oldSlug
-          : title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-      if (!slug) {
-        setError("Set the title before uploading audio");
-        setUploadingAudio(false);
-        return;
-      }
       const form = new FormData();
       form.append("file", file);
       form.append("slug", slug);
@@ -141,6 +154,36 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
       setError(e instanceof Error ? e.message : "Network error");
     } finally {
       setUploadingAudio(false);
+    }
+  };
+
+  const onUploadImage = async (file: File) => {
+    setError(null);
+    const slug = deriveUploadSlug();
+    if (!slug) return;
+    setUploadingImage(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("slug", slug);
+      const token = getToken();
+      const res = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: form,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Image upload failed");
+        setUploadingImage(false);
+        return;
+      }
+      const data = await res.json();
+      setImage(data.url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Network error");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -222,14 +265,51 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
           />
         </Field>
 
-        <Field label="Hero image path (optional)">
-          <input
-            type="text"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            placeholder="/images/about.jpg"
-            className={inputCls}
-          />
+        <Field label="Hero image (optional)" full>
+          <div className="flex flex-col md:flex-row gap-3">
+            <input
+              type="text"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              placeholder="/images/about.jpg"
+              className={`${inputCls} flex-1`}
+            />
+            <label
+              className={`shrink-0 rounded-full border border-white/15 hover:border-[#0f62fe]/50 bg-white/[0.04] hover:bg-[#0f62fe]/10 px-5 py-3 font-mono text-[10px] tracking-[0.22em] uppercase text-zinc-300 hover:text-white cursor-pointer transition-colors flex items-center justify-center ${
+                uploadingImage ? "opacity-60 cursor-wait" : ""
+              }`}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                disabled={uploadingImage}
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) onUploadImage(f);
+                  e.target.value = "";
+                }}
+                className="hidden"
+              />
+              {uploadingImage ? "Uploading…" : "Upload image"}
+            </label>
+          </div>
+          {/* Preview thumbnail. Shows once an image URL is present —
+              local path or Blob URL both work. `unoptimized` so Next
+              doesn't try to run the Blob URL through its image
+              optimizer (which would require remote-pattern config). */}
+          {image && (
+            <div className="mt-1 flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={image}
+                alt="Hero preview"
+                className="w-24 h-16 rounded-lg object-cover border border-white/10 bg-white/[0.02]"
+              />
+              <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-500 truncate">
+                {image}
+              </span>
+            </div>
+          )}
         </Field>
 
         <Field label="Video URL (optional, YouTube)" full>
@@ -270,6 +350,22 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
               {uploadingAudio ? "Uploading…" : "Upload MP3"}
             </label>
           </div>
+          {/* Inline preview player. Lets the admin sanity-check
+              the upload without leaving the form — preload="none"
+              so we don't suck down a 30 MB MP3 every render. */}
+          {audio && (
+            <div className="mt-1 flex items-center gap-3">
+              <audio
+                controls
+                preload="none"
+                src={audio}
+                className="h-9 max-w-full"
+              />
+              <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-500 truncate">
+                {audio}
+              </span>
+            </div>
+          )}
         </Field>
 
         <Field label="" full>
@@ -287,15 +383,29 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
         </Field>
       </div>
 
-      {/* Body */}
-      <Field label="Body (Markdown)" full>
-        <textarea
+      {/* Body — markdown + MDX with a toolbar that inserts quote
+          blocks, single images, image carousels, and YouTube
+          embeds. Output is plain text in `body`; the article-page
+          MDX renderer translates the JSX tags into branded
+          components on the front end. */}
+      <Field label="Body (Markdown + MDX)" full>
+        <BodyEditor
           value={body}
-          onChange={(e) => setBody(e.target.value)}
+          onChange={setBody}
+          slug={
+            mode === "edit" && oldSlug
+              ? oldSlug
+              : title
+                  .toLowerCase()
+                  .trim()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/^-+|-+$/g, "") || null
+          }
+          onError={setError}
           required
           rows={20}
+          placeholder={`## A heading\n\nYour paragraph here.\n\n- A bullet\n- Another bullet\n\n> A blockquote.\n\nUse the toolbar above to drop in images, image carousels, and YouTube videos.\n`}
           className={`${inputCls} font-mono text-sm leading-relaxed resize-y`}
-          placeholder={`## A heading\n\nYour paragraph here.\n\n- A bullet\n- Another bullet\n\n> A blockquote.\n`}
         />
       </Field>
 

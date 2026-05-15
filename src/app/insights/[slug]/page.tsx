@@ -12,7 +12,9 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
 import { InsightsBackLink } from "@/components/insights/InsightsBackLink";
 import { ArticleMedia } from "@/components/insights/players/ArticleMedia";
+import { VideoPlayer } from "@/components/insights/players/VideoPlayer";
 import { PdfDownloadModal } from "@/components/insights/PdfDownloadModal";
+import { Carousel } from "@/components/insights/Carousel";
 
 type RouteProps = {
   params: Promise<{ slug: string }>;
@@ -216,6 +218,41 @@ const mdxComponents = {
       {...props}
     />
   ),
+  // Standard markdown image (`![alt](url)`). Plain <img> on purpose:
+  // body images can land on /public OR on a Vercel Blob URL and we
+  // don't want to force next.config remote-pattern entries every
+  // time the admin uploads a new host. Editorial frame styling
+  // (rounded, hairline border, brand-glow shadow) matches the
+  // Carousel single-image fast-path so a `![]()` and a
+  // <Carousel images={["…"]} /> with one entry render identically.
+  // eslint-disable-next-line @next/next/no-img-element
+  img: (props: HTMLAttributes<HTMLImageElement> & { src?: string; alt?: string }) => (
+    <figure className="my-8 md:my-12">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        {...props}
+        alt={props.alt ?? ""}
+        className="w-full rounded-2xl md:rounded-3xl border border-white/8 shadow-[0_20px_60px_-12px_rgba(0,0,0,0.6)] object-cover"
+      />
+      {props.alt && (
+        <figcaption className="mt-3 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 text-center">
+          {props.alt}
+        </figcaption>
+      )}
+    </figure>
+  ),
+  // Inline YouTube embed — same nice player chrome we use for the
+  // optional frontmatter video. Body usage: <YouTube url="…" />.
+  // Title prop is optional (defaults to "Embedded video") so authors
+  // can drop the tag in with a single URL and move on.
+  YouTube: ({ url, title = "Embedded video" }: { url: string; title?: string }) => (
+    <div className="my-8 md:my-12">
+      <VideoPlayer url={url} title={title} />
+    </div>
+  ),
+  // Carousel of body images — see Carousel.tsx for the markup.
+  // MDX usage: <Carousel images={["/url1","/url2","/url3"]} />.
+  Carousel,
 };
 
 /**
