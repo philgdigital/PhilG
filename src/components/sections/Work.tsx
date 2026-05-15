@@ -212,6 +212,16 @@ export function Work() {
   /** matchMedia(lg+); pin scroll only activates on desktop. */
   const [isDesktop, setIsDesktop] = useState(false);
 
+  /** Desktop-only "gated" interaction. When false, the section
+   *  collapses to a single viewport with a 'Review work results'
+   *  overlay so the visitor can scroll past it quickly without
+   *  being trapped in the (N-1)-viewport pinned horizontal scroll.
+   *  Clicking the CTA expands the section to its full N×100vh and
+   *  scrolls to its top so the gallery starts from project 1.
+   *  Scrolling past the section's bottom while enabled flips it
+   *  back to disabled — the gate re-arms for the next visit. */
+  const [enabled, setEnabled] = useState(false);
+
   const handleCardClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, slug: string) => {
       const doc = document as ViewTransitionDocument;
@@ -237,6 +247,51 @@ export function Work() {
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
+
+  /**
+   * CTA handler — enables the pinned-horizontal experience and
+   * smooth-scrolls the visitor to the section's top so they enter
+   * at project 1 instead of starting mid-gallery (which would
+   * happen if their entry scrollY mapped to a midway target).
+   */
+  const onEnable = useCallback(() => {
+    setEnabled(true);
+    requestAnimationFrame(() => {
+      const w = wrapperRef.current;
+      if (!w) return;
+      window.scrollTo({ top: w.offsetTop, behavior: "smooth" });
+    });
+  }, []);
+
+  /**
+   * Auto-disable: once the visitor has scrolled past the section's
+   * bottom (i.e. they finished the gallery and continued reading),
+   * collapse it back to one viewport so the gate re-arms for the
+   * next visit. The page's total height drops by (N-1)*vh in that
+   * moment, so we counter-scroll by the same amount to keep the
+   * visitor at the same content position below the section.
+   *
+   * Only active on desktop + when currently enabled.
+   */
+  useEffect(() => {
+    if (!isDesktop || !enabled) return;
+    const onScroll = () => {
+      const w = wrapperRef.current;
+      if (!w) return;
+      const rect = w.getBoundingClientRect();
+      if (rect.bottom < -50) {
+        const collapsedDelta = (projects.length - 1) * window.innerHeight;
+        setEnabled(false);
+        // Hold the visitor at the same content under their viewport
+        // by counter-scrolling. Without this, the page would suddenly
+        // appear to jump UP because the next sections rush in to fill
+        // the height the Work block just released.
+        window.scrollBy({ top: -collapsedDelta, behavior: "auto" });
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isDesktop, enabled]);
 
   // SMOOTHED SCROLL -> HORIZONTAL TRACK (desktop only).
   //
@@ -267,7 +322,11 @@ export function Work() {
   //     0.5 ratio). That triggers the pip + inert flip but happens
   //     at most ~9 times per full scroll, not 60 times per second.
   useEffect(() => {
-    if (!isDesktop) return;
+    // No-op when disabled — the section is only 1×vh so there's no
+    // pin scroll runway, and the projects underneath are covered by
+    // the gate overlay. Skip the rAF loop + scroll listener until
+    // the visitor opts in (effect re-runs when `enabled` flips).
+    if (!isDesktop || !enabled) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
@@ -361,7 +420,7 @@ export function Work() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", measureTarget);
     };
-  }, [isDesktop]);
+  }, [isDesktop, enabled]);
 
   // INITIAL-LOAD HASH NAVIGATION.
   // If the visitor lands on the page with a hash like #work-sap
@@ -475,7 +534,16 @@ export function Work() {
     <section
       id="work"
       ref={wrapperRef}
-      className="relative z-10 lg:[height:calc(var(--work-n)*100vh)]"
+      // Desktop height is gated by `enabled`: one viewport when the
+      // overlay is up (so the visitor can scroll past quickly), full
+      // N×100vh when the visitor has opted into the gallery. Mobile
+      // is unaffected — there's no pin scroll on mobile, so the
+      // gate UI is desktop-only.
+      className={`relative z-10 ${
+        enabled
+          ? "lg:[height:calc(var(--work-n)*100vh)]"
+          : "lg:h-screen"
+      }`}
       style={
         {
           "--work-n": N,
@@ -490,6 +558,70 @@ export function Work() {
         } as React.CSSProperties
       }
     >
+      {/* DESKTOP GATE OVERLAY.
+          When the visitor hasn't opted in, the entire pinned region
+          is replaced by a single-viewport overlay with a brief
+          tease + CTA. Until they click, the section is just one
+          viewport tall, so a quick scroll past it doesn't trap the
+          visitor in the multi-viewport pinned-horizontal experience.
+          z-40 sits above every internal layer (cards z-10, chrome
+          z-30) so nothing leaks through. */}
+      {!enabled && (
+        <div
+          className="hidden lg:flex absolute inset-0 z-40 items-center justify-center px-12 lg:px-24"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 0% 0%, rgba(15,98,254,0.30), transparent 60%), radial-gradient(ellipse 80% 60% at 100% 100%, rgba(16,185,129,0.22), transparent 60%), linear-gradient(180deg, rgba(2,2,5,0.96) 0%, rgba(2,2,5,0.96) 100%)",
+          }}
+        >
+          <div className="max-w-3xl flex flex-col items-center text-center gap-6 md:gap-7">
+            <div className="flex items-center gap-3">
+              <span
+                aria-hidden
+                className="w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.7)]"
+              />
+              <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-zinc-400">
+                06 · Selected Work
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.05] max-w-2xl">
+              Five enterprise launches.
+              <br />
+              Field-tested outcomes.
+            </h2>
+            <p className="text-base md:text-lg font-light text-zinc-300 leading-relaxed max-w-xl">
+              Walk through the gallery on your own pace — opening the
+              gallery pins the page so each project gets its own
+              viewport. Skip past if you'd rather keep reading.
+            </p>
+            <button
+              type="button"
+              onClick={onEnable}
+              data-magnetic="true"
+              data-cursor-hint="Open the gallery"
+              className="hover-target group mt-2 inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#0f62fe] hover:bg-[#4589ff] shadow-[0_10px_40px_rgba(15,98,254,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_15px_60px_rgba(15,98,254,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] text-white font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase font-medium transition-all duration-500"
+            >
+              Review work results
+              <svg
+                viewBox="0 0 24 24"
+                className="w-3.5 h-3.5 transition-transform duration-500 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+            <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500">
+              Or scroll to skip
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* DESKTOP: pinned horizontal scroll.
           The outer section is N * 100vh tall. The sticky child pins
           at top:0 for (N - 1) * 100vh of vertical scroll, during
