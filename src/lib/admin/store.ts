@@ -164,11 +164,24 @@ export async function readInsights(): Promise<Insight[]> {
 /**
  * Replace the entire insights array. In production: Vercel Blob.
  * In dev: data/insights.json.
+ *
+ * On Vercel the filesystem under /var/task is read-only, so falling
+ * back to writeToLocal there would error with a cryptic
+ * `ENOENT: mkdir '/var/task/data'`. Detect that scenario explicitly
+ * and throw a self-explanatory message — the visitor (i.e. the
+ * admin operator) sees this verbatim in the editor's error pill.
  */
 export async function writeInsights(items: Insight[]): Promise<void> {
   if (shouldUseBlob()) {
     await writeToBlob(items);
     return;
+  }
+  if (process.env.VERCEL === "1" || process.env.VERCEL_ENV) {
+    throw new Error(
+      "Vercel Blob is not configured. Add a Blob store to this project " +
+        "(Vercel dashboard → Storage → Create Database → Blob) and " +
+        "redeploy so BLOB_READ_WRITE_TOKEN is available to the runtime.",
+    );
   }
   await writeToLocal(items);
 }
