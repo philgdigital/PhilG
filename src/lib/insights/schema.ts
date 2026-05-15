@@ -15,6 +15,7 @@ export const CATEGORIES = [
   "AI & Prototyping",
   "AI Exploration",
   "Digital Business",
+  "Research",
   "Process & Systems",
   "Case Studies",
   "Psychology",

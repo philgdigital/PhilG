@@ -26,6 +26,7 @@ const CATEGORY_BADGE: Record<Category, string> = {
   "AI & Prototyping": "text-[#34d399] border-[#10b981]/30",
   "AI Exploration": "text-[#22d3ee] border-[#06b6d4]/35",
   "Digital Business": "text-[#fbbf24] border-[#f59e0b]/35",
+  Research: "text-[#a78bfa] border-[#8b5cf6]/35",
   "Process & Systems": "text-zinc-300 border-zinc-500/30",
   "Case Studies": "text-white border-white/30",
   Psychology: "text-[#4589ff]/80 border-[#0f62fe]/40",

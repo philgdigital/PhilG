@@ -41,7 +41,7 @@ const SECTIONS: Section[] = [
   { id: "advantage", num: "02", label: "The Enterprise Advantage" },
   { id: "impact", num: "03", label: "Impact" },
   { id: "expertise", num: "04", label: "Capabilities" },
-  { id: "testimonials", num: "05", label: "Client Voice" },
+  { id: "testimonials", num: "05", label: "Testimonials" },
   {
     id: "work",
     num: "06",
