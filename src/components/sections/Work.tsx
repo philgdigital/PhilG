@@ -584,15 +584,22 @@ export function Work() {
                 06 · Selected Work
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.05] max-w-2xl">
-              Five enterprise launches.
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.05] max-w-3xl">
+              Adoption from 28% to 71%.
               <br />
-              Field-tested outcomes.
+              In six months. At enterprise scale.
             </h2>
-            <p className="text-base md:text-lg font-light text-zinc-300 leading-relaxed max-w-xl">
-              Walk through the gallery on your own pace — opening the
-              gallery pins the page so each project gets its own
-              viewport. Skip past if you'd rather keep reading.
+            <p className="text-base md:text-lg font-light text-zinc-300 leading-relaxed max-w-2xl">
+              That's <span className="text-white font-medium">one</span> of
+              five shipped launches inside. Each shows the constraint, the
+              call I made, and the number that moved on the dashboard —
+              20,000 enterprise users across 50 countries, 17 years of
+              patterns you can quote in your own board meeting.
+              <br />
+              <span className="text-zinc-400">
+                No mockups, no theory. Only work that shipped and survived
+                contact with the org.
+              </span>
             </p>
             <button
               type="button"
@@ -601,7 +608,7 @@ export function Work() {
               data-cursor-hint="Open the gallery"
               className="hover-target group mt-2 inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#0f62fe] hover:bg-[#4589ff] shadow-[0_10px_40px_rgba(15,98,254,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_15px_60px_rgba(15,98,254,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] text-white font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase font-medium transition-all duration-500"
             >
-              Review work results
+              Open the five
               <svg
                 viewBox="0 0 24 24"
                 className="w-3.5 h-3.5 transition-transform duration-500 group-hover:translate-x-1"
@@ -616,7 +623,7 @@ export function Work() {
               </svg>
             </button>
             <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500">
-              Or scroll to skip
+              Not hiring right now? Scroll to skip.
             </span>
           </div>
         </div>
