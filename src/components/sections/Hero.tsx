@@ -190,7 +190,12 @@ export function Hero() {
 
       <div className="relative z-10 max-w-[1400px] mx-auto w-full">
         <Reveal delay={100} direction="none">
-          <div className="mb-10">
+          {/* Bottom margin pushes the giant headline a touch lower
+              on desktop (mb-10 → mb-16, +24px). The body container's
+              top margin is reduced by the same amount below so the
+              "I'm Phil G." line stays in roughly the same vertical
+              position. Mobile spacing is unchanged. */}
+          <div className="mb-10 md:mb-16">
             <AvailabilityBadge />
           </div>
         </Reveal>
@@ -330,7 +335,7 @@ export function Hero() {
           Tighter top margin (mt-16 md:mt-20) brings the body closer to
           the giant headline for better hero spacing rhythm.
         */}
-        <div className="mt-16 md:mt-20 flex flex-col gap-8 max-w-5xl">
+        <div className="mt-16 md:mt-14 flex flex-col gap-8 max-w-5xl">
           {/* Two-tier body (frog pattern: promise first, context underneath).
               Tier 1 is the headline-level promise the eye lands on; the
               <br /> gives 'I'm Phil G.' its own line. Tier 2 is the

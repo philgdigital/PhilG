@@ -41,7 +41,7 @@ type NavLink =
   | { kind: "disabled"; label: string };
 
 const NAV_LINKS: NavLink[] = [
-  { kind: "route", href: "/", label: "Details" },
+  { kind: "route", href: "/", label: "Overview" },
   { kind: "anchor", href: "#testimonials", label: "Testimonials" },
   { kind: "route", href: "/insights", label: "Insights" },
   { kind: "disabled", label: "Portfolio" },
@@ -160,7 +160,7 @@ export function Navbar() {
             the logo against bright content underneath. */}
       <nav
         aria-label="Primary"
-        className="fixed top-5 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] md:w-[min(96%,1140px)] px-3 md:px-4 py-2.5 flex justify-between items-center gap-4 rounded-full backdrop-blur-3xl bg-black/30 border border-white/8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)]"
+        className="fixed top-5 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] md:w-[min(96%,1200px)] px-3 md:px-4 py-3 flex justify-between items-center gap-4 rounded-full backdrop-blur-3xl bg-black/30 border border-white/8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)]"
       >
         {/* Logo: bold "Phil G." wordmark. IBM Plex Sans black, tight
             tracking, white default, IBM-blue period as the signature
@@ -173,12 +173,12 @@ export function Navbar() {
           className="group shrink-0 ml-2 md:ml-3 hover-target inline-flex items-baseline leading-none"
           aria-label="Phil G, back to home"
         >
-          <span className="font-sans font-black text-lg md:text-xl tracking-[-0.03em] leading-none text-white transition-colors duration-500 ease-[var(--ease-out)] group-hover:text-[#4589ff]">
+          <span className="font-sans font-black text-xl md:text-2xl tracking-[-0.03em] leading-none text-white transition-colors duration-500 ease-[var(--ease-out)] group-hover:text-[#4589ff]">
             Phil G
           </span>
           <span
             aria-hidden
-            className="inline-block w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_6px_rgba(15,98,254,0.85)] ml-0.5 -mb-0.5 transition-all duration-500 ease-[var(--ease-out)] group-hover:scale-[1.45] group-hover:shadow-[0_0_14px_rgba(15,98,254,1)]"
+            className="inline-block w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_6px_rgba(15,98,254,0.85)] ml-0.5 -mb-0.5 transition-all duration-500 ease-[var(--ease-out)] group-hover:scale-[1.45] group-hover:shadow-[0_0_14px_rgba(15,98,254,1)]"
           />
         </Link>
         {/* Desktop nav. Each link is a hash anchor (#work, #insights,
@@ -190,7 +190,7 @@ export function Navbar() {
             then routes back to / and scrolls to the section, which
             is what every link in the menu should do regardless of
             current page. */}
-        <div className="hidden md:flex items-center gap-1 font-mono text-[11px] font-medium tracking-[0.22em] text-zinc-300">
+        <div className="hidden md:flex items-center gap-1 font-mono text-xs font-medium tracking-[0.22em] text-zinc-300">
           {NAV_LINKS.map((link, i) => {
             const k = link.kind;
             if (k === "disabled") {

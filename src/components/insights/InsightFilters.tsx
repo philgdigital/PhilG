@@ -92,19 +92,20 @@ export function InsightFilters({
 
   return (
     <div className="flex flex-col gap-4 md:gap-5">
-      {/* Filter row — search input + dropdowns + clear button live on
-          ONE line at md+. The search input takes the remaining flex
-          space (md:flex-1) so it expands to fill whatever's left
-          after the three pill selects. Stacks vertically on mobile. */}
-      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-        <div className="relative md:flex-1">
+      {/* SINGLE-LINE filter row at md+ — search input + 3 dropdowns
+          + clear button + result counter ALL on the same horizontal
+          rail. Search input is a compact fixed-ish width so the
+          dropdowns + counter fit beside it without wrapping. Stacks
+          vertically on mobile only. */}
+      <div className="flex flex-col md:flex-row md:items-center md:flex-wrap gap-3 md:gap-3">
+        <div className="relative md:w-72 lg:w-80">
           <input
             type="search"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search insights…"
             aria-label="Search insights"
-            className="w-full bg-white/[0.04] hover:bg-white/[0.06] focus:bg-white/[0.08] border border-white/8 focus:border-[#0f62fe]/50 rounded-full px-5 py-2.5 md:py-3 text-base md:text-base font-light text-white placeholder:text-zinc-500 outline-none transition-colors"
+            className="w-full bg-white/[0.04] hover:bg-white/[0.06] focus:bg-white/[0.08] border border-white/8 focus:border-[#0f62fe]/50 rounded-full px-5 py-2.5 md:py-3 text-sm font-light text-white placeholder:text-zinc-500 outline-none transition-colors"
           />
         </div>
         <BrandSelect
@@ -150,18 +151,20 @@ export function InsightFilters({
             type="button"
             onClick={onClear}
             data-cursor-no-hint="true"
-            className="hover-target ml-auto font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-400 hover:text-white px-4 py-2 rounded-full hover:bg-white/[0.04] transition-colors"
+            className="hover-target font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-400 hover:text-white px-4 py-2 rounded-full hover:bg-white/[0.04] transition-colors"
           >
             Clear filters
           </button>
         )}
-      </div>
 
-      {/* Results summary */}
-      <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-500 mt-1">
-        {hasFilter
-          ? `${filteredCount} of ${totalCount} ${totalCount === 1 ? "post" : "posts"}`
-          : `${totalCount} ${totalCount === 1 ? "post" : "posts"}`}
+        {/* Results counter — pushed to the right edge of the row so
+            the filter controls cluster on the left and the count
+            balances on the right. */}
+        <div className="md:ml-auto font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-500">
+          {hasFilter
+            ? `${filteredCount} of ${totalCount} ${totalCount === 1 ? "Insight" : "Insights"}`
+            : `${totalCount} ${totalCount === 1 ? "Insight" : "Insights"}`}
+        </div>
       </div>
     </div>
   );

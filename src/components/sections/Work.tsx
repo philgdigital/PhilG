@@ -574,57 +574,108 @@ export function Work() {
               "radial-gradient(ellipse 80% 60% at 0% 0%, rgba(15,98,254,0.30), transparent 60%), radial-gradient(ellipse 80% 60% at 100% 100%, rgba(16,185,129,0.22), transparent 60%), linear-gradient(180deg, rgba(2,2,5,0.96) 0%, rgba(2,2,5,0.96) 100%)",
           }}
         >
-          <div className="max-w-3xl flex flex-col items-center text-center gap-6 md:gap-7">
-            <div className="flex items-center gap-3">
-              <span
-                aria-hidden
-                className="w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.7)]"
-              />
-              <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-zinc-400">
-                06 · Selected Work
+          {/* 2-column editorial spread.
+              Left: eyebrow + huge headline + body + CTA + skip line.
+              Right: a 4-row "stat tower" pulling the numerical proof
+              out of the body paragraph and giving it its own lane.
+              Container caps at max-w-6xl to match the rest of the
+              page grid (AILab, FAQ, AntiPattern, Insights). */}
+          <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* LEFT COLUMN — editorial brief + CTA. */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left gap-6 md:gap-7">
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="w-1.5 h-1.5 rounded-full bg-[#0f62fe] shadow-[0_0_8px_rgba(15,98,254,0.7)]"
+                />
+                <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-zinc-400">
+                  06 · Selected Work
+                </span>
+              </div>
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.02]">
+                Adoption from 28% to 71%.
+                <br />
+                In six months. At enterprise scale.
+              </h2>
+              <p className="text-base md:text-lg font-light text-zinc-300 leading-relaxed max-w-xl">
+                That&apos;s{" "}
+                <span className="text-white font-medium">one</span> of nine
+                shipped launches inside. Each shows the constraint, the call
+                I made, and the number that moved on the dashboard.
+                <br />
+                <span className="text-zinc-400">
+                  No mockups, no theory. Only work that shipped and survived
+                  contact with the org.
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={onEnable}
+                data-magnetic="true"
+                data-cursor-hint="Open the gallery"
+                className="hover-target group mt-2 inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#0f62fe] hover:bg-[#4589ff] shadow-[0_10px_40px_rgba(15,98,254,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_15px_60px_rgba(15,98,254,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] text-white font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase font-medium transition-all duration-500"
+              >
+                Open the nine
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-3.5 h-3.5 transition-transform duration-500 group-hover:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+              <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500">
+                Not hiring right now? Scroll to skip.
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.05] max-w-3xl">
-              Adoption from 28% to 71%.
-              <br />
-              In six months. At enterprise scale.
-            </h2>
-            <p className="text-base md:text-lg font-light text-zinc-300 leading-relaxed max-w-2xl">
-              That's <span className="text-white font-medium">one</span> of
-              five shipped launches inside. Each shows the constraint, the
-              call I made, and the number that moved on the dashboard —
-              20,000 enterprise users across 50 countries, 17 years of
-              patterns you can quote in your own board meeting.
-              <br />
-              <span className="text-zinc-400">
-                No mockups, no theory. Only work that shipped and survived
-                contact with the org.
-              </span>
-            </p>
-            <button
-              type="button"
-              onClick={onEnable}
-              data-magnetic="true"
-              data-cursor-hint="Open the gallery"
-              className="hover-target group mt-2 inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#0f62fe] hover:bg-[#4589ff] shadow-[0_10px_40px_rgba(15,98,254,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_15px_60px_rgba(15,98,254,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] text-white font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase font-medium transition-all duration-500"
-            >
-              Open the five
-              <svg
-                viewBox="0 0 24 24"
-                className="w-3.5 h-3.5 transition-transform duration-500 group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </button>
-            <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-zinc-500">
-              Not hiring right now? Scroll to skip.
-            </span>
+
+            {/* RIGHT COLUMN — stat tower.
+                Four numerical proof points stacked vertically, each
+                row = big number + mono uppercase label, separated by
+                white/8 hairline dividers. Same big-number language
+                used by the AntiPattern section so the gate doesn't
+                introduce a new visual vocabulary. */}
+            <div className="lg:col-span-5">
+              <dl className="bg-white/[0.02] border border-white/8 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+                <div className="flex flex-col">
+                  <dt className="font-sans font-bold text-4xl md:text-5xl text-white tabular-nums tracking-tight leading-none">
+                    28 <span className="text-zinc-500">→</span> 71%
+                  </dt>
+                  <dd className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400 mt-2">
+                    Adoption gain on a global rollout (Cemex)
+                  </dd>
+                </div>
+                <div className="flex flex-col border-t border-white/8 mt-5 pt-5">
+                  <dt className="font-sans font-bold text-4xl md:text-5xl text-white tabular-nums tracking-tight leading-none">
+                    20,000
+                  </dt>
+                  <dd className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400 mt-2">
+                    Enterprise users shipping daily
+                  </dd>
+                </div>
+                <div className="flex flex-col border-t border-white/8 mt-5 pt-5">
+                  <dt className="font-sans font-bold text-4xl md:text-5xl text-white tabular-nums tracking-tight leading-none">
+                    50
+                  </dt>
+                  <dd className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400 mt-2">
+                    Countries the work runs in
+                  </dd>
+                </div>
+                <div className="flex flex-col border-t border-white/8 mt-5 pt-5">
+                  <dt className="font-sans font-bold text-4xl md:text-5xl text-white tabular-nums tracking-tight leading-none">
+                    17 years
+                  </dt>
+                  <dd className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400 mt-2">
+                    Of design leadership
+                  </dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </div>
       )}
