@@ -60,9 +60,8 @@ function useInsightTransitionClick() {
  *
  * Posts are loaded from the MDX corpus in /content/insights via the
  * build-time JSON cache (see src/lib/insights/). Reads the 5 most-
- * recent posts; if any are flagged `featured: true` in frontmatter the
- * first match becomes the hero, otherwise the most-recent post fills
- * the hero slot.
+ * recent posts; the newest one is always the hero, the next four
+ * fill the grid below.
  *
  * Visually distinct from Work (sticky scrollytelling) and Testimonials
  * (avatar bento) so the page reads three different rhythms in a row.
@@ -246,11 +245,15 @@ function RegularCard({ insight }: { insight: Insight }) {
 }
 
 export function Insights() {
-  // 5 most-recent posts. First slot = hero (featured if marked,
-  // otherwise the most-recent), next 4 = regular cards.
+  // 5 most-recent posts. First slot = hero (always the most-recent
+  // since getLatestInsights returns newest-first), next 4 = regular
+  // cards. We used to honour an explicit `featured: true` frontmatter
+  // flag, but it added friction in the admin (one more thing to
+  // remember) without enough payoff — "most recent" already matches
+  // the editorial intent of "what I wrote last".
   const latest = getLatestInsights(5);
-  const featured = latest.find((i) => i.featured) ?? latest[0];
-  const regulars = latest.filter((i) => i.slug !== featured.slug).slice(0, 4);
+  const featured = latest[0];
+  const regulars = latest.slice(1, 5);
 
   // Total post count is used by the CTA copy to communicate how
   // many more pieces live in the archive beyond the 5 latest on

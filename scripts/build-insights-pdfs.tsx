@@ -60,7 +60,6 @@ type Insight = {
   excerpt: string;
   readTime: string;
   image: string;
-  featured: boolean;
   body: string;
   href: string;
 };

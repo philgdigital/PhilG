@@ -81,7 +81,6 @@ function parsePayload(
     readTime: String(fmRaw.readTime ?? ""),
     image:
       typeof fmRaw.image === "string" && fmRaw.image ? fmRaw.image : undefined,
-    featured: fmRaw.featured === true,
     video:
       typeof fmRaw.video === "string" && fmRaw.video ? fmRaw.video : undefined,
     audio:

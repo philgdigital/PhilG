@@ -7,8 +7,9 @@ import { readInsights, writeInsights } from "./store";
  *
  * One JSON array is the entire data model (see ./store.ts). Each
  * entry is an Insight: { slug, title, date, category, excerpt,
- * readTime, image, featured, video, audio, body, href }. The body
- * is plain markdown stored as a string field.
+ * readTime, image, video, audio, body, href }. The body is plain
+ * markdown stored as a string field. The home-page hero is always
+ * the most-recent post by date (no separate "featured" flag).
  *
  * Public surface:
  *   listInsights()              — every post, newest first
@@ -25,7 +26,6 @@ export type AdminFrontmatter = {
   excerpt: string;
   readTime: string;
   image?: string;
-  featured?: boolean;
   video?: string;
   audio?: string;
 };
@@ -107,7 +107,6 @@ export async function saveInsight(opts: {
     excerpt: opts.fm.excerpt,
     readTime: opts.fm.readTime,
     image: opts.fm.image || "/images/about.jpg",
-    featured: opts.fm.featured ?? false,
     video: opts.fm.video,
     audio: opts.fm.audio,
     body: opts.body.trim(),

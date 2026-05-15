@@ -82,9 +82,6 @@ function validate(file, fm) {
   if (fm.image !== undefined && typeof fm.image !== "string") {
     fail(file, "frontmatter.image, if provided, must be a string path");
   }
-  if (fm.featured !== undefined && typeof fm.featured !== "boolean") {
-    fail(file, "frontmatter.featured, if provided, must be a boolean");
-  }
   // Optional video URL — must be a string and look like a URL.
   // Loose validation here; the player component handles parsing
   // YouTube IDs out of various URL shapes (youtu.be vs youtube.com).
@@ -137,7 +134,6 @@ function main() {
       excerpt: fm.excerpt,
       readTime: fm.readTime,
       image: typeof fm.image === "string" ? fm.image : "/images/about.jpg",
-      featured: fm.featured === true,
       // Optional companion media. Undefined when not provided — the
       // detail page checks for presence before rendering the players.
       ...(typeof fm.video === "string" ? { video: fm.video } : {}),
@@ -149,18 +145,6 @@ function main() {
   });
 
   insights.sort((a, b) => b.date.localeCompare(a.date));
-
-  // Warn if multiple are featured (only one should drive the home
-  // section's hero). Not an error — we just take the first one.
-  const featuredCount = insights.filter((i) => i.featured).length;
-  if (featuredCount > 1) {
-    console.warn(
-      `[build-insights-data] ${featuredCount} posts marked featured: ${insights
-        .filter((i) => i.featured)
-        .map((i) => i.slug)
-        .join(", ")} (only the most recent will be used as the hero)`,
-    );
-  }
 
   fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
   fs.writeFileSync(OUT_PATH, JSON.stringify(insights, null, 2) + "\n");

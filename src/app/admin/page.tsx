@@ -137,11 +137,6 @@ function AdminDashboard() {
                   >
                     {item.title}
                   </Link>
-                  {item.featured && (
-                    <span className="ml-2 inline-block px-2 py-0.5 rounded-full border border-[#0f62fe]/40 font-mono text-[9px] tracking-[0.22em] uppercase text-[#4589ff]">
-                      Featured
-                    </span>
-                  )}
                 </td>
                 <td className="px-5 py-3 font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400">
                   {item.category}

@@ -31,7 +31,6 @@ type Props = {
     excerpt?: string;
     readTime?: string;
     image?: string;
-    featured?: boolean;
     video?: string;
     audio?: string;
     body?: string;
@@ -53,7 +52,6 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? "");
   const [readTime, setReadTime] = useState(initial?.readTime ?? "5 min read");
   const [image, setImage] = useState(initial?.image ?? "");
-  const [featured, setFeatured] = useState(initial?.featured ?? false);
   const [video, setVideo] = useState(initial?.video ?? "");
   const [audio, setAudio] = useState(initial?.audio ?? "");
   const [body, setBody] = useState(initial?.body ?? "");
@@ -97,7 +95,6 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
           excerpt: excerpt.trim(),
           readTime: readTime.trim(),
           image: image.trim() || undefined,
-          featured,
           video: video.trim() || undefined,
           audio: audio.trim() || undefined,
         },
@@ -368,19 +365,6 @@ export function InsightEditor({ mode, oldSlug, initial }: Props) {
           )}
         </Field>
 
-        <Field label="" full>
-          <label className="flex items-center gap-3 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={featured}
-              onChange={(e) => setFeatured(e.target.checked)}
-              className="w-4 h-4 accent-[#0f62fe]"
-            />
-            <span className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-300">
-              Featured (homepage hero card)
-            </span>
-          </label>
-        </Field>
       </div>
 
       {/* Body — markdown + MDX with a toolbar that inserts quote

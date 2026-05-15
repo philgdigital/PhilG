@@ -32,13 +32,13 @@ export type Category = (typeof CATEGORIES)[number];
  *
  *   title       — display H1 + browser tab + OG title
  *   date        — ISO YYYY-MM-DD. Used for sort + display + sitemap.
+ *                 The most-recent post by date is automatically the
+ *                 hero on the home Insights section — no separate
+ *                 "featured" flag.
  *   category    — one of CATEGORIES exactly.
  *   excerpt     — ≤280 chars. Card subtitle + meta description.
  *   readTime    — free-form ("8 min read", "32 min watch", "45 min listen").
  *   image       — path under /public. Optional, defaults to about.jpg.
- *   featured    — at most one post should be true. The home Insights
- *                 section uses this to pick the hero card; if no post
- *                 is featured, it falls back to the most-recent.
  */
 export const FrontmatterSchema = z.object({
   title: z.string().min(1),
@@ -49,7 +49,6 @@ export const FrontmatterSchema = z.object({
   excerpt: z.string().min(1).max(280),
   readTime: z.string().min(1),
   image: z.string().optional().default("/images/about.jpg"),
-  featured: z.boolean().optional().default(false),
   /**
    * Optional companion video for the article. Must be a YouTube URL
    * (youtube.com/watch?v=… or youtu.be/…). The player renders the

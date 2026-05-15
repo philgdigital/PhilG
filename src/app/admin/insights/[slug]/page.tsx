@@ -101,7 +101,6 @@ function EditInsight({ slug }: { slug: string }) {
           excerpt: item.excerpt,
           readTime: item.readTime,
           image: item.image,
-          featured: item.featured,
           video: item.video,
           audio: item.audio,
           body: item.body,
