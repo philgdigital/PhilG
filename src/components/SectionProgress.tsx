@@ -202,19 +202,31 @@ export function SectionProgress() {
               aria-current={isActive ? "true" : undefined}
               className="group flex items-center justify-end gap-3 hover-target transition-transform duration-500 ease-[var(--ease-out)] hover:-translate-x-3 will-change-transform"
             >
-              {/* Label with a SOFT readability HALO behind it (not a
-                  rigid pill). The halo is a separate absolutely-
-                  positioned blurred dark ellipse that fades in on
-                  hover/active alongside the label. Keeps the
-                  "floating fluid" feel (text slides in + fades up
-                  to meet the row's hover-translate) instead of
-                  reading as a contained chip; the halo just plants
-                  enough darkness behind the mono text so it stays
-                  legible on bright underlying sections. */}
+              {/* Label with a SOFT readability BACKDROP behind it.
+                  Two stacked layers (legibility + glow):
+                  - INNER pill: solid bg-black/75 + backdrop-blur-md,
+                    a defined dark pill that plants enough contrast
+                    behind the mono text on every underlying section
+                    (Hero gradient, Work card images, AI Lab glow,
+                    Insights card grid).
+                  - OUTER blur: same colour but blurred + extended
+                    insets, fades the pill edge into the page so it
+                    still reads as "floating fluid" rather than a
+                    rigid chip.
+                  Both fade in together on hover/active alongside
+                  the label slide. */}
               <span className="relative inline-flex items-center">
                 <span
                   aria-hidden
-                  className={`pointer-events-none absolute -inset-y-1 -inset-x-3 rounded-full bg-black/55 blur-md transition-opacity duration-500 ease-[var(--ease-out)] ${
+                  className={`pointer-events-none absolute -inset-y-2 -inset-x-5 rounded-full bg-black/55 blur-lg transition-opacity duration-500 ease-[var(--ease-out)] ${
+                    isActive
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100"
+                  }`}
+                />
+                <span
+                  aria-hidden
+                  className={`pointer-events-none absolute -inset-y-1.5 -inset-x-3.5 rounded-full bg-black/75 backdrop-blur-md border border-white/8 transition-opacity duration-500 ease-[var(--ease-out)] ${
                     isActive
                       ? "opacity-100"
                       : "opacity-0 group-hover:opacity-100"
@@ -267,16 +279,23 @@ export function SectionProgress() {
                           : "0ms",
                       }}
                     >
-                      {/* Sub-item label: same soft-halo treatment as
-                          the top-level labels. The halo fades in
-                          alongside the label so the fluid feel is
-                          preserved while the text stays readable
-                          even when the active Work project's image
-                          fills the pinned track underneath. */}
+                      {/* Sub-item label: same two-layer backdrop as
+                          the top-level labels (outer blur + inner
+                          solid pill) so the project brand names stay
+                          readable even when the active Work project's
+                          image fills the pinned track underneath. */}
                       <span className="relative inline-flex items-center">
                         <span
                           aria-hidden
-                          className={`pointer-events-none absolute -inset-y-1 -inset-x-2.5 rounded-full bg-black/55 blur-md transition-opacity duration-500 ease-[var(--ease-out)] ${
+                          className={`pointer-events-none absolute -inset-y-1.5 -inset-x-4 rounded-full bg-black/55 blur-lg transition-opacity duration-500 ease-[var(--ease-out)] ${
+                            subActive
+                              ? "opacity-100"
+                              : "opacity-0 group-hover:opacity-100"
+                          }`}
+                        />
+                        <span
+                          aria-hidden
+                          className={`pointer-events-none absolute -inset-y-1 -inset-x-3 rounded-full bg-black/75 backdrop-blur-md border border-white/8 transition-opacity duration-500 ease-[var(--ease-out)] ${
                             subActive
                               ? "opacity-100"
                               : "opacity-0 group-hover:opacity-100"
