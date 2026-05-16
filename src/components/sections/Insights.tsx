@@ -165,7 +165,9 @@ function FeaturedCard({ insight }: { insight: Insight }) {
 
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col gap-6 p-8 md:p-10 lg:p-12">
-          <CategoryBadge category={insight.category} />
+          <div className="flex justify-end">
+            <CategoryBadge category={insight.category} />
+          </div>
 
           <h4
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.05]"
@@ -223,8 +225,9 @@ function RegularCard({ insight }: { insight: Insight }) {
             aria-hidden
             className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c]/80 via-transparent to-transparent"
           />
-          {/* Type badge over image, top-left */}
-          <div className="absolute top-4 left-4 z-10">
+          {/* Type badge over image, top-right (label anchored to
+              the right edge of the card across the whole grid). */}
+          <div className="absolute top-4 right-4 z-10">
             <CategoryBadge category={insight.category} />
           </div>
         </div>

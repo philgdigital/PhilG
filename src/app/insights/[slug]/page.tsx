@@ -599,14 +599,20 @@ export default async function InsightPage({ params }: RouteProps) {
               className="group block hover-target rounded-2xl md:rounded-3xl overflow-hidden border border-white/8 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_60px_-12px_rgba(15,98,254,0.25)] transition-all duration-700 mb-6 md:mb-10 bg-gradient-to-br from-white/[0.02] to-transparent"
             >
               <div className="grid grid-cols-1 md:grid-cols-[44%_56%] items-stretch">
-                {/* IMAGE */}
-                <div className="relative aspect-[5/3] md:aspect-auto md:min-h-[320px] overflow-hidden">
+                {/* IMAGE — fixed aspect-[5/4] on md+ (was aspect-auto
+                    which stretched the image to whatever the content
+                    column was, often cropping the cover top + bottom
+                    into a tall sliver). Keeps `object-position: center`
+                    so portraits + landscapes both land in the focal
+                    region. Skeleton bg shows briefly while the cover
+                    image downloads from Vercel Blob. */}
+                <div className="relative aspect-[5/3] md:aspect-[5/4] overflow-hidden bg-white/[0.04] animate-pulse">
                   <Image
                     src={next.image}
                     alt={next.title}
                     fill
                     sizes="(min-width: 768px) 45vw, 100vw"
-                    className="object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-[1500ms] ease-[var(--ease-out)]"
+                    className="object-cover object-center grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 ease-[var(--ease-out)]"
                   />
                   {/* Brand wash — same recipe as the in-article hero
                       so the recommendation reads as part of the same
@@ -686,21 +692,54 @@ export default async function InsightPage({ params }: RouteProps) {
                   key={r.slug}
                   href={r.href}
                   data-magnetic="true"
-                  className="group flex flex-col gap-3 hover-target glass rounded-2xl p-6 border-white/5 hover:border-[#0f62fe]/30 transition-all duration-500"
+                  className="group flex flex-col hover-target glass relative overflow-hidden rounded-2xl border-white/5 hover:border-[#0f62fe]/40 hover:shadow-[0_12px_40px_rgba(15,98,254,0.14)] transition-all duration-500"
                 >
-                  <span
-                    className={`inline-flex w-fit items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-2.5 py-1 rounded-full border ${
-                      CATEGORY_BADGE[r.category]
-                    }`}
-                  >
-                    {r.category}
-                  </span>
-                  <h4 className="text-base md:text-lg font-medium text-white leading-snug tracking-tight">
-                    {r.title}
-                  </h4>
-                  <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400 mt-auto pt-2">
-                    {r.readTime}
-                  </span>
+                  {/* IMAGE thumbnail — same shape as the home
+                      RegularCard so the rhythm reads as one design
+                      family across home + article surfaces. */}
+                  <div className="relative aspect-[16/9] overflow-hidden bg-white/[0.04] animate-pulse">
+                    <Image
+                      src={r.image}
+                      alt={r.title}
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700 ease-[var(--ease-out)]"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 mix-blend-multiply opacity-60 group-hover:opacity-30 transition-opacity duration-700 bg-gradient-to-tr from-[#0f62fe]/15 via-transparent to-[#10b981]/8"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c]/80 via-transparent to-transparent"
+                    />
+                    {/* Category badge — top-right anchor, matching
+                        the home RegularCard alignment. */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <span
+                        className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border bg-[#0a0a0c]/85 backdrop-blur-sm ${
+                          CATEGORY_BADGE[r.category]
+                        }`}
+                      >
+                        {r.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CONTENT panel */}
+                  <div className="relative z-10 flex flex-col gap-4 p-6 md:p-7 flex-1">
+                    <h4 className="text-lg md:text-xl font-bold text-white tracking-tight leading-snug">
+                      <span className="inline-flex items-baseline gap-2 flex-wrap">
+                        <span>{r.title}</span>
+                        <ArrowUpRight className="w-4 h-4 text-[#4589ff] shrink-0 transition-transform duration-500 group-hover:rotate-45" />
+                      </span>
+                    </h4>
+                    <div className="mt-auto pt-4 border-t border-white/8 flex items-center gap-3 font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400">
+                      <span>{formatDate(r.date)}</span>
+                      <span aria-hidden className="w-1 h-1 rounded-full bg-zinc-600" />
+                      <span>{r.readTime}</span>
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>

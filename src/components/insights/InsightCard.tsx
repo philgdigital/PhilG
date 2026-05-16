@@ -114,7 +114,7 @@ export function InsightCard({ insight }: { insight: Insight }) {
               Matches the same bg/blur used by the homepage
               CategoryBadge in Insights.tsx so every card-style badge
               reads identically. */}
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-4 right-4 z-10">
             <span
               className={`inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium px-3 py-1 rounded-full border bg-[#0a0a0c]/85 backdrop-blur-sm ${
                 CATEGORY_BADGE[insight.category]
