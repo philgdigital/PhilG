@@ -21,6 +21,15 @@ export function NeuralCanvas3D() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Reduced-motion users get a static empty canvas (no rAF loop at
+    // all). Faster, calmer, respects WCAG 2.3.3.
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
     let width = 0;
     let height = 0;
     let animationId = 0;
@@ -28,7 +37,11 @@ export function NeuralCanvas3D() {
     const targetMouse = { x: 0, y: 0 };
     const currentMouse = { x: 0, y: 0 };
 
-    const numParticles = 120;
+    // Particle count drop from 120 → 60. The connection loop is
+    // O(n²) so this halves the per-frame distance checks from
+    // ~7,200 worst-case down to ~1,800. Visual density still
+    // reads as "neural network" rather than sparse points.
+    const numParticles = 60;
     let particles: Particle[] = [];
     const fov = 350;
 
@@ -58,6 +71,22 @@ export function NeuralCanvas3D() {
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
+
+    // Pause the rAF loop when the tab is hidden — same pattern
+    // CursorTrail uses. Without this the canvas burns CPU/battery
+    // in background tabs, with no visible benefit.
+    let paused = false;
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        paused = true;
+        if (animationId) cancelAnimationFrame(animationId);
+        animationId = 0;
+      } else if (paused) {
+        paused = false;
+        animationId = requestAnimationFrame(draw);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
@@ -123,6 +152,7 @@ export function NeuralCanvas3D() {
     return () => {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       cancelAnimationFrame(animationId);
     };
   }, []);

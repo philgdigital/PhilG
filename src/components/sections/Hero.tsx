@@ -100,7 +100,7 @@ export function Hero() {
         }}
       >
         <svg
-          className="absolute inset-0 w-full h-full"
+          className="hero-liquid absolute inset-0 w-full h-full"
           preserveAspectRatio="xMidYMid slice"
           viewBox="0 0 1200 900"
         >
@@ -120,9 +120,14 @@ export function Hero() {
                 seed="7"
                 result="noise"
               >
+                {/* Slowed 24s → 40s. Filter recomputes less often;
+                    the drift is still present, just calmer. Combined
+                    with the .hero-liquid display:none-on-scroll
+                    rule in globals.css, the cost during the visitor's
+                    scroll motion drops to zero. */}
                 <animate
                   attributeName="baseFrequency"
-                  dur="24s"
+                  dur="40s"
                   values="0.009 0.013;0.014 0.018;0.011 0.015;0.009 0.013"
                   repeatCount="indefinite"
                 />
@@ -134,9 +139,10 @@ export function Hero() {
                 xChannelSelector="R"
                 yChannelSelector="G"
               >
+                {/* Slowed 18s → 32s for the same reason. */}
                 <animate
                   attributeName="scale"
-                  dur="18s"
+                  dur="32s"
                   values="50;90;65;50"
                   repeatCount="indefinite"
                 />

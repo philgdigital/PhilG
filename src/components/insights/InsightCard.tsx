@@ -90,7 +90,7 @@ export function InsightCard({ insight }: { insight: Insight }) {
         <ElectricBorder />
 
         <div
-          className="relative aspect-[16/9] overflow-hidden"
+          className="relative aspect-[16/9] overflow-hidden bg-white/[0.04] animate-pulse"
           style={{ viewTransitionName: `insight-card-${insight.slug}` }}
         >
           <Image

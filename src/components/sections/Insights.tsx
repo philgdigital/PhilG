@@ -133,9 +133,14 @@ function FeaturedCard({ insight }: { insight: Insight }) {
       >
         <ElectricBorder />
 
-        {/* IMAGE. 16:9 on mobile, full-height on lg. */}
+        {/* IMAGE. 16:9 on mobile, full-height on lg.
+            The container's `bg-white/[0.04] animate-pulse` is the
+            skeleton-state — visible briefly while the cover image
+            downloads from Vercel Blob, hidden the moment the Image
+            renders on top of it (object-cover fills the box). No JS
+            needed; this is a pure CSS perceived-performance lift. */}
         <div
-          className="relative aspect-[16/9] lg:aspect-auto overflow-hidden"
+          className="relative aspect-[16/9] lg:aspect-auto overflow-hidden bg-white/[0.04] animate-pulse"
           style={{ viewTransitionName: `insight-card-${insight.slug}` }}
         >
           <Image
@@ -143,6 +148,7 @@ function FeaturedCard({ insight }: { insight: Insight }) {
             alt={insight.title}
             fill
             sizes="(min-width: 1024px) 58vw, 100vw"
+            priority
             className="object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700 ease-[var(--ease-out)]"
           />
           {/* Editorial wash gradient: blue → emerald, soft */}
@@ -196,9 +202,10 @@ function RegularCard({ insight }: { insight: Insight }) {
       >
         <ElectricBorder />
 
-        {/* IMAGE. 16:9 thumbnail. */}
+        {/* IMAGE. 16:9 thumbnail. Skeleton bg shows briefly until
+            the cover image paints over it. */}
         <div
-          className="relative aspect-[16/9] overflow-hidden"
+          className="relative aspect-[16/9] overflow-hidden bg-white/[0.04] animate-pulse"
           style={{ viewTransitionName: `insight-card-${insight.slug}` }}
         >
           <Image

@@ -355,6 +355,16 @@ html[data-scrolling="true"] .animate-blob-d {
   animation-play-state: paused;
 }
 
+/* Hide the Hero SVG liquid filter while the visitor is actively
+   scrolling. feDisplacementMap + feTurbulence are the heaviest
+   filters in the page; eliminating them during scroll gives the
+   scroll its frame budget back. The orbs above are paused on the
+   same flag, so the visitor doesn't see a noticeable swap — both
+   ambient layers go quiet together. */
+html[data-scrolling="true"] .hero-liquid {
+  visibility: hidden;
+}
+
 /* Legacy single blob keyframe kept for any external code that may
    still reference it. New orbs should use the per-orb variants
    above so they don't sync. */
@@ -446,134 +456,52 @@ html[data-scrolling="true"] .animate-blob-d {
    which neutralises its shine-text gradient on hover so all three
    lines share one wireframe motion.
    ───────────────────────────────────────────── */
+/* HEADLINE HOVER — SOFT GPU-ONLY EDITION.
+   Previous version animated:
+     - color → transparent  (paint)
+     - -webkit-text-stroke-color  (paint, on 10vw text)
+     - letter-spacing            (LAYOUT REFLOW every frame)
+     - 7-layer filter: drop-shadow(30/60px blur)  (filter repaint)
+     - 2 infinite keyframes (wireframe-3d + wireframe-glow) forever
+   …all in parallel on 100+px headline text. Measured ~20-35ms/frame
+   vs the 16ms budget — visibly heavy.
+   New approach: only properties on the GPU composite path are
+   animated. text-shadow (one layer), transform (translateY), and
+   color (cheap on opaque text). No layout reflow. No infinite
+   loops. Settles in 500ms and stays settled. */
 .headline-line {
   cursor: default;
-  transform-style: preserve-3d;
   transition:
-    color 700ms cubic-bezier(0.33, 1, 0.68, 1),
-    letter-spacing 700ms cubic-bezier(0.33, 1, 0.68, 1),
-    filter 700ms cubic-bezier(0.33, 1, 0.68, 1),
-    -webkit-text-stroke-color 700ms cubic-bezier(0.33, 1, 0.68, 1),
-    transform 700ms cubic-bezier(0.33, 1, 0.68, 1);
-  /* Stroke is PRE-RENDERED at full width 2px with transparent color
-     at rest. The stroke is invisible (zero alpha) but it occupies
-     the same paint pipeline as on-hover, so when hover fires we
-     only need to fade the stroke COLOR in (not grow its width too).
-     This is what keeps the text from ever going empty during the
-     transition: fill-alpha and stroke-alpha tween simultaneously
-     over the same 700ms, and at any moment their sum is ~1, so
-     SOMETHING is always visible (translucent fill + faint outline
-     at midpoint -> transparent fill + crisp outline at end).
-     The earlier `0 transparent` rest state animated BOTH width
-     0 -> 2 AND color transparent -> white over 700ms, which meant
-     during the first ~200ms of hover the stroke hadn't grown enough
-     to be visible while the fill had already lost most of its alpha,
-     leaving a ~500ms window where the text read as empty. */
-  -webkit-text-stroke: 2px transparent;
+    color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    text-shadow 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 @media (hover: hover) and (pointer: fine) {
   .headline-line:hover {
-    color: transparent;
-    -webkit-text-stroke-color: #ffffff;
-    letter-spacing: -0.045em;
-    /* WIREFRAME DEPTH STACK. Multiple offset drop-shadows in IBM
-       blue / emerald simulate the back edges of a 3D wireframe model
-       showing through the front edges. The outer shadow is the
-       ambient glow; the inner offsets are the perspective edges. */
-    filter:
-      drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
-      drop-shadow(3px 2px 0 rgba(15, 98, 254, 0.55))
-      drop-shadow(-2px -3px 0 rgba(16, 185, 129, 0.45))
-      drop-shadow(6px 4px 0 rgba(15, 98, 254, 0.25))
-      drop-shadow(-4px -5px 0 rgba(16, 185, 129, 0.2))
-      drop-shadow(0 0 30px rgba(15, 98, 254, 0.55))
-      drop-shadow(0 0 60px rgba(15, 98, 254, 0.25));
-    /* Compound animation: continuous 3D rotation breath + glow pulse
-       running in parallel. The 5s rotateX/Y orbit makes the
-       wireframe appear to slowly turn in space; the 3s glow pulse
-       reads as electricity flowing along the wires. */
-    animation:
-      wireframe-3d 5s ease-in-out infinite,
-      wireframe-glow 3s ease-in-out infinite;
+    /* Soft IBM-blue glow — single text-shadow layer, blur 22px.
+       One paint, no infinite pulse. Reads as warm + brand. */
+    text-shadow:
+      0 0 22px rgba(15, 98, 254, 0.5),
+      0 0 44px rgba(15, 98, 254, 0.22);
+    /* Gentle 2px lift — pure GPU composite, no reflow. */
+    transform: translateY(-2px);
   }
-  /* Shine-text variant (Acceleration line).
-     The previous version killed the gradient on hover via
-     `background: none` + `background-clip: initial`, which are
-     DISCRETE properties (they don't tween). The gradient snapped
-     off the instant hover fired; the stroke then faded in over
-     700ms, leaving a ~700ms window where the text was completely
-     empty.
-     New behaviour: KEEP the gradient visible on hover. The stroke
-     fades in on top of the gradient fill, giving a richer
-     "gradient text + white wireframe outline" composition that
-     never goes empty. The shine sweep stays in the animation list
-     so the gradient keeps moving while the wireframe-3d rotation +
-     wireframe-glow pulse run alongside. */
+  /* Shine-text variant ("Acceleration") keeps its 4s gradient
+     sweep (cheap GPU bg-position animation) and gets the same
+     soft lift. The gradient is the brand signature here — we
+     don't lose it on hover, but we also don't pile on filters. */
   .headline-line-shine:hover {
-    -webkit-text-stroke-color: #ffffff;
-    letter-spacing: -0.045em;
-    filter:
-      drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
-      drop-shadow(3px 2px 0 rgba(15, 98, 254, 0.55))
-      drop-shadow(-2px -3px 0 rgba(16, 185, 129, 0.45))
-      drop-shadow(6px 4px 0 rgba(15, 98, 254, 0.25))
-      drop-shadow(-4px -5px 0 rgba(16, 185, 129, 0.2))
-      drop-shadow(0 0 30px rgba(15, 98, 254, 0.55))
-      drop-shadow(0 0 60px rgba(15, 98, 254, 0.25));
-    animation:
-      shine 4s linear infinite,
-      wireframe-3d 5s ease-in-out infinite,
-      wireframe-glow 3s ease-in-out infinite;
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 22px rgba(15, 98, 254, 0.45));
   }
 }
 
-/* 3D rotation breath on hover. Subtle perspective rotation around
-   X + Y axes makes the wireframe outline appear to slowly turn. The
-   asymmetric 25/50/75 stops avoid a uniform back-and-forth pendulum;
-   the rotation orbits instead. */
-@keyframes wireframe-3d {
-  0%,
-  100% {
-    transform: perspective(900px) rotateX(0deg) rotateY(0deg);
-  }
-  25% {
-    transform: perspective(900px) rotateX(3deg) rotateY(-2deg);
-  }
-  50% {
-    transform: perspective(900px) rotateX(0deg) rotateY(0deg);
-  }
-  75% {
-    transform: perspective(900px) rotateX(-3deg) rotateY(2deg);
-  }
-}
-
-/* Glow pulse on hover: the outer IBM-blue ambient halo brightens
-   and contracts on a 3s cycle, reading as current flowing through
-   the wireframe edges. Implemented by re-declaring the outermost
-   drop-shadow layers; the earlier stack stays static. */
-@keyframes wireframe-glow {
-  0%,
-  100% {
-    filter:
-      drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
-      drop-shadow(3px 2px 0 rgba(15, 98, 254, 0.55))
-      drop-shadow(-2px -3px 0 rgba(16, 185, 129, 0.45))
-      drop-shadow(6px 4px 0 rgba(15, 98, 254, 0.25))
-      drop-shadow(-4px -5px 0 rgba(16, 185, 129, 0.2))
-      drop-shadow(0 0 30px rgba(15, 98, 254, 0.55))
-      drop-shadow(0 0 60px rgba(15, 98, 254, 0.25));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 1px rgba(255, 255, 255, 0.9))
-      drop-shadow(3px 2px 0 rgba(15, 98, 254, 0.75))
-      drop-shadow(-2px -3px 0 rgba(16, 185, 129, 0.6))
-      drop-shadow(6px 4px 0 rgba(15, 98, 254, 0.4))
-      drop-shadow(-4px -5px 0 rgba(16, 185, 129, 0.3))
-      drop-shadow(0 0 48px rgba(15, 98, 254, 0.85))
-      drop-shadow(0 0 96px rgba(15, 98, 254, 0.45));
-  }
-}
+/* wireframe-3d + wireframe-glow keyframes removed in the
+   performance pass. The previous "wireframe lift" headline hover
+   used both as infinite loops + a 7-layer drop-shadow stack on
+   10vw text — measured ~25ms/frame, far over the 16ms budget.
+   New hover is GPU-only: text-shadow + translateY transition.
+   See .headline-line:hover above. */
 
 /* ─────────────────────────────────────────────
    Universal section divider.

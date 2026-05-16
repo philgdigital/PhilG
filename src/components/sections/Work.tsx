@@ -88,7 +88,7 @@ function ProjectComposition({
               // CORNER-FLASH FIX (preserved from earlier version):
               // clip-path: inset(0 round Xrem) is a GPU-stable
               // rounded clip that survives compositing transforms.
-              className="group relative block w-full rounded-[2rem] md:rounded-[2.5rem] [clip-path:inset(0_round_2rem)] md:[clip-path:inset(0_round_2.5rem)] bg-black/50 border border-white/5 hover-target overflow-hidden aspect-[4/5] transition-[border-color,box-shadow] duration-700 ease-[var(--ease-out)] hover:border-white/15 shadow-2xl"
+              className="group relative block w-full rounded-[2rem] md:rounded-[2.5rem] [clip-path:inset(0_round_2rem)] md:[clip-path:inset(0_round_2.5rem)] bg-white/[0.04] border border-white/5 hover-target overflow-hidden aspect-[4/5] transition-[border-color,box-shadow] duration-700 ease-[var(--ease-out)] hover:border-white/15 shadow-2xl"
               style={{
                 viewTransitionName: `work-card-${p.slug}`,
               }}
