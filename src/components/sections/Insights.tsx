@@ -159,12 +159,7 @@ function FeaturedCard({ insight }: { insight: Insight }) {
 
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col gap-6 p-8 md:p-10 lg:p-12">
-          <div className="flex items-center justify-between gap-4">
-            <CategoryBadge category={insight.category} />
-            <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-zinc-400">
-              Featured
-            </span>
-          </div>
+          <CategoryBadge category={insight.category} />
 
           <h4
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.05]"

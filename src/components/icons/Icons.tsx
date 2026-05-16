@@ -79,13 +79,23 @@ export const Sparkles: IconComponent = (p) => (
   </Svg>
 );
 
-// Workflow / "Discover" icon: three boxes stepping diagonally
+// Compass — used as the "Discover" step icon in Process.tsx.
+// Direct mirror of lucide-react's Compass: outer circle + an
+// inward-pointing kite (the needle's two halves). Reads as
+// "exploration / discovery" immediately, where the previous
+// Workflow icon (3 stepped boxes) read as "process / flow".
+export const Compass: IconComponent = (p) => (
+  <Svg {...p}>
+    <circle cx="12" cy="12" r="10" />
+    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+  </Svg>
+);
+
+// Workflow / "Process" icon — three boxes stepping diagonally
 // (top-left → middle → bottom-right) wired by two short L-shaped
-// connectors. The previous version's second connector was malformed
-// (`v0a3 3 0 0 1 3 3v0` — two zero-length segments plus a bare arc),
-// so the bottom half rendered as a stray curve instead of mirroring
-// the top half. Rewritten with symmetric L-paths that each enter
-// the next box on its center-edge with a small rounded corner.
+// connectors. Kept available even though Discover no longer uses
+// it; another step (or future feature) may still want a "flow"
+// glyph.
 export const Workflow: IconComponent = (p) => (
   <Svg {...p}>
     <rect x="3" y="3" width="6" height="6" rx="1" />

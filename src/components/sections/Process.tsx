@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Workflow,
+  Compass,
   Cpu,
   Sparkles,
   Code2,
@@ -54,7 +54,7 @@ const STEPS: Step[] = [
     num: "01",
     title: "Discover",
     desc: "User research, customer interviews, jobs-to-be-done, journey mapping. You leave with a discovery readout your leadership team can act on.",
-    icon: Workflow,
+    icon: Compass,
   },
   {
     num: "02",

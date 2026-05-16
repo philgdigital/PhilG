@@ -34,7 +34,7 @@ export function AntiPattern() {
     >
       <div className="max-w-[1400px] mx-auto">
         <Reveal>
-          <div className="flex items-center gap-4 mb-10">
+          <div className="flex items-center justify-center gap-4 mb-10">
             <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
             <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
               <span className="text-zinc-400">10 ·</span> Anti-Pattern
@@ -43,7 +43,7 @@ export function AntiPattern() {
         </Reveal>
 
         <Reveal delay={100}>
-          <h3 className="headline-scroll text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-white tracking-tight max-w-4xl mb-16 md:mb-20">
+          <h3 className="headline-scroll text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] text-white tracking-tight max-w-4xl mx-auto text-center mb-16 md:mb-20">
             Things I don&apos;t do.{" "}
             <span className="shine-text italic font-serif font-light">
               So we can move
@@ -52,7 +52,12 @@ export function AntiPattern() {
           </h3>
         </Reveal>
 
-        <ul className="flex flex-col gap-5 md:gap-6 max-w-3xl">
+        {/* The list COLUMN centers in the section so the block reads
+            as a deliberate centred statement instead of a flush-left
+            inventory. Individual items keep `flex items-center` so
+            dot + uppercase line still read left-to-right inside the
+            centred column. */}
+        <ul className="flex flex-col gap-5 md:gap-6 max-w-3xl mx-auto">
           {ANTI_PATTERNS.map((line, i) => (
             <Reveal key={line} delay={200 + i * 70}>
               <li className="flex items-center gap-5 md:gap-6 group">
@@ -69,7 +74,7 @@ export function AntiPattern() {
         </ul>
 
         <Reveal delay={200 + ANTI_PATTERNS.length * 70 + 100}>
-          <p className="mt-16 md:mt-20 pt-10 border-t border-white/8 font-serif italic font-light text-2xl md:text-3xl lg:text-4xl text-white/90 leading-snug max-w-2xl">
+          <p className="mt-16 md:mt-20 pt-10 border-t border-white/8 font-serif italic font-light text-2xl md:text-3xl lg:text-4xl text-white/90 leading-snug max-w-2xl mx-auto text-center">
             Lean. Embedded. Shipping.
           </p>
         </Reveal>
