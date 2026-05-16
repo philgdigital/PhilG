@@ -309,30 +309,6 @@ export default function CVPage() {
       />
       <Navbar />
 
-      {/* Page-wide dark backdrop for the CV column. Same recipe as
-          the article body backdrop in /insights/[slug] — a strong
-          rgba(2,2,5,0.92) Carbon ground with soft top + bottom
-          fades, sitting at -z-10 so the page orbs visible at the
-          rim don't fight the prose. Without it the long-form CV
-          text sat on the ambient gradient orbs and washed out. */}
-      {/* Solid Carbon Black backdrop covering the entire viewport.
-          - inset-0 (not inset-x-0 top-0 h-full) so the fixed div
-            actually fills the viewport. h-full on a fixed element
-            doesn't resolve reliably to viewport height — that bug
-            was why the dark fade kept failing to show.
-          - z-[-1] sits ABOVE the AnimatedGradient orbs (z-[-2])
-            and BELOW main content (z-10). The orbs render behind
-            this; only their soft glow tints the edges where the
-            backdrop fades to transparent. */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-[-1]"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.95) 3%, rgba(2,2,5,1) 12%, rgba(2,2,5,1) 88%, rgba(2,2,5,0.95) 97%, rgba(2,2,5,0) 100%)",
-        }}
-      />
-
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32 min-h-screen">
         <div className="max-w-[1400px] mx-auto">
 
