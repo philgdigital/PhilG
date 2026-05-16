@@ -302,7 +302,7 @@ export default function CVPage() {
         className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-full"
         style={{
           background:
-            "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.88) 6%, rgba(2,2,5,0.95) 30%, rgba(2,2,5,0.95) 70%, rgba(2,2,5,0.88) 94%, rgba(2,2,5,0) 100%)",
+            "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.92) 5%, rgba(2,2,5,0.98) 25%, rgba(2,2,5,0.98) 75%, rgba(2,2,5,0.92) 95%, rgba(2,2,5,0) 100%)",
         }}
       />
 
@@ -427,7 +427,7 @@ export default function CVPage() {
           <Section num="01" label="Professional Summary">
             <Reveal>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-                <p className="lg:col-span-9 text-zinc-200 font-light text-xl md:text-2xl leading-relaxed">
+                <p className="lg:col-span-9 text-zinc-200 font-light text-xl md:text-2xl leading-relaxed p-7 md:p-10 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md">
                   UX/UI product designer with{" "}
                   <span className="text-white font-medium">17+ years</span>{" "}
                   delivering impactful digital products through user research,
@@ -505,8 +505,13 @@ export default function CVPage() {
                         </span>
                       </div>
 
-                      {/* Body */}
-                      <div className="md:col-span-9 flex flex-col gap-4">
+                      {/* Body — dark card so the long-form prose
+                          reads against a high-contrast surface
+                          instead of the ambient page gradient.
+                          The period (left col) + timeline thread +
+                          IBM-blue dot stay on the page surface, so
+                          the timeline visual still reads. */}
+                      <div className="md:col-span-9 flex flex-col gap-4 p-7 md:p-9 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md">
                         <div className="flex flex-col gap-2">
                           <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight">
                             {role.title}
