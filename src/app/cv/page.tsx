@@ -376,7 +376,7 @@ export default function CVPage() {
                         the CV from a US org know there's no schedule
                         friction. */}
                     <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500">
-                      Working globally · Remote-first · NY timezone overlap
+                      Global remote experience · NY timezone overlap
                     </p>
                   </div>
                 </Reveal>
