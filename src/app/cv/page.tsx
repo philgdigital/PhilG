@@ -2,28 +2,57 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/Navbar";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClosingCallCTA } from "@/components/ClosingCallCTA";
-import { Mail, ArrowUpRight } from "@/components/icons/Icons";
+import {
+  Mail,
+  ArrowUpRight,
+  Award,
+  Users,
+  Globe,
+  Sparkles,
+  Compass,
+  Cpu,
+  type IconComponent,
+} from "@/components/icons/Icons";
 
 /**
- * /cv — public résumé. Built from the CZ-2026 source PDF the user
- * provided, with phone, portfolio link, and password intentionally
- * stripped (per request). Email re-pointed to hi@philg.cz so it
- * matches every other public surface (Footer, ClosingCallCTA modal).
+ * /cv — Phil G.'s public résumé.
  *
- * Layout mirrors the canonical page-grid pattern (max-w-[1400px]
- * mx-auto + px-6 md:px-12 lg:px-24) used by every other content
- * page on the site. Section eyebrows reuse the IBM-blue dot + mono
- * tracking idiom from About / Process / Insights so the CV reads
- * as the same editorial voice, not a generic résumé template.
+ * Built from the CZ-2026 source PDF. Phone, portfolio link and
+ * password are intentionally stripped (per user request). Email
+ * re-pointed to hi@philg.cz so it matches every other public
+ * surface (Footer, ClosingCallCTA modal).
  *
- * Sections (mirrors the PDF's 5-section structure):
- *   00  Header — name, role, location, email
- *   01  Professional summary
- *   02  Impact + expertise (the Fortune-500 case list)
- *   03  Key career highlights (positions in reverse-chron order)
- *   04  Competitive advantage
- *   05  Professional development
- *   ── ClosingCallCTA at the bottom
+ * Design direction (this is the 10x rebuild — the previous pass
+ * was a clean editorial layout; this one treats the CV as a
+ * standalone visual moment):
+ *
+ *   • A dedicated DARK READING BACKDROP sits behind the whole CV
+ *     column — same pattern as the article body backdrop in
+ *     /insights/[slug]. Plants the long-form text against a
+ *     high-contrast Carbon Black surface so the page-level orbs
+ *     no longer fight the prose.
+ *
+ *   • Hero is anchored by a STAT TOWER on the right (17+ years,
+ *     1,050+ designers, 11 countries, $60.4B reach) — the same
+ *     editorial pattern the Selected Work gate uses. Numbers
+ *     come first; the verbal pitch follows.
+ *
+ *   • TRUST ROW of Fortune-500 wordmarks pulled inline so the
+ *     credibility hooks read at a glance (matches the Hero on
+ *     the homepage so the two surfaces feel like one design
+ *     family).
+ *
+ *   • IMPACT cards are individual glass surfaces with the
+ *     headline metric foregrounded — not bullets in a list.
+ *
+ *   • CAREER is a vertical TIMELINE with a hairline thread and
+ *     numbered role markers, so 17 years reads as a deliberate
+ *     spine, not a wall of paragraphs.
+ *
+ *   • ADVANTAGE keeps the 2-col glass-card grid; numbered
+ *     prefixes added for visual rhythm.
+ *
+ *   • DEVELOPMENT uses chip-pills so credentials are scannable.
  */
 
 const siteUrl =
@@ -52,8 +81,37 @@ export const metadata: Metadata = {
   },
 };
 
+// ─────────────────────────────────────────────────────────────
+// CONTENT
+// ─────────────────────────────────────────────────────────────
+
+type HeroStat = {
+  value: string;
+  label: string;
+  icon: IconComponent;
+};
+
+const HERO_STATS: HeroStat[] = [
+  { value: "17+ years", label: "Shipping enterprise products", icon: Award },
+  { value: "1,050+", label: "Designers mentored, 11 countries", icon: Users },
+  { value: "50+", label: "Countries Cemex Go runs in", icon: Globe },
+  { value: "120M+", label: "Walmart shoppers monthly", icon: Sparkles },
+];
+
+const FORTUNE_500_CLIENTS = [
+  "Walmart",
+  "SAP",
+  "VMware Pivotal",
+  "Cemex",
+  "Microsoft",
+  "WWF",
+  "Royal Air Force",
+  "Kuoni Tumlare",
+];
+
 type Impact = {
   client: string;
+  metric: string;
   outcome: string;
   detail: string;
 };
@@ -61,52 +119,55 @@ type Impact = {
 const IMPACT: Impact[] = [
   {
     client: "Cemex Go",
+    metric: "20,000+ users · 50+ countries",
     outcome:
-      "Transformed ordering for 20,000+ customers across 50+ countries.",
+      "Transformed ordering for enterprise customers at industrial scale.",
     detail:
       "Streamlined operations with intuitive interfaces, reducing ordering time and increasing digital adoption.",
   },
   {
     client: "Kuoni Tumlare",
+    metric: "12-person team · AI-ready system",
     outcome:
       "Elevated design capability within a global travel enterprise.",
     detail:
-      "Built an AI-ready design system accelerating prototyping at scale, hired 6 UX designers, and led a 12-person design team with cross-functional alignment across Europe, Asia, and India.",
+      "Built an AI-ready design system accelerating prototyping at scale, hired 6 UX designers, and led a 12-person team with cross-functional alignment across Europe, Asia and India.",
   },
   {
     client: "Walmart US",
+    metric: "120M+ monthly users",
     outcome:
-      "Enhanced shopping for 120M+ monthly users.",
+      "Enhanced shopping experience within a $60.4B e-commerce ecosystem.",
     detail:
-      "Optimized List Management through user-centered design within Walmart's $60.4B e-commerce ecosystem.",
+      "Optimized List Management through user-centered design connecting customer needs with business outcomes.",
   },
   {
     client: "WWF / Nespresso",
-    outcome:
-      "Enabled ethical coffee sourcing.",
+    metric: "100% supply chain visibility",
+    outcome: "Enabled ethical coffee sourcing on a blockchain platform.",
     detail:
-      "Created blockchain platform tracking Congo coffee from farm to cup, achieving 100% supply chain visibility.",
+      "Created blockchain-backed platform tracking Congo coffee from farm to cup, achieving end-to-end traceability.",
   },
   {
     client: "Microsoft Teams",
-    outcome:
-      "Enhanced global remote collaboration.",
+    metric: "Millions of users",
+    outcome: "Enhanced global remote collaboration.",
     detail:
-      "Designed a 3D meeting interface that improved virtual communication for millions.",
+      "Designed a 3D meeting interface that improved virtual communication for one of the world's most-used collaboration platforms.",
   },
   {
     client: "Royal Air Force",
-    outcome:
-      "Strengthened defense operations.",
+    metric: "Mission-critical workflows",
+    outcome: "Strengthened defense operations.",
     detail:
       "Delivered secure systems that improved mission-critical workflows while maintaining strict security protocols.",
   },
   {
     client: "Global Mentorship",
-    outcome:
-      "Launched 1,000+ design careers.",
+    metric: "1,000+ designers · 11 countries",
+    outcome: "Launched a generation of design careers.",
     detail:
-      "Built a talent ecosystem placing designers at Meta, Booking.com, Uber, IBM, and Accenture across 11 countries.",
+      "Built a talent ecosystem placing designers at Meta, Booking.com, Uber, IBM, and Accenture.",
   },
 ];
 
@@ -123,13 +184,13 @@ const ROLES: Role[] = [
   {
     title: "Lead UX/UI Product Designer",
     org: "Independent Contractor",
-    loc: "Remote",
+    loc: "Remote · Prague-based",
     period: "Jan 2021 – Present",
     summary:
       "Recent contract work includes multiple clients. Highlights:",
     bullets: [
       "Kuoni Tumlare (CZ) — Joined as UX Designer owning end-to-end UX strategy for a core business stream. Within 4 months, was invited to take on design team leadership — hiring 6 UX designers, managing a team of 12, and building an AI-ready design system for faster prototyping at scale. Collaborated with stakeholders across Europe, Asia, and India to align teams around a consistent product experience.",
-      "Walmart (USA) — Led product discovery connecting customer needs with business outcomes, contributing to their digital shopping experience used by 120M+ Americans monthly.",
+      "Walmart (USA) — Led product discovery connecting customer needs with business outcomes, contributing to the digital shopping experience used by 120M+ Americans monthly.",
       "OpenSC / WWF (AU) — Led product discovery on a blockchain-backed ethical sourcing platform, tracing supply chains from origin to consumer.",
       "Microsoft, HSBC, Azul, Toptal, GoodNotes, and other clients — Directed UX strategy and product design across multiple verticals.",
     ],
@@ -153,58 +214,62 @@ const ROLES: Role[] = [
   {
     title: "Founder · Head of Marketing & Product",
     org: "Aela",
-    loc: "Prague / Brazil",
-    period: "Dec 2015 – Present · side project",
+    loc: "Prague / Brazil · side project",
+    period: "Dec 2015 – Present",
     summary:
       "Built and scaled a design education business from zero to 4M+ BRL in sales — entirely bootstrapped, managed remotely from Prague. Started in my apartment with no capital and grew to 1,000+ clients across Brazil. This entrepreneurial venture strengthened my business acumen through hands-on experience in product, marketing, and operations.",
   },
 ];
 
-const ADVANTAGES: { title: string; body: string }[] = [
+type Advantage = {
+  num: string;
+  icon: IconComponent;
+  title: string;
+  body: string;
+};
+
+const ADVANTAGES: Advantage[] = [
   {
+    num: "01",
+    icon: Sparkles,
     title: "Revenue acceleration",
     body: "As demonstrated with Cemex's digital transformation that streamlined operations across 50+ countries and Walmart's improved product discovery experience.",
   },
   {
+    num: "02",
+    icon: Users,
     title: "Team transformation from world-class mentorship",
     body: "Demonstrated by designers I've guided now leading at top global companies and my work building high-performing teams at VMware and SAP.",
   },
   {
+    num: "03",
+    icon: Cpu,
     title: "Technical innovation that creates market advantages",
-    body: "Evidenced by pioneering blockchain applications for WWF and advanced interfaces for Microsoft.",
+    body: "Evidenced by pioneering blockchain applications for WWF and advanced 3D interfaces for Microsoft Teams.",
   },
   {
+    num: "04",
+    icon: Compass,
     title: "Accelerated go-to-market through cross-functional alignment",
-    body: "Successfully implemented at SAP, Royal Air Force, Cemex, and VMware Pivotal — reducing development cycles.",
+    body: "Successfully implemented at SAP, Royal Air Force, Cemex, and VMware Pivotal — reducing development cycles end-to-end.",
   },
 ];
 
 const DEVELOPMENT: string[] = [
-  "Executive MBA in Marketing & Sales — UNIBTA, Brazil",
-  "Practical expertise with gen-AI for coding, image generation, video production, copywriting, research, and strategic brainstorming; experience creating custom GPTs and AI agents",
-  "Certified UX Master (NN/g) — UX Research, UX Management, Interaction Design",
-  "Certified Sales Funnel Builder — ClickFunnels",
-  "IDEO Certifications — Creative Leadership and Design Thinking",
-  "IBM Enterprise Design Thinking Certification",
-  "Bachelor's in Digital Design and Graphic Design — Brazil",
+  "Executive MBA · Marketing & Sales · UNIBTA, Brazil",
+  "Practical gen-AI expertise · custom GPTs, agents, coding, image / video generation, research",
+  "Certified UX Master · NN/g · Research · Management · Interaction",
+  "IDEO Certifications · Creative Leadership · Design Thinking",
+  "IBM Enterprise Design Thinking · Certified",
+  "Certified Sales Funnel Builder · ClickFunnels",
+  "Bachelor's · Digital Design & Graphic Design · Brazil",
 ];
 
-const FORTUNE_500_CLIENTS = [
-  "Walmart",
-  "SAP",
-  "VMware Pivotal",
-  "Cemex",
-  "Microsoft",
-  "WWF",
-  "Royal Air Force",
-  "Kuoni Tumlare",
-];
+// ─────────────────────────────────────────────────────────────
+// PAGE
+// ─────────────────────────────────────────────────────────────
 
 export default function CVPage() {
-  /**
-   * Person JSON-LD so crawlers + LLM agents pick up Phil's
-   * professional identity from a single structured payload.
-   */
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -218,10 +283,7 @@ export default function CVPage() {
     },
     url: `${siteUrl}/cv`,
     sameAs: ["https://www.linkedin.com/in/felipeaela/"],
-    worksFor: ROLES.map((r) => ({
-      "@type": "Organization",
-      name: r.org,
-    })),
+    worksFor: ROLES.map((r) => ({ "@type": "Organization", name: r.org })),
   };
 
   return (
@@ -231,15 +293,29 @@ export default function CVPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
       <Navbar />
+
+      {/* Page-wide dark backdrop for the CV column. Same recipe as
+          the article body backdrop in /insights/[slug] — a strong
+          rgba(2,2,5,0.92) Carbon ground with soft top + bottom
+          fades, sitting at -z-10 so the page orbs visible at the
+          rim don't fight the prose. Without it the long-form CV
+          text sat on the ambient gradient orbs and washed out. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-full"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.88) 6%, rgba(2,2,5,0.95) 30%, rgba(2,2,5,0.95) 70%, rgba(2,2,5,0.88) 94%, rgba(2,2,5,0) 100%)",
+        }}
+      />
+
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-32 pb-32 min-h-screen">
-        {/* Canonical content grid — matches every other page on
-            the site (Hero, Insights, Work case studies). */}
         <div className="max-w-[1400px] mx-auto">
 
-          {/* 00 · Header */}
-          <header className="mb-20 md:mb-28">
+          {/* ─── 00 · HERO ─── */}
+          <header className="mb-24 md:mb-32">
             <Reveal>
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-4 mb-10">
                 <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
                 <span className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
                   Curriculum Vitae · CZ 2026
@@ -247,182 +323,239 @@ export default function CVPage() {
               </div>
             </Reveal>
 
-            <Reveal delay={100}>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.02] mb-6">
-                Felipe (Phil) G.
-              </h1>
-            </Reveal>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+              {/* LEFT — name + role + contact */}
+              <div className="lg:col-span-7 flex flex-col gap-8">
+                <Reveal delay={100}>
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.02]">
+                    Felipe{" "}
+                    <span className="font-serif italic font-light text-zinc-400">
+                      (Phil)
+                    </span>{" "}
+                    G.
+                  </h1>
+                </Reveal>
 
-            <Reveal delay={200}>
-              <p className="text-2xl md:text-3xl font-light text-zinc-200 leading-snug max-w-3xl mb-10">
-                Senior UX/UI Product Design Leader{" "}
-                <span className="text-zinc-500">·</span> Digital
-                Transformation{" "}
-                <span className="text-zinc-500">·</span> Tech Products
-              </p>
-            </Reveal>
+                <Reveal delay={200}>
+                  <p className="text-2xl md:text-3xl font-light text-zinc-200 leading-snug max-w-2xl">
+                    Senior UX/UI Product Design Leader.{" "}
+                    <span className="text-zinc-400">
+                      Digital transformation, tech products, embedded
+                      delivery.
+                    </span>
+                  </p>
+                </Reveal>
 
-            <Reveal delay={300}>
-              <div className="flex flex-wrap items-center gap-x-8 gap-y-4 font-mono text-xs md:text-sm tracking-[0.18em] uppercase text-zinc-400">
-                <span className="inline-flex items-center gap-2">
-                  <span aria-hidden className="text-[#4589ff]">●</span>
-                  Prague, CZ
-                </span>
-                <a
-                  href="mailto:hi@philg.cz"
-                  data-magnetic="true"
-                  className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
-                >
-                  <Mail className="w-3.5 h-3.5" />
-                  hi@philg.cz
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/felipeaela/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-magnetic="true"
-                  className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
-                >
-                  LinkedIn
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
+                <Reveal delay={300}>
+                  <div className="flex flex-wrap items-center gap-x-8 gap-y-4 font-mono text-xs md:text-sm tracking-[0.18em] uppercase text-zinc-400">
+                    <span className="inline-flex items-center gap-2">
+                      <span aria-hidden className="text-[#4589ff]">●</span>
+                      Prague, CZ
+                    </span>
+                    <a
+                      href="mailto:hi@philg.cz"
+                      data-magnetic="true"
+                      className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      hi@philg.cz
+                    </a>
+                    <a
+                      href="https://www.linkedin.com/in/felipeaela/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-magnetic="true"
+                      className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+                    >
+                      LinkedIn
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </Reveal>
               </div>
-            </Reveal>
+
+              {/* RIGHT — stat tower */}
+              <div className="lg:col-span-5">
+                <Reveal delay={250}>
+                  <dl className="bg-white/[0.02] border border-white/8 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+                    {HERO_STATS.map((s, i) => (
+                      <div
+                        key={s.value}
+                        className={`flex items-start gap-5 ${
+                          i > 0 ? "mt-5 pt-5 border-t border-white/8" : ""
+                        }`}
+                      >
+                        <span className="shrink-0 w-10 h-10 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
+                          <s.icon className="w-4 h-4 text-[#4589ff]" />
+                        </span>
+                        <div className="flex flex-col">
+                          <dt className="font-sans font-bold text-2xl md:text-3xl text-white tabular-nums tracking-tight leading-none">
+                            {s.value}
+                          </dt>
+                          <dd className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400 mt-1.5">
+                            {s.label}
+                          </dd>
+                        </div>
+                      </div>
+                    ))}
+                  </dl>
+                </Reveal>
+              </div>
+            </div>
           </header>
 
-          {/* 01 · Professional summary */}
-          <Section num="01" label="Professional Summary">
-            <Reveal>
-              <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed max-w-4xl">
-                UX/UI product designer with{" "}
-                <span className="text-white font-medium">17+ years</span> of
-                experience delivering impactful digital products through user
-                research, design thinking, and usability optimization. Expert in
-                building{" "}
-                <span className="text-white font-medium">design systems</span>,
-                facilitating workshops, and leading{" "}
-                <span className="text-white font-medium">
-                  cross-functional teams
-                </span>{" "}
-                using Figma and prototyping tools. My expertise spans from
-                project leadership to design strategy and innovation processes —
-                elevating user satisfaction while driving business metrics.
-                After delivering results for global organizations,{" "}
-                <span className="font-serif italic text-white">
-                  I&apos;m seeking a long-term role to continue value delivery
-                  within key functional areas.
-                </span>
+          {/* ─── TRUST ROW ─── */}
+          <Reveal>
+            <div className="mb-24 md:mb-32 pt-10 md:pt-14 border-t border-white/8">
+              <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 mb-6">
+                Delivered for
               </p>
-            </Reveal>
-          </Section>
-
-          {/* 02 · Impact & expertise */}
-          <Section num="02" label="Impact & Expertise">
-            <Reveal>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-12 md:mb-16">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 md:gap-x-10">
                 {FORTUNE_500_CLIENTS.map((c, i) => (
-                  <span
-                    key={c}
-                    className="font-mono text-xs md:text-sm font-medium tracking-[0.18em] uppercase text-white"
-                  >
-                    {c}
+                  <span key={c} className="inline-flex items-center gap-6">
+                    <span className="font-mono text-sm md:text-base font-medium tracking-[0.18em] uppercase text-white">
+                      {c}
+                    </span>
                     {i < FORTUNE_500_CLIENTS.length - 1 && (
-                      <span aria-hidden className="text-zinc-600 ml-3">
-                        ·
-                      </span>
+                      <span
+                        aria-hidden
+                        className="hidden md:inline-block w-1 h-1 rounded-full bg-zinc-700"
+                      />
                     )}
                   </span>
                 ))}
               </div>
-            </Reveal>
+            </div>
+          </Reveal>
 
-            <Reveal delay={100}>
-              <p className="font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase text-zinc-500 mb-8">
-                Proven results for Fortune 500 companies
-              </p>
+          {/* ─── 01 · PROFESSIONAL SUMMARY ─── */}
+          <Section num="01" label="Professional Summary">
+            <Reveal>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+                <p className="lg:col-span-9 text-zinc-200 font-light text-xl md:text-2xl leading-relaxed">
+                  UX/UI product designer with{" "}
+                  <span className="text-white font-medium">17+ years</span>{" "}
+                  delivering impactful digital products through user research,
+                  design thinking and usability optimization. Expert in
+                  building{" "}
+                  <span className="text-white font-medium">
+                    design systems
+                  </span>
+                  , facilitating workshops, and leading{" "}
+                  <span className="text-white font-medium">
+                    cross-functional teams
+                  </span>{" "}
+                  using Figma and prototyping tools. My expertise spans
+                  project leadership, design strategy and innovation —
+                  elevating user satisfaction while driving business metrics.{" "}
+                  <span className="font-serif italic text-white">
+                    After delivering results for global organizations, I&apos;m
+                    seeking a long-term role to continue value delivery within
+                    key functional areas.
+                  </span>
+                </p>
+              </div>
             </Reveal>
-
-            <ul className="flex flex-col gap-8 md:gap-10">
-              {IMPACT.map((it, i) => (
-                <Reveal key={it.client} delay={150 + i * 70}>
-                  <li className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-10 pt-8 border-t border-white/8 first:pt-0 first:border-t-0">
-                    <div className="md:col-span-3">
-                      <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight">
-                        {it.client}
-                      </h3>
-                    </div>
-                    <div className="md:col-span-9 flex flex-col gap-2">
-                      <p className="text-lg md:text-xl text-white font-light leading-snug">
-                        {it.outcome}
-                      </p>
-                      <p className="text-zinc-400 font-light text-base md:text-lg leading-relaxed">
-                        {it.detail}
-                      </p>
-                    </div>
-                  </li>
-                </Reveal>
-              ))}
-            </ul>
           </Section>
 
-          {/* 03 · Key career highlights */}
-          <Section num="03" label="Key Career Highlights">
-            <ul className="flex flex-col gap-12 md:gap-16">
-              {ROLES.map((role, i) => (
-                <Reveal key={`${role.org}-${role.period}`} delay={i * 80}>
-                  <li className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-10">
-                    {/* Period column */}
-                    <div className="md:col-span-3">
-                      <span className="font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase text-zinc-400">
-                        {role.period}
-                      </span>
-                    </div>
-
-                    {/* Body */}
-                    <div className="md:col-span-9 flex flex-col gap-4">
-                      <div className="flex flex-col gap-1">
-                        <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight">
-                          {role.title}
-                        </h3>
-                        <p className="font-mono text-xs md:text-sm tracking-[0.18em] uppercase text-[#4589ff]">
-                          {role.org}{" "}
-                          <span aria-hidden className="text-zinc-600 mx-2">
-                            ·
-                          </span>{" "}
-                          <span className="text-zinc-400">{role.loc}</span>
-                        </p>
-                      </div>
-
-                      {role.summary && (
-                        <p className="text-zinc-300 font-light text-base md:text-lg leading-relaxed max-w-3xl">
-                          {role.summary}
-                        </p>
-                      )}
-
-                      {role.bullets && (
-                        <ul className="flex flex-col gap-4 mt-2 max-w-3xl">
-                          {role.bullets.map((b) => (
-                            <li
-                              key={b}
-                              className="flex items-start gap-4 text-zinc-400 font-light text-base md:text-lg leading-relaxed"
-                            >
-                              <span
-                                aria-hidden
-                                className="shrink-0 mt-2.5 w-1.5 h-1.5 rounded-full bg-[#0f62fe]/60"
-                              />
-                              <span>{b}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </li>
+          {/* ─── 02 · IMPACT & EXPERTISE ─── */}
+          <Section num="02" label="Impact & Expertise">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+              {IMPACT.map((it, i) => (
+                <Reveal key={it.client} delay={i * 60}>
+                  <article className="group h-full flex flex-col gap-4 p-7 md:p-8 rounded-2xl bg-white/[0.025] border border-white/8 backdrop-blur-sm hover:border-[#0f62fe]/35 hover:bg-white/[0.04] transition-all duration-500">
+                    {/* metric pill */}
+                    <span className="self-start inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium text-[#4589ff] px-3 py-1 rounded-full border border-[#0f62fe]/30 bg-[#0f62fe]/[0.06]">
+                      {it.metric}
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-snug">
+                      {it.client}
+                    </h3>
+                    <p className="text-base md:text-lg text-white/90 font-light leading-snug">
+                      {it.outcome}
+                    </p>
+                    <p className="text-zinc-400 font-light text-sm md:text-base leading-relaxed mt-auto">
+                      {it.detail}
+                    </p>
+                  </article>
                 </Reveal>
               ))}
-            </ul>
+            </div>
+          </Section>
+
+          {/* ─── 03 · KEY CAREER HIGHLIGHTS ─── */}
+          <Section num="03" label="Key Career Highlights">
+            <div className="relative">
+              {/* Vertical thread runs down the left side at md+. The
+                  per-role period markers (the IBM-blue circles) sit
+                  on this thread, visually anchoring the timeline. */}
+              <span
+                aria-hidden
+                className="hidden md:block pointer-events-none absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-white/12 via-white/8 to-white/3"
+              />
+              <ol className="flex flex-col gap-14 md:gap-16">
+                {ROLES.map((role, i) => (
+                  <Reveal key={`${role.org}-${role.period}`} delay={i * 80}>
+                    <li className="relative grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-10 md:pl-10">
+                      {/* Thread dot */}
+                      <span
+                        aria-hidden
+                        className="hidden md:block absolute left-0 top-2 w-[15px] h-[15px] rounded-full bg-[#0a0a0c] border-2 border-[#0f62fe] shadow-[0_0_14px_rgba(15,98,254,0.5)]"
+                      />
+
+                      {/* Period (left col on md+) */}
+                      <div className="md:col-span-3">
+                        <span className="font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase text-zinc-400">
+                          {role.period}
+                        </span>
+                      </div>
+
+                      {/* Body */}
+                      <div className="md:col-span-9 flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
+                          <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight">
+                            {role.title}
+                          </h3>
+                          <p className="font-mono text-xs md:text-sm tracking-[0.18em] uppercase">
+                            <span className="text-[#4589ff]">{role.org}</span>
+                            <span aria-hidden className="text-zinc-600 mx-2.5">
+                              ·
+                            </span>
+                            <span className="text-zinc-400">{role.loc}</span>
+                          </p>
+                        </div>
+
+                        {role.summary && (
+                          <p className="text-zinc-300 font-light text-base md:text-lg leading-relaxed max-w-3xl">
+                            {role.summary}
+                          </p>
+                        )}
+
+                        {role.bullets && (
+                          <ul className="flex flex-col gap-4 mt-2 max-w-3xl">
+                            {role.bullets.map((b) => (
+                              <li
+                                key={b}
+                                className="flex items-start gap-4 text-zinc-400 font-light text-base md:text-lg leading-relaxed"
+                              >
+                                <span
+                                  aria-hidden
+                                  className="shrink-0 mt-2.5 w-1.5 h-1.5 rounded-full bg-[#0f62fe]/60"
+                                />
+                                <span>{b}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </li>
+                  </Reveal>
+                ))}
+              </ol>
+            </div>
 
             <Reveal delay={ROLES.length * 80 + 100}>
-              <p className="mt-12 md:mt-16 font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase text-zinc-500">
+              <p className="mt-12 md:mt-16 md:pl-10 font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase text-zinc-500">
                 For earlier roles, see{" "}
                 <a
                   href="https://www.linkedin.com/in/felipeaela/"
@@ -438,12 +571,20 @@ export default function CVPage() {
             </Reveal>
           </Section>
 
-          {/* 04 · Competitive advantage */}
+          {/* ─── 04 · COMPETITIVE ADVANTAGE ─── */}
           <Section num="04" label="Competitive Advantage">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {ADVANTAGES.map((a, i) => (
                 <Reveal key={a.title} delay={i * 100}>
-                  <article className="flex flex-col gap-4 p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/8 backdrop-blur-sm h-full">
+                  <article className="h-full flex flex-col gap-5 p-8 md:p-10 rounded-2xl bg-white/[0.025] border border-white/8 backdrop-blur-sm">
+                    <div className="flex items-center gap-4">
+                      <span className="shrink-0 w-12 h-12 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
+                        <a.icon className="w-5 h-5 text-[#4589ff]" />
+                      </span>
+                      <span className="font-mono text-xs tracking-[0.32em] uppercase text-zinc-500">
+                        {a.num}
+                      </span>
+                    </div>
                     <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-snug">
                       {a.title}
                     </h3>
@@ -456,24 +597,24 @@ export default function CVPage() {
             </div>
           </Section>
 
-          {/* 05 · Professional development */}
+          {/* ─── 05 · PROFESSIONAL DEVELOPMENT ─── */}
           <Section num="05" label="Professional Development">
-            <ul className="flex flex-col gap-5 md:gap-6 max-w-3xl">
+            <div className="flex flex-wrap gap-3 md:gap-4">
               {DEVELOPMENT.map((d, i) => (
-                <Reveal key={d} delay={i * 60}>
-                  <li className="flex items-start gap-4 text-zinc-300 font-light text-base md:text-lg leading-relaxed">
+                <Reveal key={d} delay={i * 50}>
+                  <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/[0.04] border border-white/8 text-zinc-200 font-light text-sm md:text-base hover:bg-white/[0.08] hover:border-white/15 transition-colors">
                     <span
                       aria-hidden
-                      className="shrink-0 mt-2.5 w-1.5 h-1.5 rounded-full bg-[#0f62fe]/60"
+                      className="w-1.5 h-1.5 rounded-full bg-[#0f62fe]/70"
                     />
-                    <span>{d}</span>
-                  </li>
+                    {d}
+                  </span>
                 </Reveal>
               ))}
-            </ul>
+            </div>
           </Section>
 
-          {/* Closing CTA */}
+          {/* ─── CLOSING CTA ─── */}
           <Reveal delay={200}>
             <div className="mt-24 md:mt-32 pt-10 md:pt-14 relative">
               <span
@@ -494,8 +635,9 @@ export default function CVPage() {
 }
 
 /**
- * Section — numbered editorial section wrapper, mirroring the
- * "01 · Section Label" pattern the rest of the site uses.
+ * Section — numbered editorial section wrapper. Same shape as
+ * About / Process / FAQ / AntiPattern eyebrows so the CV reads
+ * as part of the same design family.
  */
 function Section({
   num,
@@ -507,7 +649,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mb-20 md:mb-28">
+    <section className="mb-24 md:mb-32">
       <Reveal>
         <div className="flex items-center gap-4 mb-10 md:mb-14">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
