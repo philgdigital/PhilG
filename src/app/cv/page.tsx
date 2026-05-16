@@ -647,39 +647,91 @@ export default function CVPage() {
           </Section>
 
           {/* ─── 05 · PROFESSIONAL DEVELOPMENT ───
-              Credential cards (was a flat chip list). Each card:
-              icon medallion · category tag · bold title · provider
-              · optional detail. Lays out in a responsive 2/3 col
-              grid so the section reads as a deliberate credential
-              wall, not a tag dump. */}
+              Editorial CREDENTIAL LEDGER. Grouped by category
+              (Certifications → Degrees → Practical Expertise),
+              each group introduced by an eyebrow + a hairline
+              that trails off to the right (same magazine-style
+              chapter break the article page uses for its
+              "Continue reading" section). Each credential is a
+              clean horizontal row: PROVIDER (left, mono blue) ·
+              TITLE (centre, bold) · DETAIL (right, mono zinc).
+              Rows separated by white/8 dividers, soft hover wash
+              for affordance. Reads as a published CV record —
+              not generic cards. */}
           <Section num="05" label="Professional Development">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {CREDENTIALS.map((c, i) => (
-                <Reveal key={c.title} delay={i * 60}>
-                  <article className="group h-full flex flex-col gap-3 p-6 md:p-7 rounded-2xl bg-[#0a0a0c]/55 border border-white/10 backdrop-blur-md hover:border-[#0f62fe]/35 hover:bg-[#0a0a0c]/75 transition-all duration-500">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="shrink-0 w-9 h-9 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
-                        <c.icon className="w-4 h-4 text-[#4589ff]" />
-                      </span>
-                      <span className="font-mono text-[9px] md:text-[10px] tracking-[0.22em] uppercase text-zinc-500">
-                        {c.category}
-                      </span>
+            {(() => {
+              const groups: { name: string; items: Credential[] }[] = [
+                {
+                  name: "Certifications",
+                  items: CREDENTIALS.filter(
+                    (c) => c.category === "Certification",
+                  ),
+                },
+                {
+                  name: "Degrees",
+                  items: CREDENTIALS.filter(
+                    (c) => c.category === "Degree",
+                  ),
+                },
+                {
+                  name: "Practical Expertise",
+                  items: CREDENTIALS.filter(
+                    (c) => c.category === "Practical Expertise",
+                  ),
+                },
+              ];
+
+              return (
+                <div className="flex flex-col gap-12 md:gap-14">
+                  {groups.map((g, gi) => (
+                    <div key={g.name} className="flex flex-col">
+                      <Reveal>
+                        <div className="flex items-center gap-4 mb-5">
+                          <span className="font-mono text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-[#4589ff]">
+                            {g.name}
+                          </span>
+                          <span
+                            aria-hidden
+                            className="flex-1 h-px bg-gradient-to-r from-white/15 via-white/5 to-transparent"
+                          />
+                          <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-zinc-500 tabular-nums">
+                            {`0${g.items.length}`.slice(-2)}
+                          </span>
+                        </div>
+                      </Reveal>
+
+                      <ul className="flex flex-col">
+                        {g.items.map((c, i) => (
+                          <Reveal
+                            key={c.title}
+                            delay={gi * 100 + i * 70}
+                          >
+                            <li className="group grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6 items-baseline py-5 md:py-6 border-t border-white/8 first:border-t-0 hover:bg-white/[0.025] transition-colors duration-500 px-2 md:px-3 -mx-2 md:-mx-3 rounded-lg">
+                              {/* Provider — anchor of the row, IBM
+                                  blue mono uppercase. */}
+                              <div className="md:col-span-3 font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase text-[#4589ff] flex items-center gap-3">
+                                <c.icon className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                                <span>{c.provider}</span>
+                              </div>
+                              {/* Title — the actual credential. */}
+                              <div className="md:col-span-5 text-white text-lg md:text-xl font-medium tracking-tight leading-snug">
+                                {c.title}
+                              </div>
+                              {/* Detail — optional, mono zinc.
+                                  Empty cell when absent keeps the
+                                  ledger grid aligned. */}
+                              <div className="md:col-span-4 font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-zinc-400 leading-snug">
+                                {c.detail ?? ""}
+                              </div>
+                            </li>
+                          </Reveal>
+                        ))}
+                      </ul>
                     </div>
-                    <h3 className="text-base md:text-lg font-bold text-white tracking-tight leading-snug">
-                      {c.title}
-                    </h3>
-                    <p className="font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-[#4589ff]/80">
-                      {c.provider}
-                    </p>
-                    {c.detail && (
-                      <p className="text-zinc-400 font-light text-sm leading-relaxed mt-auto pt-2 border-t border-white/8">
-                        {c.detail}
-                      </p>
-                    )}
-                  </article>
-                </Reveal>
-              ))}
-            </div>
+                  ))}
+                </div>
+              );
+            })()}
           </Section>
 
           {/* ─── CLOSING CTA ─── */}
