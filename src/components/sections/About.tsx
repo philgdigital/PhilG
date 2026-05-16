@@ -20,7 +20,7 @@ export function About() {
         </div>
       </Reveal>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
         <div className="lg:col-span-5 relative">
           <Reveal delay={100} direction="left">
             <TiltCard scale={1.02} maxRotation={5}>
