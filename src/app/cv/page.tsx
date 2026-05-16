@@ -706,22 +706,37 @@ export default function CVPage() {
                             key={c.title}
                             delay={gi * 100 + i * 70}
                           >
-                            <li className="group grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6 items-baseline py-5 md:py-6 border-t border-white/8 first:border-t-0 hover:bg-white/[0.025] transition-colors duration-500 px-2 md:px-3 -mx-2 md:-mx-3 rounded-lg">
-                              {/* Provider — anchor of the row, IBM
-                                  blue mono uppercase. */}
-                              <div className="md:col-span-3 font-mono text-[11px] md:text-xs tracking-[0.22em] uppercase text-[#4589ff] flex items-center gap-3">
-                                <c.icon className="w-3.5 h-3.5 shrink-0 opacity-80" />
-                                <span>{c.provider}</span>
-                              </div>
-                              {/* Title — the actual credential. */}
-                              <div className="md:col-span-5 text-white text-lg md:text-xl font-medium tracking-tight leading-snug">
-                                {c.title}
-                              </div>
-                              {/* Detail — optional, mono zinc.
-                                  Empty cell when absent keeps the
-                                  ledger grid aligned. */}
-                              <div className="md:col-span-4 font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-zinc-400 leading-snug">
-                                {c.detail ?? ""}
+                            {/* Each row: TITLE leads (large white,
+                                always visible + dominant), with a
+                                subtitle line beneath carrying
+                                provider · detail in mono. Icon
+                                medallion anchors the left rail. */}
+                            <li className="group flex items-start gap-4 md:gap-5 py-5 md:py-6 border-t border-white/8 first:border-t-0 hover:bg-white/[0.025] transition-colors duration-500 px-3 md:px-4 -mx-3 md:-mx-4 rounded-lg">
+                              <span className="shrink-0 mt-1 w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
+                                <c.icon className="w-4 h-4 text-[#4589ff]" />
+                              </span>
+                              <div className="flex flex-col gap-1.5 min-w-0">
+                                <h3 className="text-white text-lg md:text-xl font-bold tracking-tight leading-snug">
+                                  {c.title}
+                                </h3>
+                                <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase leading-relaxed">
+                                  <span className="text-[#4589ff]">
+                                    {c.provider}
+                                  </span>
+                                  {c.detail && (
+                                    <>
+                                      <span
+                                        aria-hidden
+                                        className="text-zinc-600 mx-2"
+                                      >
+                                        ·
+                                      </span>
+                                      <span className="text-zinc-400">
+                                        {c.detail}
+                                      </span>
+                                    </>
+                                  )}
+                                </p>
                               </div>
                             </li>
                           </Reveal>
