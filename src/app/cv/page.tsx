@@ -315,9 +315,13 @@ export default function CVPage() {
           fades, sitting at -z-10 so the page orbs visible at the
           rim don't fight the prose. Without it the long-form CV
           text sat on the ambient gradient orbs and washed out. */}
+      {/* Sits at z-[-1], which is ABOVE the AnimatedGradient orbs
+          (z-[-2]) and BELOW the main content (z-10). Previously at
+          -z-10, which put it BEHIND the orbs — the dark fade did
+          nothing because the orbs painted over the top of it. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-full"
+        className="pointer-events-none fixed inset-x-0 top-0 z-[-1] h-full"
         style={{
           background:
             "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.94) 4%, rgba(2,2,5,1) 14%, rgba(2,2,5,1) 86%, rgba(2,2,5,0.94) 96%, rgba(2,2,5,0) 100%)",
