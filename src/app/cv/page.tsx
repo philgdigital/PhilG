@@ -320,7 +320,7 @@ export default function CVPage() {
               </div>
             </Reveal>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
               {/* LEFT — name + role + contact */}
               <div className="lg:col-span-7 flex flex-col gap-6">
                 <Reveal delay={100}>
@@ -376,7 +376,7 @@ export default function CVPage() {
                         the CV from a US org know there's no schedule
                         friction. */}
                     <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500">
-                      Embedded across Europe · US · Asia · NY-hours compatible
+                      Global remote experience · NY-hours compatible
                     </p>
                   </div>
                 </Reveal>
