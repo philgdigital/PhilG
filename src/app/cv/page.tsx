@@ -13,6 +13,7 @@ import {
   Cpu,
   type IconComponent,
 } from "@/components/icons/Icons";
+import { TrustRow } from "@/components/TrustRow";
 
 /**
  * /cv — Phil G.'s public résumé.
@@ -98,17 +99,6 @@ const HERO_STATS: HeroStat[] = [
   { value: "120M+", label: "Walmart shoppers monthly", icon: Sparkles },
 ];
 
-const FORTUNE_500_CLIENTS = [
-  "Walmart",
-  "SAP",
-  "VMware Pivotal",
-  "Cemex",
-  "Microsoft",
-  "WWF",
-  "Royal Air Force",
-  "Kuoni Tumlare",
-];
-
 type Impact = {
   client: string;
   metric: string;
@@ -168,6 +158,13 @@ const IMPACT: Impact[] = [
     outcome: "Launched a generation of design careers.",
     detail:
       "Built a talent ecosystem placing designers at Meta, Booking.com, Uber, IBM, and Accenture.",
+  },
+  {
+    client: "SAP Concur",
+    metric: "3 mobile teams · enterprise SaaS",
+    outcome: "Directed end-to-end design for the Concur mobile app.",
+    detail:
+      "Significantly enhanced user satisfaction for ExpenseIt and Request features, and implemented an efficient cross-team UX/UI request system that drastically improved workflow efficiency.",
   },
 ];
 
@@ -318,7 +315,7 @@ export default function CVPage() {
               <div className="flex items-center gap-4 mb-10">
                 <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
                 <span className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
-                  Curriculum Vitae · CZ 2026
+                  Curriculum Vitae
                 </span>
               </div>
             </Reveal>
@@ -332,7 +329,7 @@ export default function CVPage() {
                     <span className="font-serif italic font-light text-zinc-400">
                       (Phil)
                     </span>{" "}
-                    G.
+                    Guimarães
                   </h1>
                 </Reveal>
 
@@ -347,55 +344,66 @@ export default function CVPage() {
                 </Reveal>
 
                 <Reveal delay={300}>
-                  <div className="flex flex-wrap items-center gap-x-8 gap-y-4 font-mono text-xs md:text-sm tracking-[0.18em] uppercase text-zinc-400">
-                    <span className="inline-flex items-center gap-2">
-                      <span aria-hidden className="text-[#4589ff]">●</span>
-                      Prague, CZ
-                    </span>
-                    <a
-                      href="mailto:hi@philg.cz"
-                      data-magnetic="true"
-                      className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
-                    >
-                      <Mail className="w-3.5 h-3.5" />
-                      hi@philg.cz
-                    </a>
-                    <a
-                      href="https://www.linkedin.com/in/felipeaela/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      data-magnetic="true"
-                      className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
-                    >
-                      LinkedIn
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </a>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-mono text-xs md:text-sm tracking-[0.18em] uppercase text-zinc-400">
+                      <span className="inline-flex items-center gap-2">
+                        <span aria-hidden className="text-[#4589ff]">●</span>
+                        Prague, CZ
+                      </span>
+                      <a
+                        href="mailto:hi@philg.cz"
+                        data-magnetic="true"
+                        className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        hi@philg.cz
+                      </a>
+                      <a
+                        href="https://www.linkedin.com/in/felipeaela/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-magnetic="true"
+                        className="hover-target inline-flex items-center gap-2 text-zinc-300 hover:text-white transition-colors"
+                      >
+                        LinkedIn
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                    {/* Working-style strip — Prague-based, fluent in
+                        global remote engagements, comfortable with US
+                        East Coast (NY) timezone overlap. Surfaces the
+                        availability up front so recruiters reading
+                        the CV from a US org know there's no schedule
+                        friction. */}
+                    <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500">
+                      Working globally · Remote-first · NY timezone overlap
+                    </p>
                   </div>
                 </Reveal>
               </div>
 
-              {/* RIGHT — stat tower */}
+              {/* RIGHT — 2x2 stat grid. Previously a 4-row tower
+                  which made the right column much taller than the
+                  left, leaving a wide empty band below the contact
+                  row. 2x2 balances the two columns so the hero
+                  reads as one composed unit. */}
               <div className="lg:col-span-5">
                 <Reveal delay={250}>
-                  <dl className="bg-white/[0.02] border border-white/8 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
-                    {HERO_STATS.map((s, i) => (
+                  <dl className="grid grid-cols-2 gap-3 md:gap-4">
+                    {HERO_STATS.map((s) => (
                       <div
                         key={s.value}
-                        className={`flex items-start gap-5 ${
-                          i > 0 ? "mt-5 pt-5 border-t border-white/8" : ""
-                        }`}
+                        className="flex flex-col gap-3 p-5 md:p-6 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md"
                       >
-                        <span className="shrink-0 w-10 h-10 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
+                        <span className="shrink-0 w-9 h-9 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
                           <s.icon className="w-4 h-4 text-[#4589ff]" />
                         </span>
-                        <div className="flex flex-col">
-                          <dt className="font-sans font-bold text-2xl md:text-3xl text-white tabular-nums tracking-tight leading-none">
-                            {s.value}
-                          </dt>
-                          <dd className="font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400 mt-1.5">
-                            {s.label}
-                          </dd>
-                        </div>
+                        <dt className="font-sans font-bold text-2xl md:text-3xl text-white tabular-nums tracking-tight leading-none">
+                          {s.value}
+                        </dt>
+                        <dd className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-400 leading-snug">
+                          {s.label}
+                        </dd>
                       </div>
                     ))}
                   </dl>
@@ -404,27 +412,14 @@ export default function CVPage() {
             </div>
           </header>
 
-          {/* ─── TRUST ROW ─── */}
+          {/* ─── TRUST ROW ───
+              Shared TrustRow component from the homepage Hero —
+              same brand-typography wordmarks (Walmart sparkle,
+              vmware italic, RAF roundel, etc.) so the CV strip
+              reads as part of the same design system. */}
           <Reveal>
             <div className="mb-24 md:mb-32 pt-10 md:pt-14 border-t border-white/8">
-              <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500 mb-6">
-                Delivered for
-              </p>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 md:gap-x-10">
-                {FORTUNE_500_CLIENTS.map((c, i) => (
-                  <span key={c} className="inline-flex items-center gap-6">
-                    <span className="font-mono text-sm md:text-base font-medium tracking-[0.18em] uppercase text-white">
-                      {c}
-                    </span>
-                    {i < FORTUNE_500_CLIENTS.length - 1 && (
-                      <span
-                        aria-hidden
-                        className="hidden md:inline-block w-1 h-1 rounded-full bg-zinc-700"
-                      />
-                    )}
-                  </span>
-                ))}
-              </div>
+              <TrustRow eyebrow="Delivered for" />
             </div>
           </Reveal>
 
@@ -463,7 +458,7 @@ export default function CVPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
               {IMPACT.map((it, i) => (
                 <Reveal key={it.client} delay={i * 60}>
-                  <article className="group h-full flex flex-col gap-4 p-7 md:p-8 rounded-2xl bg-white/[0.025] border border-white/8 backdrop-blur-sm hover:border-[#0f62fe]/35 hover:bg-white/[0.04] transition-all duration-500">
+                  <article className="group h-full flex flex-col gap-4 p-7 md:p-8 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md hover:border-[#0f62fe]/40 hover:bg-[#0a0a0c]/95 transition-all duration-500">
                     {/* metric pill */}
                     <span className="self-start inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium text-[#4589ff] px-3 py-1 rounded-full border border-[#0f62fe]/30 bg-[#0f62fe]/[0.06]">
                       {it.metric}
@@ -576,7 +571,7 @@ export default function CVPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {ADVANTAGES.map((a, i) => (
                 <Reveal key={a.title} delay={i * 100}>
-                  <article className="h-full flex flex-col gap-5 p-8 md:p-10 rounded-2xl bg-white/[0.025] border border-white/8 backdrop-blur-sm">
+                  <article className="h-full flex flex-col gap-5 p-8 md:p-10 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md">
                     <div className="flex items-center gap-4">
                       <span className="shrink-0 w-12 h-12 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
                         <a.icon className="w-5 h-5 text-[#4589ff]" />
@@ -602,7 +597,7 @@ export default function CVPage() {
             <div className="flex flex-wrap gap-3 md:gap-4">
               {DEVELOPMENT.map((d, i) => (
                 <Reveal key={d} delay={i * 50}>
-                  <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/[0.04] border border-white/8 text-zinc-200 font-light text-sm md:text-base hover:bg-white/[0.08] hover:border-white/15 transition-colors">
+                  <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md text-zinc-200 font-light text-sm md:text-base hover:bg-[#0a0a0c]/95 hover:border-white/20 transition-colors">
                     <span
                       aria-hidden
                       className="w-1.5 h-1.5 rounded-full bg-[#0f62fe]/70"

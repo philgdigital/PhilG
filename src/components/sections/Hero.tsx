@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight } from "@/components/icons/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
+import { TrustRow } from "@/components/TrustRow";
 
 export function Hero() {
   // Editorial-correction sequence on the first headline.
@@ -436,156 +437,10 @@ export function Hero() {
             logo file). All brand marks default to 75% opacity;
             hover lifts to 100% + 1.04x scale. */}
         <Reveal delay={600}>
-          <div className="mt-10 md:mt-14 flex flex-col gap-5 md:gap-7">
-            <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-400 whitespace-nowrap">
-              Trusted by
-            </p>
-            {/* Desktop: flex-nowrap + justify-between spreads the
-                ten brand entries edge-to-edge across the trust row's
-                full width, so the first mark sits flush left, the
-                last flush right, and the rest distribute evenly
-                between them. gap-x-0 on lg lets justify-between own
-                the inter-item spacing.
-                Mobile / tablet: flex-wrap with a small gap-x so
-                entries wrap cleanly when there isn't horizontal room. */}
-            <ul className="flex flex-wrap lg:flex-nowrap lg:justify-between items-center gap-x-5 md:gap-x-7 lg:gap-x-0 gap-y-4 md:gap-y-5 w-full">
-              {/* WALMART: clean 6-ray sparkle. Three rounded rects
-                  rotated 0/60/120 deg around the center, each giving
-                  two opposing rays. Reads as a clean asterisk-style
-                  burst rather than the previous 4-point lozenge. */}
-              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <svg
-                  viewBox="0 0 20 20"
-                  aria-hidden
-                  className="w-[18px] h-[18px] shrink-0 text-[#ffc220] group-hover:drop-shadow-[0_0_8px_rgba(255,194,32,0.6)] transition-all duration-500"
-                >
-                  {[0, 60, 120].map((deg) => (
-                    <rect
-                      key={deg}
-                      x="9.1"
-                      y="2"
-                      width="1.8"
-                      height="16"
-                      rx="0.9"
-                      fill="currentColor"
-                      transform={`rotate(${deg} 10 10)`}
-                    />
-                  ))}
-                </svg>
-                <span className="font-sans font-bold tracking-tight text-base md:text-lg text-[#0a8fff] group-hover:text-[#2da5ff] transition-colors duration-500">
-                  Walmart
-                </span>
-              </li>
-
-              {/* VMWARE: italic two-tone wordmark. */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-sans italic font-extrabold tracking-tight text-base md:text-lg text-zinc-200">
-                  vm
-                  <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors duration-500">
-                    ware
-                  </span>
-                </span>
-              </li>
-
-              {/* PIVOTAL LABS: text-only wordmark (bracket glyph
-                  removed per user request). Two-tone lime-green
-                  'Pivotal' + muted grey ' Labs'. */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-sans font-bold tracking-tight text-base md:text-lg text-[#82c63a] group-hover:text-[#a3df60] transition-colors duration-500">
-                  Pivotal
-                  <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors duration-500">
-                    {" "}
-                    Labs
-                  </span>
-                </span>
-              </li>
-
-              {/* SAP: cyan-blue black uppercase. */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-sans font-black uppercase tracking-[0.04em] text-base md:text-lg text-[#21a8ec] group-hover:text-[#4dbdf2] transition-colors duration-500">
-                  SAP
-                </span>
-              </li>
-
-              {/* MICROSOFT: 2x2 four-color square mark + light sans. */}
-              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <svg
-                  viewBox="0 0 14 14"
-                  aria-hidden
-                  className="w-3.5 h-3.5 shrink-0"
-                >
-                  <rect x="0" y="0" width="6" height="6" fill="#f25022" />
-                  <rect x="8" y="0" width="6" height="6" fill="#7fba00" />
-                  <rect x="0" y="8" width="6" height="6" fill="#00a4ef" />
-                  <rect x="8" y="8" width="6" height="6" fill="#ffb900" />
-                </svg>
-                <span className="font-sans font-light tracking-tight text-base md:text-lg text-zinc-200">
-                  Microsoft
-                </span>
-              </li>
-
-              {/* VODAFONE: text-only red wordmark. Earlier
-                  attempts at a graphical mark (red dot, red circle
-                  with an internal curl) were reading as imitations
-                  of a trademarked logo; safest treatment for a
-                  trusted-by row is a plain wordmark in the brand's
-                  signature red. Matches how WWF / OpenSC is handled
-                  in the same row. */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-sans font-extrabold tracking-tight text-base md:text-lg text-[#ff2c2c] group-hover:text-[#ff5757] transition-colors duration-500">
-                  Vodafone
-                </span>
-              </li>
-
-              {/* CEMEX: brighter mid-blue (the previous dark navy
-                  failed contrast on the dark page bg). */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-sans font-black uppercase tracking-[0.05em] text-base md:text-lg text-[#2d8ce0] group-hover:text-[#5aa9eb] transition-colors duration-500">
-                  CEMEX
-                </span>
-              </li>
-
-              {/* NESPRESSO: refined serif italic in cream. */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-serif italic font-light tracking-tight text-base md:text-lg text-[#e6d8c0] group-hover:text-[#f4e9d6] transition-colors duration-500">
-                  Nespresso
-                </span>
-              </li>
-
-              {/* WWF / OpenSC: text-only wordmark (icon removed per
-                  user request). Two-tone with WWF emphasized. */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-sans font-bold tracking-tight text-base md:text-lg text-zinc-200">
-                  WWF
-                  <span className="text-zinc-500"> / OpenSC</span>
-                </span>
-              </li>
-
-              {/* KUONI TUMLARE: two-tone semibold sans. */}
-              <li className="group cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <span className="font-sans font-semibold tracking-tight text-base md:text-lg text-zinc-200">
-                  Kuoni
-                  <span className="text-zinc-400"> Tumlare</span>
-                </span>
-              </li>
-
-              {/* ROYAL AIR FORCE: concentric roundel SVG + tracked
-                  mono uppercase. */}
-              <li className="group flex items-center gap-1.5 cursor-default opacity-75 hover:opacity-100 transition-all duration-500 ease-[var(--ease-out)] hover:scale-[1.04] origin-left whitespace-nowrap">
-                <svg
-                  viewBox="0 0 16 16"
-                  aria-hidden
-                  className="w-4 h-4 shrink-0"
-                >
-                  <circle cx="8" cy="8" r="7.5" fill="#1f4eaa" />
-                  <circle cx="8" cy="8" r="5" fill="#f4f4f5" />
-                  <circle cx="8" cy="8" r="2.5" fill="#c81f3a" />
-                </svg>
-                <span className="font-mono font-medium uppercase tracking-[0.18em] text-[10px] md:text-[11px] text-zinc-200">
-                  Royal Air Force
-                </span>
-              </li>
-            </ul>
+          {/* TrustRow component owns the brand wordmark strip so
+              both Hero and CV render identical brand marks. */}
+          <div className="mt-10 md:mt-14">
+            <TrustRow eyebrow="Trusted by" />
           </div>
         </Reveal>
       </div>
