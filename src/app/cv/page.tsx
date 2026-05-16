@@ -270,14 +270,65 @@ const ADVANTAGES: Advantage[] = [
   },
 ];
 
-const DEVELOPMENT: string[] = [
-  "Executive MBA · Marketing & Sales · UNIBTA, Brazil",
-  "Practical gen-AI expertise · custom GPTs, agents, coding, image / video generation, research",
-  "Certified UX Master · NN/g · Research · Management · Interaction",
-  "IDEO Certifications · Creative Leadership · Design Thinking",
-  "IBM Enterprise Design Thinking · Certified",
-  "Certified Sales Funnel Builder · ClickFunnels",
-  "Bachelor's · Digital Design & Graphic Design · Brazil",
+type Credential = {
+  category: "Certification" | "Degree" | "Practical Expertise";
+  title: string;
+  provider: string;
+  detail?: string;
+  icon: IconComponent;
+};
+
+// Credentials grouped by category + iconified. The previous flat
+// chip list put a 4-word degree next to a 14-word AI expertise
+// description and made every entry compete for the same visual
+// weight. This shape lets each credential breathe with a clear
+// hierarchy: category tag → title → provider → optional detail.
+const CREDENTIALS: Credential[] = [
+  {
+    category: "Certification",
+    title: "Certified UX Master",
+    provider: "Nielsen Norman Group (NN/g)",
+    detail: "Research · Management · Interaction Design",
+    icon: Award,
+  },
+  {
+    category: "Certification",
+    title: "Creative Leadership & Design Thinking",
+    provider: "IDEO",
+    icon: Compass,
+  },
+  {
+    category: "Certification",
+    title: "Enterprise Design Thinking",
+    provider: "IBM",
+    icon: Sparkles,
+  },
+  {
+    category: "Certification",
+    title: "Sales Funnel Builder",
+    provider: "ClickFunnels",
+    icon: Cpu,
+  },
+  {
+    category: "Degree",
+    title: "Executive MBA",
+    provider: "UNIBTA · Brazil",
+    detail: "Marketing & Sales",
+    icon: Award,
+  },
+  {
+    category: "Degree",
+    title: "Bachelor's in Digital Design",
+    provider: "Brazil",
+    detail: "Digital Design & Graphic Design",
+    icon: Award,
+  },
+  {
+    category: "Practical Expertise",
+    title: "Generative AI · daily craft",
+    provider: "Custom GPTs · agents · coding · image & video gen · research",
+    icon: Cpu,
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -595,18 +646,37 @@ export default function CVPage() {
             </div>
           </Section>
 
-          {/* ─── 05 · PROFESSIONAL DEVELOPMENT ─── */}
+          {/* ─── 05 · PROFESSIONAL DEVELOPMENT ───
+              Credential cards (was a flat chip list). Each card:
+              icon medallion · category tag · bold title · provider
+              · optional detail. Lays out in a responsive 2/3 col
+              grid so the section reads as a deliberate credential
+              wall, not a tag dump. */}
           <Section num="05" label="Professional Development">
-            <div className="flex flex-wrap gap-3 md:gap-4">
-              {DEVELOPMENT.map((d, i) => (
-                <Reveal key={d} delay={i * 50}>
-                  <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#0a0a0c]/55 border border-white/10 backdrop-blur-md text-zinc-200 font-light text-sm md:text-base hover:bg-[#0a0a0c]/75 hover:border-white/20 transition-colors">
-                    <span
-                      aria-hidden
-                      className="w-1.5 h-1.5 rounded-full bg-[#0f62fe]/70"
-                    />
-                    {d}
-                  </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+              {CREDENTIALS.map((c, i) => (
+                <Reveal key={c.title} delay={i * 60}>
+                  <article className="group h-full flex flex-col gap-3 p-6 md:p-7 rounded-2xl bg-[#0a0a0c]/55 border border-white/10 backdrop-blur-md hover:border-[#0f62fe]/35 hover:bg-[#0a0a0c]/75 transition-all duration-500">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="shrink-0 w-9 h-9 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
+                        <c.icon className="w-4 h-4 text-[#4589ff]" />
+                      </span>
+                      <span className="font-mono text-[9px] md:text-[10px] tracking-[0.22em] uppercase text-zinc-500">
+                        {c.category}
+                      </span>
+                    </div>
+                    <h3 className="text-base md:text-lg font-bold text-white tracking-tight leading-snug">
+                      {c.title}
+                    </h3>
+                    <p className="font-mono text-[10px] md:text-[11px] tracking-[0.18em] uppercase text-[#4589ff]/80">
+                      {c.provider}
+                    </p>
+                    {c.detail && (
+                      <p className="text-zinc-400 font-light text-sm leading-relaxed mt-auto pt-2 border-t border-white/8">
+                        {c.detail}
+                      </p>
+                    )}
+                  </article>
                 </Reveal>
               ))}
             </div>
