@@ -79,6 +79,12 @@ export function About() {
               long prose comfortable AND lets the highlighted
               white spans inside each paragraph do the visual lifting
               instead of the paragraph-level font size. */}
+          {/* Condensed to 2 paragraphs:
+              P1 = credentials + 17 yrs + Fortune-500 + Kuoni
+                   leadership + 1,050 mentees roster
+              P2 = product-builder pitch + three force-multipliers
+                   + AI-as-daily-craft + closing "gap between
+                   insight and experience" line. */}
           <Reveal delay={300}>
             <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed">
               I&apos;m a{" "}
@@ -95,55 +101,39 @@ export function About() {
               </span>{" "}
               practitioner with{" "}
               <span className="text-white font-medium">17+ years</span> driving
-              digital transformation for the Fortune 500: Walmart, VMware,
+              digital transformation for the Fortune 500 — Walmart, VMware,
               Pivotal Labs, Microsoft, SAP, WWF, Royal Air Force, Cemex,
-              Vodafone, Kuoni Tumlare, and beyond.
+              Vodafone, Kuoni Tumlare, and beyond. At Kuoni Tumlare I hired
+              six designers and led a twelve-person team in Prague behind a
+              single AI-ready design system, and along the way I&apos;ve{" "}
+              <span className="text-white font-medium">
+                mentored 1,050+ designers
+              </span>{" "}
+              now leading at Meta, Booking.com, Uber, IBM, Accenture, SAP,
+              Thoughtworks, and Zalando across 11 countries.
             </p>
           </Reveal>
 
           <Reveal delay={400}>
             <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed">
               I&apos;m a{" "}
-              <span className="text-white font-medium">product builder</span> who leads
-              with design. Three force-multipliers:{" "}
-              <span className="text-white font-medium">product discovery</span> that turns
-              user research into board-room business outcomes,{" "}
-              <span className="text-white font-medium">AI-native prototyping</span> that
-              compresses ideation-to-shipped-code from quarters to days, and{" "}
-              <span className="text-white font-medium">design leadership</span> that builds
-              high-performing teams. At Kuoni Tumlare I hired six designers and
-              led a twelve-person team in Prague behind a
-              single AI-ready design system. Along the way{" "}
+              <span className="text-white font-medium">product builder</span>{" "}
+              who leads with design — three force-multipliers:{" "}
+              <span className="text-white font-medium">product discovery</span>{" "}
+              that turns user research into board-room outcomes,{" "}
+              <span className="text-white font-medium">AI-native prototyping</span>{" "}
+              that compresses ideation-to-shipped-code from quarters to days,
+              and{" "}
+              <span className="text-white font-medium">design leadership</span>{" "}
+              that builds high-performing teams. I treat AI as a{" "}
               <span className="text-white font-medium">
-                I&apos;ve mentored 1,050+ designers who&apos;ve led at hundreds
-                of firms
-              </span>
-              , including Meta, Booking.com, Uber, IBM, Accenture, SAP,
-              Thoughtworks, Zalando, and Kuoni Tumlare across 11 countries.
-            </p>
-          </Reveal>
-
-          {/* Third paragraph — the AI-as-daily-craft pitch. Reframes
-              the previous para's "AI-native prototyping" line as
-              a working method, not a buzzword: research happens,
-              UI ships in Figma, prototypes stand up in real code.
-              The closing line ("close the gap between insight and
-              experience") is the editorial pay-off. */}
-          <Reveal delay={500}>
-            <p className="text-zinc-300 font-light text-lg md:text-xl leading-relaxed">
-              I treat AI as a{" "}
-              <span className="text-white font-medium">force multiplier</span>,
-              not a novelty — wired into my daily craft. I run user research,
-              ship polished UI in Figma, and stand up{" "}
-              <span className="text-white font-medium">
-                functional prototypes with AI-assisted code generation
+                force multiplier, not a novelty
               </span>{" "}
-              to test ideas{" "}
-              <span className="text-white font-medium">before a sprint begins</span>.
-              I move fast, explore broadly, and use every tool at my disposal
-              to{" "}
+              — wired into my daily craft. I run user research, ship polished
+              UI in Figma, and stand up functional prototypes with AI-assisted
+              code generation to test ideas before a sprint begins,{" "}
               <span className="text-white font-medium">
-                close the gap between insight and experience
+                closing the gap between insight and experience
               </span>
               .
             </p>
