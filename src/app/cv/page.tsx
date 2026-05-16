@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   Award,
   Users,
-  Globe,
   Sparkles,
   Compass,
   Cpu,
@@ -92,11 +91,30 @@ type HeroStat = {
   icon: IconComponent;
 };
 
+// Four stats — one per dimension:
+//   TENURE      → 17+ years
+//   COMMUNITY   → 1,050+ designers mentored
+//   LEADERSHIP  → 12-person design team led
+//   TECHNICAL   → 10× faster AI-native shipping
+// The previous bottom row repeated "scale of one client" (Cemex
+// countries, Walmart users), which read as the same story twice.
 const HERO_STATS: HeroStat[] = [
   { value: "17+ years", label: "Shipping enterprise products", icon: Award },
-  { value: "1,050+", label: "Designers mentored, 11 countries", icon: Users },
-  { value: "50+", label: "Countries Cemex Go runs in", icon: Globe },
-  { value: "120M+", label: "Walmart shoppers monthly", icon: Sparkles },
+  {
+    value: "1,050+",
+    label: "Designers mentored · 11 countries",
+    icon: Users,
+  },
+  {
+    value: "12 designers",
+    label: "Team led · AI-ready design system",
+    icon: Compass,
+  },
+  {
+    value: "10× faster",
+    label: "AI-native prototype to shipped React",
+    icon: Cpu,
+  },
 ];
 
 type Impact = {
