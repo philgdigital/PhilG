@@ -310,9 +310,9 @@ export default function CVPage() {
         <div className="max-w-[1400px] mx-auto">
 
           {/* ─── 00 · HERO ─── */}
-          <header className="mb-24 md:mb-32">
+          <header className="mb-14 md:mb-20">
             <Reveal>
-              <div className="flex items-center gap-4 mb-10">
+              <div className="flex items-center gap-4 mb-7">
                 <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
                 <span className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
                   Curriculum Vitae
@@ -322,7 +322,7 @@ export default function CVPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
               {/* LEFT — name + role + contact */}
-              <div className="lg:col-span-7 flex flex-col gap-8">
+              <div className="lg:col-span-7 flex flex-col gap-6">
                 <Reveal delay={100}>
                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.02]">
                     Felipe{" "}
@@ -376,7 +376,7 @@ export default function CVPage() {
                         the CV from a US org know there's no schedule
                         friction. */}
                     <p className="font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-zinc-500">
-                      Global remote experience · NY timezone overlap
+                      Embedded across Europe · US · Asia · NY-hours compatible
                     </p>
                   </div>
                 </Reveal>
@@ -418,7 +418,7 @@ export default function CVPage() {
               vmware italic, RAF roundel, etc.) so the CV strip
               reads as part of the same design system. */}
           <Reveal>
-            <div className="mb-24 md:mb-32 pt-10 md:pt-14 border-t border-white/8">
+            <div className="mb-14 md:mb-20 pt-7 md:pt-9 border-t border-white/8">
               <TrustRow eyebrow="Delivered for" />
             </div>
           </Reveal>
@@ -611,7 +611,7 @@ export default function CVPage() {
 
           {/* ─── CLOSING CTA ─── */}
           <Reveal delay={200}>
-            <div className="mt-24 md:mt-32 pt-10 md:pt-14 relative">
+            <div className="mt-16 md:mt-20 pt-8 md:pt-10 relative">
               <span
                 aria-hidden
                 className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
@@ -644,9 +644,9 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mb-24 md:mb-32">
+    <section className="mb-16 md:mb-20">
       <Reveal>
-        <div className="flex items-center gap-4 mb-10 md:mb-14">
+        <div className="flex items-center gap-4 mb-7 md:mb-10">
           <div className="w-2 h-2 rounded-full bg-[#0f62fe] shadow-[0_0_10px_rgba(15,98,254,0.8)]" />
           <h2 className="font-mono text-xs md:text-sm font-medium tracking-[0.22em] uppercase text-zinc-400">
             <span className="text-zinc-400">{num} ·</span> {label}
