@@ -45,7 +45,7 @@ const NAV_LINKS: NavLink[] = [
   { kind: "anchor", href: "#testimonials", label: "Testimonials" },
   { kind: "route", href: "/insights", label: "Insights" },
   { kind: "disabled", label: "Portfolio" },
-  { kind: "disabled", label: "CV" },
+  { kind: "route", href: "/cv", label: "CV" },
   { kind: "action", action: "openForm", label: "Hire Me" },
   {
     kind: "external",
