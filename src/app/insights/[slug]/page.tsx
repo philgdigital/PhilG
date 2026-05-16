@@ -598,15 +598,19 @@ export default async function InsightPage({ params }: RouteProps) {
               data-magnetic="true"
               className="group block hover-target rounded-2xl md:rounded-3xl overflow-hidden border border-white/8 hover:border-[#0f62fe]/40 hover:shadow-[0_20px_60px_-12px_rgba(15,98,254,0.25)] transition-all duration-700 mb-6 md:mb-10 bg-gradient-to-br from-white/[0.02] to-transparent"
             >
-              <div className="grid grid-cols-1 md:grid-cols-[44%_56%] items-stretch">
-                {/* IMAGE — fixed aspect-[5/4] on md+ (was aspect-auto
-                    which stretched the image to whatever the content
-                    column was, often cropping the cover top + bottom
-                    into a tall sliver). Keeps `object-position: center`
-                    so portraits + landscapes both land in the focal
-                    region. Skeleton bg shows briefly while the cover
-                    image downloads from Vercel Blob. */}
-                <div className="relative aspect-[5/3] md:aspect-[5/4] overflow-hidden bg-white/[0.04] animate-pulse">
+              {/* Grid uses items-center so the image column doesn't
+                  stretch vertically to match the content column —
+                  that stretch was the source of the previous crop
+                  bug. */}
+              <div className="grid grid-cols-1 md:grid-cols-[44%_56%] items-center">
+                {/* IMAGE — fixed 16:9 (aspect-video), matching the
+                    home Insights cards. Insight cover uploads are
+                    authored at ~16:9, so object-cover lands the
+                    full image without horizontal/vertical crop in
+                    either direction. Skeleton bg shows briefly
+                    while the cover image downloads from Vercel
+                    Blob. */}
+                <div className="relative aspect-video overflow-hidden bg-white/[0.04] animate-pulse">
                   <Image
                     src={next.image}
                     alt={next.title}
