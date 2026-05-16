@@ -603,20 +603,22 @@ export default async function InsightPage({ params }: RouteProps) {
                   that stretch was the source of the previous crop
                   bug. */}
               <div className="grid grid-cols-1 md:grid-cols-[44%_56%] items-center">
-                {/* IMAGE — fixed 16:9 (aspect-video), matching the
-                    home Insights cards. Insight cover uploads are
-                    authored at ~16:9, so object-cover lands the
-                    full image without horizontal/vertical crop in
-                    either direction. Skeleton bg shows briefly
-                    while the cover image downloads from Vercel
-                    Blob. */}
-                <div className="relative aspect-video overflow-hidden bg-white/[0.04] animate-pulse">
+                {/* IMAGE — aspect-video container with object-contain
+                    so the FULL cover artwork is always visible (no
+                    edge crop). Some covers ship at non-16:9 ratios
+                    (square, 4:3, etc.) and object-cover was clipping
+                    them when the aspect didn't match exactly. With
+                    object-contain the dark page bg shows around any
+                    excess and the cover renders end-to-end. Skeleton
+                    bg shows briefly while the image downloads from
+                    Vercel Blob. */}
+                <div className="relative aspect-video overflow-hidden bg-[#0a0a0c]">
                   <Image
                     src={next.image}
                     alt={next.title}
                     fill
                     sizes="(min-width: 768px) 45vw, 100vw"
-                    className="object-cover object-center grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 ease-[var(--ease-out)]"
+                    className="object-contain object-center grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700 ease-[var(--ease-out)]"
                   />
                   {/* Brand wash — same recipe as the in-article hero
                       so the recommendation reads as part of the same
