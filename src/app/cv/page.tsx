@@ -315,16 +315,21 @@ export default function CVPage() {
           fades, sitting at -z-10 so the page orbs visible at the
           rim don't fight the prose. Without it the long-form CV
           text sat on the ambient gradient orbs and washed out. */}
-      {/* Sits at z-[-1], which is ABOVE the AnimatedGradient orbs
-          (z-[-2]) and BELOW the main content (z-10). Previously at
-          -z-10, which put it BEHIND the orbs — the dark fade did
-          nothing because the orbs painted over the top of it. */}
+      {/* Solid Carbon Black backdrop covering the entire viewport.
+          - inset-0 (not inset-x-0 top-0 h-full) so the fixed div
+            actually fills the viewport. h-full on a fixed element
+            doesn't resolve reliably to viewport height — that bug
+            was why the dark fade kept failing to show.
+          - z-[-1] sits ABOVE the AnimatedGradient orbs (z-[-2])
+            and BELOW main content (z-10). The orbs render behind
+            this; only their soft glow tints the edges where the
+            backdrop fades to transparent. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 z-[-1] h-full"
+        className="pointer-events-none fixed inset-0 z-[-1]"
         style={{
           background:
-            "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.94) 4%, rgba(2,2,5,1) 14%, rgba(2,2,5,1) 86%, rgba(2,2,5,0.94) 96%, rgba(2,2,5,0) 100%)",
+            "linear-gradient(180deg, rgba(2,2,5,0) 0%, rgba(2,2,5,0.95) 3%, rgba(2,2,5,1) 12%, rgba(2,2,5,1) 88%, rgba(2,2,5,0.95) 97%, rgba(2,2,5,0) 100%)",
         }}
       />
 
@@ -415,7 +420,7 @@ export default function CVPage() {
                     {HERO_STATS.map((s) => (
                       <div
                         key={s.value}
-                        className="flex flex-col gap-3 p-5 md:p-6 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md"
+                        className="flex flex-col gap-3 p-5 md:p-6 rounded-2xl bg-[#0a0a0c]/55 border border-white/10 backdrop-blur-md"
                       >
                         <span className="shrink-0 w-9 h-9 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
                           <s.icon className="w-4 h-4 text-[#4589ff]" />
@@ -480,7 +485,7 @@ export default function CVPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
               {IMPACT.map((it, i) => (
                 <Reveal key={it.client} delay={i * 60}>
-                  <article className="group h-full flex flex-col gap-4 p-7 md:p-8 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md hover:border-[#0f62fe]/40 hover:bg-[#0a0a0c]/95 transition-all duration-500">
+                  <article className="group h-full flex flex-col gap-4 p-7 md:p-8 rounded-2xl bg-[#0a0a0c]/55 border border-white/10 backdrop-blur-md hover:border-[#0f62fe]/40 hover:bg-[#0a0a0c]/75 transition-all duration-500">
                     {/* metric pill */}
                     <span className="self-start inline-flex items-center font-mono text-[10px] tracking-[0.22em] uppercase font-medium text-[#4589ff] px-3 py-1 rounded-full border border-[#0f62fe]/30 bg-[#0f62fe]/[0.06]">
                       {it.metric}
@@ -543,7 +548,7 @@ export default function CVPage() {
                         </div>
 
                         {role.summary && (
-                          <p className="text-zinc-300 font-light text-base md:text-lg leading-relaxed max-w-3xl">
+                          <p className="text-zinc-200 font-light text-base md:text-lg leading-relaxed max-w-3xl">
                             {role.summary}
                           </p>
                         )}
@@ -553,7 +558,7 @@ export default function CVPage() {
                             {role.bullets.map((b) => (
                               <li
                                 key={b}
-                                className="flex items-start gap-4 text-zinc-400 font-light text-base md:text-lg leading-relaxed"
+                                className="flex items-start gap-4 text-zinc-200 font-light text-base md:text-lg leading-relaxed"
                               >
                                 <span
                                   aria-hidden
@@ -593,7 +598,7 @@ export default function CVPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {ADVANTAGES.map((a, i) => (
                 <Reveal key={a.title} delay={i * 100}>
-                  <article className="h-full flex flex-col gap-5 p-8 md:p-10 rounded-2xl bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md">
+                  <article className="h-full flex flex-col gap-5 p-8 md:p-10 rounded-2xl bg-[#0a0a0c]/55 border border-white/10 backdrop-blur-md">
                     <div className="flex items-center gap-4">
                       <span className="shrink-0 w-12 h-12 rounded-full bg-[#0f62fe]/10 border border-[#0f62fe]/30 flex items-center justify-center">
                         <a.icon className="w-5 h-5 text-[#4589ff]" />
@@ -619,7 +624,7 @@ export default function CVPage() {
             <div className="flex flex-wrap gap-3 md:gap-4">
               {DEVELOPMENT.map((d, i) => (
                 <Reveal key={d} delay={i * 50}>
-                  <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#0a0a0c]/85 border border-white/10 backdrop-blur-md text-zinc-200 font-light text-sm md:text-base hover:bg-[#0a0a0c]/95 hover:border-white/20 transition-colors">
+                  <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#0a0a0c]/55 border border-white/10 backdrop-blur-md text-zinc-200 font-light text-sm md:text-base hover:bg-[#0a0a0c]/75 hover:border-white/20 transition-colors">
                     <span
                       aria-hidden
                       className="w-1.5 h-1.5 rounded-full bg-[#0f62fe]/70"
